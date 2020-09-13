@@ -263,6 +263,10 @@
 <p>[^脚注名]</p>
 <p>[^脚注名]: 脚注内容</p>
 </blockquote>
+<h3 id="标记"><a href="#标记" class="headerlink" title="标记"></a>标记</h3><p>&nbsp;&nbsp;&nbsp;&nbsp;将选中的文字用灰色背景加重（<code>像这样</code>）,就在文字的两旁加`</p>
+<blockquote>
+<p>`文字`</p>
+</blockquote>
 <h3 id="特殊符号失效"><a href="#特殊符号失效" class="headerlink" title="特殊符号失效"></a>特殊符号失效</h3><p>&nbsp; 如果想让特殊符号失效，即打出原有符号样子(如#),则在特殊符号前加反切线\</p>
 <blockquote>
 <p>\<br> \&lt;\u&gt;…&lt;/u&gt;</p>
