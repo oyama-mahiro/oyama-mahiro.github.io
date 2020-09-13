@@ -1,6 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C语言基础-存储类别</title>
+    <url>/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="存储类别"><a href="#存储类别" class="headerlink" title="存储类别"></a><font color="green">存储类别</font></h1><p>在理解存储类别前，先要复习一些概念和术语。</p>
+<ul>
+<li>对象：对于储存在内存中的数据，被储存的每个值都占用一定的物理内存。这样的一块内存成为对象(和面向对象的对象概念不同)</li>
+<li>存储期：对象在内存中保留了多长的时间。</li>
+<li>标识符用于访问对象，可以用<strong>作用域</strong>和<strong>链接</strong>描述标识符，表明了程序的哪些部分可以使用它。</li>
+</ul>
+<p>我们先介绍`作用域、链接和储存期的含义，再介绍具体的存储类别</p>
+<a id="more"></a>
+
+<h2 id="1-作用域"><a href="#1-作用域" class="headerlink" title="1.作用域"></a>1.作用域</h2><p>作用域描述程序中可访问标识符的区域。<br>一个C变量的作用域可以是:</p>
+<ul>
+<li>块作用域：花括号内的代码，if语句或循环所控制的代码</li>
+<li>函数作用域：仅用于goto语句的标签。再块中定义但作用域是整个函数</li>
+<li>函数原型作用域：从形参定义处到原型声明结束</li>
+<li>文件作用域：定义在函数外面，从它的定义到该定义所在的文件的末尾均可见</li>
+</ul>
+<blockquote>
+<p>注意：当一个源代码中包含一个或多个头文件时，会把所有头文件和编译器源代码文件都看成是一个包含信息的单独文件，文件作用域的实际可见范围是整个翻译单元</p>
+</blockquote>
+<h2 id="2-链接"><a href="#2-链接" class="headerlink" title="2.链接"></a>2.链接</h2><p>链接指该变量访问范围<br>C变量有3种链接属性：<strong>外部链接，内部链接或无链接</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;具有块作用域、函数作用域和函数原型作用域的变量都是无链接变量<br>&nbsp;&nbsp;&nbsp;&nbsp;文件作用域的变量可以是外部链接和内部链接，<br>&nbsp;&nbsp;&nbsp;&nbsp;内部链接变量比外部链接变量前面多了个static ，内部链接变量只能在翻译单元中使用，外部链接变量可以在多文件程序中使用</p>
+<h2 id="3-存储期"><a href="#3-存储期" class="headerlink" title="3.存储期"></a>3.存储期</h2><p>作用域和链接描述了标识符的可见性。存储期描述了通过这些标识符访问的对象的生存期。<br>C对象有4种存储期：</p>
+<ol>
+<li>静态存储期：关键字static，如果对象具有静态储存期，那么它在程序的执行期间一直存在   <font color="red">注意：文件作用域变量都具有静态存储期，但它的static表示的是其链接属性</font></li>
+<li>线程存储期: _Thread_local</li>
+<li>自动存储期: 通常是块作用域的变量所具有</li>
+<li>动态分配存储期： 从声明处到块末尾而不是块头到末尾</li>
+</ol>
+<h2 id="5种存储类别"><a href="#5种存储类别" class="headerlink" title="5种存储类别"></a>5种存储类别</h2><table>
+<thead>
+<tr>
+<th>存储类别</th>
+<th>存储期</th>
+<th>作用域</th>
+<th>链接</th>
+<th>声明方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自动(局部变量)</td>
+<td>自动</td>
+<td>块</td>
+<td>无</td>
+<td>块内</td>
+</tr>
+<tr>
+<td>寄存器</td>
+<td>自动</td>
+<td>块</td>
+<td>无</td>
+<td>块内，使用关键字<code>register</code></td>
+</tr>
+<tr>
+<td>静态外部链接(全局变量)</td>
+<td>静态</td>
+<td>文件</td>
+<td>外部</td>
+<td>所有函数外</td>
+</tr>
+<tr>
+<td>静态内部链接(static全局变量)</td>
+<td>静态</td>
+<td>文件</td>
+<td>内部</td>
+<td>所有函数外，翻译单元中，使用关键字<code>static</code></td>
+</tr>
+<tr>
+<td>静态无链接(静态局部变量)</td>
+<td>静态</td>
+<td>块</td>
+<td>无</td>
+<td>块内，使用关键字<code>static</code></td>
+</tr>
+</tbody></table>
+<ul>
+<li>如果内层块种声明的变量和外层块的变量同名时，优先内层块的变量</li>
+<li>寄存器变量储存在寄存器中，所以无法获取其地址</li>
+<li>局部静态变量在程序的执行时间一直存在但只能在块内部使用，其值有继承性（就像Java里面的成员变量）</li>
+<li>要在外部使用全局变量或在块中使用全局变量或static全局变量。也必须先声明，而且声明前面要加关键字extern</li>
+<li>局部变量和静态局部变量在本文件中只能在声明后使用</li>
+</ul>
+<h3 id="存储类别的初始化"><a href="#存储类别的初始化" class="headerlink" title="存储类别的初始化"></a>存储类别的初始化</h3><ul>
+<li>局部变量不会初始化，但其变量值是分配空间范围中的任意值</li>
+<li>静态变量如未人为初始化，则自动初始化为0</li>
+</ul>
+<h3 id="存储类别说明符"><a href="#存储类别说明符" class="headerlink" title="存储类别说明符"></a>存储类别说明符</h3><ul>
+<li>auto:声明局部变量，可忽略</li>
+<li>register:声明寄存器变量</li>
+<li>static:声明静态类型</li>
+<li>extern:  声明时调用（全局/static全局） 变量</li>
+<li>_Thread_local：声明线程存储期，可以和 static或extern一起使用</li>
+</ul>
+<hr>
+<br>
+
+<h2 id="存储类别与函数"><a href="#存储类别与函数" class="headerlink" title="存储类别与函数"></a>存储类别与函数</h2><p>函数也有存储类别。</p>
+<ul>
+<li>外部函数<blockquote>
+<p>double a(int i)</p>
+</blockquote>
+</li>
+<li>静态函数<blockquote>
+<p>static double a(int i)</p>
+</blockquote>
+</li>
+<li>内联函数<blockquote>
+<p>extern double a(int i)</p>
+</blockquote>
+</li>
+</ul>
+]]></content>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>基础</tag>
+        <tag>存储类别</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C语言基础-递归</title>
+    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
+<a id="more"></a>
+
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
+<blockquote>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
+</blockquote>
+</blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
+<ol>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
+</ol>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
+<ol>
+<li>变化的参数</li>
+<li>递归终止条件</li>
+</ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
+<blockquote>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
+<ol>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
+</ol>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
+<ol>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
+</ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
+<br>
+<br>
+
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
+]]></content>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>递归</tag>
+        <tag>C语言基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Markdown笔记-基础</title>
     <url>/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="Markdown-概述"><a href="#Markdown-概述" class="headerlink" title="Markdown 概述"></a>Markdown 概述</h1><p>Markdown 是一种轻量级标记语言，与 2004 年创建。<br>后缀为<code>.md</code>或<code>.maekdown</code>，可导出 HTML，Word，pdf 等多种格式文档</p>
@@ -183,7 +404,7 @@
 <blockquote>
 <p>![图片出不来了](.\mdphoto\markdownlearn\0.jpg)</p>
 </blockquote>
-<p><img src="Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/0.jpg" alt="图片出不来了"></p>
+<p><img src="/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/0.jpg" alt="图片出不来了"></p>
 <p>当然，当地址过长时也可以像链接那样将(…)变成变量名</p>
 <blockquote>
 <p>![图片加载出错][photo 1]</p>
@@ -239,21 +460,341 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2020/09/12/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+    <title>算法分析</title>
+    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
+<ol>
+<li>确定输入模型，定义问题规模（n）</li>
+<li>识别循环与递归</li>
+<li>根据内循环或每部递归的操作确定成本模型</li>
+<li>对于给定的输入，判断这些操作的执行频率</li>
+</ol>
+<hr>
+<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
+<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
+</blockquote>
+<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
+<blockquote>
+<p>渐进分析：</p>
+<ol>
+<li>忽略依赖于机器性能的常量</li>
+<li>只关注运行时间的增长</li>
+</ol>
+</blockquote>
+<hr>
+<br>
+<br>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
+<blockquote>
+<p>例：$2n^2 = O(n^3)$</p>
+</blockquote>
+<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
+<blockquote>
+<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
+</blockquote>
+<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
+<blockquote>
+<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
+</blockquote>
+<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
+<p>理解：左右两边增长速率一样</p>
+<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
+<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
+<ul>
+<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
+<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
+</ul>
+<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
+<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
+<hr>
+<br>
+<br>
 
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
+<ol>
+<li>证明 n=1 时成立</li>
+<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
+<li>则命题成立</li>
+</ol>
+<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
+<li>先猜答案得到最高阶</li>
+<li>验证这个递归式是否按照数学归纳法满足条件</li>
+</ol>
+<blockquote>
+<p>例：T(n)=4T(n/2)+n</p>
+<ol>
+<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
+<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
+<p>$O(n^2)$=$c(n)^2$</p>
+</blockquote>
+</li>
+<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
+</ol>
+</blockquote>
+<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
+<blockquote>
+<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
+</blockquote>
+<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
+<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
+<li>根据每层的和的规律，求出总子叶节点<ul>
+<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
+<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
+</blockquote>
+</li>
+<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
+</ul>
+</li>
+<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
+</ol>
+<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
+<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
+<p>1.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
+<p>2.</p>
+<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
+<p>3.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
 ]]></content>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>概念</tag>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>十大排序算法</title>
+    <url>/2020/05/05/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
+    <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a><font color="green">简介</font></h1><p>我们关注的主要对象是重新排列数组元素的算法，其中每个元素都有一个主键，排序算法的目的就是将所有的元素的主键按照某种方式排列（通常是按照大小或是字母顺序） </p>
+<a id="more"></a> 
+<p>常见的十大算法：<br><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1588689912090&di=3d31e8a2f7ab8a74d03f295e5a2c6f25&imgtype=0&src=http://img.mp.itc.cn/upload/20160925/6689ac6a8e954126aefebaf492994cfc_th.jpeg" alt="排序算法"></p>
+<blockquote>
+<p>稳定：指如果有相同的数，排序后本来在前面的还是在前面<br>out-place：指用了额外的空间</p>
+</blockquote>
+<hr>
+<br>
+
+<p>下面我们在介绍排序算法时将从这几个方向入手：</p>
+<ul>
+<li>算法思路</li>
+<li>算法图解</li>
+<li>基本代码实现</li>
+<li>易踩坑点</li>
+<li>优化思路</li>
+</ul>
+<p><strong>如未特别说明，下面的变量都是从0开始的</strong></p>
+<hr>
+<br>
+
+<h1 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a><font color="green">冒泡排序</font></h1><h2 id="算法思路"><a href="#算法思路" class="headerlink" title="算法思路"></a>算法思路</h2><ol>
+<li>从头开始遍历数据，当前者的主键(值)大于后者时，两者交换位置，直到最后一位</li>
+<li>此时数据的最大值一定排在了最后一位，排好的最大值便固定，无需再排</li>
+<li>重复1的操作，直到最后两个数排序完成</li>
+</ol>
+<p>总结：外部循环<code>数据个数-1</code>次，内部循环<code>数组长度-n-1</code>次，每次内部循环比较当前位和后一位的值的大小，判断是否交换</p>
+<h2 id="算法图解"><a href="#算法图解" class="headerlink" title="算法图解"></a>算法图解</h2><p><img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3438712239,3527372442&fm=26&gp=0.jpg" alt="冒泡排序"></p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2> <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">bubble</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">            <span class="keyword">int</span> temp; <span class="comment">//帮助交换</span></span><br><span class="line">            <span class="keyword">boolean</span> falg = <span class="keyword">false</span>; <span class="comment">//检查是否已经排好</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;arr.length-<span class="number">1</span>;i++)&#123;</span><br><span class="line">                falg = <span class="keyword">false</span>;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;arr.length-<span class="number">1</span>-i;j++)&#123; <span class="comment">//每次排序后的最大位可以忽略</span></span><br><span class="line">                    <span class="keyword">if</span>(arr[j]&gt;arr[j+<span class="number">1</span>])&#123;</span><br><span class="line">                        falg =<span class="keyword">true</span>;</span><br><span class="line">                        temp=arr[j+<span class="number">1</span>];</span><br><span class="line">                        arr[j+<span class="number">1</span>]=arr[j];</span><br><span class="line">                        arr[j]=temp;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(!falg) <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="易踩坑点"><a href="#易踩坑点" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>一共循环 <code>数据个数-1</code> 次 ，因为最后一次确定第二个值的同时也把最小值确定了</li>
+<li>每次遍历后的最大值要忽略，所以每次内部循环时循环次数要-1次</li>
+<li>因为比较是和后面的数比较，所以当后面的数到最大值即当前数到倒数第二个时就说明内部循环完，否则数组越界</li>
+</ol>
+<h2 id="优化思路"><a href="#优化思路" class="headerlink" title="优化思路"></a>优化思路</h2><p>如果有次内循环中没有发生交换，说明已经有序</p>
+<hr>
+<br>
+
+<h1 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a><font color="green">选择排序</font></h1><h2 id="算法思路-1"><a href="#算法思路-1" class="headerlink" title="算法思路"></a>算法思路</h2><ol>
+<li>先把第一个数记成最小值，遍历整个数组，记录遍历时遇见的最小值</li>
+<li>遍历完一次后将最小值和第一个数交换位置，下一次遍历从第二个数开始</li>
+<li>重复上述操作，直到最后两个数遍历完成</li>
+</ol>
+<h2 id="算法图解-1"><a href="#算法图解-1" class="headerlink" title="算法图解"></a>算法图解</h2><p><img src="http://www.west.cn/cms/images/2019-01-10/q5dlczui1fw.gif" alt="选择排序"></p>
+<h2 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">select</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> min;<span class="comment">//记录最小数</span></span><br><span class="line">        <span class="keyword">int</span> temp; <span class="comment">//帮助交换</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;arr.length;i++)&#123;</span><br><span class="line">            min = i; <span class="comment">//将最小值初始化为遍历的第一个数</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j=i+<span class="number">1</span>;j&lt;arr.length;j++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(arr[j]&lt;arr[min])&#123; <span class="comment">//*当某数小于当前最小数(别写成i)时，将最小数的索引改成该数的索引</span></span><br><span class="line">                    min =j;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//进行交换</span></span><br><span class="line">            temp = arr[i];</span><br><span class="line">            arr[i] = arr[min];</span><br><span class="line">            arr[min] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="易踩坑点-1"><a href="#易踩坑点-1" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>开始时我们是把第一个数当成最小值的，所以是从第二个数开始遍历的</li>
+<li>i值的含义有两个，一个是遍历次数，一个是当前遍历最小时应所处的位置</li>
+</ol>
+<hr>
+<br>
+
+<h1 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a><font color="green">插入排序</font></h1><h2 id="算法思路-2"><a href="#算法思路-2" class="headerlink" title="算法思路"></a>算法思路</h2><ol>
+<li>遍历数组，将当前数组插入左边已排好数据中</li>
+<li>插入方法：先记录当前值，遍历左边，将当前数左边的数向右移动，直到遇见比当前数小的数，此时空白部分便是要插入的地方</li>
+</ol>
+<h2 id="算法图解-2"><a href="#算法图解-2" class="headerlink" title="算法图解"></a>算法图解</h2><p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F.gif" alt="插入排序"></p>
+<h2 id="代码实现-2"><a href="#代码实现-2" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insertion</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;    </span><br><span class="line">        <span class="comment">//插入法</span></span><br><span class="line">        <span class="keyword">int</span> temp;</span><br><span class="line">        <span class="keyword">int</span> j;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;arr.length;i++)&#123;</span><br><span class="line">            temp=arr[i];</span><br><span class="line">            <span class="keyword">for</span>(j=i-<span class="number">1</span>;j&gt;=<span class="number">0</span> &amp;&amp; temp&lt;arr[j];j--)&#123; <span class="comment">//别忘了j要大于0</span></span><br><span class="line">                arr[j+<span class="number">1</span>]=arr[j];</span><br><span class="line">            &#125;</span><br><span class="line">            arr[j+<span class="number">1</span>]=temp;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="易踩坑点-2"><a href="#易踩坑点-2" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>i是从第二个数开始的</li>
+<li>为了插入而进行的遍历一定别忘了j要大于0，(因为每次都是j和j+1比较)如果当前值正好是最小值，则数组会越界</li>
+<li>这里j的含义是当前值最后插入的位置的左边</li>
+</ol>
+<hr>
+<br>
+
+<h1 id="希尔排序"><a href="#希尔排序" class="headerlink" title="希尔排序"></a><font color="green">希尔排序</font></h1><h2 id="算法思路-3"><a href="#算法思路-3" class="headerlink" title="算法思路"></a>算法思路</h2><ol>
+<li>先将数据分成间隔为h的许多小组，先让小组进行排序(插入排序法)</li>
+<li>在把间隔缩短（小组变少，每个组中数变多）再进行插入排序</li>
+<li>重复上述步骤，直到最后间隔为1时排序(即整个数据排序)</li>
+</ol>
+<blockquote>
+<p>注：h也称为增量序列，对于最优增量序列目前还没有结论，主要的增量序列有Shell 增量序列，Hibbard 增量序列，Knuth 增量序列</p>
+</blockquote>
+<h2 id="算法图解-3"><a href="#算法图解-3" class="headerlink" title="算法图解"></a>算法图解</h2><p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F.jpg" alt="希尔排序"></p>
+<h2 id="代码实现-3"><a href="#代码实现-3" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">shell</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> N = arr.length; <span class="comment">//总数</span></span><br><span class="line">        <span class="keyword">int</span> h=<span class="number">1</span>;<span class="comment">//增量序列</span></span><br><span class="line">        <span class="keyword">while</span>(h&lt;N/<span class="number">3</span>) h= h*<span class="number">3</span>+<span class="number">1</span>; <span class="comment">//Knuth 增量序列计算得来的h</span></span><br><span class="line">        <span class="comment">//插入法</span></span><br><span class="line">        <span class="keyword">while</span>(h&gt;=<span class="number">1</span>)&#123;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i=h;i&lt;N;i++)&#123;</span><br><span class="line">                <span class="keyword">int</span> j=i;</span><br><span class="line">                <span class="keyword">int</span> temp = arr[i]; <span class="comment">//因为arr[i]的值可能会变，保存插入值</span></span><br><span class="line">                <span class="keyword">for</span>(;j-h&gt;=<span class="number">0</span> &amp;&amp; temp&lt;arr[j-h];j=j-h)&#123;</span><br><span class="line">                    arr[j] = arr[j-h];</span><br><span class="line">                &#125;</span><br><span class="line">                arr[j] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">            h=h/<span class="number">3</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="易踩坑点-3"><a href="#易踩坑点-3" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>和插入排序一样，i是从h而不是0开始的(h代表的是第一个小组的第二个数)</li>
+<li>这里j的含义是当前数再小组中该插入的位置(和插入排序j的含义不同)，所以不是要 j&gt;=0而是要 j-h&gt;=0 (因为每次都是j和j-h比较)</li>
+<li>这里是从h开始遍历到结束，效果是先让每个小组的第二个数和前面比较后再让每个小组的第三个数和前面比较，如此循环</li>
+</ol>
+<h2 id="优化思路-1"><a href="#优化思路-1" class="headerlink" title="优化思路"></a>优化思路</h2><p>增量序列的不同会影响排序算法效率</p>
+<hr>
+<br>
+
+<h1 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a><font color="green">归并排序</font></h1><h2 id="算法思路-4"><a href="#算法思路-4" class="headerlink" title="算法思路"></a>算法思路</h2><ol>
+<li>将数组分成两部分</li>
+<li>左部分和右部分分别排序，直到左部分或右部分只有一个数时返回</li>
+<li>将两部分合并起来</li>
+</ol>
+<p>合并方法：</p>
+<ul>
+<li>传入需要合并的部分的开头，中间和结尾数，将该部分数组放入辅助数组对应位置中</li>
+<li>左部分开头和右部分开头创建指针分别遍历：</li>
+<li>当左边遍历完时，将右边的数传入原数组</li>
+<li>当右边遍历完时，将左边的数传入原数组</li>
+<li>当左边小于右边时，将左边的数传入原数组</li>
+<li>当右边小于左边时，将右边的数传入原数组</li>
+</ul>
+<h2 id="算法图解-4"><a href="#算法图解-4" class="headerlink" title="算法图解"></a>算法图解</h2><p><img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=4070550482,2402998767&fm=26&gp=0.jpg" alt="归并算法"></p>
+<p>合并步骤：</p>
+<p><img src="https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=1120323612,2379483011&fm=15&gp=0.jpg" alt="归并算法2"></p>
+<h2 id="代码实现-4"><a href="#代码实现-4" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Merge</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span>[] aux; <span class="comment">//归并时所用的辅助数组</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//归并两个有序子数据：先将要归并的数据保存到辅助数组中，用两个指针指向辅助数组的前面和中间+1分成两数组</span></span><br><span class="line">    <span class="comment">//两数组依次比较，将较小的数放进原数组对应位置，然后较小数所在的数组指针上移</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//合并子数组，先将数据存入辅助数组中，用两指针二分辅助数组并遍历</span></span><br><span class="line">    <span class="comment">//mid为左边数组的最右边，即最大值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> lo,<span class="keyword">int</span> mid,<span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">        <span class="comment">//辅助指针</span></span><br><span class="line">        <span class="keyword">int</span> i = lo;</span><br><span class="line">        <span class="keyword">int</span> j = mid+<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//将要归并的数据保存到辅助数组中</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=lo;k&lt;=hi;k++)&#123;</span><br><span class="line">            aux[k] = a[k];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> k=lo;k&lt;=hi;k++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i&gt;mid) a[k] = aux[j++];<span class="comment">//左边数组遍历完时，直接加右边</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(j&gt;hi) a[k] = aux[i++];<span class="comment">//右边数组遍历完时，直接加左边</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(aux[i]&gt;aux[j]) a[k] = aux [j++]; <span class="comment">//当右边的比左边的小时，加右边</span></span><br><span class="line">            <span class="keyword">else</span> a[k] = aux [i++]; <span class="comment">//当左边的比右边的小时，加左边</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//自顶向下的归并排序,将数组不断地二分直到直到只有一个数，再向上合并返回</span></span><br><span class="line">    <span class="comment">//将数组分成左右两部分，每个部分进行排序，排完后再合并排序</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSort1</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        aux = <span class="keyword">new</span> <span class="keyword">int</span>[a.length];</span><br><span class="line">        mergeSort1(a,<span class="number">0</span>,a.length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSort1</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> lo ,<span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(lo&gt;=hi) <span class="keyword">return</span>; <span class="comment">//如果最前面和最后面一样说明已经分成最小单位</span></span><br><span class="line">        <span class="keyword">int</span> mid = (hi-lo)/<span class="number">2</span>+lo;</span><br><span class="line">        mergeSort1(a,lo,mid);</span><br><span class="line">        mergeSort1(a,mid+<span class="number">1</span>,hi);</span><br><span class="line">        <span class="keyword">if</span>(a[mid+<span class="number">1</span>]&gt;=a[mid]) <span class="keyword">return</span>; <span class="comment">//优化，如果排好序的右边最小值已经大于左边最大值，说明已经有序</span></span><br><span class="line">        merge(a,lo,mid,hi);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="易踩坑点-4"><a href="#易踩坑点-4" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>合并时传入的 mid (中间值)含义是左部分的最后一个数，算 mid 时记得要加 lo，写右边排序时记得传入的是 mid+1</li>
+<li>合并中，将数据存入辅助数组是记得要&lt;=最后一位数而不是&lt;</li>
+<li>判断是否左部分或右部分只含有一个数(传入的最左边的索引<code>lo</code> &gt;= 最右边的索引<code>hi</code>)</li>
+</ol>
+<h2 id="优化思路-2"><a href="#优化思路-2" class="headerlink" title="优化思路"></a>优化思路</h2><p>左右两边排好了之后，如果这时左部分的最大值&lt;=右部分的最小值的，说明已经有序，不用再合并</p>
+<h3 id="自下向顶的归并"><a href="#自下向顶的归并" class="headerlink" title="自下向顶的归并"></a>自下向顶的归并</h3><p>除了上面的自顶向下的归并方法，还存在自下向顶的归并的方法：</p>
+<ul>
+<li><p>每个子数组长度为1开始，2个一组归并，再4个一组归并，直到整个归并</p>
+<p>图解：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F%E8%87%AA%E4%B8%8B%E5%90%91%E9%A1%B6.jpg" alt="自顶向下"></p>
+</li>
+</ul>
+<p>代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSort2</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        aux = <span class="keyword">new</span> <span class="keyword">int</span>[a.length];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;a.length;i*=<span class="number">2</span>) &#123;</span><br><span class="line">            <span class="comment">//因为归并是两个归并，所以每次指针k要移动2个子数组长度</span></span><br><span class="line">            <span class="comment">//可以把一个子数组的i个 数看成一个整体，k的循环就要小于a.length - i</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> k = <span class="number">0</span>; k &lt; a.length - i; k=k+i*<span class="number">2</span>)&#123;</span><br><span class="line">                merge(a,k,k+i-<span class="number">1</span>,Math.min(k+i*<span class="number">2</span>-<span class="number">1</span>,a.length-<span class="number">1</span>)); <span class="comment">//有可能最后一组数不够，要判断</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>易踩坑点：</p>
+<ol>
+<li>因为k的作用是指向两个子数组合并的开头，如果最后的个数连一个子数组都没达到的话，那在合并时传入的中间值k+i-1就会发生数组出界问题，所以 k&lt;a.length-i</li>
+<li>如果最后只剩一个不全数组，则放到下一轮，如果最后剩一个好的左部分和一个不全的右部分，两者可以合并，但要注意此时传入的最右边的值就不是 k+i*2-1 而是 a.length-1</li>
+</ol>
+<hr>
+<br>
+
+<h1 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a><font color="green">快速排序</font></h1><h2 id="算法思路-5"><a href="#算法思路-5" class="headerlink" title="算法思路"></a>算法思路</h2><p>和归并排序有异曲同工之妙，都采用分治法，但不同点是归并是先分别排序后归并，快速是分开时先排序再分别排序</p>
+<ol>
+<li>确定一位中间值(一般取第一个数),遍历数组，小于等于中间值的放左边，大于等于中间值的放右边</li>
+<li>对中间值左边的数组排序</li>
+<li>对中间值右边的数组排序</li>
+</ol>
+<p>上面 1 的具体步骤：</p>
+<ol>
+<li>将左边第一个数设为中间值</li>
+<li>左边第二个和最右边分别设置两指针向中间遍历，直到左边的指针大于等于右边的指针</li>
+<li>当左边遍历时遇见大于中间值的数停下，当右边遍历时遇见小于中间值的数停下</li>
+<li>当两指针停下后交换两指针所值的数</li>
+<li>遍历完后j所指的一定是小于等于中间值的，将j所在的数与第一个数交换，返回j(中间值所在位置)</li>
+</ol>
+<h2 id="算法图解-5"><a href="#算法图解-5" class="headerlink" title="算法图解"></a>算法图解</h2><p>整体思路：</p>
+<p><img src="https://img-blog.csdnimg.cn/20200318212047646.png" alt="快速排序"></p>
+<p>左右排序：</p>
+<p>i和j最后一次交换时<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F2.jpg" alt="快速排序2"></p>
+<p>i和j最后一次没有交换时<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F3.jpg" alt="快速排序3"></p>
+<h2 id="代码实现-5"><a href="#代码实现-5" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//将数组有序二分并返回切分元素位置</span></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">        <span class="comment">//创建两个辅助指针和切分元素</span></span><br><span class="line">        <span class="keyword">int</span> i = lo;</span><br><span class="line">        <span class="keyword">int</span> j = hi+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> v = a[lo];</span><br><span class="line"></span><br><span class="line">        <span class="comment">//i,j指针向中间遍历，直到遇见不符合的数或边界停下，两者都停下时将两数进行交换</span></span><br><span class="line">        <span class="comment">//当遍历完时i的位置可能会比j大(最后两个数发生交换时，i，j同时移动)可能相等(最后两个数没发生交换时，i，j其中一个移动)</span></span><br><span class="line">        <span class="comment">//遍历完时j的位置一定在小于等于切分元素的数的索引上，将这两个数交换，j所指的便是切分元素索引</span></span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">            <span class="keyword">while</span> (a[++i] &lt; v) <span class="keyword">if</span>(i==hi) <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">while</span> (a[--j] &gt; v) ;<span class="comment">//这里本来还有个判断j是否跑到了最左边(当切分元素是该数据中最小值时)，但因为v在最左边，j一定会停在lo上</span></span><br><span class="line">            <span class="keyword">if</span>(i&gt;=j) <span class="keyword">break</span>;</span><br><span class="line">            <span class="keyword">int</span> temp = a[i];</span><br><span class="line">            a[i] = a[j];</span><br><span class="line">            a[j] = temp;</span><br><span class="line">        &#125;</span><br><span class="line">        a[lo] = a[j];</span><br><span class="line">        a[j] = v;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> j;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//快速排序</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quick</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        quick(a , <span class="number">0</span>,a.length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quick</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(lo&gt;=hi) <span class="keyword">return</span>;  <span class="comment">//可以在某个情况后改成插入排序</span></span><br><span class="line">        <span class="keyword">int</span> j = partition(a, lo, hi);</span><br><span class="line">        quick(a,lo,j-<span class="number">1</span>);</span><br><span class="line">        quick(a,j+<span class="number">1</span>,hi);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="易踩坑点-5"><a href="#易踩坑点-5" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>数组切分时创建并初始化 i 与 j 是让 i ，j 等于第一个数和最后一个数的后一位，并且先加减再操作。如果是让 i ，j 等于第二个数和最后一个数并且先操作在加减时会很麻烦，不仅要在内循环中写i++，j–，在arr[i]和arr[j]交换后也要写i++，j– <strong>最好是先移动指针再操作</strong></li>
+<li>返回中间值后，中间值是不再参与排序的</li>
+<li>小心i和j出界的问题，当i到最右边或j到左边时，也要停止指针移动(j比较特殊，因为j到最左边时一定是等于v的，不可能越界)</li>
+</ol>
+<h2 id="优化思路-3"><a href="#优化思路-3" class="headerlink" title="优化思路"></a>优化思路</h2><p>防止特殊情况，可以先把数据打乱再排</p>
+<h3 id="三切分法："><a href="#三切分法：" class="headerlink" title="三切分法："></a>三切分法：</h3><p>思路：</p>
+<ul>
+<li>对于有大量的重复数而言，可以使用三分切法，将数据分成大于v，等于，小于iv三部分，v代表中间值<ul>
+<li>三个辅助指针i,lt,gt，i来遍历数组，直到大于gt(等于gt时还要再判断一次)</li>
+<li>如果i遇见小的数，和lt交换并两者++，如果遇见大的数，和gt交换，gt–，i不动(因为无法保证gt所在的值，lt一定为v)</li>
+<li>最后lt，gt都在中间段的最左边和最右边</li>
+</ul>
+</li>
+</ul>
+<p>图示：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E4%B8%89%E5%90%91%E5%88%87%E5%88%86.jpg" alt="快速排序三向切分"></p>
+<p>代码：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span>  <span class="keyword">void</span> <span class="title">quick3way</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        quick(a,<span class="number">0</span>,a.length-<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quick3way</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> lo,<span class="keyword">int</span> hi)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(hi&lt;=lo) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> lt = lo;</span><br><span class="line">        <span class="keyword">int</span> gt = hi;</span><br><span class="line">        <span class="keyword">int</span> i  = lo+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> v  = a[lo];</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(i&lt;=gt)&#123;</span><br><span class="line">            <span class="keyword">if</span>(a[i]&lt;v) exchange(a,i++,lt++); <span class="comment">//lt一定为v，交换后i为v，可以移动</span></span><br><span class="line">            <span class="keyword">else</span> <span class="keyword">if</span>(a[i]&gt;v) exchange(a,i,gt--); <span class="comment">//无法确定gt处的值，交换后不能动i</span></span><br><span class="line">            <span class="keyword">else</span> i++; <span class="comment">//i处等于v</span></span><br><span class="line">            &#125;</span><br><span class="line">        quick3way(a,lo,lt-<span class="number">1</span>);</span><br><span class="line">        quick3way(a,gt+<span class="number">1</span>,hi);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">exchange</span><span class="params">(<span class="keyword">int</span>[] a,<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = a[x];</span><br><span class="line">        a[x] = a[y];</span><br><span class="line">        a[y] = temp;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>易踩坑点：</p>
+<ol>
+<li>因为lt是一定等于v的并且在等于v数组的最左边，所以和i所在值交换后两者可以一起++，但由于不知道gt所在的值，所以和i所在值交换后只能让gt–，i不动</li>
+<li>记得当i=gt时还要再判断一次</li>
+</ol>
+<hr>
+<br>
+
+<h1 id="计数排序"><a href="#计数排序" class="headerlink" title="计数排序"></a><font color="green">计数排序</font></h1><h2 id="算法思路："><a href="#算法思路：" class="headerlink" title="算法思路："></a>算法思路：</h2><ol>
+<li>找到数组中最大的值</li>
+<li>创建一个长度为最大值+1的数组，遍历原数组把数放在值相同的辅助数组下(如遍历到5，则让辅助数组temp[5]++)</li>
+<li>遍历辅助数组，将不等于0的索引依次返回给原数组</li>
+</ol>
+<h2 id="算法图解-6"><a href="#算法图解-6" class="headerlink" title="算法图解"></a>算法图解</h2><p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/%E8%AE%A1%E6%95%B0%E6%8E%92%E5%BA%8F.gif" alt="计数排序"></p>
+<h2 id="代码实现-6"><a href="#代码实现-6" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">counting</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> max = findMax(a);</span><br><span class="line">        counting(a,max);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">counting</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> max)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] temp = <span class="keyword">new</span> <span class="keyword">int</span>[max+<span class="number">1</span>];</span><br><span class="line">        <span class="keyword">int</span> k = <span class="number">0</span>; <span class="comment">//用作a的指针</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> x:a)&#123;</span><br><span class="line">            temp[x]++;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;temp.length;i++)&#123;</span><br><span class="line">            <span class="keyword">while</span>(temp[i]&gt;<span class="number">0</span>)&#123;</span><br><span class="line">                a[k++] = i;</span><br><span class="line">                temp[i]--;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">findMax</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> max = a[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;a.length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(a[i]&gt;max) max = a[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> max;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="易踩坑点-6"><a href="#易踩坑点-6" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>数组计数是从0开始的，记得创建数组时长度为 max+1 这样数组的最后一位才是max</li>
+<li>当取出一个数后，该数上的计数(即 temp[ i ] )要-1</li>
+<li>注意当前给的代码中因为是用的<code>temp[i]--</code>所以不稳定，可以改成一个从0开始小于temp[i]的循环</li>
+</ol>
+<hr>
+<br>
+
+<h1 id="桶排序"><a href="#桶排序" class="headerlink" title="桶排序"></a><font color="green">桶排序</font></h1><h2 id="算法思路-6"><a href="#算法思路-6" class="headerlink" title="算法思路"></a>算法思路</h2><ol>
+<li>找到数组最大值</li>
+<li>根据最大值创建n个桶，每个桶中存放一定范围的数</li>
+<li>将每个桶中的数据排序</li>
+<li>遍历桶，返回桶中的数</li>
+</ol>
+<p><strong>因为这个算法本身比较麻烦且用得不多，就不再演示了</strong></p>
+<hr>
+<br>
+
+<h1 id="基数排序"><a href="#基数排序" class="headerlink" title="基数排序"></a><font color="green">基数排序</font></h1><h2 id="算法思路-7"><a href="#算法思路-7" class="headerlink" title="算法思路"></a>算法思路</h2><ol>
+<li>找到数据中 位数最高的数（即最大数有多少位）</li>
+<li>创建一个二维数组，第一维 0~9 代表某位上可能出现的数，第二维用来存某位相同的数（如12，42都放在arr[2][n]中）</li>
+<li>从个位数开始，遍历数组，将个位上相同的数存入相同一维的二维数组中（这里需要一个辅助一维数组来记录二维数组的一维上有多少存储的数）</li>
+<li>遍历二维数组，依次返回给原数组</li>
+<li>再从十位开始，重复上述操作，如果没十位则补0.循环最高位数次</li>
+</ol>
+<blockquote>
+<p>二维数组可以这样理解：一共有0<del>9的桶，某位上值和桶的索引一样时放进桶中，从下到上放入桶中。一维数组也是0</del>9，每个位置的值就代表桶中有多少存入的值以及下一个该存入该桶的数的位置</p>
+</blockquote>
+<h2 id="算法图解-7"><a href="#算法图解-7" class="headerlink" title="算法图解"></a>算法图解</h2><p><img src="https://www.runoob.com/wp-content/uploads/2019/03/radixSort.gif" alt="基数排序"></p>
+<h2 id="代码实现-7"><a href="#代码实现-7" class="headerlink" title="代码实现"></a>代码实现</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">radix</span><span class="params">(<span class="keyword">int</span>[] a)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> high = findHigh(a);</span><br><span class="line">        radix(a,high);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">radix</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[][] bucket = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>][a.length]; <span class="comment">//放数据的桶，一共要有10个桶(0~9),桶中最多存a中所有的数</span></span><br><span class="line">        <span class="keyword">int</span> m = <span class="number">1</span>; <span class="comment">//用于计算某位上的数</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">//一共循环的次数</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>;i&lt;=high;i++) &#123;</span><br><span class="line">            <span class="keyword">int</span>[] bucketContent = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">10</span>]; <span class="comment">//记录每个桶有多少数已经下一个数应该存放在桶的哪里</span></span><br><span class="line">            <span class="keyword">int</span> n = <span class="number">0</span>; <span class="comment">//用于将桶中数据返回给数组时对数组的指针</span></span><br><span class="line"></span><br><span class="line">            <span class="comment">//计算某位上的数进行分组,放入桶里</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> value : a) &#123;</span><br><span class="line">                <span class="keyword">int</span> temp = (value / m) % <span class="number">10</span>; <span class="comment">//如果该数没有更高位，temp就为0</span></span><br><span class="line">                bucket[temp][bucketContent[temp]] = value;<span class="comment">//bucketContent[temp]可以表示该存入该桶的数的位置</span></span><br><span class="line">                bucketContent[temp]++;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//将桶中数据返回数组</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> k=<span class="number">0</span>;k&lt;bucket.length;k++)&#123;</span><br><span class="line">                <span class="keyword">if</span>(bucketContent[k]!=<span class="number">0</span>)&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j=<span class="number">0</span>;j&lt;bucketContent[k];j++)&#123;</span><br><span class="line">                        a[n++] = bucket[k][j];</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            m=m*<span class="number">10</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">findHigh</span><span class="params">(<span class="keyword">int</span>[] a)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> max = a[<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;a.length;i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(a[i]&gt;max)&#123;</span><br><span class="line">                max = a[i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        String temp = Integer.toString(max);</span><br><span class="line">        <span class="keyword">return</span> temp.length();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="易踩坑点-7"><a href="#易踩坑点-7" class="headerlink" title="易踩坑点"></a>易踩坑点</h2><ol>
+<li>每循环完一次后辅助一维数组要清0，即要放入循环中</li>
+<li>用m计算位时，没有该位的运算结果就为0</li>
+<li>每次记得m*10</li>
+</ol>
+<hr>
+<br>
+
+<h1 id="堆排序"><a href="#堆排序" class="headerlink" title="堆排序"></a><font color="green">堆排序</font></h1><p><del>还没学到二叉树呢，以后补</del></p>
+]]></content>
+      <tags>
+        <tag>算法，排序算法，基础</tag>
+      </tags>
   </entry>
 </search>

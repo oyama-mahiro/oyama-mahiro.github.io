@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Markdown笔记-基础 |  
+    C语言基础-递归 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-Markdown笔记-基础"
+  id="post-C语言基础-递归"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,22 +55,22 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Markdown笔记-基础
+  C语言基础-递归
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/" class="article-date">
-  <time datetime="2020-04-26T03:26:56.000Z" itemprop="datePublished">2020-04-26</time>
+      <a href="/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/" class="article-date">
+  <time datetime="2020-04-28T07:24:33.000Z" itemprop="datePublished">2020-04-28</time>
 </a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.5k</span>
+            <span class="post-count">1.3k</span>
         </span>
     </span>
 
@@ -79,7 +79,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">5 min</span>
+            <span class="post-count">4 min</span>
         </span>
     </span>
 </div>
@@ -94,235 +94,96 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="Markdown-概述"><a href="#Markdown-概述" class="headerlink" title="Markdown 概述"></a>Markdown 概述</h1><p>Markdown 是一种轻量级标记语言，与 2004 年创建。<br>后缀为<code>.md</code>或<code>.maekdown</code>，可导出 HTML，Word，pdf 等多种格式文档</p>
+  <h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
 <a id="more"></a>
 
-<hr>
-<br>
-
-<h1 id="Markdown-标题"><a href="#Markdown-标题" class="headerlink" title="Markdown 标题"></a>Markdown 标题</h1><h2 id="1-使用-和-标记一级和二级标题"><a href="#1-使用-和-标记一级和二级标题" class="headerlink" title="1.使用=和-标记一级和二级标题"></a>1.使用=和-标记一级和二级标题</h2><blockquote>
-<p>这是一级标题<br>==========<br>这是二级标题<br>-—————–</p>
-</blockquote>
-<h2 id="2-使用-号标记标题"><a href="#2-使用-号标记标题" class="headerlink" title="2.使用#号标记标题"></a>2.使用#号标记标题</h2><blockquote>
-<p># 一级标题<br>## 二级标题<br>### 三级标题<br>…<br>###### 六级标题</p>
-</blockquote>
-<p><strong>注：#后要加空格</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-段落与字体格式"><a href="#Markdown-段落与字体格式" class="headerlink" title="Markdown 段落与字体格式"></a>Markdown 段落与字体格式</h1><h2 id="段落"><a href="#段落" class="headerlink" title="段落"></a>段落</h2><p>1.在段落末尾使用两个以上空格加回车为换行</p>
-<p>2.在段落与段落之间留出一个空行为换段落</p>
-<h2 id="字体格式"><a href="#字体格式" class="headerlink" title="字体格式"></a>字体格式</h2><h3 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h3><blockquote>
-<p>*斜体文本* &gt; _斜体文本_ &gt; **粗体文本** &gt;__粗体文本__ &gt; ***粗斜体文本*** &gt;___粗斜体文本___</p>
-</blockquote>
-<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><p>&nbsp; 在一行内用三个以上的星号，减号，下划线，在建立一个分割线<br>&nbsp; 注意：行内不能有其他东西</p>
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
 <blockquote>
-<p>***<br> -–<br>_ _ _<br>-———–</p>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
 </blockquote>
-<h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a><del>删除线</del></h3><p>&nbsp; 如果要在文字上添加删除线，则在文字两端加上两个波浪线~~</p>
-<blockquote>
-<p>~~要删除线的文字~~</p>
 </blockquote>
-<h3 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h3><p>&nbsp; <u>下划线</u>可以通过 HTML 的<code>&lt;u&gt;</code>标签来实现</p>
-<blockquote>
-<p>&lt;u&gt;带下划线的文本&lt;/u&gt;</p>
-</blockquote>
-<h3 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h3><p>&nbsp; 在需要脚注<a href="%E6%97%A0%E8%AE%BA%E5%86%99%E4%BB%80%E4%B9%88%E8%84%9A%E6%B3%A8%E5%90%8D%EF%BC%8C%E6%9C%80%E5%90%8E%E9%83%BD%E4%BC%9A%E5%8F%98%E6%88%90%E6%95%B0%E5%AD%97%E6%8E%92%E5%88%97%E6%96%B9%E5%BC%8F">^像这样</a>的文字后写[^脚注名]，并在后面的某个地方用[^要注明的文本]: 内容 来使用脚注。<u>且无论写什么脚注名，最后都会变成数字排列方式</u></p>
-<blockquote>
-<p>[^脚注名]</p>
-<p>[^脚注名]: 脚注内容</p>
-</blockquote>
-<h3 id="特殊符号失效"><a href="#特殊符号失效" class="headerlink" title="特殊符号失效"></a>特殊符号失效</h3><p>&nbsp; 如果想让特殊符号失效，即打出原有符号样子(如#),则在特殊符号前加反切线\</p>
-<blockquote>
-<p>\<br> \&lt;\u&gt;…&lt;/u&gt;</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-列表"><a href="#Markdown-列表" class="headerlink" title="Markdown 列表"></a>Markdown 列表</h1><p>&nbsp; Markdown 支持有序列表和无序列表（在标记后面要有空格）</p>
-<h3 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a>无序列表</h3><p>无序列表使用星号(*)、加号(+)或是减号(-)作为列表标记</p>
-<blockquote>
-<p>* 第一项<br>* 第二项<br>* 第三项</p>
-<p>+ 第一项<br>+ 第二项<br>+ 第三项</p>
-<p>- 第一项<br>- 第二项<br>- 第三项</p>
-</blockquote>
-<ul>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
-</ul>
-<br>
-
-<h3 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a>有序列表</h3><p>有序列表使用数字加上<code>.</code>号来表示，如：</p>
-<blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
 <ol>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
 </ol>
-</blockquote>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
 <ol>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
+<li>变化的参数</li>
+<li>递归终止条件</li>
 </ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
 <hr>
 <br>
 <br>
 
-<h1 id="Markdown-区块"><a href="#Markdown-区块" class="headerlink" title="Markdown 区块"></a>Markdown 区块</h1><p>Markdown 区块引用时在段落开头使用&gt;号，后面要跟个空格符号</p>
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
 <blockquote>
-<p>&gt;区块内文字,效果就是这像一行一样出现阴影</p>
-<blockquote>
-<p>打多个&gt;还可以还可以内嵌(如这行的&gt;&gt;)</p>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
 </blockquote>
-</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
 <ol>
-<li>区块中使用列表的话，就在&gt;后面用列表语法就行<blockquote>
-<p>&gt; 1. 第一项<br>&gt; 2. 第二项<br>&gt; 3. 第三项</p>
-<p>&gt; + 第一项<br>&gt; + 第二项<br>&gt; + 第三项</p>
-</blockquote>
-</li>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
 </ol>
-<br>
-
-<ol start="2">
-<li>列表中使用区块，则要在&gt;前添加四个空格的缩进</li>
-</ol>
-<blockquote>
-<p>* 第一项<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;区块内容<br>* 第二项</p>
-</blockquote>
-<p>效果如下：</p>
-<ul>
-<li>第一项<blockquote>
-<p>区块内容</p>
-</blockquote>
-</li>
-<li>第二项</li>
-</ul>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-代码"><a href="#Markdown-代码" class="headerlink" title="Markdown 代码"></a>Markdown 代码</h1><ul>
-<li>如果是段落上的一个函数或片段的代码可以用反引号(`)将内容包起来</li>
-</ul>
-<blockquote>
-<p>`printf()`函数</p>
-</blockquote>
-<p><code>printf()</code>函数<br><br></p>
-<ul>
-<li>如果是代码区块，则使用 4 个空格或者一个制表符(Tab 键)</li>
-</ul>
-<blockquote>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 代码内容</p>
-</blockquote>
-<pre><code>public static void main(String[] args)&#123;
-    System.out.println(&quot;hello,world&quot;)
-&#125;</code></pre>
-<br>
-
-<ul>
-<li>也可以用 ``` …. ``` 来包裹一段代码，还可以在```后面指定一种语言</li>
-</ul>
-<blockquote>
-<p>```java<br>public static void main(String[] args){<br>System.out.println(“hello,world”)<br>}<br>```</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello,world&quot;</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-链接"><a href="#Markdown-链接" class="headerlink" title="Markdown 链接"></a>Markdown 链接</h1><ul>
-<li>普通方式</li>
-</ul>
-<blockquote>
-<p>[链接名称](链接地址)<br>或者&lt;链接地址&gt;</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">技术文档书写规范</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">https://www.jianshu.com/p/3b638180e42c</a><br><br></p>
-<ul>
-<li>高级链接<br>如果链接太长时，可在[连接名称]后面设置一个[标签名],则可在后面的任意位置写[标签名]: 链接<br><strong>注意：<code>[标签名]:</code> 冒号前面以及两个中括号之间[][]不要留空格</strong></li>
-</ul>
-<blockquote>
-<p>[技术文档书写规范][1]<br>[csdn 官网][csdn]</p>
-<p>[1]: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">https://www.jianshu.com/p/3b638180e42c</a> &gt;[csdn]: <a target="_blank" rel="noopener" href="https://www.csdn.net/">https://www.csdn.net/</a></p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">技术文档书写规范</a><br><a target="_blank" rel="noopener" href="https://www.csdn.net/">csdn 官网</a></p>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-图片"><a href="#Markdown-图片" class="headerlink" title="Markdown 图片"></a>Markdown 图片</h1><h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><blockquote>
-<p>![alt 属性文本](图片地址)</p>
-<p>![alt 属性文本](图片地址 “title 属性文本”)</p>
-</blockquote>
-<p>alt 为图片加载出错时的代替文本<br>title 为鼠标放在图片上时所显示的文字</p>
-<h2 id="图片地址的传入方法"><a href="#图片地址的传入方法" class="headerlink" title="图片地址的传入方法"></a>图片地址的传入方法</h2><ol>
-<li>通过图床将图上传到网上后使用图片的链接<blockquote>
-<p>![图片加载出错](<a target="_blank" rel="noopener" href="https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http://gss0.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg">https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http%3A%2F%2Fgss0.baidu.com%2F-4o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg</a> “这是 title 属性”)</p>
-</blockquote>
-</li>
-</ol>
-<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587895752391&di=e2f0ba8e2108ab4f04b19700233f121f&imgtype=0&src=http://gss0.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg" alt="图片加载出错" title="这是title属性"><br><br></p>
-<ol start="2">
-<li>将图片存入本地，通过 <a target="_blank" rel="noopener" href="https://blog.csdn.net/chudelong1/article/details/90697409">绝对路径/相对路径</a> 来加载图片(相对路径是以当前的 md 文件所在目录为起点)</li>
-</ol>
-<blockquote>
-<p>![图片出不来了](.\mdphoto\markdownlearn\0.jpg)</p>
-</blockquote>
-<p><img src="/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/0.jpg" alt="图片出不来了"></p>
-<p>当然，当地址过长时也可以像链接那样将(…)变成变量名</p>
-<blockquote>
-<p>![图片加载出错][photo 1]</p>
-<p>[photo 1]: <a target="_blank" rel="noopener" href="https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http://gss0.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg">https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http%3A%2F%2Fgss0.baidu.com%2F-4o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg</a></p>
-</blockquote>
-<p><strong><u>注意：如果是想将本地连接的图片通过 hexo 传到远端时，直接使用是无效的,要实现下列步骤</u></strong></p>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
 <ol>
-<li>配置 hexo 根下的<code>_config.yml</code>里面的<code>post_asset_folder:false</code>这个选项设置为<code>true</code>。</li>
-<li>git bash 安装插件：<code>npm install https://github.com/7ym0n/hexo-asset-image --save</code> , 安装之后再生成新 md 文件时同目录下会出现同名的文件夹，图片可放进那里</li>
-<li>这时再使用上面的语法便能成功</li>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
 </ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <hr>
 <br>
 <br>
 
-<h1 id="Markdown-表格"><a href="#Markdown-表格" class="headerlink" title="Markdown 表格"></a>Markdown 表格</h1><p>&nbsp; Markdown 中制作表格用<code>|</code>来分割不同的单元格，用<code>-</code>在分割表头和其它行</p>
-<blockquote>
-<p>|表头 1|表头 2|表头 3|<br>| :&nbsp;—&nbsp;&nbsp; &nbsp;|:&nbsp;&nbsp; —&nbsp;&nbsp;: |&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;: |<br>|左对齐|中对齐|右对齐|<br>|左对齐效果|中对齐效果|右对齐效果|</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th align="left">表头 1</th>
-<th align="center">表头 2</th>
-<th align="right">表头 3</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">左对齐</td>
-<td align="center">中对齐</td>
-<td align="right">右对齐</td>
-</tr>
-<tr>
-<td align="left">左对齐效果</td>
-<td align="center">中对齐效果</td>
-<td align="right">右对齐效果</td>
-</tr>
-</tbody></table>
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
 <br>
 <br>
 
-<p>还能设置表格的对齐方式(默认向左对齐)：</p>
-<ul>
-<li><strong><code>-:</code></strong> 设置内容和标题栏右对齐</li>
-<li><strong><code>:-:</code></strong> 设置内容和标题栏中对齐</li>
-<li><strong><code>:-</code></strong> 设置内容和标题栏左对齐</li>
-</ul>
-<p><strong>注：最右边的<code>|</code>可以省略</strong></p>
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a target="_blank" rel="noopener" href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a target="_blank" rel="noopener" href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
  
       <!-- reward -->
       
@@ -393,12 +254,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Markdown%E5%9F%BA%E7%A1%80/" rel="tag">Markdown基础</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80/" rel="tag">C语言基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%92%E5%BD%92/" rel="tag">递归</a></li></ul>
 
     </footer>
   </div>
@@ -406,15 +267,20 @@
    
   <nav class="article-nav">
     
-      <a href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" class="article-nav-link">
+      <a href="/2020/05/05/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            算法分析
+            十大排序算法
           
         </div>
       </a>
     
+    
+      <a href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">算法分析</div>
+      </a>
     
   </nav>
 

@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    Markdown笔记-基础 |  
+    算法分析 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-Markdown笔记-基础"
+  id="post-算法分析"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,22 +55,22 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  Markdown笔记-基础
+  算法分析
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/" class="article-date">
-  <time datetime="2020-04-26T03:26:56.000Z" itemprop="datePublished">2020-04-26</time>
+      <a href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" class="article-date">
+  <time datetime="2020-04-27T02:40:43.000Z" itemprop="datePublished">2020-04-27</time>
 </a>   
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.5k</span>
+            <span class="post-count">1.4k</span>
         </span>
     </span>
 
@@ -94,235 +94,101 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="Markdown-概述"><a href="#Markdown-概述" class="headerlink" title="Markdown 概述"></a>Markdown 概述</h1><p>Markdown 是一种轻量级标记语言，与 2004 年创建。<br>后缀为<code>.md</code>或<code>.maekdown</code>，可导出 HTML，Word，pdf 等多种格式文档</p>
-<a id="more"></a>
-
+  <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
+<ol>
+<li>确定输入模型，定义问题规模（n）</li>
+<li>识别循环与递归</li>
+<li>根据内循环或每部递归的操作确定成本模型</li>
+<li>对于给定的输入，判断这些操作的执行频率</li>
+</ol>
 <hr>
-<br>
-
-<h1 id="Markdown-标题"><a href="#Markdown-标题" class="headerlink" title="Markdown 标题"></a>Markdown 标题</h1><h2 id="1-使用-和-标记一级和二级标题"><a href="#1-使用-和-标记一级和二级标题" class="headerlink" title="1.使用=和-标记一级和二级标题"></a>1.使用=和-标记一级和二级标题</h2><blockquote>
-<p>这是一级标题<br>==========<br>这是二级标题<br>-—————–</p>
+<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
+<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
 </blockquote>
-<h2 id="2-使用-号标记标题"><a href="#2-使用-号标记标题" class="headerlink" title="2.使用#号标记标题"></a>2.使用#号标记标题</h2><blockquote>
-<p># 一级标题<br>## 二级标题<br>### 三级标题<br>…<br>###### 六级标题</p>
-</blockquote>
-<p><strong>注：#后要加空格</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-段落与字体格式"><a href="#Markdown-段落与字体格式" class="headerlink" title="Markdown 段落与字体格式"></a>Markdown 段落与字体格式</h1><h2 id="段落"><a href="#段落" class="headerlink" title="段落"></a>段落</h2><p>1.在段落末尾使用两个以上空格加回车为换行</p>
-<p>2.在段落与段落之间留出一个空行为换段落</p>
-<h2 id="字体格式"><a href="#字体格式" class="headerlink" title="字体格式"></a>字体格式</h2><h3 id="字体"><a href="#字体" class="headerlink" title="字体"></a>字体</h3><blockquote>
-<p>*斜体文本* &gt; _斜体文本_ &gt; **粗体文本** &gt;__粗体文本__ &gt; ***粗斜体文本*** &gt;___粗斜体文本___</p>
-</blockquote>
-<h3 id="分割线"><a href="#分割线" class="headerlink" title="分割线"></a>分割线</h3><p>&nbsp; 在一行内用三个以上的星号，减号，下划线，在建立一个分割线<br>&nbsp; 注意：行内不能有其他东西</p>
+<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
 <blockquote>
-<p>***<br> -–<br>_ _ _<br>-———–</p>
-</blockquote>
-<h3 id="删除线"><a href="#删除线" class="headerlink" title="删除线"></a><del>删除线</del></h3><p>&nbsp; 如果要在文字上添加删除线，则在文字两端加上两个波浪线~~</p>
-<blockquote>
-<p>~~要删除线的文字~~</p>
-</blockquote>
-<h3 id="下划线"><a href="#下划线" class="headerlink" title="下划线"></a>下划线</h3><p>&nbsp; <u>下划线</u>可以通过 HTML 的<code>&lt;u&gt;</code>标签来实现</p>
-<blockquote>
-<p>&lt;u&gt;带下划线的文本&lt;/u&gt;</p>
-</blockquote>
-<h3 id="脚注"><a href="#脚注" class="headerlink" title="脚注"></a>脚注</h3><p>&nbsp; 在需要脚注<a href="%E6%97%A0%E8%AE%BA%E5%86%99%E4%BB%80%E4%B9%88%E8%84%9A%E6%B3%A8%E5%90%8D%EF%BC%8C%E6%9C%80%E5%90%8E%E9%83%BD%E4%BC%9A%E5%8F%98%E6%88%90%E6%95%B0%E5%AD%97%E6%8E%92%E5%88%97%E6%96%B9%E5%BC%8F">^像这样</a>的文字后写[^脚注名]，并在后面的某个地方用[^要注明的文本]: 内容 来使用脚注。<u>且无论写什么脚注名，最后都会变成数字排列方式</u></p>
-<blockquote>
-<p>[^脚注名]</p>
-<p>[^脚注名]: 脚注内容</p>
-</blockquote>
-<h3 id="特殊符号失效"><a href="#特殊符号失效" class="headerlink" title="特殊符号失效"></a>特殊符号失效</h3><p>&nbsp; 如果想让特殊符号失效，即打出原有符号样子(如#),则在特殊符号前加反切线\</p>
-<blockquote>
-<p>\<br> \&lt;\u&gt;…&lt;/u&gt;</p>
+<p>渐进分析：</p>
+<ol>
+<li>忽略依赖于机器性能的常量</li>
+<li>只关注运行时间的增长</li>
+</ol>
 </blockquote>
 <hr>
 <br>
 <br>
 
-<h1 id="Markdown-列表"><a href="#Markdown-列表" class="headerlink" title="Markdown 列表"></a>Markdown 列表</h1><p>&nbsp; Markdown 支持有序列表和无序列表（在标记后面要有空格）</p>
-<h3 id="无序列表"><a href="#无序列表" class="headerlink" title="无序列表"></a>无序列表</h3><p>无序列表使用星号(*)、加号(+)或是减号(-)作为列表标记</p>
+<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
 <blockquote>
-<p>* 第一项<br>* 第二项<br>* 第三项</p>
-<p>+ 第一项<br>+ 第二项<br>+ 第三项</p>
-<p>- 第一项<br>- 第二项<br>- 第三项</p>
+<p>例：$2n^2 = O(n^3)$</p>
 </blockquote>
+<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
+<blockquote>
+<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
+</blockquote>
+<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
+<blockquote>
+<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
+</blockquote>
+<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
+<p>理解：左右两边增长速率一样</p>
+<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
+<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
 <ul>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
+<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
+<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
 </ul>
-<br>
-
-<h3 id="有序列表"><a href="#有序列表" class="headerlink" title="有序列表"></a>有序列表</h3><p>有序列表使用数字加上<code>.</code>号来表示，如：</p>
-<blockquote>
-<ol>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
-</ol>
-</blockquote>
-<ol>
-<li>第一项</li>
-<li>第二项</li>
-<li>第三项</li>
-</ol>
+<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
+<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
 <hr>
 <br>
 <br>
 
-<h1 id="Markdown-区块"><a href="#Markdown-区块" class="headerlink" title="Markdown 区块"></a>Markdown 区块</h1><p>Markdown 区块引用时在段落开头使用&gt;号，后面要跟个空格符号</p>
-<blockquote>
-<p>&gt;区块内文字,效果就是这像一行一样出现阴影</p>
-<blockquote>
-<p>打多个&gt;还可以还可以内嵌(如这行的&gt;&gt;)</p>
-</blockquote>
-</blockquote>
+<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
 <ol>
-<li>区块中使用列表的话，就在&gt;后面用列表语法就行<blockquote>
-<p>&gt; 1. 第一项<br>&gt; 2. 第二项<br>&gt; 3. 第三项</p>
-<p>&gt; + 第一项<br>&gt; + 第二项<br>&gt; + 第三项</p>
+<li>证明 n=1 时成立</li>
+<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
+<li>则命题成立</li>
+</ol>
+<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
+<li>先猜答案得到最高阶</li>
+<li>验证这个递归式是否按照数学归纳法满足条件</li>
+</ol>
+<blockquote>
+<p>例：T(n)=4T(n/2)+n</p>
+<ol>
+<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
+<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
+<p>$O(n^2)$=$c(n)^2$</p>
 </blockquote>
 </li>
+<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
 </ol>
-<br>
-
-<ol start="2">
-<li>列表中使用区块，则要在&gt;前添加四个空格的缩进</li>
-</ol>
-<blockquote>
-<p>* 第一项<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;区块内容<br>* 第二项</p>
 </blockquote>
-<p>效果如下：</p>
-<ul>
-<li>第一项<blockquote>
-<p>区块内容</p>
+<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
+<blockquote>
+<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
+</blockquote>
+<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
+<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
+<li>根据每层的和的规律，求出总子叶节点<ul>
+<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
+<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
 </blockquote>
 </li>
-<li>第二项</li>
+<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
 </ul>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-代码"><a href="#Markdown-代码" class="headerlink" title="Markdown 代码"></a>Markdown 代码</h1><ul>
-<li>如果是段落上的一个函数或片段的代码可以用反引号(`)将内容包起来</li>
-</ul>
-<blockquote>
-<p>`printf()`函数</p>
-</blockquote>
-<p><code>printf()</code>函数<br><br></p>
-<ul>
-<li>如果是代码区块，则使用 4 个空格或者一个制表符(Tab 键)</li>
-</ul>
-<blockquote>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 代码内容</p>
-</blockquote>
-<pre><code>public static void main(String[] args)&#123;
-    System.out.println(&quot;hello,world&quot;)
-&#125;</code></pre>
-<br>
-
-<ul>
-<li>也可以用 ``` …. ``` 来包裹一段代码，还可以在```后面指定一种语言</li>
-</ul>
-<blockquote>
-<p>```java<br>public static void main(String[] args){<br>System.out.println(“hello,world”)<br>}<br>```</p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;hello,world&quot;</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-链接"><a href="#Markdown-链接" class="headerlink" title="Markdown 链接"></a>Markdown 链接</h1><ul>
-<li>普通方式</li>
-</ul>
-<blockquote>
-<p>[链接名称](链接地址)<br>或者&lt;链接地址&gt;</p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">技术文档书写规范</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">https://www.jianshu.com/p/3b638180e42c</a><br><br></p>
-<ul>
-<li>高级链接<br>如果链接太长时，可在[连接名称]后面设置一个[标签名],则可在后面的任意位置写[标签名]: 链接<br><strong>注意：<code>[标签名]:</code> 冒号前面以及两个中括号之间[][]不要留空格</strong></li>
-</ul>
-<blockquote>
-<p>[技术文档书写规范][1]<br>[csdn 官网][csdn]</p>
-<p>[1]: <a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">https://www.jianshu.com/p/3b638180e42c</a> &gt;[csdn]: <a target="_blank" rel="noopener" href="https://www.csdn.net/">https://www.csdn.net/</a></p>
-</blockquote>
-<p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/3b638180e42c">技术文档书写规范</a><br><a target="_blank" rel="noopener" href="https://www.csdn.net/">csdn 官网</a></p>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-图片"><a href="#Markdown-图片" class="headerlink" title="Markdown 图片"></a>Markdown 图片</h1><h2 id="基本语法"><a href="#基本语法" class="headerlink" title="基本语法"></a>基本语法</h2><blockquote>
-<p>![alt 属性文本](图片地址)</p>
-<p>![alt 属性文本](图片地址 “title 属性文本”)</p>
-</blockquote>
-<p>alt 为图片加载出错时的代替文本<br>title 为鼠标放在图片上时所显示的文字</p>
-<h2 id="图片地址的传入方法"><a href="#图片地址的传入方法" class="headerlink" title="图片地址的传入方法"></a>图片地址的传入方法</h2><ol>
-<li>通过图床将图上传到网上后使用图片的链接<blockquote>
-<p>![图片加载出错](<a target="_blank" rel="noopener" href="https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http://gss0.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg">https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http%3A%2F%2Fgss0.baidu.com%2F-4o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg</a> “这是 title 属性”)</p>
-</blockquote>
 </li>
+<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
 </ol>
-<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587895752391&di=e2f0ba8e2108ab4f04b19700233f121f&imgtype=0&src=http://gss0.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg" alt="图片加载出错" title="这是title属性"><br><br></p>
-<ol start="2">
-<li>将图片存入本地，通过 <a target="_blank" rel="noopener" href="https://blog.csdn.net/chudelong1/article/details/90697409">绝对路径/相对路径</a> 来加载图片(相对路径是以当前的 md 文件所在目录为起点)</li>
-</ol>
-<blockquote>
-<p>![图片出不来了](.\mdphoto\markdownlearn\0.jpg)</p>
-</blockquote>
-<p><img src="/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/0.jpg" alt="图片出不来了"></p>
-<p>当然，当地址过长时也可以像链接那样将(…)变成变量名</p>
-<blockquote>
-<p>![图片加载出错][photo 1]</p>
-<p>[photo 1]: <a target="_blank" rel="noopener" href="https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http://gss0.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/zhidao/pic/item/810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg">https://timgsa.baidu.com/timg?image&amp;quality=80&amp;size=b9999_10000&amp;sec=1587895752391&amp;di=e2f0ba8e2108ab4f04b19700233f121f&amp;imgtype=0&amp;src=http%3A%2F%2Fgss0.baidu.com%2F-4o3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2F810a19d8bc3eb13537a41c57aa1ea8d3fc1f44fe.jpg</a></p>
-</blockquote>
-<p><strong><u>注意：如果是想将本地连接的图片通过 hexo 传到远端时，直接使用是无效的,要实现下列步骤</u></strong></p>
-<ol>
-<li>配置 hexo 根下的<code>_config.yml</code>里面的<code>post_asset_folder:false</code>这个选项设置为<code>true</code>。</li>
-<li>git bash 安装插件：<code>npm install https://github.com/7ym0n/hexo-asset-image --save</code> , 安装之后再生成新 md 文件时同目录下会出现同名的文件夹，图片可放进那里</li>
-<li>这时再使用上面的语法便能成功</li>
-</ol>
-<hr>
-<br>
-<br>
-
-<h1 id="Markdown-表格"><a href="#Markdown-表格" class="headerlink" title="Markdown 表格"></a>Markdown 表格</h1><p>&nbsp; Markdown 中制作表格用<code>|</code>来分割不同的单元格，用<code>-</code>在分割表头和其它行</p>
-<blockquote>
-<p>|表头 1|表头 2|表头 3|<br>| :&nbsp;—&nbsp;&nbsp; &nbsp;|:&nbsp;&nbsp; —&nbsp;&nbsp;: |&nbsp;&nbsp;&nbsp;—&nbsp;&nbsp;: |<br>|左对齐|中对齐|右对齐|<br>|左对齐效果|中对齐效果|右对齐效果|</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th align="left">表头 1</th>
-<th align="center">表头 2</th>
-<th align="right">表头 3</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">左对齐</td>
-<td align="center">中对齐</td>
-<td align="right">右对齐</td>
-</tr>
-<tr>
-<td align="left">左对齐效果</td>
-<td align="center">中对齐效果</td>
-<td align="right">右对齐效果</td>
-</tr>
-</tbody></table>
-<br>
-<br>
-
-<p>还能设置表格的对齐方式(默认向左对齐)：</p>
-<ul>
-<li><strong><code>-:</code></strong> 设置内容和标题栏右对齐</li>
-<li><strong><code>:-:</code></strong> 设置内容和标题栏中对齐</li>
-<li><strong><code>:-</code></strong> 设置内容和标题栏左对齐</li>
-</ul>
-<p><strong>注：最右边的<code>|</code>可以省略</strong></p>
+<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
+<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
+<p>1.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
+<p>2.</p>
+<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
+<p>3.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
  
       <!-- reward -->
       
@@ -393,12 +259,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Markdown/" rel="tag">Markdown</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Markdown%E5%9F%BA%E7%A1%80/" rel="tag">Markdown基础</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/" rel="tag">数据结构与算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%A6%82%E5%BF%B5/" rel="tag">概念</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li></ul>
 
     </footer>
   </div>
@@ -406,15 +272,20 @@
    
   <nav class="article-nav">
     
-      <a href="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/" class="article-nav-link">
+      <a href="/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            算法分析
+            C语言基础-递归
           
         </div>
       </a>
     
+    
+      <a href="/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Markdown笔记-基础</div>
+      </a>
     
   </nav>
 
