@@ -550,6 +550,115 @@
       </tags>
   </entry>
   <entry>
+    <title>算法分析</title>
+    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
+<ol>
+<li>确定输入模型，定义问题规模（n）</li>
+<li>识别循环与递归</li>
+<li>根据内循环或每部递归的操作确定成本模型</li>
+<li>对于给定的输入，判断这些操作的执行频率</li>
+</ol>
+<hr>
+<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
+<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
+</blockquote>
+<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
+<blockquote>
+<p>渐进分析：</p>
+<ol>
+<li>忽略依赖于机器性能的常量</li>
+<li>只关注运行时间的增长</li>
+</ol>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
+<blockquote>
+<p>例：$2n^2 = O(n^3)$</p>
+</blockquote>
+<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
+<blockquote>
+<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
+</blockquote>
+<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
+<blockquote>
+<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
+</blockquote>
+<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
+<p>理解：左右两边增长速率一样</p>
+<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
+<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
+<ul>
+<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
+<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
+</ul>
+<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
+<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
+<ol>
+<li>证明 n=1 时成立</li>
+<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
+<li>则命题成立</li>
+</ol>
+<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
+<li>先猜答案得到最高阶</li>
+<li>验证这个递归式是否按照数学归纳法满足条件</li>
+</ol>
+<blockquote>
+<p>例：T(n)=4T(n/2)+n</p>
+<ol>
+<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
+<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
+<p>$O(n^2)$=$c(n)^2$</p>
+</blockquote>
+</li>
+<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
+</ol>
+</blockquote>
+<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
+<blockquote>
+<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
+</blockquote>
+<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
+<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
+<li>根据每层的和的规律，求出总子叶节点<ul>
+<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
+<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
+</blockquote>
+</li>
+<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
+</ul>
+</li>
+<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
+</ol>
+<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
+<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
+<p>1.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
+<p>2.</p>
+<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
+<p>3.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>概念</tag>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>十大排序算法</title>
     <url>/2020/05/05/%E5%8D%81%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a><font color="green">简介</font></h1><p>我们关注的主要对象是重新排列数组元素的算法，其中每个元素都有一个主键，排序算法的目的就是将所有的元素的主键按照某种方式排列（通常是按照大小或是字母顺序） </p>
@@ -782,115 +891,6 @@
       </categories>
       <tags>
         <tag>算法，排序算法，基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法分析</title>
-    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
-<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
-<ol>
-<li>确定输入模型，定义问题规模（n）</li>
-<li>识别循环与递归</li>
-<li>根据内循环或每部递归的操作确定成本模型</li>
-<li>对于给定的输入，判断这些操作的执行频率</li>
-</ol>
-<hr>
-<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
-<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
-</blockquote>
-<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
-<blockquote>
-<p>渐进分析：</p>
-<ol>
-<li>忽略依赖于机器性能的常量</li>
-<li>只关注运行时间的增长</li>
-</ol>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
-<blockquote>
-<p>例：$2n^2 = O(n^3)$</p>
-</blockquote>
-<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
-<blockquote>
-<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
-</blockquote>
-<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
-<blockquote>
-<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
-</blockquote>
-<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
-<p>理解：左右两边增长速率一样</p>
-<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
-<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
-<ul>
-<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
-<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
-</ul>
-<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
-<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
-<ol>
-<li>证明 n=1 时成立</li>
-<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
-<li>则命题成立</li>
-</ol>
-<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
-<li>先猜答案得到最高阶</li>
-<li>验证这个递归式是否按照数学归纳法满足条件</li>
-</ol>
-<blockquote>
-<p>例：T(n)=4T(n/2)+n</p>
-<ol>
-<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
-<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
-<p>$O(n^2)$=$c(n)^2$</p>
-</blockquote>
-</li>
-<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
-</ol>
-</blockquote>
-<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
-<blockquote>
-<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
-</blockquote>
-<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
-<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
-<li>根据每层的和的规律，求出总子叶节点<ul>
-<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
-<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
-</blockquote>
-</li>
-<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
-</ul>
-</li>
-<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
-</ol>
-<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
-<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
-<p>1.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
-<p>2.</p>
-<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
-<p>3.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>算法</tag>
-        <tag>概念</tag>
-        <tag>数据结构与算法</tag>
       </tags>
   </entry>
 </search>
