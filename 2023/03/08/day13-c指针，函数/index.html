@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.1k</span>
+            <span class="post-count">1.3k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">4 min</span>
+            <span class="post-count">5 min</span>
         </span>
     </span>
 </div>
@@ -135,6 +135,62 @@
 <p>(3)全局变量</p>
 <p>&emsp;&emsp;因为全局变量的作用域在整个文件中有效，所有在当前文件的任何一个函数中都可以当作参数使用</p>
 <h3 id="6、数组传参"><a href="#6、数组传参" class="headerlink" title="6、数组传参"></a>6、数组传参</h3><p>&emsp;&emsp;数组传参需要传入指定数组的首地址，如果该数组是一个整型数组，那么在传入数组首地址的同时，还需要传入数组元素的个数</p>
+<hr>
+   <br>
+   <br>
+
+<h2 id="7、易错点"><a href="#7、易错点" class="headerlink" title="7、易错点"></a>7、易错点</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p[<span class="number">3</span>]=a; <span class="comment">//error</span></span><br><span class="line"><span class="keyword">int</span> *p=a;<span class="comment">//error</span></span><br><span class="line"><span class="keyword">sizeof</span>(a[<span class="number">0</span>]);<span class="comment">//error一定为8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> row=a[<span class="number">1</span>]-a[<span class="number">0</span>];   <span class="comment">//二维数组列数计算，用下一行的地址减去第一行的地址。即使二维数组只有一列也行</span></span><br><span class="line"><span class="keyword">int</span> line=<span class="keyword">sizeof</span>(a)/(row*<span class="keyword">sizeof</span>(a[<span class="number">0</span>][<span class="number">0</span>]));​   <span class="comment">//二维数组行数计算</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="指针数组与数组指针的区别"><a href="#指针数组与数组指针的区别" class="headerlink" title="指针数组与数组指针的区别"></a>指针数组与数组指针的区别</h3><p>例：<br>int a[2][3]={1,2,3,4,5,6};<br>int (*p)[3]=a;<br>int *p[2]={a[0],a[1]};</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">指针数组</th>
+<th align="center">数组指针</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">本质</td>
+<td align="center">元素是指针的数组</td>
+<td align="center">指向数组的行指针</td>
+</tr>
+<tr>
+<td align="center">形式</td>
+<td align="center">int *p[3]={a[0],a[1]};</td>
+<td align="center">int (*p)[3]=a;</td>
+</tr>
+<tr>
+<td align="center">p+1</td>
+<td align="center">=&amp;p[1]=&amp;a[1]=&amp;&amp;a[1][0]</td>
+<td align="center">=&amp;p[1]=&amp;a[1]=&amp;&amp;a[1][0]</td>
+</tr>
+<tr>
+<td align="center">sizeof(p)</td>
+<td align="center">整个数组的大小</td>
+<td align="center">一定为8(即指针的大小)</td>
+</tr>
+<tr>
+<td align="center">*(p+1)<strong>值一样但形式不一样</strong></td>
+<td align="center">p[1]=a[1]=&amp;a[1][0]</td>
+<td align="center">=a[1]=&amp;a[1][0]</td>
+</tr>
+<tr>
+<td align="center">sizeof(*p)</td>
+<td align="center">一定为8(即指针的大小)</td>
+<td align="center">一列的大小</td>
+</tr>
+<tr>
+<td align="center">二级指针x</td>
+<td align="center">有二级指针 int **x=p</td>
+<td align="center">没有二级指针，<font color="red">不能 int **x=p</font></td>
+</tr>
+<tr>
+<td align="center">**p</td>
+<td align="center">=**x=*p[0]=*a[0]=a[0][0]</td>
+<td align="center">=*a[0]=a[0][0]</td>
+</tr>
+</tbody></table>
 <p>​                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
  
       <!-- reward -->
@@ -218,6 +274,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2023/03/10/day14-%E5%87%BD%E6%95%B0/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            day14-函数
+          
+        </div>
+      </a>
     
     
       <a href="/2023/03/08/day12-c%E6%8C%87%E9%92%88/" class="article-nav-link">
