@@ -544,6 +544,73 @@
       </tags>
   </entry>
   <entry>
+    <title>day12-c指针</title>
+    <url>/2023/03/08/day12-c%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<h1 id="day12-c指针"><a href="#day12-c指针" class="headerlink" title="day12-c指针"></a><font color="green">day12-c指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针变量的赋值"><a href="#1、指针变量的赋值" class="headerlink" title="1、指针变量的赋值"></a>1、指针变量的赋值</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> b[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> *q = p;   <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">char</span> *m = <span class="literal">NULL</span>; <span class="comment">//空指针 3</span></span><br><span class="line"><span class="keyword">int</span> *n = b; <span class="comment">// n == &amp;b[0] //4</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+
+<h3 id="2、指针变量的运算"><a href="#2、指针变量的运算" class="headerlink" title="2、指针变量的运算"></a>2、指针变量的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line">p+n --&gt; 向高地址位偏移n个元素的字节数</span><br><span class="line">p-n --&gt; 向低地址位偏移n个元素的字节数</span><br><span class="line">    </span><br><span class="line">指针-指针：计算两个相同类型的指针之间相差的元素个数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、指针和一维数组"><a href="#3、指针和一维数组" class="headerlink" title="3、指针和一维数组"></a>3、指针和一维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、指针和二维数组"><a href="#4、指针和二维数组" class="headerlink" title="4、指针和二维数组"></a>4、指针和二维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">二维数组的数组名也表示整个二维数组的首地址。但是是一个行地址</span><br><span class="line"></span><br><span class="line">    数组指针定义的一般形式：</span><br><span class="line">    	&lt;存储类型&gt; &lt;数据类型&gt; (*数组指针名)[列数];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	a == &amp;a[<span class="number">0</span>] </span><br><span class="line">	a+<span class="number">1</span> == &amp;a[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line">	*(*(p+<span class="number">1</span>)+<span class="number">1</span>) --&gt; 二维数组中第二行第二个元素</span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​        数组指针(行指针)：本质是指针，存放地址值，指向的内容是一个一维数组的地址</p>
+<p>​        指针数组：本质是数组。如果一个数组中所有元素都是地址，那么该数组称为指针数组</p>
+<h3 id="2、指针数组的定义"><a href="#2、指针数组的定义" class="headerlink" title="2、指针数组的定义"></a>2、指针数组的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *数组名[元素个数];</span><br><span class="line">	例：</span><br><span class="line">    	<span class="keyword">int</span> a, b, c;</span><br><span class="line">		<span class="keyword">int</span> *addr[<span class="number">3</span>] = &#123;&amp;a, &amp;b, &amp;c&#125;;</span><br><span class="line">		addr[<span class="number">0</span>] == &amp;a;</span><br><span class="line">		addr[<span class="number">1</span>] == &amp;b;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、多级指针–二级指针-难点"><a href="#3、多级指针–二级指针-难点" class="headerlink" title="3、多级指针–二级指针(难点)"></a>3、多级指针–二级指针(<strong>难点</strong>)</h3><p>​    定义一个指针变量，有几个星号就是几级指针</p>
+<p>​    二级指针的定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; **指针变量名;</span><br><span class="line">例：</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> **q = &amp;p;</span><br><span class="line">	</span><br><span class="line">	*q == p == &amp;a</span><br><span class="line">	**q == *p == *&amp;a == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p><font color="red"><strong>注意</strong>：</font></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"><span class="keyword">int</span> *q[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line"></span><br><span class="line">p:数组指针名，p+<span class="number">1</span>偏移一行数据大小</span><br><span class="line">q:指针数组名，q+<span class="number">1</span>偏移一个指针大小</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **x = p; <span class="comment">//error****</span></span><br><span class="line"><span class="keyword">int</span> **x = q;  <span class="comment">//right</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4、const指针"><a href="#4、const指针" class="headerlink" title="4、const指针"></a>4、const指针</h3><p>​    const修饰的变量为只读属性，不能直接修改该变量的值</p>
+<p>​    const指针</p>
+<p>​    (1)const 数据类型 *指针变量名;</p>
+<p>​         数据类型 const *指针变量名;    </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error  *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
+
+<p>​        const修饰是指针指向的内容，不能修改指针指向的数据，但是可以修改指针变量中的地址值</p>
+<p>​    </p>
+<p>​    (2)数据类型 *  const  指针变量名；   </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
+
+<p>​    const修饰的指针变量p，不能修改指针变量的值，但是可以修改指针指向内容的值</p>
+<p>（3）const 数据类型 *  const  指针变量名；</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
+
+<p>​    const同时修饰指针变量和指针指向内容，两者都不能修改</p>
+<h3 id="5、void指针"><a href="#5、void指针" class="headerlink" title="5、void指针"></a>5、void指针</h3><p>​        void – 空类型，不确定类型</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;s&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">指针p中可以存放任意类型的地址值</span><br><span class="line">*p = <span class="number">2</span>;  <span class="comment">//error  void指针在使用之前需要将void类型指针强制转换为需要的类型</span></span><br><span class="line">*(<span class="keyword">int</span> *)p = <span class="number">2</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6、字符指针和字符串"><a href="#6、字符指针和字符串" class="headerlink" title="6、字符指针和字符串"></a>6、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">50</span>] = &#123;<span class="string">&quot;hello&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//right</span></span><br><span class="line">如果将一个字符串赋值给一个字符指针，相当于把该字符串的首地址赋值给字符指针变量</span><br><span class="line"></span><br><span class="line">注意：如果将一个字符串常量赋值给一个指针变量，那么通过该指针不能修改字符串每一个字符的值</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p>若有以下定义，且0≤i＜4，则不正确的赋值语句是<u>&emsp;B&emsp;</u>.<br>int b[4][6], *p, *q[4];<br>（A）q[i] = b[i];           （B） p = b;<br>（C）p = b[i]               （D） q[i] = &amp;b[0][0];</p>
+<p>解：表示b的话要用二次指针来表示二维数组的地址。这样的话*p仅代表所对应的行地址</p>
+<p>​    </p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>指针</tag>
+        <tag>c语言</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>day13-c指针，函数</title>
     <url>/2023/03/08/day13-c%E6%8C%87%E9%92%88%EF%BC%8C%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h1 id="day13-c指针，函数"><a href="#day13-c指针，函数" class="headerlink" title="day13-c指针，函数"></a><font color="green">day13-c指针，函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​    本质：数组</p>
@@ -652,76 +719,9 @@
       </tags>
   </entry>
   <entry>
-    <title>day12-c指针</title>
-    <url>/2023/03/08/day12-c%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<h1 id="day12-c指针"><a href="#day12-c指针" class="headerlink" title="day12-c指针"></a><font color="green">day12-c指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针变量的赋值"><a href="#1、指针变量的赋值" class="headerlink" title="1、指针变量的赋值"></a>1、指针变量的赋值</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> b[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> *q = p;   <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">char</span> *m = <span class="literal">NULL</span>; <span class="comment">//空指针 3</span></span><br><span class="line"><span class="keyword">int</span> *n = b; <span class="comment">// n == &amp;b[0] //4</span></span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-
-<h3 id="2、指针变量的运算"><a href="#2、指针变量的运算" class="headerlink" title="2、指针变量的运算"></a>2、指针变量的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line">p+n --&gt; 向高地址位偏移n个元素的字节数</span><br><span class="line">p-n --&gt; 向低地址位偏移n个元素的字节数</span><br><span class="line">    </span><br><span class="line">指针-指针：计算两个相同类型的指针之间相差的元素个数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、指针和一维数组"><a href="#3、指针和一维数组" class="headerlink" title="3、指针和一维数组"></a>3、指针和一维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
-<h3 id="4、指针和二维数组"><a href="#4、指针和二维数组" class="headerlink" title="4、指针和二维数组"></a>4、指针和二维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">二维数组的数组名也表示整个二维数组的首地址。但是是一个行地址</span><br><span class="line"></span><br><span class="line">    数组指针定义的一般形式：</span><br><span class="line">    	&lt;存储类型&gt; &lt;数据类型&gt; (*数组指针名)[列数];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	a == &amp;a[<span class="number">0</span>] </span><br><span class="line">	a+<span class="number">1</span> == &amp;a[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line">	*(*(p+<span class="number">1</span>)+<span class="number">1</span>) --&gt; 二维数组中第二行第二个元素</span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​        数组指针(行指针)：本质是指针，存放地址值，指向的内容是一个一维数组的地址</p>
-<p>​        指针数组：本质是数组。如果一个数组中所有元素都是地址，那么该数组称为指针数组</p>
-<h3 id="2、指针数组的定义"><a href="#2、指针数组的定义" class="headerlink" title="2、指针数组的定义"></a>2、指针数组的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *数组名[元素个数];</span><br><span class="line">	例：</span><br><span class="line">    	<span class="keyword">int</span> a, b, c;</span><br><span class="line">		<span class="keyword">int</span> *addr[<span class="number">3</span>] = &#123;&amp;a, &amp;b, &amp;c&#125;;</span><br><span class="line">		addr[<span class="number">0</span>] == &amp;a;</span><br><span class="line">		addr[<span class="number">1</span>] == &amp;b;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3、多级指针–二级指针-难点"><a href="#3、多级指针–二级指针-难点" class="headerlink" title="3、多级指针–二级指针(难点)"></a>3、多级指针–二级指针(<strong>难点</strong>)</h3><p>​    定义一个指针变量，有几个星号就是几级指针</p>
-<p>​    二级指针的定义：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; **指针变量名;</span><br><span class="line">例：</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> **q = &amp;p;</span><br><span class="line">	</span><br><span class="line">	*q == p == &amp;a</span><br><span class="line">	**q == *p == *&amp;a == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p><font color="red"><strong>注意</strong>：</font></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"><span class="keyword">int</span> *q[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line"></span><br><span class="line">p:数组指针名，p+<span class="number">1</span>偏移一行数据大小</span><br><span class="line">q:指针数组名，q+<span class="number">1</span>偏移一个指针大小</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **x = p; <span class="comment">//error****</span></span><br><span class="line"><span class="keyword">int</span> **x = q;  <span class="comment">//right</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="4、const指针"><a href="#4、const指针" class="headerlink" title="4、const指针"></a>4、const指针</h3><p>​    const修饰的变量为只读属性，不能直接修改该变量的值</p>
-<p>​    const指针</p>
-<p>​    (1)const 数据类型 *指针变量名;</p>
-<p>​         数据类型 const *指针变量名;    </p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error  *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
-
-<p>​        const修饰是指针指向的内容，不能修改指针指向的数据，但是可以修改指针变量中的地址值</p>
-<p>​    </p>
-<p>​    (2)数据类型 *  const  指针变量名；   </p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
-
-<p>​    const修饰的指针变量p，不能修改指针变量的值，但是可以修改指针指向内容的值</p>
-<p>（3）const 数据类型 *  const  指针变量名；</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
-
-<p>​    const同时修饰指针变量和指针指向内容，两者都不能修改</p>
-<h3 id="5、void指针"><a href="#5、void指针" class="headerlink" title="5、void指针"></a>5、void指针</h3><p>​        void – 空类型，不确定类型</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;s&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">指针p中可以存放任意类型的地址值</span><br><span class="line">*p = <span class="number">2</span>;  <span class="comment">//error  void指针在使用之前需要将void类型指针强制转换为需要的类型</span></span><br><span class="line">*(<span class="keyword">int</span> *)p = <span class="number">2</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6、字符指针和字符串"><a href="#6、字符指针和字符串" class="headerlink" title="6、字符指针和字符串"></a>6、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">50</span>] = &#123;<span class="string">&quot;hello&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//right</span></span><br><span class="line">如果将一个字符串赋值给一个字符指针，相当于把该字符串的首地址赋值给字符指针变量</span><br><span class="line"></span><br><span class="line">注意：如果将一个字符串常量赋值给一个指针变量，那么通过该指针不能修改字符串每一个字符的值</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p>若有以下定义，且0≤i＜4，则不正确的赋值语句是<u>&emsp;B&emsp;</u>.<br>int b[4][6], *p, *q[4];<br>（A）q[i] = b[i];           （B） p = b;<br>（C）p = b[i]               （D） q[i] = &amp;b[0][0];</p>
-<p>解：表示b的话要用二次指针来表示二维数组的地址。这样的话*p仅代表所对应的行地址</p>
-<p>​    </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>指针</tag>
-        <tag>c语言</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day14-函数</title>
-    <url>/2023/03/10/day14-%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="day14-函数"><a href="#day14-函数" class="headerlink" title="day14-函数"></a><font color="green">day14-函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
+    <title>day14-c函数</title>
+    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 
 <h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
