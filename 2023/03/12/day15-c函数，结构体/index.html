@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    day14-c函数 |  
+    day15-c函数，结构体 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-day14-c函数"
+  id="post-day15-c函数，结构体"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,15 +55,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  day14-c函数
+  day15-c函数，结构体
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2023/03/10/day14-c%E5%87%BD%E6%95%B0/" class="article-date">
-  <time datetime="2023-03-10T03:10:54.000Z" itemprop="datePublished">2023-03-10</time>
+      <a href="/2023/03/12/day15-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="article-date">
+  <time datetime="2023-03-12T15:58:54.000Z" itemprop="datePublished">2023-03-12</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">439</span>
+            <span class="post-count">682</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">1 min</span>
+            <span class="post-count">2 min</span>
         </span>
     </span>
 </div>
@@ -98,44 +98,58 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
+  <h1 id="day15-c函数，结构体"><a href="#day15-c函数，结构体" class="headerlink" title=" day15-c函数，结构体"></a><font color="green"> day15-c函数，结构体</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><hr>
+<h3 id="1、指针函数："><a href="#1、指针函数：" class="headerlink" title="1、指针函数："></a>1、指针函数：</h3><p>​    本质：是一个函数，指针函数的返回值是一个地址</p>
 <a id="more"></a>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;数据类型&gt;* 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    代码模块;</span><br><span class="line">    <span class="keyword">return</span> 地址量; <span class="comment">//合法地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
-<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
-<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
-<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
-<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
-<p>​    (3)全局变量传参</p>
-<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
-<p>​    (2)字符数组：只需要传入数组首地址</p>
-<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
-<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2、函数指针："><a href="#2、函数指针：" class="headerlink" title="2、函数指针："></a>2、函数指针：</h3><p>​    本质：是一个指针，指向一个函数的首地址</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">定义的一般形式：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针变量名)(参数列表);</span><br><span class="line"></span><br><span class="line">	例：</span><br><span class="line">        <span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y);</span><br><span class="line">	数据类型：跟指针指向的函数的数据类型一致</span><br><span class="line">	参数列表：跟指针指向的函数的参数列表一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">p = add;  <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line">(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//调用add函数传入实参为2和3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="二、函数"><a href="#二、函数" class="headerlink" title="二、函数"></a>二、函数</h2><h3 id="1、函数指针数组"><a href="#1、函数指针数组" class="headerlink" title="1、函数指针数组"></a>1、函数指针数组</h3><p>​    本质：是一个数组, 存放的全部都是函数指针类型的数据</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">定义的一般形式：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针数组名[元素个数])(参数列表);</span><br><span class="line">	例：</span><br><span class="line">    	<span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">		<span class="keyword">int</span> (*arr[<span class="number">2</span>])(<span class="keyword">int</span> x, <span class="keyword">int</span> y) = &#123;add, sub&#125;;</span><br><span class="line">        <span class="comment">//定义了一个名为arr的函数指针数组，数组中最多可以存放两个 int(* )(int, int)类型的数据</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+<h3 id="2、递归函数"><a href="#2、递归函数" class="headerlink" title="2、递归函数"></a>2、递归函数</h3><p>​    练习：计算一个正整数的阶乘，用函数封装功能</p>
+<p>​    概念：在一个函数中直接或者间接调用函数本身</p>
+<p>​    </p>
+<p>​    递归函数的特点：</p>
+<p>​            1：递推公式</p>
+<p>​            2：设置有退出条件</p>
+<p>​    优点：能够让代码整体更加简洁</p>
+<p>​    缺点：需要消耗大量系统资源</p>
+<p>​                必须要设置退出条件</p>
+<h2 id="三、结构体"><a href="#三、结构体" class="headerlink" title="三、结构体"></a>三、结构体</h2><p>​    跟数组一样，是用户自定义的一种数据类型</p>
+<p>​    结构体中可以存放多个不同数据类型的数据</p>
+<h3 id="1、结构体的定义"><a href="#1、结构体的定义" class="headerlink" title="1、结构体的定义"></a>1、结构体的定义</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> 结构体名</span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">       数据类型 成员名<span class="number">1</span>;</span><br><span class="line">       数据类型 成员名<span class="number">2</span>;        	</span><br><span class="line">       数据类型 成员名<span class="number">3</span>; </span><br><span class="line">        ......</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">	例：</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">stu</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> name[<span class="number">50</span>]; </span><br><span class="line">            <span class="keyword">int</span>	age;</span><br><span class="line">            <span class="keyword">char</span> sex;</span><br><span class="line">            <span class="keyword">double</span> height;</span><br><span class="line">            <span class="keyword">char</span> address[<span class="number">50</span>];</span><br><span class="line">            <span class="keyword">char</span> hobby[<span class="number">50</span>];</span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure>
 
+<h3 id="2、结构体变量"><a href="#2、结构体变量" class="headerlink" title="2、结构体变量"></a>2、结构体变量</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> 结构体名 结构体变量名;</span></span><br><span class="line">	例：</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu1</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu2</span>;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
+<h3 id="3、访问结构体成员"><a href="#3、访问结构体成员" class="headerlink" title="3、访问结构体成员"></a>3、访问结构体成员</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    结构体变量名.成员名;  </span><br><span class="line">	stu1.age = <span class="number">18</span>;  <span class="comment">//访问1号学生stu1中的年龄，赋值为18；	</span></span><br></pre></td></tr></table></figure>
 
-
-<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
+<h3 id="4、结构体变量的初始化"><a href="#4、结构体变量的初始化" class="headerlink" title="4、结构体变量的初始化"></a>4、结构体变量的初始化</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> 结构体名 结构体变量名 = &#123;</span>依次给每一个成员赋值&#125;;  <span class="comment">//成员之间用逗号隔开</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu2</span> = &#123;</span><span class="string">&quot;张三&quot;</span>, <span class="number">19</span>, <span class="string">&#x27;m&#x27;</span>, <span class="number">182.1</span>, <span class="string">&quot;成都&quot;</span>, <span class="string">&quot;sing and dance&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
 
 
 
+<h3 id="5、结构体指针"><a href="#5、结构体指针" class="headerlink" title="5、结构体指针"></a>5、结构体指针</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu1</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> *<span class="title">p</span> = &amp;<span class="title">stu1</span>;</span></span><br><span class="line">(*p).name       <span class="comment">//stu1中的name成员</span></span><br><span class="line">p-&gt;name == (*p).name</span><br></pre></td></tr></table></figure>
 
 
 
-<p>​            </p>
-<p>​                </p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
       <!-- reward -->
       
@@ -206,12 +220,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2023/03/10/day14-c%E5%87%BD%E6%95%B0/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2023/03/12/day15-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c%E8%AF%AD%E8%A8%80/" rel="tag">c语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%87%BD%E6%95%B0/" rel="tag">函数</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c%E8%AF%AD%E8%A8%80/" rel="tag">c语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%87%BD%E6%95%B0/" rel="tag">函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BB%93%E6%9E%84%E4%BD%93/" rel="tag">结构体</a></li></ul>
 
     </footer>
   </div>
@@ -219,19 +233,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/03/12/day15-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            day15-c函数，结构体
-          
-        </div>
-      </a>
     
-    
-      <a href="/2023/03/08/day13-c%E6%8C%87%E9%92%88%EF%BC%8C%E5%87%BD%E6%95%B0/" class="article-nav-link">
+      <a href="/2023/03/10/day14-c%E5%87%BD%E6%95%B0/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">day13-c指针，函数</div>
+        <div class="article-nav-title">day14-c函数</div>
       </a>
     
   </nav>
