@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    day16-Linux基础 |  
+    day17-Linux基础 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-day16-Linux基础"
+  id="post-day17-Linux基础"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,15 +55,15 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  day16-Linux基础
+  day17-Linux基础
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2023/03/13/day16-Linux%E5%9F%BA%E7%A1%80/" class="article-date">
-  <time datetime="2023-03-13T09:24:52.000Z" itemprop="datePublished">2023-03-13</time>
+      <a href="/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/" class="article-date">
+  <time datetime="2023-03-14T11:29:36.000Z" itemprop="datePublished">2023-03-14</time>
 </a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/Linux/">Linux</a>
@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.4k</span>
+            <span class="post-count">1.7k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">5 min</span>
+            <span class="post-count">6 min</span>
         </span>
     </span>
 </div>
@@ -98,109 +98,186 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day16-linux基础"><a href="#day16-linux基础" class="headerlink" title="day16-linux基础"></a><font color="green">day16-linux基础</font></h1><hr>
-<h2 id="一、嵌入式："><a href="#一、嵌入式：" class="headerlink" title="一、嵌入式："></a>一、嵌入式：</h2><p>以应用为中心，以计算机为基础，软硬件可裁剪，适用于对功能、可靠性、成本、体积、功耗有严格要求的专用计算机系统</p>
+  <h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
+<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
+<p>命令行模式：gg=G</p>
+<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
+<p>底行模式：set nonumber  不显示行号，set number 显示行号</p>
 <a id="more"></a>
-<h3 id="1-linux系统："><a href="#1-linux系统：" class="headerlink" title="1.linux系统："></a>1.linux系统：</h3><p>特点：开源、安全性、可移植性</p>
-<h3 id="2-linux体系结构："><a href="#2-linux体系结构：" class="headerlink" title="2.linux体系结构："></a>2.linux体系结构：</h3><p>文件结构：最大的为根目录（/），</p>
-<blockquote>
-<p>home：家目录，给用户工作的目录<br>（~）：权限没有开通完，需要权限需要加sudo<br>dev：设备文件<br>etc：配置文件</p>
-</blockquote>
-<h3 id="3-vi的配置："><a href="#3-vi的配置：" class="headerlink" title="3.vi的配置："></a>3.vi的配置：</h3><p>vi .vimrc（~下）配置vi的初始化</p>
-<blockquote>
-<p>boot：启动文件<br>root：权限文件<br>lib：库文件<br>mnt：挂载文件</p>
-</blockquote>
-<hr>
-<br>
-<br>
 
-<h2 id="二、shell命令"><a href="#二、shell命令" class="headerlink" title="二、shell命令"></a>二、shell命令</h2><h3 id="1-文件的查看"><a href="#1-文件的查看" class="headerlink" title="1.文件的查看"></a>1.文件的查看</h3><blockquote>
-<p>我是谁—whoami<br>我在哪儿—pwd<br>我有什么—-ls</p>
-<blockquote>
-<p>ls -a—显示所有文件，包括隐藏文件<br>ls -l—显示文件信息</p>
-</blockquote>
-</blockquote>
 <br>
-
-<blockquote>
-<p><font color="blue">蓝色</font>：目录文件<br>白色：普通文件<br><font color="green">绿色</font>：可执行文件<br><font color="red">红色</font>：压缩文件<br><font color="#00FFFF">浅蓝</font>：链接文件</p>
-</blockquote>
-<p>文件的类型：</p>
-<p>lsp-bcd</p>
-<br>
-
-<h3 id="2-文件的权限："><a href="#2-文件的权限：" class="headerlink" title="2.文件的权限："></a>2.文件的权限：</h3><p>rwxrwxrwx</p>
-<p>前三个：用户自己的权限，中间三个，用户组的权限，最后三个，其他用户的权限</p>
-<p>ls -R–以遍历的方式查看文件</p>
-<br>
-
-<h3 id="3-目录的移动"><a href="#3-目录的移动" class="headerlink" title="3.目录的移动"></a>3.目录的移动</h3><p>我要去哪儿—-cd</p>
-<p>cd +路径  (如果直接加文件名，默认从当前路径下去进入)</p>
-<p>./—当前路径</p>
-<p>../—上一级路径</p>
-<p>直接cd，回到家目录（~）<br><br></p>
-<h3 id="4-文件的修改"><a href="#4-文件的修改" class="headerlink" title="4.文件的修改"></a>4.文件的修改</h3><blockquote>
-<p>mkdir-rmdir：创建-删除目录（里面有文件时不行）<br>rm -r ：（删除目录下所有的文件）<br>touch：创建但不打开文件<br>vi、vim ：打开vim编辑器<br>cat：查看文件内容<br>head：默认查看前十行的内容<br>head -n 文件名：查看文件前n行的内容<br>tail：默认查看后十行的内容<br>tail -n 文件名：查看文件后n行的内容<br>mv：可以充当重命名文件名的作用<br>cp 1.c 2.c：如果没有后面的复制文件，会先创建文件再复制<br>man：查看帮助</p>
-</blockquote>
 <br>
 
 <hr>
-<h2 id="三、编辑器："><a href="#三、编辑器：" class="headerlink" title="三、编辑器："></a>三、编辑器：</h2><p>vi/vim编辑器</p>
-<p>vi +文件名—打开这个文件，如果没有这个文件，先去创建再打开</p>
-<p>1.命令行模式：yy，nyy，p，dd，ndd，u</p>
-<p>2.插入模式：</p>
-<blockquote>
-<p>i：从光标当前位置开始插入<br>a：追加，从光标下一位开始插入<br>o：从光标下一行开始插入<br>esc：退出插入模式，回到的是命令行模式</p>
+<h2 id="二、tar-归档和释放"><a href="#二、tar-归档和释放" class="headerlink" title="二、tar-归档和释放"></a>二、tar-归档和释放</h2><blockquote>
+<p>tar<br>-c   创建归档文件<br>-v   显示归档或释放过程<br>-x   释放归档文件<br>-f   用户指定归档文件的文件名，否则使用默认名称<br>-j   以bzip2方式压缩<br>-z   以gzip方式压缩<br>    tar -czvf  要压缩或归档之后的文件名 目标文件名<br>    tar -xvf   目标文件名</p>
 </blockquote>
-<p>3.底行模式：</p>
-<blockquote>
-<p>wq，！q，x<br>s/字符串1/字符串2 ：只替换从光标当前所在行的第一个字符串1<br>%s/字符串1/字符串2:替换文件每一行的第一个字符串1<br>%s/字符串1/字符串2/g:替换文件所有的字符串1<br>vsp+文件名：在当前的vi编辑器打开另一个文件<br>ctrl+w—-切换光标的位置<br>退出vsp：wq<br>set mouse = a—让光标跟着鼠标移动<br>set mouse -= a—让光标不跟着鼠标移动<br>gedit编辑器：没有配置，操作起来相对简单一点，类似于word文档</p>
-</blockquote>
+<br>
 <br>
 
 <hr>
-<h2 id="四、gcc编译器："><a href="#四、gcc编译器：" class="headerlink" title="四、gcc编译器："></a>四、gcc编译器：</h2><blockquote>
-<p>四个步骤：<br>1、预处理—处理要用到的头文件和宏定义<br>gcc -E 1.c -o 1.i<br>2、编译—检查代码的错误<br>gcc -S 1.i -o 1.s<br>3、汇编—将文件变成计算机能够识别的二进制文件<br>gcc -c 1.s -o 1.o<br>4、链接—生成执行文件<br>gcc 1.o -o 1</p>
-</blockquote>
-<p>选项：</p>
-<blockquote>
-<p>-o：修改执行文件名<br>-Wall：显示所有警告<br>-w：隐藏所有警告</p>
-</blockquote>
+<h2 id="三、diff"><a href="#三、diff" class="headerlink" title="三、diff"></a>三、diff</h2><p>比较文件的不同</p>
+<br>
 <br>
 
 <hr>
-<h2 id="五、快捷键："><a href="#五、快捷键：" class="headerlink" title="五、快捷键："></a>五、快捷键：</h2><blockquote>
-<p>ctrl+l：清屏，翻页，鼠标往上滑还是能看到（clear–但是看不到之前的）<br>ctrl+shift+t：并列打开一个终端（ctrl+shift+n）<br>ctrl+c：结束当前进程回到终端<br>ctrl+z：暂停当前进程回到终端<br>ctrl+空格：切换中英文（可以修改）<br>上下键：翻找历史指令<br>alt+tab：切换终端</p>
-</blockquote>
+<h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
+
+<h2 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
+
+
+<br>
 <br>
 
 <hr>
-<h2 id="六、文件管理"><a href="#六、文件管理" class="headerlink" title="六、文件管理"></a>六、文件管理</h2><h3 id="1-文件的类型："><a href="#1-文件的类型：" class="headerlink" title="1.文件的类型："></a>1.文件的类型：</h3><p>lsp-bcd</p>
+<h2 id="五、工具："><a href="#五、工具：" class="headerlink" title="五、工具："></a>五、工具：</h2><p>vi编辑器</p>
+<p>gedit编辑器</p>
+<p>gcc编译器</p>
+<h2 id="1-下载工具："><a href="#1-下载工具：" class="headerlink" title="1.下载工具："></a>1.下载工具：</h2><blockquote>
+<p>deb（常用的） —-Debian<br>rpm（小红帽）—-Redhat</p>
+</blockquote>
 <br>
 
-<h3 id="2-文件的权限：-1"><a href="#2-文件的权限：-1" class="headerlink" title="2.文件的权限："></a>2.文件的权限：</h3><p>rwxrwxrwx</p>
-<p>前三个：用户自己的权限，中间三个，用户组的权限，最后三个，其他用户的权限</p>
-<br>
-
-<h3 id="3-chmod–修改文件权限"><a href="#3-chmod–修改文件权限" class="headerlink" title="3.chmod–修改文件权限"></a>3.chmod–修改文件权限</h3><p>第一种方式：chmod u+x 文件名—-给当前用户增加执行权限</p>
-<p>如果不加u，默认给所有用户加权限</p>
+<h3 id="（1）dpkg工具—-离线下载，没有依赖文件"><a href="#（1）dpkg工具—-离线下载，没有依赖文件" class="headerlink" title="（1）dpkg工具—-离线下载，没有依赖文件"></a>（1）dpkg工具—-离线下载，没有依赖文件</h3><p>sudo—-暂时赋予用户权限，密码初始都为1，但是不显示密码的输入，确保输出按回车就可以了</p>
+<p>dpkg都要加sudo</p>
 <blockquote>
-<p>u–用户自己<br>g—用户组<br>o—其他用户</p>
+<p>sudo dpkg -i 安装包—下载<br>sudo dpkg -r 软件名—卸载</p>
 </blockquote>
-<p>第二种方式：chmod 0777 文件名</p>
 <br>
 
-<h3 id="4-链接文件–ln"><a href="#4-链接文件–ln" class="headerlink" title="4.链接文件–ln"></a>4.链接文件–ln</h3><p>（1）硬链接：</p>
-<p>ln 文件名 硬链接文件名</p>
-<p>硬链接如果把本体文件删掉，依旧可以单独使用，类型和原文件一模一样，移动原文件也依旧可以执行</p>
-<p>（2）软链接：</p>
-<p>ln -s 文件名 软链接文件名 </p>
-<p>大大缩小了文件的大小，如果把本体文件删除或者移动，软链接失效</p>
+
+<h3 id="（2）apt工具—在线下载"><a href="#（2）apt工具—在线下载" class="headerlink" title="（2）apt工具—在线下载"></a>（2）apt工具—在线下载</h3><p>下载：</p>
+<blockquote>
+<p>sudo apt-get install sl–跑火车<br>sudo apt-get install frozen-bubble–泡泡龙<br>sudo apt-get install cmatrix–代码雨<br>sudo  apt-get install fortune—-名人名言<br>sudo  apt-get install fortunes-zh—-名人名言（中文）<br>sudo  apt-get install lolcat—-有颜色显示<br>fortune | lolcat<br>卸载：sudo apt-get remove 软件名</p>
+</blockquote>
 <br>
 
-<h3 id="5-文件的压缩与解压"><a href="#5-文件的压缩与解压" class="headerlink" title="5.文件的压缩与解压"></a>5.文件的压缩与解压</h3><blockquote>
-<p>gzip—压缩文件，原文件被替换成压缩之后的文件，，会生成一个.gz的压缩文件，用vi能看到源文件内容，用cat在终端查看乱码<br>gunzip—解压文件<br>bzip2—压缩文件，原文件被替换成压缩之后的文件，，会生成一个.bz2的压缩文件，压缩功能相对于gzip较弱，但是压缩时间缩短<br>bunzip–解压文件<br>xz—压缩文件，原文件被替换成压缩之后的文件，，会生成一个.xz的压缩文件，压缩功能相对于gzip较弱，但是压缩时间缩短<br>unxz–解压文件</p>
+<h3 id="（3）创建共享文件夹："><a href="#（3）创建共享文件夹：" class="headerlink" title="（3）创建共享文件夹："></a>（3）创建共享文件夹：</h3><ol>
+<li>选择虚拟机左上菜单的虚拟机选项，点击设置</li>
+<li>点击选项，找到共享文件夹，选择总是启用</li>
+<li>点击添加，跟着下一步，选择主机（windows）的一个文件作为自己的共享文件夹</li>
+<li>点击完成，点击确定，最后在<code>/mnt/hgfs</code>查看有没有</li>
+</ol>
+<h3 id="（4）网络配置："><a href="#（4）网络配置：" class="headerlink" title="（4）网络配置："></a>（4）网络配置：</h3><p>ping–能不能网络通信</p>
+<p>ping +IP地址</p>
+<ol>
+<li>点击虚拟机菜单的编辑，选择虚拟网络编辑</li>
+<li>点击更改设置（如果没有，直接选择桥接模式），选择桥接模式</li>
+<li>在桥接模式下选择自己windos网络的描述名字，点击确定</li>
+<li>点击虚拟机，选择设置，找到网络适配器，选择自定义模式，选择自己的网络名称(一般为VMnet0)，点击确定</li>
+<li>进入linux系统，断开重连网络（重启网络）</li>
+</ol>
+<p>或者：在终端上输入：</p>
+<p>sudo service network-manager restart</p>
+<blockquote>
+<p>ifconfig—查看linux系统的IP地址<br>ipconfig—查看windows系统的IP地址</p>
 </blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h2><p>(1) 超级用户：</p>
+<blockquote>
+<p>su，开通了所有权限，我们一般不在这里工作，因为一旦删除，找不回来，也容易操作到内核上的东西<br>exit：退出超级用户</p>
+</blockquote>
+<p>(2)查看</p>
+<blockquote>
+<p>查看用户—vi /etc/passwd<br>查看用户组–vi /etc/group</p>
+</blockquote>
+<p>(3)添加用户：</p>
+<blockquote>
+<p>adduser 新添用户名<br>输入密码，不显示，确保输入按回车<br>su 用户名—-进入该用户</p>
+</blockquote>
+<p>(4)删除用户<br>deluser 用户名，但是我们一般进入passwd和group这两个文件去删除 <strong>（加sudo）</strong></p>
+<p>(5)修改密码：passwd</p>
+<br>
+<br>
+
+<hr>
+<h2 id="3-进程管理"><a href="#3-进程管理" class="headerlink" title="3.进程管理"></a>3.进程管理</h2><blockquote>
+<p>ps   查看前台的进程<br>ps -aux  查看所有进程<br>pstree—以树的形式展示进程<br>top—查看进程（从占用cpu最大开始展示），类似于任务管理器<br>kill -9 进程号   —-杀死进程</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="4-shell的特殊字符"><a href="#4-shell的特殊字符" class="headerlink" title="4.shell的特殊字符"></a>4.shell的特殊字符</h2><p>（1）|—管道</p>
+<p>指令1 | 指令2—-把指令1的输出作为指令2的输入</p>
+<p>fortune | lolcat</p>
+<p>（2）` &emsp; `—命令置换<br>指令1 ` &emsp; `    把命令置换里面的内容作为指令1的参数<br>    echo `ls`</p>
+<p>（3）echo–终端的输出</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo hello    world---会自动缩进空格字符串之间保留一个空格</span><br><span class="line">echo &#x27;hello    world&#x27;---原样输出</span><br><span class="line">echo <span class="string">&quot;hello    world&quot;</span>---原样输出</span><br></pre></td></tr></table></figure>
+<p>（4）输入输出重定向</p>
+<blockquote>
+<p>&gt;:<br>cat &gt;1.c（覆盖输入）<br> &gt;&gt;:<br>cat &gt;&gt;1.c（追加输入）</p>
+</blockquote>
+<p>注：输入都是读取的键盘输入</p>
+<p>（5）通配符：</p>
+<ul>
+<li>*—匹配所有字符串</li>
+<li>{起始..结束}–可以创建起始到结束的文件</li>
+<li>touch {1..10}.c—-创建1到10的.c文件</li>
+<li>rm 【13579】.c—-删除了1.c 3.c 5.c 7.c 9.c</li>
+<li>rm [1-5].c—-删除了1.c2.c3.c4.c5.c</li>
+<li>rm [^8].c—-删除除了8.c的文件,也只能通配一个</li>
+<li>？—匹配一个字符串<br>rm h？llo.c—删除hello.c hrllo.c</li>
+</ul>
+<p>（6）其他</p>
+<p>shutdown—关机</p>
+<p>shutdown -r now—重启</p>
+<p>vm上的快照–相当于备份</p>
+<br>
+<br>
+
+<hr>
+<h2 id="5-shell脚本："><a href="#5-shell脚本：" class="headerlink" title="5.shell脚本："></a>5.shell脚本：</h2><p>（1）本质：shell命令的有序集合</p>
+<p>解释型语言（python，shell脚本）</p>
+<p>不会检查错误，但是会显示出错误，出现错误会继续执行后面的语句</p>
+<p>需要一个解释器（shell的是bash）</p>
+<p>编译型语言（c语言，c++）</p>
+<p>编译会报错，一旦错误会停止进程</p>
+<p>（2）怎么去写一个shell脚本：</p>
+<ol>
+<li><p>创建一个.sh的文件（也可以没有后缀名）</p>
+</li>
+<li><p>写shell命令</p>
+</li>
+<li><p>执行:</p>
+</li>
+</ol>
+<p>&emsp;&emsp;&emsp;&emsp;a. 通过bash这个解释器来执行，直接bash+要执行的文件</p>
+<p>&emsp;&emsp;&emsp;&emsp;b. 通过chmod给shell文件添加执行权限，然后再执行</p>
+<p><strong>注：第一行一般写：<code>#!/bin/bash</code>，我们解释器的路径</strong></p>
+<p>练习：复制上一级目录的1.c 2.c到当前目录下，然后把hello world写入1.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> cd ../</span><br><span class="line">  <span class="number">4</span> touch <span class="number">1.</span>c <span class="number">2.</span>c</span><br><span class="line">  <span class="number">5</span> cp [<span class="number">12</span>].c day2</span><br><span class="line">  <span class="number">6</span> echo <span class="string">&quot;hello world&quot;</span> &gt;day2/<span class="number">1.</span>c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>（3）shell变量</p>
+<ul>
+<li>自定义变量</li>
+</ul>
+<p>没有数据类型，默认为字符串类型</p>
+<p>赋值不能隔开</p>
+<p>变量名=值</p>
+<p>没有分号，换行就相当于分号</p>
+<p>变量的调用需要加钱$</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>位置变量</li>
+</ul>
+<p>命令行参数的变量，即命令即后面的参数作为变量 从bash后面的那个开始为0</p>
+<p>从终端传递参数给shell脚本</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">从$<span class="number">0</span>开始到$<span class="number">9</span>如果要打印<span class="number">9</span>以后的变量需要加&#123;&#125;，例如$&#123;<span class="number">12</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>环境变量</li>
+</ul>
+<p>计算机定义好了的变量</p>
+<p>env可以查看所有环境变量</p>
+<p>调用需要加$</p>
+<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
+
  
       <!-- reward -->
       
@@ -271,7 +348,7 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2023/03/13/day16-Linux%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -284,19 +361,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            day17-Linux基础
-          
-        </div>
-      </a>
     
-    
-      <a href="/2023/03/12/day15-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/" class="article-nav-link">
+      <a href="/2023/03/13/day16-Linux%E5%9F%BA%E7%A1%80/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">day15-c函数，结构体</div>
+        <div class="article-nav-title">day16-Linux基础</div>
       </a>
     
   </nav>
