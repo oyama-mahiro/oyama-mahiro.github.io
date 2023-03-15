@@ -544,6 +544,73 @@
       </tags>
   </entry>
   <entry>
+    <title>day12-c指针</title>
+    <url>/2023/03/08/day12-c%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<h1 id="day12-c指针"><a href="#day12-c指针" class="headerlink" title="day12-c指针"></a><font color="green">day12-c指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针变量的赋值"><a href="#1、指针变量的赋值" class="headerlink" title="1、指针变量的赋值"></a>1、指针变量的赋值</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> b[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> *q = p;   <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">char</span> *m = <span class="literal">NULL</span>; <span class="comment">//空指针 3</span></span><br><span class="line"><span class="keyword">int</span> *n = b; <span class="comment">// n == &amp;b[0] //4</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+
+<h3 id="2、指针变量的运算"><a href="#2、指针变量的运算" class="headerlink" title="2、指针变量的运算"></a>2、指针变量的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line">p+n --&gt; 向高地址位偏移n个元素的字节数</span><br><span class="line">p-n --&gt; 向低地址位偏移n个元素的字节数</span><br><span class="line">    </span><br><span class="line">指针-指针：计算两个相同类型的指针之间相差的元素个数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、指针和一维数组"><a href="#3、指针和一维数组" class="headerlink" title="3、指针和一维数组"></a>3、指针和一维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、指针和二维数组"><a href="#4、指针和二维数组" class="headerlink" title="4、指针和二维数组"></a>4、指针和二维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">二维数组的数组名也表示整个二维数组的首地址。但是是一个行地址</span><br><span class="line"></span><br><span class="line">    数组指针定义的一般形式：</span><br><span class="line">    	&lt;存储类型&gt; &lt;数据类型&gt; (*数组指针名)[列数];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	a == &amp;a[<span class="number">0</span>] </span><br><span class="line">	a+<span class="number">1</span> == &amp;a[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line">	*(*(p+<span class="number">1</span>)+<span class="number">1</span>) --&gt; 二维数组中第二行第二个元素</span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​        数组指针(行指针)：本质是指针，存放地址值，指向的内容是一个一维数组的地址</p>
+<p>​        指针数组：本质是数组。如果一个数组中所有元素都是地址，那么该数组称为指针数组</p>
+<h3 id="2、指针数组的定义"><a href="#2、指针数组的定义" class="headerlink" title="2、指针数组的定义"></a>2、指针数组的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *数组名[元素个数];</span><br><span class="line">	例：</span><br><span class="line">    	<span class="keyword">int</span> a, b, c;</span><br><span class="line">		<span class="keyword">int</span> *addr[<span class="number">3</span>] = &#123;&amp;a, &amp;b, &amp;c&#125;;</span><br><span class="line">		addr[<span class="number">0</span>] == &amp;a;</span><br><span class="line">		addr[<span class="number">1</span>] == &amp;b;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、多级指针–二级指针-难点"><a href="#3、多级指针–二级指针-难点" class="headerlink" title="3、多级指针–二级指针(难点)"></a>3、多级指针–二级指针(<strong>难点</strong>)</h3><p>​    定义一个指针变量，有几个星号就是几级指针</p>
+<p>​    二级指针的定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; **指针变量名;</span><br><span class="line">例：</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> **q = &amp;p;</span><br><span class="line">	</span><br><span class="line">	*q == p == &amp;a</span><br><span class="line">	**q == *p == *&amp;a == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p><font color="red"><strong>注意</strong>：</font></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"><span class="keyword">int</span> *q[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line"></span><br><span class="line">p:数组指针名，p+<span class="number">1</span>偏移一行数据大小</span><br><span class="line">q:指针数组名，q+<span class="number">1</span>偏移一个指针大小</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **x = p; <span class="comment">//error****</span></span><br><span class="line"><span class="keyword">int</span> **x = q;  <span class="comment">//right</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4、const指针"><a href="#4、const指针" class="headerlink" title="4、const指针"></a>4、const指针</h3><p>​    const修饰的变量为只读属性，不能直接修改该变量的值</p>
+<p>​    const指针</p>
+<p>​    (1)const 数据类型 *指针变量名;</p>
+<p>​         数据类型 const *指针变量名;    </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error  *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
+
+<p>​        const修饰是指针指向的内容，不能修改指针指向的数据，但是可以修改指针变量中的地址值</p>
+<p>​    </p>
+<p>​    (2)数据类型 *  const  指针变量名；   </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
+
+<p>​    const修饰的指针变量p，不能修改指针变量的值，但是可以修改指针指向内容的值</p>
+<p>（3）const 数据类型 *  const  指针变量名；</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
+
+<p>​    const同时修饰指针变量和指针指向内容，两者都不能修改</p>
+<h3 id="5、void指针"><a href="#5、void指针" class="headerlink" title="5、void指针"></a>5、void指针</h3><p>​        void – 空类型，不确定类型</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;s&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">指针p中可以存放任意类型的地址值</span><br><span class="line">*p = <span class="number">2</span>;  <span class="comment">//error  void指针在使用之前需要将void类型指针强制转换为需要的类型</span></span><br><span class="line">*(<span class="keyword">int</span> *)p = <span class="number">2</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6、字符指针和字符串"><a href="#6、字符指针和字符串" class="headerlink" title="6、字符指针和字符串"></a>6、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">50</span>] = &#123;<span class="string">&quot;hello&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//right</span></span><br><span class="line">如果将一个字符串赋值给一个字符指针，相当于把该字符串的首地址赋值给字符指针变量</span><br><span class="line"></span><br><span class="line">注意：如果将一个字符串常量赋值给一个指针变量，那么通过该指针不能修改字符串每一个字符的值</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p>若有以下定义，且0≤i＜4，则不正确的赋值语句是<u>&emsp;B&emsp;</u>.<br>int b[4][6], *p, *q[4];<br>（A）q[i] = b[i];           （B） p = b;<br>（C）p = b[i]               （D） q[i] = &amp;b[0][0];</p>
+<p>解：表示b的话要用二次指针来表示二维数组的地址。这样的话*p仅代表所对应的行地址</p>
+<p>​    </p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>指针</tag>
+        <tag>c语言</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>day13-c指针，函数</title>
     <url>/2023/03/08/day13-c%E6%8C%87%E9%92%88%EF%BC%8C%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h1 id="day13-c指针，函数"><a href="#day13-c指针，函数" class="headerlink" title="day13-c指针，函数"></a><font color="green">day13-c指针，函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​    本质：数组</p>
@@ -652,70 +719,54 @@
       </tags>
   </entry>
   <entry>
-    <title>day12-c指针</title>
-    <url>/2023/03/08/day12-c%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<h1 id="day12-c指针"><a href="#day12-c指针" class="headerlink" title="day12-c指针"></a><font color="green">day12-c指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针变量的赋值"><a href="#1、指针变量的赋值" class="headerlink" title="1、指针变量的赋值"></a>1、指针变量的赋值</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> b[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> *q = p;   <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">char</span> *m = <span class="literal">NULL</span>; <span class="comment">//空指针 3</span></span><br><span class="line"><span class="keyword">int</span> *n = b; <span class="comment">// n == &amp;b[0] //4</span></span><br></pre></td></tr></table></figure>
+    <title>day14-c函数</title>
+    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
 
-
-<h3 id="2、指针变量的运算"><a href="#2、指针变量的运算" class="headerlink" title="2、指针变量的运算"></a>2、指针变量的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line">p+n --&gt; 向高地址位偏移n个元素的字节数</span><br><span class="line">p-n --&gt; 向低地址位偏移n个元素的字节数</span><br><span class="line">    </span><br><span class="line">指针-指针：计算两个相同类型的指针之间相差的元素个数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、指针和一维数组"><a href="#3、指针和一维数组" class="headerlink" title="3、指针和一维数组"></a>3、指针和一维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
-<h3 id="4、指针和二维数组"><a href="#4、指针和二维数组" class="headerlink" title="4、指针和二维数组"></a>4、指针和二维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">二维数组的数组名也表示整个二维数组的首地址。但是是一个行地址</span><br><span class="line"></span><br><span class="line">    数组指针定义的一般形式：</span><br><span class="line">    	&lt;存储类型&gt; &lt;数据类型&gt; (*数组指针名)[列数];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	a == &amp;a[<span class="number">0</span>] </span><br><span class="line">	a+<span class="number">1</span> == &amp;a[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line">	*(*(p+<span class="number">1</span>)+<span class="number">1</span>) --&gt; 二维数组中第二行第二个元素</span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​        数组指针(行指针)：本质是指针，存放地址值，指向的内容是一个一维数组的地址</p>
-<p>​        指针数组：本质是数组。如果一个数组中所有元素都是地址，那么该数组称为指针数组</p>
-<h3 id="2、指针数组的定义"><a href="#2、指针数组的定义" class="headerlink" title="2、指针数组的定义"></a>2、指针数组的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *数组名[元素个数];</span><br><span class="line">	例：</span><br><span class="line">    	<span class="keyword">int</span> a, b, c;</span><br><span class="line">		<span class="keyword">int</span> *addr[<span class="number">3</span>] = &#123;&amp;a, &amp;b, &amp;c&#125;;</span><br><span class="line">		addr[<span class="number">0</span>] == &amp;a;</span><br><span class="line">		addr[<span class="number">1</span>] == &amp;b;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
+<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
+<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
+<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
+<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
+<p>​    (3)全局变量传参</p>
+<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
+<p>​    (2)字符数组：只需要传入数组首地址</p>
+<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
+<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="3、多级指针–二级指针-难点"><a href="#3、多级指针–二级指针-难点" class="headerlink" title="3、多级指针–二级指针(难点)"></a>3、多级指针–二级指针(<strong>难点</strong>)</h3><p>​    定义一个指针变量，有几个星号就是几级指针</p>
-<p>​    二级指针的定义：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; **指针变量名;</span><br><span class="line">例：</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> **q = &amp;p;</span><br><span class="line">	</span><br><span class="line">	*q == p == &amp;a</span><br><span class="line">	**q == *p == *&amp;a == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
 
-<p><font color="red"><strong>注意</strong>：</font></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"><span class="keyword">int</span> *q[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line"></span><br><span class="line">p:数组指针名，p+<span class="number">1</span>偏移一行数据大小</span><br><span class="line">q:指针数组名，q+<span class="number">1</span>偏移一个指针大小</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **x = p; <span class="comment">//error****</span></span><br><span class="line"><span class="keyword">int</span> **x = q;  <span class="comment">//right</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h3 id="4、const指针"><a href="#4、const指针" class="headerlink" title="4、const指针"></a>4、const指针</h3><p>​    const修饰的变量为只读属性，不能直接修改该变量的值</p>
-<p>​    const指针</p>
-<p>​    (1)const 数据类型 *指针变量名;</p>
-<p>​         数据类型 const *指针变量名;    </p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error  *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
-
-<p>​        const修饰是指针指向的内容，不能修改指针指向的数据，但是可以修改指针变量中的地址值</p>
-<p>​    </p>
-<p>​    (2)数据类型 *  const  指针变量名；   </p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
-
-<p>​    const修饰的指针变量p，不能修改指针变量的值，但是可以修改指针指向内容的值</p>
-<p>（3）const 数据类型 *  const  指针变量名；</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
-
-<p>​    const同时修饰指针变量和指针指向内容，两者都不能修改</p>
-<h3 id="5、void指针"><a href="#5、void指针" class="headerlink" title="5、void指针"></a>5、void指针</h3><p>​        void – 空类型，不确定类型</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;s&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">指针p中可以存放任意类型的地址值</span><br><span class="line">*p = <span class="number">2</span>;  <span class="comment">//error  void指针在使用之前需要将void类型指针强制转换为需要的类型</span></span><br><span class="line">*(<span class="keyword">int</span> *)p = <span class="number">2</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
+<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="6、字符指针和字符串"><a href="#6、字符指针和字符串" class="headerlink" title="6、字符指针和字符串"></a>6、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">50</span>] = &#123;<span class="string">&quot;hello&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//right</span></span><br><span class="line">如果将一个字符串赋值给一个字符指针，相当于把该字符串的首地址赋值给字符指针变量</span><br><span class="line"></span><br><span class="line">注意：如果将一个字符串常量赋值给一个指针变量，那么通过该指针不能修改字符串每一个字符的值</span><br></pre></td></tr></table></figure>
 
 
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p>若有以下定义，且0≤i＜4，则不正确的赋值语句是<u>&emsp;B&emsp;</u>.<br>int b[4][6], *p, *q[4];<br>（A）q[i] = b[i];           （B） p = b;<br>（C）p = b[i]               （D） q[i] = &amp;b[0][0];</p>
-<p>解：表示b的话要用二次指针来表示二维数组的地址。这样的话*p仅代表所对应的行地址</p>
-<p>​    </p>
+
+
+
+
+
+
+
+
+
+
+<p>​            </p>
+<p>​                </p>
 ]]></content>
       <categories>
         <category>c语言</category>
       </categories>
       <tags>
         <tag>c</tag>
-        <tag>指针</tag>
         <tag>c语言</tag>
+        <tag>函数</tag>
       </tags>
   </entry>
   <entry>
@@ -901,57 +952,6 @@
       </tags>
   </entry>
   <entry>
-    <title>day14-c函数</title>
-    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
-<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
-<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
-<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
-<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
-<p>​    (3)全局变量传参</p>
-<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
-<p>​    (2)字符数组：只需要传入数组首地址</p>
-<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
-<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>​            </p>
-<p>​                </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>c语言</tag>
-        <tag>函数</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>day17-Linux基础</title>
     <url>/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
@@ -979,7 +979,8 @@
 <hr>
 <h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
 
-<h2 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
+<p> wc</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
 
 
 <br>
@@ -1131,6 +1132,7 @@
 <p>计算机定义好了的变量</p>
 <p>env可以查看所有环境变量</p>
 <p>调用需要加$</p>
+<p><strong>注：shell中0是真，1是假</strong></p>
 <h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
 
@@ -1142,6 +1144,291 @@
         <tag>Linux</tag>
         <tag>shell</tag>
         <tag>Linux基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day18-Linux基础,shell脚本</title>
+    <url>/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/</url>
+    <content><![CDATA[<h1 id="day18-linux基础-shell脚本"><a href="#day18-linux基础-shell脚本" class="headerlink" title="day18-linux基础,shell脚本"></a><font color="green">day18-linux基础,shell脚本</font></h1><br>
+<br>
+
+
+<hr>
+<h2 id="一、变量的四则运算："><a href="#一、变量的四则运算：" class="headerlink" title="一、变量的四则运算："></a>一、变量的四则运算：</h2><ol>
+<li>（（ &emsp; ））</li>
+</ol>
+<p>不能进行浮点型的运算</p>
+<p>调用的时候需要加钱$</p>
+<p>可以进型幂数运算</p>
+<p>可以进行自加自减</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">#!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> a=$(( <span class="number">3</span>**<span class="number">3</span>)) <span class="comment">//3的3次方</span></span><br><span class="line"> <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>【&emsp;】</li>
+</ol>
+<p>不能进行浮点型的运算</p>
+<p>调用的时候需要加钱$</p>
+<p>可以进型幂数运算</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> a=$[ <span class="number">3</span>+<span class="number">3</span>]</span><br><span class="line"><span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>expr</li>
+</ol>
+<p>需要命令置换符置换出来结果` &emsp; `</p>
+<p>算数之间需要空开</p>
+<p>当进行乘法的时候需要用\区分</p>
+<p>没有幂数运算</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=`expr <span class="number">1</span> \* <span class="number">2</span>`</span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>练习：运算出a=3的3次方的值，b=5*7的值，交换</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=$((<span class="number">3</span>**<span class="number">3</span>))</span><br><span class="line">  <span class="number">4</span> b=`expr <span class="number">5</span> \* $((<span class="number">4</span>+<span class="number">2</span>))`</span><br><span class="line">  <span class="number">5</span> c=$a</span><br><span class="line">  <span class="number">6</span> a=$b</span><br><span class="line">  <span class="number">7</span> b=$c</span><br><span class="line">  <span class="number">8</span> echo a=$&#123;a&#125;b=$b</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="二、shell-语句"><a href="#二、shell-语句" class="headerlink" title="二、shell 语句"></a>二、shell 语句</h2><h3 id="1-解释性语句"><a href="#1-解释性语句" class="headerlink" title="1. 解释性语句"></a>1. 解释性语句</h3><p>#注释一行<br>:&lt;&lt;!注释多行<br>注释的shell语句<br>！<br>：&lt;&lt;EOF<br>注释的shell语句<br>EOF</p>
+<h3 id="2-功能性语句"><a href="#2-功能性语句" class="headerlink" title="2.功能性语句"></a>2.功能性语句</h3><h4 id="（1）test"><a href="#（1）test" class="headerlink" title="（1）test"></a>（1）test</h4><p>结构：字符串 整型 文件</p>
+<ul>
+<li>字符串的比较：</li>
+</ul>
+<blockquote>
+<p>test 字符串1 = 字符串2    —-比较两个字符串是否相等<br>test 字符串1 ！= 字符串2    —-比较两个字符串是否不相等<br>test -z 字符串—判断字符串为不为空<br>test -n 字符串—判断字符串是否不为空</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="string">&quot;hello&quot;</span></span><br><span class="line">  <span class="number">4</span> b=<span class="string">&quot;hello&quot;</span></span><br><span class="line">  <span class="number">5</span> test $a != $b</span><br><span class="line">  <span class="number">6</span> test -z $a</span><br><span class="line">  <span class="number">7</span> test -n $a</span><br><span class="line">  <span class="number">8</span> echo $?</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>整型的比较</li>
+</ul>
+<blockquote>
+<p>-eq—等于<br>-ne—不等于<br>-gt—大于<br>-lt–小于<br>-ge—大于等于<br>-le—小于等于</p>
+</blockquote>
+<ul>
+<li>文件的比较</li>
+</ul>
+<blockquote>
+<p>-e —判断文件是否存在<br>-f—判断文件是否是普通文件<br>-L—判断文件是否是链接文件<br>-S—判断文件是否是套接字文件<br>-b—判断文件是否是块文件<br>-c—判断文件是否是字符文件<br>-d—判断文件是否是目录文件<br>-p—判断文件是否为管道文件</p>
+</blockquote>
+<ul>
+<li>文件的权限：</li>
+</ul>
+<blockquote>
+<p>-r–判断文件是否有可读权限<br>-w—判断文件是否有可写权限<br>-x—判断文件是否有可执行权限<br>文件1  -nt  文件2–判断文件1是否比文件2新（时间戳）<br>文件1  -ot  文件2–判断文件1是否比文件2旧（时间戳）</p>
+</blockquote>
+<ul>
+<li>逻辑<blockquote>
+<p>-o—或</p>
+</blockquote>
+</li>
+</ul>
+<p>-a—与</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> test -d $<span class="number">1</span> -a -f $<span class="number">2</span></span><br><span class="line">  <span class="number">4</span> echo $?</span><br><span class="line">~           </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="（2）read"><a href="#（2）read" class="headerlink" title="（2）read"></a>（2）read</h4><p>把终端上的输入传给参数</p>
+<p>read 变量1 变量2 </p>
+<p>read -p “提示” 变量名</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> read -p <span class="string">&quot;please input tow numbern:&quot;</span> a b</span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line">  <span class="number">5</span> echo $b</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>read -t  时间 变量名—限制时间输入</p>
+<p>超过时间会自动结束（以秒为单位）</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> read -t <span class="number">5</span> a b</span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line">  <span class="number">5</span> echo $b</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>read -n –限制输入的个数,超过个数也会自动结束</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> read -n <span class="number">1</span> a b</span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line">  <span class="number">5</span> echo $b</span><br><span class="line">~           </span><br></pre></td></tr></table></figure>
+
+<p>read -s —隐藏输入</p>
+<br>
+
+<h3 id="3-shell的控制语句"><a href="#3-shell的控制语句" class="headerlink" title="3. shell的控制语句"></a>3. shell的控制语句</h3><h4 id="（1）if"><a href="#（1）if" class="headerlink" title="（1）if"></a>（1）if</h4><p>第一种：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span>[]</span><br><span class="line"></span><br><span class="line">then</span><br><span class="line"></span><br><span class="line">​    shell语句；</span><br><span class="line"></span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<p><strong><font color="red">注意：if和【】之间要隔一个空，表达式和【】也要隔一个空</font></strong></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">56</span></span><br><span class="line">  <span class="number">4</span> b=<span class="number">34</span></span><br><span class="line">  <span class="number">5</span> <span class="keyword">if</span> [ $a -gt $b ]</span><br><span class="line">  <span class="number">6</span> then</span><br><span class="line">  <span class="number">7</span>     echo <span class="string">&quot;hello world&quot;</span></span><br><span class="line">  <span class="number">8</span> fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>第二种：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> test语句</span><br><span class="line"></span><br><span class="line">then</span><br><span class="line"></span><br><span class="line">​    shell语句；</span><br><span class="line"></span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> a=<span class="number">56</span></span><br><span class="line"><span class="number">4</span> b=<span class="number">34</span></span><br><span class="line"><span class="number">5</span> <span class="keyword">if</span> test $a -gt $b</span><br><span class="line"><span class="number">6</span> then</span><br><span class="line"><span class="number">7</span>     echo <span class="string">&quot;hello world&quot;</span></span><br><span class="line"><span class="number">8</span> fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>if - elif-else</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> read a b</span><br><span class="line">  <span class="number">4</span> <span class="keyword">if</span> test $a -gt $b</span><br><span class="line">  <span class="number">5</span> then</span><br><span class="line">  <span class="number">6</span>     echo <span class="string">&quot;hello world&quot;</span></span><br><span class="line">  <span class="number">7</span> elif test $a -eq $b</span><br><span class="line">  <span class="number">8</span> then</span><br><span class="line">  <span class="number">9</span>     echo <span class="string">&quot;zhangcheng&quot;</span></span><br><span class="line"> <span class="number">10</span> <span class="keyword">else</span></span><br><span class="line"> <span class="number">11</span>     echo <span class="string">&quot;day3&quot;</span></span><br><span class="line"> <span class="number">12</span> fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>练习：输入一个文件名。判断这个文件是否存在，如果不存在，就创建，判断是否有可写权限，如果有，就把helloworld 写进去，如果没有，赋予可写权限，再写进去，如果存在就写入helloworld</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> read -p <span class="string">&quot;please input a filename:&quot;</span> file</span><br><span class="line"> <span class="number">4</span> <span class="keyword">if</span> test -e $file</span><br><span class="line"> <span class="number">5</span> then</span><br><span class="line"> <span class="number">6</span>     <span class="keyword">if</span> test -w $file</span><br><span class="line"> <span class="number">7</span>     then</span><br><span class="line"> <span class="number">8</span>        echo <span class="string">&quot;hello world&quot;</span>&gt;&gt;$file <span class="comment">//注意别忘了echo</span></span><br><span class="line"> <span class="number">9</span>    <span class="keyword">else</span></span><br><span class="line"><span class="number">10</span>        chmod +w $file</span><br><span class="line"><span class="number">11</span>        echo <span class="string">&quot;hello world&quot;</span>&gt;&gt;$file</span><br><span class="line"><span class="number">12</span>     fi</span><br><span class="line"><span class="number">13</span> <span class="keyword">else</span></span><br><span class="line"><span class="number">14</span>     touch $file</span><br><span class="line"><span class="number">15</span>     echo <span class="string">&quot;hello world&quot;</span>&gt;&gt;$file</span><br><span class="line"><span class="number">16</span> fi</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">case</span> 表达式 in</span><br><span class="line"></span><br><span class="line">​           表达式）</span><br><span class="line"></span><br><span class="line">​              shell语句</span><br><span class="line"></span><br><span class="line">​               ；；</span><br><span class="line"></span><br><span class="line">表达式）</span><br><span class="line"></span><br><span class="line">​      shell语句</span><br><span class="line"></span><br><span class="line">​      ；；</span><br><span class="line"></span><br><span class="line">esac</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">3</span> read a</span><br><span class="line"> <span class="number">4</span> <span class="keyword">case</span>  $a in</span><br><span class="line"> <span class="number">5</span>     <span class="number">1</span>|<span class="number">2</span>|<span class="number">3</span>)</span><br><span class="line"> <span class="number">6</span>         echo <span class="string">&quot;星期一&quot;</span></span><br><span class="line"> <span class="number">7</span>         ;;</span><br><span class="line"> <span class="number">8</span>     <span class="number">2</span>)</span><br><span class="line"> <span class="number">9</span>         echo <span class="string">&quot;星期二&quot;</span></span><br><span class="line"><span class="number">10</span>         ;;</span><br><span class="line"><span class="number">11</span>     <span class="number">3</span>)</span><br><span class="line"><span class="number">12</span>         echo <span class="string">&quot;星期三&quot;</span></span><br><span class="line"><span class="number">13</span>         ;;</span><br><span class="line"><span class="number">14</span>     <span class="number">4</span>)</span><br><span class="line"><span class="number">15</span>         echo <span class="string">&quot;星期四&quot;</span></span><br><span class="line"><span class="number">16</span>         ;;</span><br><span class="line"><span class="number">17</span>     <span class="number">5</span>)</span><br><span class="line"><span class="number">18</span>         echo <span class="string">&quot;星期五&quot;</span></span><br><span class="line"><span class="number">19</span>         ;;</span><br><span class="line"><span class="number">20</span>     <span class="number">6</span>)</span><br><span class="line"><span class="number">21</span>         echo <span class="string">&quot;星期六&quot;</span></span><br><span class="line"><span class="number">22</span>         ;;</span><br><span class="line"><span class="number">23</span>     <span class="number">7</span>)</span><br><span class="line"><span class="number">24</span>         echo <span class="string">&quot;星期天&quot;</span></span><br><span class="line"><span class="number">25</span>         ;;</span><br><span class="line">       *)</span><br><span class="line"><span class="number">27</span>         echo <span class="string">&quot;asdads&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="number">26</span> esac</span><br></pre></td></tr></table></figure>
+
+<p>用【】</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">read a</span><br><span class="line">  <span class="number">4</span> <span class="keyword">case</span>  $a in</span><br><span class="line">  <span class="number">5</span>     [a-zA-Z])</span><br><span class="line">  <span class="number">6</span>         echo <span class="string">&quot;星期一&quot;</span></span><br><span class="line">  <span class="number">7</span>         ;;</span><br><span class="line">  <span class="number">8</span>     [zbc])</span><br><span class="line">  <span class="number">9</span>         echo <span class="string">&quot;星期二&quot;</span></span><br><span class="line"> <span class="number">10</span>         ;;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>练习：模拟一个应用下载</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> read -p <span class="string">&quot;请选择要下载的应用:&quot;</span> app</span><br><span class="line"> <span class="number">4</span> read -p <span class="string">&quot;请确认是否下载y|n|q)&quot;</span> chioce</span><br><span class="line"> <span class="number">5</span> <span class="keyword">case</span> $chioce in</span><br><span class="line"> <span class="number">6</span>     Y|y|yes)</span><br><span class="line"> <span class="number">7</span>         echo <span class="string">&quot;$app正在下载中.....&quot;</span></span><br><span class="line"> <span class="number">8</span>         ;;</span><br><span class="line"> <span class="number">9</span>     N|n|no)</span><br><span class="line"><span class="number">10</span>         echo <span class="string">&quot;取消下载$app&quot;</span></span><br><span class="line"><span class="number">11</span>         ;;</span><br><span class="line"><span class="number">12</span>     *)</span><br><span class="line"><span class="number">13</span>         echo <span class="string">&quot;退出&quot;</span></span><br><span class="line"><span class="number">14</span> esac</span><br><span class="line"><span class="number">15</span> </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="（2）循环语句"><a href="#（2）循环语句" class="headerlink" title="（2）循环语句"></a>（2）循环语句</h4><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> 表达式</span><br><span class="line"></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"></span><br><span class="line">shell语句</span><br><span class="line"></span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">5</span></span><br><span class="line">  <span class="number">4</span> <span class="keyword">while</span> test $a -gt <span class="number">0</span></span><br><span class="line">  <span class="number">5</span> <span class="keyword">do</span></span><br><span class="line">  <span class="number">6</span>     ((a--))</span><br><span class="line">  <span class="number">7</span>     echo $a</span><br><span class="line">  <span class="number">8</span> done</span><br></pre></td></tr></table></figure>
+
+<p>死循环</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">while</span> <span class="literal">true</span></span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">shell语句</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<p>for循环</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span>（（表达式<span class="number">1</span>；表达式<span class="number">2</span>；表达式<span class="number">3</span>））</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">shell语句</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> </span><br><span class="line">  <span class="number">4</span> i=<span class="number">5</span></span><br><span class="line">  <span class="number">5</span> <span class="keyword">for</span>((i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++))</span><br><span class="line">  <span class="number">6</span> <span class="keyword">do</span></span><br><span class="line">  <span class="number">7</span>     echo $i</span><br><span class="line">  <span class="number">8</span> done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>第二种</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> 变量 in 单词表</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">shell语句</span><br><span class="line">done</span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> </span><br><span class="line">  <span class="number">4</span> i=<span class="number">5</span></span><br><span class="line">  <span class="number">5</span> <span class="keyword">for</span> i in he li oi asda adsa ada ad</span><br><span class="line">  <span class="number">6</span> <span class="keyword">do</span></span><br><span class="line">  <span class="number">7</span>     echo $i</span><br><span class="line">  <span class="number">8</span> done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>连续的</p>
+<p>for 变量 in {起始..结束}</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> i=<span class="number">5</span></span><br><span class="line"> <span class="number">5</span> <span class="keyword">for</span> i in &#123;a..z&#125;</span><br><span class="line"> <span class="number">6</span> <span class="keyword">do</span></span><br><span class="line"> <span class="number">7</span>     echo $i</span><br><span class="line"> <span class="number">8</span> done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>for 变量 in ``</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> i=<span class="number">5</span></span><br><span class="line"> <span class="number">5</span> <span class="keyword">for</span> i in `ls`</span><br><span class="line"> <span class="number">6</span> <span class="keyword">do</span></span><br><span class="line"> <span class="number">7</span>     echo $i</span><br><span class="line"> <span class="number">8</span> done</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>练习：求1到100的和</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> sum=<span class="number">0</span></span><br><span class="line"> <span class="number">4</span> i=<span class="number">5</span></span><br><span class="line"> <span class="number">5</span> <span class="keyword">for</span>((i=<span class="number">0</span>;i&lt;<span class="number">101</span>;i++))</span><br><span class="line"> <span class="number">6</span> <span class="keyword">do</span></span><br><span class="line"> <span class="number">7</span>     sum=$(($sum+$i))</span><br><span class="line"> <span class="number">8</span> done</span><br><span class="line"> <span class="number">9</span> echo <span class="string">&quot;sum=$sum&quot;</span></span><br><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> sum=<span class="number">0</span></span><br><span class="line"> <span class="number">4</span> i=<span class="number">5</span></span><br><span class="line"> <span class="number">5</span> <span class="keyword">for</span>((i=<span class="number">0</span>;i&lt;<span class="number">101</span>;i++))</span><br><span class="line"> <span class="number">6</span> <span class="keyword">do</span></span><br><span class="line"> <span class="number">7</span>     sum=`expr $sum + $i`</span><br><span class="line"> <span class="number">8</span> done</span><br><span class="line"> <span class="number">9</span> echo <span class="string">&quot;sum=$sum&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="shell数组"><a href="#shell数组" class="headerlink" title="shell数组"></a>shell数组</h2><p>shell脚本里面只有一维数组</p>
+<p>没有数据类型</p>
+<p>数组的初始化</p>
+<p>数组名=（元素1 元素2 元素3.。。。）</p>
+<p>数组的赋值：</p>
+<p>数组名【下标】=内容</p>
+<p>数组的调用：</p>
+<p>${数组名【下标】}</p>
+<p>数组的遍历：</p>
+<p>循环遍历</p>
+<p>${arr[*]}</p>
+<p>${arr[@]}</p>
+<p>求数组的长度：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$&#123;<span class="meta">#arr[*]&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> arr=(hello world nihao shijie)</span><br><span class="line"> <span class="number">4</span> arr[<span class="number">0</span>]=<span class="string">&quot;zhangcheng&quot;</span></span><br><span class="line"> <span class="number">5</span> echo $&#123;arr[<span class="number">0</span>]&#125;</span><br><span class="line"> <span class="number">6</span> echo $&#123;arr[@]&#125;</span><br><span class="line"> <span class="number">7</span> echo $&#123;#arr[*]&#125;</span><br><span class="line">                     </span><br></pre></td></tr></table></figure>
+
+<p>练习：</p>
+<p>数组的逆序打印（用交换）</p>
+<p>shijie nihao world hello</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> arr=(hello world nihao shijie)</span><br><span class="line">  <span class="number">4</span> arr[<span class="number">0</span>]=<span class="string">&quot;zhangcheng&quot;</span></span><br><span class="line">  <span class="number">5</span> echo $&#123;arr[<span class="number">0</span>]&#125;</span><br><span class="line">  <span class="number">6</span> echo $&#123;arr[@]&#125;</span><br><span class="line">  <span class="number">7</span> len=$&#123;#arr[*]&#125;</span><br><span class="line">  <span class="number">8</span> <span class="keyword">for</span>((i=<span class="number">0</span>;i&lt;$len/<span class="number">2</span>;i++))</span><br><span class="line">  <span class="number">9</span> <span class="keyword">do</span></span><br><span class="line"> <span class="number">10</span>     temp=$&#123;arr[$i]&#125;</span><br><span class="line"> <span class="number">11</span>     arr[$i]=$&#123;arr[$(($len-$i<span class="number">-1</span>))]&#125;</span><br><span class="line"> <span class="number">12</span>     arr[$(($len-$i<span class="number">-1</span>))]=$temp</span><br><span class="line"> <span class="number">13</span> done</span><br><span class="line"> <span class="number">14</span> </span><br><span class="line"> <span class="number">15</span> echo $&#123;arr[@]&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-shell函数"><a href="#4-shell函数" class="headerlink" title="4. shell函数"></a>4. shell函数</h3><p>没有数据类型</p>
+<p>没有写形参，但可以传参</p>
+<p>只有调用函数之后，函数里面的变量才会生效</p>
+<p>函数里面定义的都是全局变量，如果要定义局部变量，加local</p>
+<p>（1）函数的一般形式：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">function 函数名（）</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    函数体</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">或者：</span><br><span class="line"></span><br><span class="line">函数名（）</span><br><span class="line">&#123;</span><br><span class="line">    函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>（2）函数的调用，直接函数名</p>
+<p>（3）返回值return，可以通过$?来打印函数的返回值,如果有返回值，返回在0~256</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> add()</span><br><span class="line"> <span class="number">4</span> &#123;</span><br><span class="line"> <span class="number">5</span>     a=<span class="number">12</span></span><br><span class="line"> <span class="number">6</span>     <span class="keyword">return</span> $a</span><br><span class="line"> <span class="number">7</span> &#125;</span><br><span class="line"> <span class="number">8</span> add</span><br><span class="line"> <span class="number">9</span> echo $?</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>（4）函数的传参</p>
+<p>函数名 实参1 实参2.。。。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">函数体中用$<span class="number">1</span>,$<span class="number">2</span>$<span class="number">3.</span>....来接受传递的实参</span><br><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> add()</span><br><span class="line">  <span class="number">4</span> &#123;</span><br><span class="line">  <span class="number">5</span>     a=<span class="number">12</span></span><br><span class="line">  <span class="number">6</span>     echo $<span class="number">1</span></span><br><span class="line">  <span class="number">7</span>     echo $<span class="number">2</span></span><br><span class="line">  <span class="number">8</span>     echo $<span class="number">3</span></span><br><span class="line">  <span class="number">9</span>     <span class="keyword">return</span> $a</span><br><span class="line"> <span class="number">10</span> &#125;</span><br><span class="line"> <span class="number">11</span> add <span class="number">34</span> <span class="number">56</span> <span class="number">78</span></span><br><span class="line"> <span class="number">12</span> echo $?</span><br></pre></td></tr></table></figure>
+
+<p>练习：写一个求和函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> read m n</span><br><span class="line"> <span class="number">3</span> add()</span><br><span class="line"> <span class="number">4</span> &#123;</span><br><span class="line"> <span class="number">5</span>     sum=<span class="number">0</span></span><br><span class="line"> <span class="number">6</span>     <span class="keyword">for</span>((i=$<span class="number">1</span>;i&lt;=$<span class="number">2</span>;i++))</span><br><span class="line"> <span class="number">7</span>     <span class="keyword">do</span></span><br><span class="line"> <span class="number">8</span>         sum=$(($sum+$i))</span><br><span class="line"> <span class="number">9</span>     done</span><br><span class="line"><span class="number">10</span> &#125;</span><br><span class="line"><span class="number">11</span> add m n</span><br><span class="line"><span class="number">12</span> echo $sum</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h2 id="三、c高级："><a href="#三、c高级：" class="headerlink" title="三、c高级："></a>三、c高级：</h2><h3 id="1-指针："><a href="#1-指针：" class="headerlink" title="1. 指针："></a>1. 指针：</h3><p>（1）指针的定义：</p>
+<p>存储类型 数据类型 *指针变量名；</p>
+<p>（2）指针的初始化：</p>
+<p>存储类型 数据类型 *指针变量名=地址；</p>
+<p>（3）指针的赋值：</p>
+<p>1、把一个已知变量的地址赋值给指针</p>
+<p>2、把已知数组首地址赋值给指针</p>
+<p>3、把已有同级别指针赋值给指针</p>
+<p>4、把NULL赋值给指针</p>
+<p>（4）数组指针</p>
+<p>本质是一个指针，只是这个指向了每个元素都是一维数组的一维数组</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">10  </span>&#123;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="number">12</span>     <span class="keyword">int</span> (*p)[<span class="number">3</span>]=a;</span><br><span class="line"><span class="number">13</span> </span><br><span class="line"><span class="number">14</span>     <span class="built_in">printf</span>(<span class="string">&quot;a[1][0]=%d\n&quot;</span>,a[<span class="number">1</span>][<span class="number">0</span>]);</span><br><span class="line"><span class="number">15</span>     <span class="built_in">printf</span>(<span class="string">&quot;*(*(p+1))]=%d\n&quot;</span>,*(*(p+<span class="number">1</span>)));</span><br><span class="line"><span class="number">16</span>     <span class="built_in">printf</span>(<span class="string">&quot;p[1][0]=%d\n&quot;</span>,p[<span class="number">1</span>][<span class="number">0</span>]);</span><br><span class="line"><span class="number">17</span>     <span class="built_in">printf</span>(<span class="string">&quot;*p[1]=%d\n&quot;</span>,*p[<span class="number">1</span>]);</span><br><span class="line"><span class="number">18</span> </span><br><span class="line"><span class="number">19</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">20</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong><font color="red">注意：用指针数组创建的字符串(char *p[]={“hello”,”nihao”,”konnichiwa”})是字符串常量,而用二维字符串数组写的字符串才算变量。</font></strong></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">写博客时有&#123;#的地方必须要放在代码里否则会渲染错误</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>shell</tag>
+        <tag>Linux基础</tag>
+        <tag>shell脚本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>嵌入式学习-Linux基础</title>
+    <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
+<a id="more"></a>
+
+<h2 id="2、linux操作系统的基本使用"><a href="#2、linux操作系统的基本使用" class="headerlink" title="2、linux操作系统的基本使用"></a>2、linux操作系统的基本使用</h2><h3 id="0-、linux的文件的系统结构"><a href="#0-、linux的文件的系统结构" class="headerlink" title="(0)、linux的文件的系统结构"></a>(0)、linux的文件的系统结构</h3><blockquote>
+<ul>
+<li>windows：所有文件有分盘(C,D,E,F….)，每个盘中都有子文件或者子目录，对文件存放没有要求，可以放在任意位置</li>
+<li>linux：没有分盘，只有一个大的目录–根目录（’/‘），根目录下的文件夹每一个都有其固定作用</li>
+<li>bin：存放二进制文件或者可执行程序</li>
+<li>dev：存放设备文件</li>
+<li>etc：系统相关的配置文件</li>
+<li>home：用户目录，用户所有操作都在该目录下进行     /home/hqyj 可以用符号(~)表示</li>
+</ul>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h3 id="1-、基本的shell命令"><a href="#1-、基本的shell命令" class="headerlink" title="(1)、基本的shell命令"></a>(1)、基本的shell命令</h3><p>​        shell本质：命令行解释器，将用户输入的特定指令转换为系统能够识别的语言</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    绝对路径：从根目录出发所表示的一个路径</span><br><span class="line">    相对路径：相对于用户当前位置所表示的一个路径</span><br><span class="line"></span><br><span class="line">pwd:显示当前用户在文件系统中的绝对路径</span><br><span class="line">    用法：</span><br><span class="line">    	pwd + 回车</span><br><span class="line">ls:显示当前用户所在路径下的所有文件(不包含隐藏文件)</span><br><span class="line">    用法：</span><br><span class="line">    	ls + 回车</span><br><span class="line">ls -a：显示当前用户所在路径下的所有文件(包含隐藏文件)</span><br><span class="line">    <span class="string">&#x27;.&#x27;</span> == 用户当前目录</span><br><span class="line">    &#x27;..&#x27; == 当前目录的上一级目录</span><br><span class="line">    </span><br><span class="line">ls -l:显示当前用户所在路径下的所有文件的详细信息</span><br><span class="line">    - rw- rw- r--</span><br><span class="line">    第一位代表文件类型：</span><br><span class="line">    	<span class="string">&#x27;-&#x27;</span> :普通文件</span><br><span class="line">    	<span class="string">&#x27;d&#x27;</span> :目录文件</span><br><span class="line">    	<span class="string">&#x27;c&#x27;</span> :字符设备文件</span><br><span class="line">    	<span class="string">&#x27;b&#x27;</span> :块设备文件</span><br><span class="line">    	<span class="string">&#x27;p&#x27;</span> :管道文件</span><br><span class="line">    	<span class="string">&#x27;l&#x27;</span> :符号链接文件</span><br><span class="line">    	<span class="string">&#x27;s&#x27;</span> :套接字文件</span><br><span class="line">            不同操作系统下支持使用的文件类型不同</span><br><span class="line">    	</span><br><span class="line">    后<span class="number">9</span>位代表文件存取权限</span><br><span class="line">         rw-rw-r--  == <span class="number">110</span> <span class="number">110</span> <span class="number">100</span> == <span class="number">0664</span></span><br><span class="line">         权限的前<span class="number">3</span>位表示用户自己的使用权限，如果当前位上没有对应权限用<span class="string">&#x27;-&#x27;</span>表示                      </span><br><span class="line">		 权限的中间<span class="number">3</span>位代表用户组的使用权限        </span><br><span class="line">         权限的最后<span class="number">3</span>位代表其他用户的使用权限</span><br><span class="line">         r -- 具有读权限  w -- 具有写权限  x -- 具有可执行权限</span><br><span class="line">    改变文件权限的命令入下:</span><br><span class="line">         chmod [-R]  xyz  文件或目录</span><br><span class="line">         -R ： 以递归方式进行修改，比如修改某个目录下所有文件的属性。</span><br><span class="line"></span><br><span class="line">cd: 目录跳转	</span><br><span class="line">    用法：</span><br><span class="line">    	cd + 指定路径    </span><br><span class="line"></span><br><span class="line">touch:以不打开的方式创建一个文件，如果文件存在，则修改时间戳</span><br><span class="line">    用法：</span><br><span class="line">    	touch + 文件名</span><br><span class="line">    </span><br><span class="line">rm:删除指定文件</span><br><span class="line">    用法：</span><br><span class="line">    	rm + 文件名</span><br><span class="line">    </span><br><span class="line">cat：显示文件内容</span><br><span class="line">    用法：</span><br><span class="line">    	cat + 文件名</span><br><span class="line">    </span><br><span class="line">cp: 复制文件</span><br><span class="line">    用法：</span><br><span class="line">    	cp + 源文件名 + 路径名</span><br><span class="line">    	cp + 源文件名 + 目标文件名</span><br><span class="line">mv：移动文件</span><br><span class="line">    用法：</span><br><span class="line">    	mv + 源文件名 + 路径名</span><br><span class="line">    	mv + 源文件名 + 目标文件名    </span><br><span class="line"></span><br><span class="line">mkdir: 创建目录</span><br><span class="line">    用法：</span><br><span class="line">    	mkdir + 目录名</span><br><span class="line">    </span><br><span class="line">rmdir: 删除指定目录(空目录)   </span><br><span class="line">    用法：</span><br><span class="line">    	rmdir + 目录名</span><br><span class="line">    </span><br><span class="line">  	删除非空目录：rm -r 目录名</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">clear:清屏    ctrl + l快捷方式也可以清屏</span><br><span class="line">Tab: 命令补全</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h3 id="2-、vim编辑器"><a href="#2-、vim编辑器" class="headerlink" title="(2)、vim编辑器"></a>(2)、vim编辑器</h3><p>shell命令：vi 或者 vim + 文件名  </p>
+<p>如果文件不存在，则会先创建再进行编辑</p>
+<h4 id="vim编辑器中的三种工作模式："><a href="#vim编辑器中的三种工作模式：" class="headerlink" title="vim编辑器中的三种工作模式："></a>vim编辑器中的三种工作模式：</h4><p>​命令行模式：用户在进入编辑器后默认处于的工作模式</p>
+<p>​        在命令行模式下不能直接输入数据，但是可以对文本进行复制、粘贴、剪切、撤销等操作：</p>
+<p>​            在命令行模式下输入：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">ngg: 光标跳到某一行首</span><br><span class="line"></span><br><span class="line">nyy：将光标以及光标以下的n行数据进行复制</span><br><span class="line"></span><br><span class="line">ndd：将光标以及光标以下的n行数据进行剪切或删除</span><br><span class="line"></span><br><span class="line">p：将复制或者剪切的内容粘贴到光标的下一行</span><br><span class="line"></span><br><span class="line">u：撤回到上一步操作</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>：当前行首</span><br><span class="line"></span><br><span class="line">$：当前行尾</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​    编辑模式：可以对文本进行编辑操作</p>
+<p>​        在命令行模式下输入：a, i, o都可以进入编辑模式</p>
+<p>​        按Esc退回到命令行模式</p>
+<p>​    </p>
+<p>​    底行模式：对文本进行保存、退出等操作</p>
+<p>​        在命令行模式下输入冒号进入底行模式</p>
+<p>​            在底行模式下输入：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">w：保存文件</span><br><span class="line">q：退出文件</span><br><span class="line">wq：保存并且退出</span><br><span class="line">q！：强制不保存退出</span><br><span class="line">x：保存并且退出</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="vim文本查找和替换"><a href="#vim文本查找和替换" class="headerlink" title="vim文本查找和替换"></a>vim文本查找和替换</h4><p>在一般模式下，可以执行以下命令。</p>
+<ol>
+<li>查找<br>pattern  从光标开始处向文件尾搜索pattern，后按下n或N</li>
+</ol>
+<p>注意：</p>
+<blockquote>
+<p>n    在同一个方向重复上一次搜索命令<br>N    在反方向重复上一次搜索命令</p>
+</blockquote>
+<p>注意：<br>在/pattern之前先跳到第一行则进行全文件搜索。</p>
+<ol start="2">
+<li>替换<blockquote>
+<p>:%s/p1/p2/g   //将文件中所有的p1均用p2替换<br>:%s/p1/p2/gc  //替换时需要确认<br>“s“ 全称：substitute替换；<br>“g“ 全称：global全局；<br>“c“ 全称：confirm，确认</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="3-、gcc编译工具"><a href="#3-、gcc编译工具" class="headerlink" title="(3)、gcc编译工具"></a>(3)、gcc编译工具</h3><p>​    shell指令：</p>
+<p>​        gcc + c文件名</p>
+<p>​        编译成功之后会在当前目录下产生一个名为a.out的二进制可执行程序</p>
+<p>​            </p>
+<p>​       gcc c文件名 -o 新的二进制可执行文件名</p>
+<p>​    </p>
+<h3 id="4-、执行程序"><a href="#4-、执行程序" class="headerlink" title="(4)、执行程序"></a>(4)、执行程序</h3><p>​    shell命令：</p>
+<p>​        ./可执行的二进制文件名</p>
+<p>​        </p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>嵌入式</tag>
       </tags>
   </entry>
   <entry>
@@ -1377,83 +1664,6 @@
       </categories>
       <tags>
         <tag>算法，排序算法，基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>嵌入式学习-Linux基础</title>
-    <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
-<a id="more"></a>
-
-<h2 id="2、linux操作系统的基本使用"><a href="#2、linux操作系统的基本使用" class="headerlink" title="2、linux操作系统的基本使用"></a>2、linux操作系统的基本使用</h2><h3 id="0-、linux的文件的系统结构"><a href="#0-、linux的文件的系统结构" class="headerlink" title="(0)、linux的文件的系统结构"></a>(0)、linux的文件的系统结构</h3><blockquote>
-<ul>
-<li>windows：所有文件有分盘(C,D,E,F….)，每个盘中都有子文件或者子目录，对文件存放没有要求，可以放在任意位置</li>
-<li>linux：没有分盘，只有一个大的目录–根目录（’/‘），根目录下的文件夹每一个都有其固定作用</li>
-<li>bin：存放二进制文件或者可执行程序</li>
-<li>dev：存放设备文件</li>
-<li>etc：系统相关的配置文件</li>
-<li>home：用户目录，用户所有操作都在该目录下进行     /home/hqyj 可以用符号(~)表示</li>
-</ul>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h3 id="1-、基本的shell命令"><a href="#1-、基本的shell命令" class="headerlink" title="(1)、基本的shell命令"></a>(1)、基本的shell命令</h3><p>​        shell本质：命令行解释器，将用户输入的特定指令转换为系统能够识别的语言</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    绝对路径：从根目录出发所表示的一个路径</span><br><span class="line">    相对路径：相对于用户当前位置所表示的一个路径</span><br><span class="line"></span><br><span class="line">pwd:显示当前用户在文件系统中的绝对路径</span><br><span class="line">    用法：</span><br><span class="line">    	pwd + 回车</span><br><span class="line">ls:显示当前用户所在路径下的所有文件(不包含隐藏文件)</span><br><span class="line">    用法：</span><br><span class="line">    	ls + 回车</span><br><span class="line">ls -a：显示当前用户所在路径下的所有文件(包含隐藏文件)</span><br><span class="line">    <span class="string">&#x27;.&#x27;</span> == 用户当前目录</span><br><span class="line">    &#x27;..&#x27; == 当前目录的上一级目录</span><br><span class="line">    </span><br><span class="line">ls -l:显示当前用户所在路径下的所有文件的详细信息</span><br><span class="line">    - rw- rw- r--</span><br><span class="line">    第一位代表文件类型：</span><br><span class="line">    	<span class="string">&#x27;-&#x27;</span> :普通文件</span><br><span class="line">    	<span class="string">&#x27;d&#x27;</span> :目录文件</span><br><span class="line">    	<span class="string">&#x27;c&#x27;</span> :字符设备文件</span><br><span class="line">    	<span class="string">&#x27;b&#x27;</span> :块设备文件</span><br><span class="line">    	<span class="string">&#x27;p&#x27;</span> :管道文件</span><br><span class="line">    	<span class="string">&#x27;l&#x27;</span> :符号链接文件</span><br><span class="line">    	<span class="string">&#x27;s&#x27;</span> :套接字文件</span><br><span class="line">            不同操作系统下支持使用的文件类型不同</span><br><span class="line">    	</span><br><span class="line">    后<span class="number">9</span>位代表文件存取权限</span><br><span class="line">         rw-rw-r--  == <span class="number">110</span> <span class="number">110</span> <span class="number">100</span> == <span class="number">0664</span></span><br><span class="line">         权限的前<span class="number">3</span>位表示用户自己的使用权限，如果当前位上没有对应权限用<span class="string">&#x27;-&#x27;</span>表示                      </span><br><span class="line">		 权限的中间<span class="number">3</span>位代表用户组的使用权限        </span><br><span class="line">         权限的最后<span class="number">3</span>位代表其他用户的使用权限</span><br><span class="line">         r -- 具有读权限  w -- 具有写权限  x -- 具有可执行权限</span><br><span class="line">    改变文件权限的命令入下:</span><br><span class="line">         chmod [-R]  xyz  文件或目录</span><br><span class="line">         -R ： 以递归方式进行修改，比如修改某个目录下所有文件的属性。</span><br><span class="line"></span><br><span class="line">cd: 目录跳转	</span><br><span class="line">    用法：</span><br><span class="line">    	cd + 指定路径    </span><br><span class="line"></span><br><span class="line">touch:以不打开的方式创建一个文件，如果文件存在，则修改时间戳</span><br><span class="line">    用法：</span><br><span class="line">    	touch + 文件名</span><br><span class="line">    </span><br><span class="line">rm:删除指定文件</span><br><span class="line">    用法：</span><br><span class="line">    	rm + 文件名</span><br><span class="line">    </span><br><span class="line">cat：显示文件内容</span><br><span class="line">    用法：</span><br><span class="line">    	cat + 文件名</span><br><span class="line">    </span><br><span class="line">cp: 复制文件</span><br><span class="line">    用法：</span><br><span class="line">    	cp + 源文件名 + 路径名</span><br><span class="line">    	cp + 源文件名 + 目标文件名</span><br><span class="line">mv：移动文件</span><br><span class="line">    用法：</span><br><span class="line">    	mv + 源文件名 + 路径名</span><br><span class="line">    	mv + 源文件名 + 目标文件名    </span><br><span class="line"></span><br><span class="line">mkdir: 创建目录</span><br><span class="line">    用法：</span><br><span class="line">    	mkdir + 目录名</span><br><span class="line">    </span><br><span class="line">rmdir: 删除指定目录(空目录)   </span><br><span class="line">    用法：</span><br><span class="line">    	rmdir + 目录名</span><br><span class="line">    </span><br><span class="line">  	删除非空目录：rm -r 目录名</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">clear:清屏    ctrl + l快捷方式也可以清屏</span><br><span class="line">Tab: 命令补全</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<h3 id="2-、vim编辑器"><a href="#2-、vim编辑器" class="headerlink" title="(2)、vim编辑器"></a>(2)、vim编辑器</h3><p>shell命令：vi 或者 vim + 文件名  </p>
-<p>如果文件不存在，则会先创建再进行编辑</p>
-<h4 id="vim编辑器中的三种工作模式："><a href="#vim编辑器中的三种工作模式：" class="headerlink" title="vim编辑器中的三种工作模式："></a>vim编辑器中的三种工作模式：</h4><p>​命令行模式：用户在进入编辑器后默认处于的工作模式</p>
-<p>​        在命令行模式下不能直接输入数据，但是可以对文本进行复制、粘贴、剪切、撤销等操作：</p>
-<p>​            在命令行模式下输入：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">ngg: 光标跳到某一行首</span><br><span class="line"></span><br><span class="line">nyy：将光标以及光标以下的n行数据进行复制</span><br><span class="line"></span><br><span class="line">ndd：将光标以及光标以下的n行数据进行剪切或删除</span><br><span class="line"></span><br><span class="line">p：将复制或者剪切的内容粘贴到光标的下一行</span><br><span class="line"></span><br><span class="line">u：撤回到上一步操作</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>：当前行首</span><br><span class="line"></span><br><span class="line">$：当前行尾</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>​    编辑模式：可以对文本进行编辑操作</p>
-<p>​        在命令行模式下输入：a, i, o都可以进入编辑模式</p>
-<p>​        按Esc退回到命令行模式</p>
-<p>​    </p>
-<p>​    底行模式：对文本进行保存、退出等操作</p>
-<p>​        在命令行模式下输入冒号进入底行模式</p>
-<p>​            在底行模式下输入：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">w：保存文件</span><br><span class="line">q：退出文件</span><br><span class="line">wq：保存并且退出</span><br><span class="line">q！：强制不保存退出</span><br><span class="line">x：保存并且退出</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h4 id="vim文本查找和替换"><a href="#vim文本查找和替换" class="headerlink" title="vim文本查找和替换"></a>vim文本查找和替换</h4><p>在一般模式下，可以执行以下命令。</p>
-<ol>
-<li>查找<br>pattern  从光标开始处向文件尾搜索pattern，后按下n或N</li>
-</ol>
-<p>注意：</p>
-<blockquote>
-<p>n    在同一个方向重复上一次搜索命令<br>N    在反方向重复上一次搜索命令</p>
-</blockquote>
-<p>注意：<br>在/pattern之前先跳到第一行则进行全文件搜索。</p>
-<ol start="2">
-<li>替换<blockquote>
-<p>:%s/p1/p2/g   //将文件中所有的p1均用p2替换<br>:%s/p1/p2/gc  //替换时需要确认<br>“s“ 全称：substitute替换；<br>“g“ 全称：global全局；<br>“c“ 全称：confirm，确认</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="3-、gcc编译工具"><a href="#3-、gcc编译工具" class="headerlink" title="(3)、gcc编译工具"></a>(3)、gcc编译工具</h3><p>​    shell指令：</p>
-<p>​        gcc + c文件名</p>
-<p>​        编译成功之后会在当前目录下产生一个名为a.out的二进制可执行程序</p>
-<p>​            </p>
-<p>​       gcc c文件名 -o 新的二进制可执行文件名</p>
-<p>​    </p>
-<h3 id="4-、执行程序"><a href="#4-、执行程序" class="headerlink" title="(4)、执行程序"></a>(4)、执行程序</h3><p>​    shell命令：</p>
-<p>​        ./可执行的二进制文件名</p>
-<p>​        </p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>嵌入式</tag>
       </tags>
   </entry>
   <entry>

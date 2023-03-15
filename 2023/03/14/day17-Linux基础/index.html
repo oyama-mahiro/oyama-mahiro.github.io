@@ -123,7 +123,8 @@
 <hr>
 <h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
 
-<h2 id="wc"><a href="#wc" class="headerlink" title="wc"></a>wc</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
+<p> wc</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
 
 
 <br>
@@ -275,6 +276,7 @@
 <p>计算机定义好了的变量</p>
 <p>env可以查看所有环境变量</p>
 <p>调用需要加$</p>
+<p><strong>注：shell中0是真，1是假</strong></p>
 <h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
 
@@ -360,6 +362,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            day18-Linux基础,shell脚本
+          
+        </div>
+      </a>
     
     
       <a href="/2023/03/13/day16-Linux%E5%9F%BA%E7%A1%80/" class="article-nav-link">
