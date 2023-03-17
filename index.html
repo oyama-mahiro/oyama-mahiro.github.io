@@ -97,6 +97,162 @@
     
     
     <article
+  id="post-day20-c特殊类型和gbd-makefile"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/03/17/day20-c%E7%89%B9%E6%AE%8A%E7%B1%BB%E5%9E%8B%E5%92%8Cgbd-makefile/"
+    >day20-c特殊类型和gbd,makefile</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/03/17/day20-c%E7%89%B9%E6%AE%8A%E7%B1%BB%E5%9E%8B%E5%92%8Cgbd-makefile/" class="article-date">
+  <time datetime="2023-03-17T15:58:51.000Z" itemprop="datePublished">2023-03-17</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a> / <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/Linux/">Linux</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day20-linux基础和c"><a href="#day20-linux基础和c" class="headerlink" title="day20-linux基础和c"></a><font color="green">day20-linux基础和c</font></h1><br>
+<br>
+
+<hr>
+<h2 id="一、结构体："><a href="#一、结构体：" class="headerlink" title="一、结构体："></a>一、结构体：</h2><h3 id="1-结构体的嵌套："><a href="#1-结构体的嵌套：" class="headerlink" title="1. 结构体的嵌套："></a>1. 结构体的嵌套：</h3><p>结构体里面再放结构体</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line">  <span class="number">8</span> <span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">stu</span>&#123;</span></span><br><span class="line">  <span class="number">9</span>     <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">10</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"> <span class="number">11</span>     <span class="keyword">int</span> id;</span><br><span class="line"> <span class="number">12</span> &#125;STU;</span><br><span class="line"> <span class="number">13</span> </span><br><span class="line"> <span class="number">14</span> <span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">tea</span>&#123;</span></span><br><span class="line"> <span class="number">15</span>     <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">16</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"> <span class="number">17</span>     <span class="keyword">char</span> sex[<span class="number">32</span>];</span><br><span class="line"> <span class="number">18</span>     STU zc;</span><br><span class="line"> <span class="number">19</span> &#125;TEA;</span><br><span class="line"> <span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"> 21 </span>&#123;   </span><br><span class="line"> <span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"> <span class="number">23</span>     TEA b=&#123;<span class="number">30</span>,<span class="string">&quot;lisi&quot;</span>,<span class="string">&quot;man&quot;</span>,a&#125;;</span><br><span class="line"> <span class="number">24</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.age=%d\n&quot;</span>,a.age);</span><br><span class="line"> <span class="number">25</span>     <span class="built_in">printf</span>(<span class="string">&quot;b.zc.age=%d\n&quot;</span>,b.zc.age);</span><br><span class="line"> <span class="number">26</span> </span><br><span class="line"> <span class="number">27</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> <span class="number">28</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-结构体指针"><a href="#2-结构体指针" class="headerlink" title="2. 结构体指针"></a>2. 结构体指针</h3><p>本质是一个指针，只是这个指针指向了一个结构体</p>
+<p>一般形式：struct 结构提名 * 指针变量名；</p>
+<p>初始化：struct 结构提名 * 指针变量名=结构体地址；</p>
+<p>指针访问结构体内容：</p>
+<p>两种方式：</p>
+<p>1、（*p）.成员—用的少</p>
+<p>2、p-&gt;成员</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">21 </span>&#123;   </span><br><span class="line"><span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"><span class="number">23</span>     STU *p=&amp;a;<span class="comment">//初始化</span></span><br><span class="line"><span class="number">24</span>     <span class="built_in">printf</span>(<span class="string">&quot;(*p).age=%d\n&quot;</span>,(*p).age);</span><br><span class="line"><span class="number">25</span>     <span class="built_in">printf</span>(<span class="string">&quot;p-&gt;age=%d\n&quot;</span>,p-&gt;age);</span><br><span class="line"><span class="number">26</span> </span><br><span class="line"><span class="number">27</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">28</span> &#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-结构体数组："><a href="#3-结构体数组：" class="headerlink" title="3. 结构体数组："></a>3. 结构体数组：</h3><p>本质是一个数组，只是这个数组里面的元素都是结构体</p>
+<p>一般形式：struct 结构提名 数组名【下标】；</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"> 21 </span>&#123;   </span><br><span class="line"> <span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"> <span class="number">23</span>     STU b=&#123;<span class="number">13</span>,<span class="string">&quot;lisi&quot;</span>,<span class="number">47</span>&#125;;</span><br><span class="line"> <span class="number">24</span>     STU c=&#123;<span class="number">15</span>,<span class="string">&quot;wangwu&quot;</span>,<span class="number">50</span>&#125;;</span><br><span class="line"> <span class="number">25</span>     STU s[<span class="number">3</span>]=&#123;a,b,c&#125;;<span class="comment">//初始化</span></span><br><span class="line"> <span class="number">26</span>     <span class="built_in">printf</span>(<span class="string">&quot;s[1].name=%s\n&quot;</span>,s[<span class="number">1</span>].name);</span><br><span class="line"> <span class="number">27</span>     </span><br><span class="line"> <span class="number">28</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> <span class="number">29</span> &#125; </span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="二、共用体—union"><a href="#二、共用体—union" class="headerlink" title="二、共用体—union"></a>二、共用体—union</h2><p>也叫联合体</p>
+<p>成员们一起用一片空间地址</p>
+<p>共用体不允许初始化</p>
+<p>STU a={12,”zhangsan”,45};//错误</p>
+<p>赋值只能成员赋值，而且每次只能赋值一个，前面赋值的都会被覆盖</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">8</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"> <span class="number">9</span> <span class="keyword">typedef</span> <span class="keyword">union</span> stu&#123;</span><br><span class="line"><span class="number">10</span>     <span class="keyword">int</span> age;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"><span class="number">12</span>     <span class="keyword">int</span> id;</span><br><span class="line"><span class="number">13</span> &#125;STU;</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">16 </span>&#123;   </span><br><span class="line"><span class="number">17</span>     STU a;</span><br><span class="line"><span class="number">18</span>     a.age=<span class="number">12</span>;</span><br><span class="line"><span class="number">19</span>     <span class="built_in">strcpy</span>(a.name,<span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line"><span class="number">20</span>     a.id=<span class="number">45</span>;</span><br><span class="line"><span class="number">21</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.age=%d\n&quot;</span>,a.age); <span class="comment">//a.age=45</span></span><br><span class="line"><span class="number">22</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.name=%s\n&quot;</span>,a.name); <span class="comment">//a.name=-</span></span><br><span class="line"><span class="number">23</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.id=%d\n&quot;</span>,a.id); <span class="comment">//a.id=45</span></span><br><span class="line"><span class="number">24</span>     </span><br><span class="line"><span class="number">25</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">26</span> &#125; </span><br></pre></td></tr></table></figure>
+
+<p>共用体的大小：</p>
+<p>也要遵循结构体大小的规则，但是只会给最大成员开辟对应的空间地址</p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、枚举型–enum"><a href="#三、枚举型–enum" class="headerlink" title="三、枚举型–enum"></a>三、枚举型–enum</h2><p>成员没有初始化，从0开始往后赋值</p>
+<p>如果有成员赋值，成员后面依次递增+1</p>
+<p>enum里面的成员都是常量，不能修改它们的值</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">10 </span>&#123;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">enum</span> &#123;A,E,B=<span class="number">2</span>,C,D=<span class="number">8</span>,F&#125;;</span><br><span class="line"><span class="number">12</span>     <span class="built_in">printf</span>(<span class="string">&quot;A=%d\n&quot;</span>,A);<span class="comment">//0</span></span><br><span class="line"><span class="number">13</span>     <span class="built_in">printf</span>(<span class="string">&quot;E=%d\n&quot;</span>,E);<span class="comment">//1</span></span><br><span class="line"><span class="number">14</span>     <span class="built_in">printf</span>(<span class="string">&quot;B=%d\n&quot;</span>,B);<span class="comment">//2</span></span><br><span class="line"><span class="number">15</span>     <span class="built_in">printf</span>(<span class="string">&quot;C=%d\n&quot;</span>,C);<span class="comment">//3</span></span><br><span class="line"><span class="number">16</span>     <span class="built_in">printf</span>(<span class="string">&quot;F=%d\n&quot;</span>,F);<span class="comment">//9</span></span><br><span class="line"><span class="number">17</span>     </span><br><span class="line"><span class="number">18</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">19</span> &#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="四、gdb调试工具："><a href="#四、gdb调试工具：" class="headerlink" title="四、gdb调试工具："></a>四、gdb调试工具：</h2><p>帮助我们找出代码的问题</p>
+<p>gcc -g 编译的文件名，会生成一个a.out的执行文件，这个执行文件就可以调试</p>
+<p>gdb 执行文件名</p>
+<blockquote>
+<p>r—运行我们的程序<br>l—查看我们的程序代码<br>b—设置断点，让程序跑到我们断点的那一行<br>c–继续运行我们的程序，直到下一个断点，如果没有直接运行完<br>p+变量===查看变量的值<br>n—按行运行，但是不进入函数<br>s—按行运行，会进入函数<br>delete—删除所有断点<br>q—退出dgb调试</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="五、makefile"><a href="#五、makefile" class="headerlink" title="五、makefile"></a>五、makefile</h2><p>makefile是一个文件，里面放的是编译的规则，可以管理多个文件</p>
+<p>make是一个工具，用来解析我们的makefile</p>
+<p>make会根据文件的时间戳进行编译，如果文件的时间戳没有改变，不会编译该文件，节省大量的编译时间</p>
+<p>makefile的逻辑：</p>
+<p>目标文件：依赖文件</p>
+<p>​     （tab）编译语句</p>
+<p>目标文件就是我们最终会生成的文件，要生成这个文件，会去找生成它需要的文件，就叫依赖文件，如果这个依赖文件有需要其他文件来生成，继续找它的依赖文件，直到不需要为止</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> app:<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">2</span>     gcc  <span class="built_in">list</span>.o main.o -o app</span><br><span class="line"> <span class="number">3</span> <span class="built_in">list</span>.o:<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">4</span>     gcc -c <span class="built_in">list</span>.c -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">5</span> main.o:main.c</span><br><span class="line"> <span class="number">6</span>     gcc -c main.c -o main.o</span><br><span class="line"> <span class="number">7</span> clean:</span><br><span class="line"> <span class="number">8</span>     rm main.o <span class="built_in">list</span>.o app </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>make clean  删除生成的文件（执行clean后面的语句）</p>
+<p>make，默认解析当前目录下的makefile或者Makefile</p>
+<p>make -f 指定的makefile</p>
+<p>调用外部头文件-I 加头文件的路径</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> app:<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">2</span>     gcc  <span class="built_in">list</span>.o main.o -I ./include -o app</span><br><span class="line"> <span class="number">3</span> <span class="built_in">list</span>.o:<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">4</span>     gcc -c <span class="built_in">list</span>.c -I ./include -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">5</span> main.o:main.c</span><br><span class="line"> <span class="number">6</span>     gcc -c main.c -I ./include -o main.o</span><br><span class="line"> <span class="number">7</span> clean:</span><br><span class="line"> <span class="number">8</span>     rm main.o <span class="built_in">list</span>.o app </span><br></pre></td></tr></table></figure>
+
+<h3 id="makefile的变量"><a href="#makefile的变量" class="headerlink" title="makefile的变量"></a>makefile的变量</h3><p>变量的赋值：</p>
+<ul>
+<li>=：给当前变量赋值，但是如果后面有新的赋值，把新的赋值给变量</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b=$(a)</span><br><span class="line">  <span class="number">3</span> a=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">b=<span class="number">34</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>:=—立即赋值,和平时的赋值一样，后面新的赋值不会改变当前值</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">      b=<span class="number">12</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>？=—询问赋值,询问前面有没有赋值，如果有，此次赋值无效</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a?=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">  <span class="number">6</span>     echo $(a)</span><br><span class="line">a=<span class="number">12</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>+=：追加赋值</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a+=hello</span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">  <span class="number">6</span>     echo $(a)</span><br><span class="line">a=<span class="number">12</span> hello</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以在语句前加@隐藏显示语句</p>
+</blockquote>
+<p>利用变量写makefile：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> TARGET=app <span class="comment">//相当于代替</span></span><br><span class="line">  <span class="number">2</span> OBJS=<span class="built_in">list</span>.o main.o </span><br><span class="line">  <span class="number">3</span> CC=gcc</span><br><span class="line">  <span class="number">4</span> OBJS2=<span class="built_in">list</span>.c</span><br><span class="line">  <span class="number">5</span> OBJS3=main.c</span><br><span class="line">  <span class="number">6</span> PATH=-I ./include</span><br><span class="line">  <span class="number">7</span> </span><br><span class="line">  <span class="number">8</span> $(TARGET):$(OBJS)</span><br><span class="line">  <span class="number">9</span>     $(CC)  $(OBJS) $(PATH) -o $(TARGET)</span><br><span class="line"> <span class="number">10</span> <span class="built_in">list</span>.o:$(OBJS2)</span><br><span class="line"> <span class="number">11</span>     $(CC) -c $(OBJS2) $(PATH) -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">12</span> main.o:$(OBJS3)</span><br><span class="line"> <span class="number">13</span>     $(CC) -c $(OBJS3) $(PATH) -o main.o</span><br><span class="line"> <span class="number">14</span> clean:</span><br><span class="line"> <span class="number">15</span>     rm $(OBJS) $(TARGET) </span><br><span class="line">~                            </span><br></pre></td></tr></table></figure>
+
+<p>特殊的变量：</p>
+<blockquote>
+<p>$@—目标文件<br>$^—所有依赖文件<br>$&lt;:第一个依赖文件<br>通配符：%</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">TARGET=app</span><br><span class="line"> <span class="number">2</span> OBJS=<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">3</span> CC=gcc</span><br><span class="line"> <span class="number">4</span> OBJS2=<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">5</span> OBJS3=main.c</span><br><span class="line"> <span class="number">6</span> path=-I ./include</span><br><span class="line"> <span class="number">7</span> $(TARGET):$(OBJS)</span><br><span class="line"> <span class="number">8</span>     $(CC)  $^ $(path) -o $@</span><br><span class="line"> <span class="number">9</span> %.o:%.c</span><br><span class="line"><span class="number">10</span>     $(CC) -c $^ $(path) -o $@</span><br><span class="line"><span class="number">11</span> clean:</span><br><span class="line"><span class="number">12</span>     rm $(TARGET) $(OBJS)</span><br></pre></td></tr></table></figure>
+
+
+
+ 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gbd/" rel="tag">gbd</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/makefile/" rel="tag">makefile</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BB%93%E6%9E%84%E4%BD%93/" rel="tag">结构体</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-day19-c函数，结构体"
   class="article article-type-post"
   itemscope
@@ -905,62 +1061,6 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C%E8%AF%AD%E8%A8%80/" rel="tag">C语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%8C%87%E9%92%88/" rel="tag">指针</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E7%BB%84/" rel="tag">数组</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-嵌入式学习"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/"
-    >嵌入式学习-Linux基础</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/" class="article-date">
-  <time datetime="2023-02-28T07:06:14.000Z" itemprop="datePublished">2023-02-28</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p> 
-      <a class="article-more-link" href="/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/" rel="tag">嵌入式</a></li></ul>
 
     </footer>
   </div>
