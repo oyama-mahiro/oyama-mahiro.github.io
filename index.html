@@ -164,7 +164,11 @@
 <br>
 
 <hr>
-<h2 id="二、shell-语句"><a href="#二、shell-语句" class="headerlink" title="二、shell 语句"></a>二、shell 语句</h2><h3 id="1-解释性语句"><a href="#1-解释性语句" class="headerlink" title="1. 解释性语句"></a>1. 解释性语句</h3><p>#注释一行<br>:&lt;&lt;!注释多行<br>注释的shell语句<br>！<br>：&lt;&lt;EOF<br>注释的shell语句<br>EOF</p>
+<h2 id="二、shell-语句"><a href="#二、shell-语句" class="headerlink" title="二、shell 语句"></a>二、shell 语句</h2><h3 id="1-解释性语句"><a href="#1-解释性语句" class="headerlink" title="1. 解释性语句"></a>1. 解释性语句</h3><ul>
+<li>#注释一行</li>
+<li>:&lt;&lt;!注释多行<br>注释的shell语句<br>！</li>
+<li>：&lt;&lt;EOF<br>注释的shell语句<br>EOF</li>
+</ul>
 <h3 id="2-功能性语句"><a href="#2-功能性语句" class="headerlink" title="2.功能性语句"></a>2.功能性语句</h3><h4 id="（1）test"><a href="#（1）test" class="headerlink" title="（1）test"></a>（1）test</h4><p>结构：字符串 整型 文件</p>
 <ul>
 <li>字符串的比较：</li>
@@ -194,11 +198,10 @@
 </blockquote>
 <ul>
 <li>逻辑<blockquote>
-<p>-o—或</p>
+<p>-o—或<br>-a—与</p>
 </blockquote>
 </li>
 </ul>
-<p>-a—与</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> test -d $<span class="number">1</span> -a -f $<span class="number">2</span></span><br><span class="line">  <span class="number">4</span> echo $?</span><br><span class="line">~           </span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <br>
@@ -265,20 +268,15 @@
 
 
 
-<h2 id="shell数组"><a href="#shell数组" class="headerlink" title="shell数组"></a>shell数组</h2><p>shell脚本里面只有一维数组</p>
+<h2 id="三、shell数组"><a href="#三、shell数组" class="headerlink" title="三、shell数组"></a>三、shell数组</h2><p>shell脚本里面只有一维数组</p>
 <p>没有数据类型</p>
-<p>数组的初始化</p>
-<p>数组名=（元素1 元素2 元素3.。。。）</p>
-<p>数组的赋值：</p>
-<p>数组名【下标】=内容</p>
-<p>数组的调用：</p>
-<p>${数组名【下标】}</p>
-<p>数组的遍历：</p>
-<p>循环遍历</p>
+<h3 id="1-数组的初始化"><a href="#1-数组的初始化" class="headerlink" title="1. 数组的初始化"></a>1. 数组的初始化</h3><p>数组名=（元素1 元素2 元素3.。。。）</p>
+<h3 id="2-数组的赋值："><a href="#2-数组的赋值：" class="headerlink" title="2. 数组的赋值："></a>2. 数组的赋值：</h3><p>数组名【下标】=内容</p>
+<h3 id="3-数组的调用："><a href="#3-数组的调用：" class="headerlink" title="3. 数组的调用："></a>3. 数组的调用：</h3><p>${数组名【下标】}</p>
+<h3 id="4-数组的遍历："><a href="#4-数组的遍历：" class="headerlink" title="4. 数组的遍历："></a>4. 数组的遍历：</h3><p>循环遍历</p>
 <p>${arr[*]}</p>
 <p>${arr[@]}</p>
-<p>求数组的长度：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="meta">#arr[*]&#125;</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-求数组的长度："><a href="#5-求数组的长度：" class="headerlink" title="5. 求数组的长度："></a>5. 求数组的长度：</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;<span class="meta">#arr[*]&#125;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> arr=(hello world nihao shijie)</span><br><span class="line"> <span class="number">4</span> arr[<span class="number">0</span>]=<span class="string">&quot;zhangcheng&quot;</span></span><br><span class="line"> <span class="number">5</span> echo $&#123;arr[<span class="number">0</span>]&#125;</span><br><span class="line"> <span class="number">6</span> echo $&#123;arr[@]&#125;</span><br><span class="line"> <span class="number">7</span> echo $&#123;#arr[*]&#125;</span><br><span class="line">                     </span><br></pre></td></tr></table></figure>
 
 <p>练习：</p>
