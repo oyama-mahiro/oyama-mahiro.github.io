@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    day22-数据结构和算法简介，顺序表 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-day22-数据结构和算法简介，顺序表"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  day22-数据结构和算法简介，顺序表
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/" class="article-date">
+  <time datetime="2023-03-21T11:51:24.000Z" itemprop="datePublished">2023-03-21</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/">数据结构</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">2k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">8 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day22-数据结构和算法简介，顺序表"><a href="#day22-数据结构和算法简介，顺序表" class="headerlink" title="day22-数据结构和算法简介，顺序表"></a><font color="green">day22-数据结构和算法简介，顺序表</font></h1><h2 id="一、课程大纲"><a href="#一、课程大纲" class="headerlink" title="一、课程大纲"></a>一、课程大纲</h2><ol>
+<li>数据结构基础及算法基础+ 顺序表</li>
+<li>链表</li>
+<li>双向链表、双向循环链表 、栈、队列</li>
+<li>树、图</li>
+<li>常见的算法</li>
+</ol>
+<a id="more"></a>
+<br>
+<br>
+
+<hr>
+<h2 id="二、数据结构和算法简介"><a href="#二、数据结构和算法简介" class="headerlink" title="二、数据结构和算法简介"></a>二、数据结构和算法简介</h2><h3 id="1-数据结构基础"><a href="#1-数据结构基础" class="headerlink" title="1.数据结构基础"></a>1.数据结构基础</h3><ol>
+<li><p>了解数据的基本概念和术语：</p>
+<ul>
+<li><p>数据：</p>
+<pre><code>  (1)数据即信息的载体，是能够输入到计算机中且能被计算机识别、存储和处理的符号总称。
+  (2)数据不仅包括:
+ a. 数值型数据：整型、实型、字符型数值型数据
+ b. 非数值型数据：图片、视频、声音等</code></pre>
+</li>
+<li><p>数据项：<br> 数据元素由若干数据项组成，数据项是数据中的最小单位。</p>
+<p> 数据由多种数据项组成：</p>
+<p> 正比如：我们在讨论一个电影角色等时候，我们讨论的是该角色的姓名、性别、住址、等</p>
+<p> 注意：数据项是数据不可分隔的最小组成单位</p>
+</li>
+<li><p>数据结构（DS）：</p>
+<p> (1)可用形式化语言描述，即DS是一个二元组：</p>
+<pre><code>       DS =（D,R）其中，D为数据元素的集合，R为D上关系的集合。 </code></pre>
+<p> (2)数据结构的逻辑关系</p>
+<p> <img src="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/image-20230321104451784.png" alt="image-20230321104451784"></p>
+</li>
+</ul>
+<ul>
+<li>存储结构：</li>
+</ul>
+<blockquote>
+<p>a. 顺序存储<br>b. 链式存储<br>c. 索引存储<br>d. 散列存储</p>
+</blockquote>
+<ul>
+<li>运算：增、删、改、查、排</li>
+</ul>
+<p><img src="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/image-20230321105735324.png" alt="image-20230321105735324"></p>
+</li>
+</ol>
+<h3 id="2-算法"><a href="#2-算法" class="headerlink" title="2.算法"></a>2.算法</h3><p>(1)什么是算法？</p>
+<pre><code>    1. 算法（Algorithm）是一个有穷规则（或语句、指令）的有序集合。它确定了解决某一问题的一个运算序列。对于问题的初始输入，通过算法有限步的运行，产生一个或多个输出。
+
+    2. 算法的特性：
+
+        (1)  有穷性 —— 算法执行的步骤（或规则）是有限的
+
+        (2)  确定性 —— 每个计算步骤无二义性
+
+        (3)  可行性 —— 每个计算步骤能够在有限的时间内完成
+
+        (4)  输入  —— 算法有零个或多个外部输入
+
+        (5)  输出  —— 算法有一个或多个输出
+
+    3. 算法和程序的区别：
+
+        共同点：二者都是为完成某个任务，或解决某个问题而编制的规则（或语句）的有序集合，这是它们的。
+        不同点：
+            * 算法与计算机无关，但程序依赖于具体的计算机语言。
+            * 算法必须是有穷尽的，但程序可能是无穷尽的。
+            * 算法可忽略一些语法细节问题，重点放在解决问题的思路上，但程序必须严格遵循相应语言工具的语法。算法转换成程序后才能在计算机上运行。另外，在设计算法时，一定要考虑它的确定性，即算法的每个步骤都是无二义性的（即一条规则不能有两种以上的解释）
+
+    4. 程序的基本概念：
+
+        1. 可执行的有序二进制指令、存放在磁盘、不占用系统资源（ cpu、内存等）
+
+    5. 算法的优劣：
+
+        消耗时间的多少 ：
+
+        消耗存储空间的多少 ：
+
+        容易理解、容易编程和调试、容易维护。时间复杂度的概念介绍 ：
+
+        问题的规模 ：输入数据量的大小，用n来表示。
+
+        算法的时间复杂度 ：算法消耗时间，它是问题规模的函数 T(n)。
+
+        其中好算法代表了：
+
+            算法对应的程序所耗时间少；
+
+            算法对应的程序所耗存储空间少；
+
+            算法结构性好、易读、易移植和调试等等。
+
+        3. 时间复杂度：算法的时间复杂度定义为算法中可执行语句的频度之和，记为T(n)</code></pre>
+<p><img src="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/image-20230321141217272.png" alt="image-20230321141217272"><br><img src="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/image-20230321141200570.png" alt="image-20230321141200570"></p>
+<h3 id="3-数据结构常见的结构"><a href="#3-数据结构常见的结构" class="headerlink" title="3.数据结构常见的结构-"></a>3.数据结构常见的结构-</h3><p><img src="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/image-20230321142133548.png" alt="image-20230321142133548"></p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、数据结构之顺序表"><a href="#三、数据结构之顺序表" class="headerlink" title="三、数据结构之顺序表"></a>三、数据结构之顺序表</h2><ol>
+<li>线性表：</li>
+</ol>
+<p><img src="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/image-20230321144943972.png" alt="image-20230321144943972"></p>
+<ol start="2">
+<li>线性表特征：</li>
+</ol>
+<p><img src="/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/image-20230321145052751.png" alt="image-20230321145052751"></p>
+<ol start="3">
+<li>顺序表的代码实现：</li>
+</ol>
+<p>（1）memset(&emsp;)函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">功能：<span class="built_in">memset</span> - fill memory with a constant byte</span><br><span class="line"></span><br><span class="line">头文件：</span><br><span class="line">       <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line">函数原型：</span><br><span class="line">       <span class="function"><span class="keyword">void</span> *<span class="title">memset</span><span class="params">(<span class="keyword">void</span> *s, <span class="keyword">int</span> c, <span class="keyword">size_t</span> n)</span></span>;</span><br><span class="line">参数说明：</span><br><span class="line">	<span class="keyword">void</span> *s：要清空的目标数组或指针所指空间  buf</span><br><span class="line">	<span class="keyword">int</span> c：给定的填充的数据   <span class="number">0</span> <span class="number">1</span> 等</span><br><span class="line">    <span class="keyword">size_t</span> n： 大小     <span class="keyword">sizeof</span>（buf）；</span><br><span class="line">返回值</span><br><span class="line">	无返回值：</span><br></pre></td></tr></table></figure>
+
+
+
+<p>（2）bzero(&emsp;)函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">功能： bzero - write zero-valued bytes</span><br><span class="line"></span><br><span class="line">头文件：</span><br><span class="line">       <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;strings.h&gt;</span></span></span><br><span class="line">函数原型：</span><br><span class="line">       <span class="function"><span class="keyword">void</span> <span class="title">bzero</span><span class="params">(<span class="keyword">void</span> *s, <span class="keyword">size_t</span> n)</span></span>;</span><br><span class="line">参数说明：</span><br><span class="line">	<span class="keyword">void</span> *s：要清空的目标数组或指针所指空间  buf</span><br><span class="line">    <span class="keyword">size_t</span> n： 大小     <span class="keyword">sizeof</span>（buf）；</span><br><span class="line">返回值</span><br><span class="line">	无返回值：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>（3）printf 变色打印(Linux)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">    字背景颜色范围:<span class="number">40</span> - <span class="number">49</span></span><br><span class="line">    <span class="number">40</span>:黑</span><br><span class="line">    <span class="number">41</span>:深红</span><br><span class="line">    <span class="number">42</span>:绿</span><br><span class="line">    <span class="number">43</span>:黄色</span><br><span class="line">    <span class="number">44</span>:蓝色</span><br><span class="line">    <span class="number">45</span>:紫色</span><br><span class="line">    <span class="number">46</span>:深绿</span><br><span class="line">    <span class="number">47</span>:白色</span><br><span class="line">     </span><br><span class="line">    字颜色:<span class="number">30</span> - <span class="number">39</span></span><br><span class="line">    <span class="number">30</span>:黑</span><br><span class="line">    <span class="number">31</span>:红</span><br><span class="line">    <span class="number">32</span>:绿</span><br><span class="line">    <span class="number">33</span>:黄</span><br><span class="line">    <span class="number">34</span>:蓝色</span><br><span class="line">    <span class="number">35</span>:紫色</span><br><span class="line">    <span class="number">36</span>:深绿</span><br><span class="line">    <span class="number">37</span>:白色</span><br><span class="line">    \<span class="number">33</span>[<span class="number">0</span>m 关闭所有属性</span><br><span class="line">    \<span class="number">33</span>[<span class="number">1</span>m 设置高亮度</span><br><span class="line">    \<span class="number">33</span>[<span class="number">4</span>m 下划线</span><br><span class="line">    \<span class="number">33</span>[<span class="number">5</span>m 闪烁</span><br><span class="line">    \<span class="number">33</span>[<span class="number">7</span>m 反显</span><br><span class="line">    \<span class="number">33</span>[<span class="number">8</span>m 消隐</span><br><span class="line">    \<span class="number">33</span>[<span class="number">30</span>m -- \<span class="number">33</span>[<span class="number">37</span>m 设置前景色</span><br><span class="line">    \<span class="number">33</span>[<span class="number">40</span>m -- \<span class="number">33</span>[<span class="number">47</span>m 设置背景色</span><br><span class="line">    \<span class="number">33</span>[nA 光标上移n行</span><br><span class="line">    \<span class="number">33</span>[nB 光标下移n行</span><br><span class="line">    \<span class="number">33</span>[nC 光标右移n行</span><br><span class="line">    \<span class="number">33</span>[nD 光标左移n行</span><br><span class="line">    \<span class="number">33</span>[y;xH设置光标位置</span><br><span class="line">    \<span class="number">33</span>[<span class="number">2</span>J 清屏</span><br><span class="line">    \<span class="number">33</span>[K 清除从光标到行尾的内容</span><br><span class="line">    \<span class="number">33</span>[s 保存光标位置</span><br><span class="line">    \<span class="number">33</span>[u 恢复光标位置</span><br><span class="line">    \<span class="number">33</span>[?<span class="number">25l</span> 隐藏光标</span><br><span class="line">    \<span class="number">33</span>[?<span class="number">25</span>h 显示光标</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//printf(&quot;hello world\n&quot;); </span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\033[40;32;5m hello world\033[1m\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//printf(&quot;\033[40;31;5m hello world\033[0m\n&quot;);</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>（3）printf 变色打印(Windows)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    HANDLE hConsole= GetStdHandle(STD_OUTPUT_HANDLE);</span><br><span class="line">    SetConsoleTextAttribute(hConsole,FOREGROUND_RED);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;hello world&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*1. 引入Windows.h头文件。</span></span><br><span class="line"><span class="comment">2. 使用SetConsoleTextAttribute函数设置控制台输出的字体颜色。该函数的第一个参数是控制台输出的句柄，可以使用GetStdHandle函数获取标准输出句柄；第二个参数是字体颜色，可以使用预定义的常量或自定义的颜色值。</span></span><br><span class="line"><span class="comment">   例如，以下代码将控制台输出的字体颜色设置为红色预定义的颜色常量包括：</span></span><br><span class="line"><span class="comment">- FOREGROUND_BLUE：蓝色</span></span><br><span class="line"><span class="comment">- FOREGROUND_GREEN：绿色</span></span><br><span class="line"><span class="comment">- FOREGROUND_RED：红色</span></span><br><span class="line"><span class="comment">- FOREGROUND_INTENSITY：高亮</span></span><br><span class="line"><span class="comment">- BACKGROUND_BLUE：背景色为蓝色</span></span><br><span class="line"><span class="comment">- BACKGROUND_GREEN：背景色为绿色</span></span><br><span class="line"><span class="comment">- BACKGROUND_RED：背景色为红色</span></span><br><span class="line"><span class="comment">- BACKGROUND_INTENSITY：背景色高亮</span></span><br><span class="line"><span class="comment">可以使用位运算符|和&amp;来组合多个颜色常量，</span></span><br><span class="line"><span class="comment">例如：</span></span><br><span class="line"><span class="comment">SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_GREEN | FOREGROUND_INTENSITY);</span></span><br><span class="line"><span class="comment">该代码将字体颜色设置为红色、背景色设置为绿色、高亮显示。*/</span></span><br></pre></td></tr></table></figure>
+
+<p>（4）线性表c的实现</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">perr_exit</span><span class="params">(<span class="keyword">char</span> *s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, s); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//构造顺序表结构</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE 100</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">data_t</span>; </span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">data_t</span> data[SIZE]; <span class="comment">//保存元素</span></span><br><span class="line">    <span class="keyword">int</span> last;        <span class="comment">//保存尾元素下标</span></span><br><span class="line">&#125;seqlist; </span><br><span class="line"><span class="comment">//创建表头及初始化表</span></span><br><span class="line"><span class="function">seqlist *<span class="title">create_seqlite</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    seqlist* head =(seqlist*) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(seqlist)); <span class="comment">//创建表头 head </span></span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    head-&gt;last = <span class="number">-1</span>;   <span class="comment">//初始化 last为-1  表示空表</span></span><br><span class="line">    <span class="built_in">memset</span>(head-&gt;data, <span class="number">0</span>, <span class="keyword">sizeof</span>(head-&gt;data)); <span class="comment">//清空 表</span></span><br><span class="line">    <span class="keyword">return</span> head; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//求表长</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>  <span class="title">get_leng_seqlist</span><span class="params">(seqlist *head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> head-&gt;last+<span class="number">1</span>;  <span class="comment">//</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>  <span class="title">seqlist_is_empty</span><span class="params">(seqlist *head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> ((head-&gt;last == <span class="number">-1</span>)?<span class="number">1</span>:<span class="number">0</span>);  <span class="comment">//</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//判满</span></span><br><span class="line"><span class="function"><span class="keyword">int</span>  <span class="title">seqlist_is_full</span><span class="params">(seqlist *head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> ((head-&gt;last+<span class="number">1</span> == SIZE)?<span class="number">1</span>:<span class="number">0</span>);  <span class="comment">//</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//按位置插入</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_by_pos_seqlist</span><span class="params">(seqlist* head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> value)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) perr_exit(<span class="string">&quot;insert_by_pos_seqlist:&quot;</span>);  </span><br><span class="line">    <span class="keyword">if</span>(seqlist_is_full(head) == <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>; </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; head-&gt;last+<span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//挪位置</span></span><br><span class="line">    <span class="keyword">int</span> i ;</span><br><span class="line">    <span class="keyword">for</span>(i=head-&gt;last+<span class="number">1</span>; i&gt;pos; i--)</span><br><span class="line">    &#123;</span><br><span class="line">        head-&gt;data[i] = head-&gt;data[i<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//插入数据</span></span><br><span class="line">    head-&gt;data[pos] = value;</span><br><span class="line">    <span class="comment">//更新 last </span></span><br><span class="line">        head-&gt;last++; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;   </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//打印看结果</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">prn</span><span class="params">(seqlist *head)</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">     <span class="built_in">printf</span>(<span class="string">&quot;\033[40;32;5m\033[1m\n&quot;</span>);   <span class="comment">//开启打印颜色</span></span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> ;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">int</span> len = get_leng_seqlist(head); </span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;len; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%-3d&quot;</span>, head-&gt;data[i]);</span><br><span class="line">    &#125;</span><br><span class="line">     <span class="built_in">printf</span>(<span class="string">&quot;\033[40;32;5m\033[0m\n&quot;</span>);   <span class="comment">//关闭打印颜色</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>); </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//错误打印</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc,<span class="keyword">const</span> <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line">    seqlist* head = create_seqlite();</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">for</span>(i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        insert_by_pos_seqlist(head, i, i+<span class="number">1</span>); <span class="comment">// </span></span><br><span class="line">    &#125;</span><br><span class="line">    prn(head); </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://nakano-mahiro.gitee.io/2023/03/21/day22-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95%E7%AE%80%E4%BB%8B%EF%BC%8C%E9%A1%BA%E5%BA%8F%E8%A1%A8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag">数据结构</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%A1%BA%E5%BA%8F%E8%A1%A8/" rel="tag">顺序表</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/03/17/day20-c%E7%89%B9%E6%AE%8A%E7%B1%BB%E5%9E%8B%E5%92%8Cgbd-makefile/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">day20-c特殊类型和gbd,makefile</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "tuYk4qAcyDHqUmYKwnOzB9nI-9Nh9j0Va",
+    app_key: "EuYRm7WE36kxYD3nnGAQBK5y",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2023
+        <i class="ri-heart-fill heart_icon"></i> nakano-mahiro
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">文章</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechatpay.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.6/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+<script src="/js/dz.js"></script>
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=1356160363&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
