@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    linux |  
+    Linux |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -47,7 +47,7 @@
   <article class="articles">
     
     
-    <h1 class="page-type-title">linux</h1>
+    <h1 class="page-type-title">Linux</h1>
     
     
   
@@ -65,13 +65,13 @@
       <article class="archive-article archive-type-post">
   <div class="archive-article-inner">
     <header class="archive-article-header">
-      <a href="/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/" class="archive-article-date">
-  <time datetime="2023-02-28T07:06:14.000Z" itemprop="datePublished">02/28</time>
+      <a href="/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/" class="archive-article-date">
+  <time datetime="2023-03-15T15:49:45.000Z" itemprop="datePublished">03/15</time>
 </a>
        
 <h2 itemprop="name">
-  <a class="archive-article-title" href="/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/"
-    >嵌入式学习-Linux基础</a> 
+  <a class="archive-article-title" href="/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/"
+    >day18-Linux基础,shell脚本</a> 
 </h2>
  
 
@@ -79,7 +79,61 @@
     
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+
+    
+    
+  </div>
+</article>
+      
+  
+  
+      <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/" class="archive-article-date">
+  <time datetime="2023-03-14T11:29:36.000Z" itemprop="datePublished">03/14</time>
+</a>
+       
+<h2 itemprop="name">
+  <a class="archive-article-title" href="/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/"
+    >day17-Linux基础</a> 
+</h2>
+ 
+
+    </header>
+    
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+
+    
+    
+  </div>
+</article>
+      
+  
+  
+      <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <a href="/2023/03/13/day16-Linux%E5%9F%BA%E7%A1%80/" class="archive-article-date">
+  <time datetime="2023-03-13T09:24:52.000Z" itemprop="datePublished">03/13</time>
+</a>
+       
+<h2 itemprop="name">
+  <a class="archive-article-title" href="/2023/03/13/day16-Linux%E5%9F%BA%E7%A1%80/"
+    >day16-Linux基础</a> 
+</h2>
+ 
+
+    </header>
+    
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
   </div>
 
     
@@ -437,62 +491,6 @@
         $span[0].innerText = 'COPIED';
         
         wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-checkbox-circle-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
-      clipboard.on('error', function(e) {
-        e.clearSelection();
-        let $btn = $(e.trigger);
-        $btn.addClass('copy-failed');
-        let $icon = $($btn.find('i'));
-        $icon.removeClass('ri-file-copy-2-line');
-        $icon.addClass('ri-time-line');
-        let $span = $($btn.find('span'));
-        $span[0].innerText = 'COPY FAILED';
-        
-        wait(function () { // 等待两秒钟后恢复
-          $icon.removeClass('ri-time-line');
-          $icon.addClass('ri-file-copy-2-line');
-          $span[0].innerText = 'COPY';
-        }, 2000);
-      });
-    }
-    initCopyCode();
-  }(window, document);
-</script>
-
-
-<!-- CanvasBackground -->
-
-
-<script src="/js/dz.js"></script>
-
-
-
-    
-    <div id="music">
-    
-    
-    
-    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
-        src="//music.163.com/outchain/player?type=2&id=1356160363&auto=1&height=32"></iframe>
-</div>
-
-<style>
-    #music {
-        position: fixed;
-        right: 15px;
-        bottom: 0;
-        z-index: 998;
-    }
-</style>
-    
-  </div>
-</body>
-
-</html>   wait(function () { // 等待两秒钟后恢复
           $icon.removeClass('ri-checkbox-circle-line');
           $icon.addClass('ri-file-copy-2-line');
           $span[0].innerText = 'COPY';

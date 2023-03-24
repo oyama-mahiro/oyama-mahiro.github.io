@@ -1,110 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>C语言基础-递归</title>
-    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
-<a id="more"></a>
-
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
-<p>栈：一种数据结构，其特点为先进后出</p>
-<blockquote>
-<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
-</blockquote>
-</blockquote>
-<p>如图( 计算 3! )：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
-<p>解释：</p>
-<ol>
-<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
-<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
-<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
-<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
-<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
-</ol>
-<p>由此可以看成递归的形成至少需要两个条件：</p>
-<ol>
-<li>变化的参数</li>
-<li>递归终止条件</li>
-</ol>
-<blockquote>
-<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
-<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
-<br>
-
-<blockquote>
-<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
-<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
-<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
-<ol>
-<li>我们要把上面的 63 个移动到 B</li>
-<li>把第 64 个移动到 C</li>
-<li>把 B 上的 63 个移动到 C</li>
-</ol>
-<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
-<ol>
-<li>我们要把上面的 62 个移动到 B</li>
-<li>把第 63 个移动到 C</li>
-<li>把 B 上的 62 个移动到 C</li>
-</ol>
-<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
-<p>所以整个过程是</p>
-<ol>
-<li>我们要把上面的<code>n-1</code>个移动到 B</li>
-<li>把第<code>n</code>个移动到 C</li>
-<li>把 B 上的<code>n-1</code>个移动到 C</li>
-</ol>
-<blockquote>
-<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
-</blockquote>
-<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
-<ol>
-<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
-<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
-</ol>
-<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
-<hr>
-<br>
-<br>
-
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>C语言</tag>
-        <tag>递归</tag>
-        <tag>C语言基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>C语言基础-存储类别</title>
     <url>/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/</url>
     <content><![CDATA[<h1 id="存储类别"><a href="#存储类别" class="headerlink" title="存储类别"></a><font color="green">存储类别</font></h1><p>在理解存储类别前，先要复习一些概念和术语。</p>
@@ -221,148 +117,10 @@
         <category>c语言</category>
       </categories>
       <tags>
-        <tag>c</tag>
         <tag>C语言</tag>
+        <tag>c</tag>
         <tag>基础</tag>
         <tag>存储类别</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day12-c指针</title>
-    <url>/2023/03/08/day12-c%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<h1 id="day12-c指针"><a href="#day12-c指针" class="headerlink" title="day12-c指针"></a><font color="green">day12-c指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针变量的赋值"><a href="#1、指针变量的赋值" class="headerlink" title="1、指针变量的赋值"></a>1、指针变量的赋值</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> b[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> *q = p;   <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">char</span> *m = <span class="literal">NULL</span>; <span class="comment">//空指针 3</span></span><br><span class="line"><span class="keyword">int</span> *n = b; <span class="comment">// n == &amp;b[0] //4</span></span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-
-<h3 id="2、指针变量的运算"><a href="#2、指针变量的运算" class="headerlink" title="2、指针变量的运算"></a>2、指针变量的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line">p+n --&gt; 向高地址位偏移n个元素的字节数</span><br><span class="line">p-n --&gt; 向低地址位偏移n个元素的字节数</span><br><span class="line">    </span><br><span class="line">指针-指针：计算两个相同类型的指针之间相差的元素个数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、指针和一维数组"><a href="#3、指针和一维数组" class="headerlink" title="3、指针和一维数组"></a>3、指针和一维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
-
-<h3 id="4、指针和二维数组"><a href="#4、指针和二维数组" class="headerlink" title="4、指针和二维数组"></a>4、指针和二维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">二维数组的数组名也表示整个二维数组的首地址。但是是一个行地址</span><br><span class="line"></span><br><span class="line">    数组指针定义的一般形式：</span><br><span class="line">    	&lt;存储类型&gt; &lt;数据类型&gt; (*数组指针名)[列数];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	a == &amp;a[<span class="number">0</span>] </span><br><span class="line">	a+<span class="number">1</span> == &amp;a[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line">	*(*(p+<span class="number">1</span>)+<span class="number">1</span>) --&gt; 二维数组中第二行第二个元素</span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​        数组指针(行指针)：本质是指针，存放地址值，指向的内容是一个一维数组的地址</p>
-<p>​        指针数组：本质是数组。如果一个数组中所有元素都是地址，那么该数组称为指针数组</p>
-<h3 id="2、指针数组的定义"><a href="#2、指针数组的定义" class="headerlink" title="2、指针数组的定义"></a>2、指针数组的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *数组名[元素个数];</span><br><span class="line">	例：</span><br><span class="line">    	<span class="keyword">int</span> a, b, c;</span><br><span class="line">		<span class="keyword">int</span> *addr[<span class="number">3</span>] = &#123;&amp;a, &amp;b, &amp;c&#125;;</span><br><span class="line">		addr[<span class="number">0</span>] == &amp;a;</span><br><span class="line">		addr[<span class="number">1</span>] == &amp;b;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="3、多级指针–二级指针-难点"><a href="#3、多级指针–二级指针-难点" class="headerlink" title="3、多级指针–二级指针(难点)"></a>3、多级指针–二级指针(<strong>难点</strong>)</h3><p>​    定义一个指针变量，有几个星号就是几级指针</p>
-<p>​    二级指针的定义：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; **指针变量名;</span><br><span class="line">例：</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> **q = &amp;p;</span><br><span class="line">	</span><br><span class="line">	*q == p == &amp;a</span><br><span class="line">	**q == *p == *&amp;a == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<p><font color="red"><strong>注意</strong>：</font></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"><span class="keyword">int</span> *q[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line"></span><br><span class="line">p:数组指针名，p+<span class="number">1</span>偏移一行数据大小</span><br><span class="line">q:指针数组名，q+<span class="number">1</span>偏移一个指针大小</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **x = p; <span class="comment">//error****</span></span><br><span class="line"><span class="keyword">int</span> **x = q;  <span class="comment">//right</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="4、const指针"><a href="#4、const指针" class="headerlink" title="4、const指针"></a>4、const指针</h3><p>​    const修饰的变量为只读属性，不能直接修改该变量的值</p>
-<p>​    const指针</p>
-<p>​    (1)const 数据类型 *指针变量名;</p>
-<p>​         数据类型 const *指针变量名;    </p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error  *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
-
-<p>​        const修饰是指针指向的内容，不能修改指针指向的数据，但是可以修改指针变量中的地址值</p>
-<p>​    </p>
-<p>​    (2)数据类型 *  const  指针变量名；   </p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
-
-<p>​    const修饰的指针变量p，不能修改指针变量的值，但是可以修改指针指向内容的值</p>
-<p>（3）const 数据类型 *  const  指针变量名；</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
-
-<p>​    const同时修饰指针变量和指针指向内容，两者都不能修改</p>
-<h3 id="5、void指针"><a href="#5、void指针" class="headerlink" title="5、void指针"></a>5、void指针</h3><p>​        void – 空类型，不确定类型</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;s&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">指针p中可以存放任意类型的地址值</span><br><span class="line">*p = <span class="number">2</span>;  <span class="comment">//error  void指针在使用之前需要将void类型指针强制转换为需要的类型</span></span><br><span class="line">*(<span class="keyword">int</span> *)p = <span class="number">2</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6、字符指针和字符串"><a href="#6、字符指针和字符串" class="headerlink" title="6、字符指针和字符串"></a>6、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">50</span>] = &#123;<span class="string">&quot;hello&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//right</span></span><br><span class="line">如果将一个字符串赋值给一个字符指针，相当于把该字符串的首地址赋值给字符指针变量</span><br><span class="line"></span><br><span class="line">注意：如果将一个字符串常量赋值给一个指针变量，那么通过该指针不能修改字符串每一个字符的值</span><br></pre></td></tr></table></figure>
-
-
-<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p>若有以下定义，且0≤i＜4，则不正确的赋值语句是<u>&emsp;B&emsp;</u>.<br>int b[4][6], *p, *q[4];<br>（A）q[i] = b[i];           （B） p = b;<br>（C）p = b[i]               （D） q[i] = &amp;b[0][0];</p>
-<p>解：表示b的话要用二次指针来表示二维数组的地址。这样的话*p仅代表所对应的行地址</p>
-<p>​    </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>c语言</tag>
-        <tag>指针</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day11-c数组与指针</title>
-    <url>/2023/03/08/day11-c%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<h1 id="day11-c数组与指针"><a href="#day11-c数组与指针" class="headerlink" title="day11-c数组与指针"></a><font color="green">day11-c数组与指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h3><p>​    字符数组和字符串</p>
-<p>​        字符数组：存放的数据是字符数据</p>
-<p>​        字符串：由一个或者多个字符组成，在字符串的末尾有一个隐藏的空字符 – ‘\0’</p>
-<p>​        char a[50] = “hello”;    </p>
-<a id="more"></a>
-
-<h3 id="2-字符串函数："><a href="#2-字符串函数：" class="headerlink" title="2.字符串函数："></a>2.字符串函数：</h3><blockquote>
-<p>字符串长度函数 – strlen()<br>字符串连接函数– strcat()<br>字符串拷贝函数 – strcpy()<br>字符串比较函数– strcmp()</p>
-</blockquote>
-<p><strong>注：<code>int a[10]=&#123;0&#125;</code>相当于把数组a中的所有元素给赋值成’\0’，但是<font color="red">int a[arr]={0}</font>则错误，因为在数组长度为变量时不能同时进行赋值</strong><br><strong>同时也不能把字符串常量赋值给一个字符数组，因为字符数组本身也是个常量 <font color="red">char s[10];s=”abcdefg”</font>是错误的。</strong></p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针相关运算符"><a href="#1、指针相关运算符" class="headerlink" title="1、指针相关运算符"></a>1、指针相关运算符</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&amp;:获取内容的地址</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	&amp;a --&gt; 获取到a的地址</span><br><span class="line">    </span><br><span class="line">*：获取地址中的内容</span><br><span class="line">    *(&amp;a) == a == <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、指针变量"><a href="#2、指针变量" class="headerlink" title="2、指针变量"></a>2、指针变量</h3><p>​    指针变量就是用于存放地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *指针变量名;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">//将a的地址存放在了一个名为p的指针变量中</span></span><br><span class="line">p == &amp;a;</span><br><span class="line">*p = *(&amp;a) == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、指针变量的赋值"><a href="#3、指针变量的赋值" class="headerlink" title="3、指针变量的赋值"></a>3、指针变量的赋值</h3><p>赋值运算符的左值和右值类型一定要相同</p>
-<p>(1)将一个变量的地址赋值给一个具有相同数据类型的指针变量</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br></pre></td></tr></table></figure>
-
-<p>(2)将一个已有的指针赋值给一个 具有相同数据类型的指针变量</p>
- <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"><span class="keyword">int</span> *q = p;</span><br><span class="line"></span><br><span class="line">q == p == &amp;a;</span><br></pre></td></tr></table></figure>
-
-<p>(3)将0值赋值给一个指针变量 – 空指针</p>
-<p>野指针：定义一个指针，没有明确指向，不能访问野指针</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
-
-<p>(4)将一个数组的数组名赋值给一个具有相同数据类型的指针变量</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a; <span class="comment">// a == &amp;a[0]</span></span><br></pre></td></tr></table></figure>
-
-<p>(5)把一个复合形式的表达式的值赋给一个具有相同数据类型的指针变量</p>
-<h3 id="4、指针的运算"><a href="#4、指针的运算" class="headerlink" title="4、指针的运算"></a>4、指针的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// &amp;a == 0x2000</span></span><br><span class="line">p+n --&gt; p向高地址位偏移n个元素大小的字节数  <span class="comment">//元素指，该指针指向的内容</span></span><br><span class="line">p-n --&gt; p向低地址位偏移n个元素大小的字节数</span><br><span class="line"></span><br><span class="line">p+n == p+n*<span class="keyword">sizeof</span>(元素类型)  <span class="comment">//在该例中元素类型为int</span></span><br><span class="line">    </span><br><span class="line">注意：指针运算中没有 指针 + 指针、指针 * 指针、 指针 / 指针，因为没有任何实际意义 </span><br><span class="line">    但是有指针 - 指针</span><br><span class="line">    </span><br><span class="line">    指针-指针表示相同类型的两个指针之间相差多少个元素,结果的正负，仅代表地址高低</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> *q = &amp;b;</span><br><span class="line">	q - p ==  (q-p)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h3 id="5、指针和一维数组"><a href="#5、指针和一维数组" class="headerlink" title="5、指针和一维数组"></a>5、指针和一维数组</h3><p>将一个一维数组的数组名赋值给一个具有相同数据类型的指针变量, 我们就可以通过该指针访问数组中所有元素</p>
-<blockquote>
-<p><strong>注：数组名不能递增递减</strong></p>
-</blockquote>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">4</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>];</span><br><span class="line">*(p+<span class="number">1</span>) == a[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">p++; <span class="comment">// p = p+1; right</span></span><br><span class="line">a++; <span class="comment">// a = a+1; error  数组名不能递增递减</span></span><br><span class="line"></span><br><span class="line">数组a中的第三个元素的表达方式:</span><br><span class="line">	a[<span class="number">2</span>]、 *(p+<span class="number">2</span>)、 *(&amp;a[<span class="number">2</span>])、p[<span class="number">2</span>]、 *(a+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6、指针和二维数组-–-行指针（数组指针）"><a href="#6、指针和二维数组-–-行指针（数组指针）" class="headerlink" title="6、指针和二维数组 – 行指针（数组指针）"></a>6、指针和二维数组 – 行指针（数组指针）</h3><p>​    本质：数组指针是一个指针，存放的内容是地址，指针指向的内容是一个一维数组</p>
-<p>​    二维数组的数组名是一个行指针，指向二维数组的首地址，行指针+n相当于地址偏移n行元素</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//行指针的定义一般形式</span></span><br><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; (*指针变量名)[列数];</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"></span><br><span class="line">*(*(p+<span class="number">1</span>)+<span class="number">2</span>) == 第二行第三个元素</span><br><span class="line">*(*(p+<span class="number">0</span>)+<span class="number">1</span>) == 第一行第二个元素</span><br></pre></td></tr></table></figure>
-
-<br>
-<br>
-
-<hr>
-<h2 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x=<span class="number">258</span>;                                                      </span><br><span class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)&amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*(++p));</span><br><span class="line">  &#125;</span><br><span class="line">  ````</span><br><span class="line">程序运行结果是  &lt;u&gt;2,1&lt;/u&gt;  </span><br><span class="line"></span><br><span class="line">解：<span class="number">258</span>的<span class="number">16</span>进制为<span class="number">102</span>，按照<span class="keyword">int</span>的存储方式为 <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">02</span>，p指针先到<span class="number">02</span>，因为转移到<span class="keyword">char</span>后+<span class="number">1</span>为前进一个字符，则p指针跳到了<span class="number">01.</span>  </span><br><span class="line"></span><br><span class="line">### <span class="number">2.</span> </span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *arr[<span class="number">3</span>]=&#123;a[<span class="number">0</span>],a[<span class="number">1</span>],a[<span class="number">2</span>]&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%ld&quot;</span>,<span class="keyword">sizeof</span>(arr[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
-<p>程序运行结果是  <u>8</u></p>
-<p>解：arr数组里的都是指针，sizeof指向第一个元素即指针，所以大小为8，不是a[0][3]中的12.</p>
-<h3 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h3><p>&emsp;若有以下说明和语句，int c[4][5],(*p)[5];p=c;能正确引用c数组元素的是<u> D</u>.<br>(A) p+1      (B) *(p+3)     　(C) *(p+1)+3   (D) *(p[0]+2) </p>
-<p>解：b错误原因是p+3仅代表地址，加个*只能表示p[3].</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>C语言</tag>
-        <tag>指针</tag>
-        <tag>数组</tag>
       </tags>
   </entry>
   <entry>
@@ -611,6 +369,248 @@
       </tags>
   </entry>
   <entry>
+    <title>C语言基础-递归</title>
+    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
+<a id="more"></a>
+
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
+<blockquote>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
+</blockquote>
+</blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
+<ol>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
+</ol>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
+<ol>
+<li>变化的参数</li>
+<li>递归终止条件</li>
+</ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
+<blockquote>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
+<ol>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
+</ol>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
+<ol>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
+</ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
+<br>
+<br>
+
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>递归</tag>
+        <tag>C语言基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day11-c数组与指针</title>
+    <url>/2023/03/08/day11-c%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<h1 id="day11-c数组与指针"><a href="#day11-c数组与指针" class="headerlink" title="day11-c数组与指针"></a><font color="green">day11-c数组与指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h3><p>​    字符数组和字符串</p>
+<p>​        字符数组：存放的数据是字符数据</p>
+<p>​        字符串：由一个或者多个字符组成，在字符串的末尾有一个隐藏的空字符 – ‘\0’</p>
+<p>​        char a[50] = “hello”;    </p>
+<a id="more"></a>
+
+<h3 id="2-字符串函数："><a href="#2-字符串函数：" class="headerlink" title="2.字符串函数："></a>2.字符串函数：</h3><blockquote>
+<p>字符串长度函数 – strlen()<br>字符串连接函数– strcat()<br>字符串拷贝函数 – strcpy()<br>字符串比较函数– strcmp()</p>
+</blockquote>
+<p><strong>注：<code>int a[10]=&#123;0&#125;</code>相当于把数组a中的所有元素给赋值成’\0’，但是<font color="red">int a[arr]={0}</font>则错误，因为在数组长度为变量时不能同时进行赋值</strong><br><strong>同时也不能把字符串常量赋值给一个字符数组，因为字符数组本身也是个常量 <font color="red">char s[10];s=”abcdefg”</font>是错误的。</strong></p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针相关运算符"><a href="#1、指针相关运算符" class="headerlink" title="1、指针相关运算符"></a>1、指针相关运算符</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&amp;:获取内容的地址</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	&amp;a --&gt; 获取到a的地址</span><br><span class="line">    </span><br><span class="line">*：获取地址中的内容</span><br><span class="line">    *(&amp;a) == a == <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、指针变量"><a href="#2、指针变量" class="headerlink" title="2、指针变量"></a>2、指针变量</h3><p>​    指针变量就是用于存放地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *指针变量名;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">//将a的地址存放在了一个名为p的指针变量中</span></span><br><span class="line">p == &amp;a;</span><br><span class="line">*p = *(&amp;a) == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、指针变量的赋值"><a href="#3、指针变量的赋值" class="headerlink" title="3、指针变量的赋值"></a>3、指针变量的赋值</h3><p>赋值运算符的左值和右值类型一定要相同</p>
+<p>(1)将一个变量的地址赋值给一个具有相同数据类型的指针变量</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br></pre></td></tr></table></figure>
+
+<p>(2)将一个已有的指针赋值给一个 具有相同数据类型的指针变量</p>
+ <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"><span class="keyword">int</span> *q = p;</span><br><span class="line"></span><br><span class="line">q == p == &amp;a;</span><br></pre></td></tr></table></figure>
+
+<p>(3)将0值赋值给一个指针变量 – 空指针</p>
+<p>野指针：定义一个指针，没有明确指向，不能访问野指针</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
+
+<p>(4)将一个数组的数组名赋值给一个具有相同数据类型的指针变量</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a; <span class="comment">// a == &amp;a[0]</span></span><br></pre></td></tr></table></figure>
+
+<p>(5)把一个复合形式的表达式的值赋给一个具有相同数据类型的指针变量</p>
+<h3 id="4、指针的运算"><a href="#4、指针的运算" class="headerlink" title="4、指针的运算"></a>4、指针的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// &amp;a == 0x2000</span></span><br><span class="line">p+n --&gt; p向高地址位偏移n个元素大小的字节数  <span class="comment">//元素指，该指针指向的内容</span></span><br><span class="line">p-n --&gt; p向低地址位偏移n个元素大小的字节数</span><br><span class="line"></span><br><span class="line">p+n == p+n*<span class="keyword">sizeof</span>(元素类型)  <span class="comment">//在该例中元素类型为int</span></span><br><span class="line">    </span><br><span class="line">注意：指针运算中没有 指针 + 指针、指针 * 指针、 指针 / 指针，因为没有任何实际意义 </span><br><span class="line">    但是有指针 - 指针</span><br><span class="line">    </span><br><span class="line">    指针-指针表示相同类型的两个指针之间相差多少个元素,结果的正负，仅代表地址高低</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> *q = &amp;b;</span><br><span class="line">	q - p ==  (q-p)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h3 id="5、指针和一维数组"><a href="#5、指针和一维数组" class="headerlink" title="5、指针和一维数组"></a>5、指针和一维数组</h3><p>将一个一维数组的数组名赋值给一个具有相同数据类型的指针变量, 我们就可以通过该指针访问数组中所有元素</p>
+<blockquote>
+<p><strong>注：数组名不能递增递减</strong></p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">4</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>];</span><br><span class="line">*(p+<span class="number">1</span>) == a[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">p++; <span class="comment">// p = p+1; right</span></span><br><span class="line">a++; <span class="comment">// a = a+1; error  数组名不能递增递减</span></span><br><span class="line"></span><br><span class="line">数组a中的第三个元素的表达方式:</span><br><span class="line">	a[<span class="number">2</span>]、 *(p+<span class="number">2</span>)、 *(&amp;a[<span class="number">2</span>])、p[<span class="number">2</span>]、 *(a+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6、指针和二维数组-–-行指针（数组指针）"><a href="#6、指针和二维数组-–-行指针（数组指针）" class="headerlink" title="6、指针和二维数组 – 行指针（数组指针）"></a>6、指针和二维数组 – 行指针（数组指针）</h3><p>​    本质：数组指针是一个指针，存放的内容是地址，指针指向的内容是一个一维数组</p>
+<p>​    二维数组的数组名是一个行指针，指向二维数组的首地址，行指针+n相当于地址偏移n行元素</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//行指针的定义一般形式</span></span><br><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; (*指针变量名)[列数];</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"></span><br><span class="line">*(*(p+<span class="number">1</span>)+<span class="number">2</span>) == 第二行第三个元素</span><br><span class="line">*(*(p+<span class="number">0</span>)+<span class="number">1</span>) == 第一行第二个元素</span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h2 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x=<span class="number">258</span>;                                                      </span><br><span class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)&amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*(++p));</span><br><span class="line">  &#125;</span><br><span class="line">  ````</span><br><span class="line">程序运行结果是  &lt;u&gt;2,1&lt;/u&gt;  </span><br><span class="line"></span><br><span class="line">解：<span class="number">258</span>的<span class="number">16</span>进制为<span class="number">102</span>，按照<span class="keyword">int</span>的存储方式为 <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">02</span>，p指针先到<span class="number">02</span>，因为转移到<span class="keyword">char</span>后+<span class="number">1</span>为前进一个字符，则p指针跳到了<span class="number">01.</span>  </span><br><span class="line"></span><br><span class="line">### <span class="number">2.</span> </span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *arr[<span class="number">3</span>]=&#123;a[<span class="number">0</span>],a[<span class="number">1</span>],a[<span class="number">2</span>]&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%ld&quot;</span>,<span class="keyword">sizeof</span>(arr[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+<p>程序运行结果是  <u>8</u></p>
+<p>解：arr数组里的都是指针，sizeof指向第一个元素即指针，所以大小为8，不是a[0][3]中的12.</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h3><p>&emsp;若有以下说明和语句，int c[4][5],(*p)[5];p=c;能正确引用c数组元素的是<u> D</u>.<br>(A) p+1      (B) *(p+3)     　(C) *(p+1)+3   (D) *(p[0]+2) </p>
+<p>解：b错误原因是p+3仅代表地址，加个*只能表示p[3].</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>指针</tag>
+        <tag>数组</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day12-c指针</title>
+    <url>/2023/03/08/day12-c%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<h1 id="day12-c指针"><a href="#day12-c指针" class="headerlink" title="day12-c指针"></a><font color="green">day12-c指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针变量的赋值"><a href="#1、指针变量的赋值" class="headerlink" title="1、指针变量的赋值"></a>1、指针变量的赋值</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> b[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// 1</span></span><br><span class="line"><span class="keyword">int</span> *q = p;   <span class="comment">// 2</span></span><br><span class="line"><span class="keyword">char</span> *m = <span class="literal">NULL</span>; <span class="comment">//空指针 3</span></span><br><span class="line"><span class="keyword">int</span> *n = b; <span class="comment">// n == &amp;b[0] //4</span></span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+
+<h3 id="2、指针变量的运算"><a href="#2、指针变量的运算" class="headerlink" title="2、指针变量的运算"></a>2、指针变量的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p;</span><br><span class="line">p+n --&gt; 向高地址位偏移n个元素的字节数</span><br><span class="line">p-n --&gt; 向低地址位偏移n个元素的字节数</span><br><span class="line">    </span><br><span class="line">指针-指针：计算两个相同类型的指针之间相差的元素个数</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、指针和一维数组"><a href="#3、指针和一维数组" class="headerlink" title="3、指针和一维数组"></a>3、指针和一维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、指针和二维数组"><a href="#4、指针和二维数组" class="headerlink" title="4、指针和二维数组"></a>4、指针和二维数组</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">二维数组的数组名也表示整个二维数组的首地址。但是是一个行地址</span><br><span class="line"></span><br><span class="line">    数组指针定义的一般形式：</span><br><span class="line">    	&lt;存储类型&gt; &lt;数据类型&gt; (*数组指针名)[列数];</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	a == &amp;a[<span class="number">0</span>] </span><br><span class="line">	a+<span class="number">1</span> == &amp;a[<span class="number">1</span>]</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line">	*(*(p+<span class="number">1</span>)+<span class="number">1</span>) --&gt; 二维数组中第二行第二个元素</span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​        数组指针(行指针)：本质是指针，存放地址值，指向的内容是一个一维数组的地址</p>
+<p>​        指针数组：本质是数组。如果一个数组中所有元素都是地址，那么该数组称为指针数组</p>
+<h3 id="2、指针数组的定义"><a href="#2、指针数组的定义" class="headerlink" title="2、指针数组的定义"></a>2、指针数组的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *数组名[元素个数];</span><br><span class="line">	例：</span><br><span class="line">    	<span class="keyword">int</span> a, b, c;</span><br><span class="line">		<span class="keyword">int</span> *addr[<span class="number">3</span>] = &#123;&amp;a, &amp;b, &amp;c&#125;;</span><br><span class="line">		addr[<span class="number">0</span>] == &amp;a;</span><br><span class="line">		addr[<span class="number">1</span>] == &amp;b;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、多级指针–二级指针-难点"><a href="#3、多级指针–二级指针-难点" class="headerlink" title="3、多级指针–二级指针(难点)"></a>3、多级指针–二级指针(<strong>难点</strong>)</h3><p>​    定义一个指针变量，有几个星号就是几级指针</p>
+<p>​    二级指针的定义：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; **指针变量名;</span><br><span class="line">例：</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> **q = &amp;p;</span><br><span class="line">	</span><br><span class="line">	*q == p == &amp;a</span><br><span class="line">	**q == *p == *&amp;a == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p><font color="red"><strong>注意</strong>：</font></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"><span class="keyword">int</span> *q[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line"></span><br><span class="line">p:数组指针名，p+<span class="number">1</span>偏移一行数据大小</span><br><span class="line">q:指针数组名，q+<span class="number">1</span>偏移一个指针大小</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> **x = p; <span class="comment">//error****</span></span><br><span class="line"><span class="keyword">int</span> **x = q;  <span class="comment">//right</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4、const指针"><a href="#4、const指针" class="headerlink" title="4、const指针"></a>4、const指针</h3><p>​    const修饰的变量为只读属性，不能直接修改该变量的值</p>
+<p>​    const指针</p>
+<p>​    (1)const 数据类型 *指针变量名;</p>
+<p>​         数据类型 const *指针变量名;    </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error  *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
+
+<p>​        const修饰是指针指向的内容，不能修改指针指向的数据，但是可以修改指针变量中的地址值</p>
+<p>​    </p>
+<p>​    (2)数据类型 *  const  指针变量名；   </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
+
+<p>​    const修饰的指针变量p，不能修改指针变量的值，但是可以修改指针指向内容的值</p>
+<p>（3）const 数据类型 *  const  指针变量名；</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error p被修饰为只读</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error *p被修饰为只读</span></span><br></pre></td></tr></table></figure>
+
+<p>​    const同时修饰指针变量和指针指向内容，两者都不能修改</p>
+<h3 id="5、void指针"><a href="#5、void指针" class="headerlink" title="5、void指针"></a>5、void指针</h3><p>​        void – 空类型，不确定类型</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;s&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">指针p中可以存放任意类型的地址值</span><br><span class="line">*p = <span class="number">2</span>;  <span class="comment">//error  void指针在使用之前需要将void类型指针强制转换为需要的类型</span></span><br><span class="line">*(<span class="keyword">int</span> *)p = <span class="number">2</span>; <span class="comment">//right</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6、字符指针和字符串"><a href="#6、字符指针和字符串" class="headerlink" title="6、字符指针和字符串"></a>6、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">50</span>] = &#123;<span class="string">&quot;hello&quot;</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//right</span></span><br><span class="line">如果将一个字符串赋值给一个字符指针，相当于把该字符串的首地址赋值给字符指针变量</span><br><span class="line"></span><br><span class="line">注意：如果将一个字符串常量赋值给一个指针变量，那么通过该指针不能修改字符串每一个字符的值</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><p>若有以下定义，且0≤i＜4，则不正确的赋值语句是<u>&emsp;B&emsp;</u>.<br>int b[4][6], *p, *q[4];<br>（A）q[i] = b[i];           （B） p = b;<br>（C）p = b[i]               （D） q[i] = &amp;b[0][0];</p>
+<p>解：表示b的话要用二次指针来表示二维数组的地址。这样的话*p仅代表所对应的行地址</p>
+<p>​    </p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>指针</tag>
+        <tag>c语言</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>day13-c指针，函数</title>
     <url>/2023/03/08/day13-c%E6%8C%87%E9%92%88%EF%BC%8C%E5%87%BD%E6%95%B0/</url>
     <content><![CDATA[<h1 id="day13-c指针，函数"><a href="#day13-c指针，函数" class="headerlink" title="day13-c指针，函数"></a><font color="green">day13-c指针，函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​    本质：数组</p>
@@ -713,8 +713,59 @@
       </categories>
       <tags>
         <tag>c</tag>
-        <tag>c语言</tag>
         <tag>指针</tag>
+        <tag>c语言</tag>
+        <tag>函数</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day14-c函数</title>
+    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
+<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
+<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
+<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
+<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
+<p>​    (3)全局变量传参</p>
+<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
+<p>​    (2)字符数组：只需要传入数组首地址</p>
+<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
+<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>​            </p>
+<p>​                </p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>c语言</tag>
         <tag>函数</tag>
       </tags>
   </entry>
@@ -782,57 +833,6 @@
         <tag>c语言</tag>
         <tag>函数</tag>
         <tag>结构体</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day14-c函数</title>
-    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
-<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
-<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
-<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
-<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
-<p>​    (3)全局变量传参</p>
-<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
-<p>​    (2)字符数组：只需要传入数组首地址</p>
-<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
-<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>​            </p>
-<p>​                </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>c语言</tag>
-        <tag>函数</tag>
       </tags>
   </entry>
   <entry>
@@ -1354,127 +1354,6 @@
       </tags>
   </entry>
   <entry>
-    <title>day20-c特殊类型和gbd,makefile</title>
-    <url>/2023/03/17/day20-c%E7%89%B9%E6%AE%8A%E7%B1%BB%E5%9E%8B%E5%92%8Cgbd-makefile/</url>
-    <content><![CDATA[<h1 id="day20-linux基础和c"><a href="#day20-linux基础和c" class="headerlink" title="day20-linux基础和c"></a><font color="green">day20-linux基础和c</font></h1><br>
-<br>
-
-<hr>
-<h2 id="一、结构体："><a href="#一、结构体：" class="headerlink" title="一、结构体："></a>一、结构体：</h2><a id="more"></a>
-
-<h3 id="1-结构体的嵌套："><a href="#1-结构体的嵌套：" class="headerlink" title="1. 结构体的嵌套："></a>1. 结构体的嵌套：</h3><p>结构体里面再放结构体</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line">  <span class="number">8</span> <span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">stu</span>&#123;</span></span><br><span class="line">  <span class="number">9</span>     <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">10</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"> <span class="number">11</span>     <span class="keyword">int</span> id;</span><br><span class="line"> <span class="number">12</span> &#125;STU;</span><br><span class="line"> <span class="number">13</span> </span><br><span class="line"> <span class="number">14</span> <span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">tea</span>&#123;</span></span><br><span class="line"> <span class="number">15</span>     <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">16</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"> <span class="number">17</span>     <span class="keyword">char</span> sex[<span class="number">32</span>];</span><br><span class="line"> <span class="number">18</span>     STU zc;</span><br><span class="line"> <span class="number">19</span> &#125;TEA;</span><br><span class="line"> <span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"> 21 </span>&#123;   </span><br><span class="line"> <span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"> <span class="number">23</span>     TEA b=&#123;<span class="number">30</span>,<span class="string">&quot;lisi&quot;</span>,<span class="string">&quot;man&quot;</span>,a&#125;;</span><br><span class="line"> <span class="number">24</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.age=%d\n&quot;</span>,a.age);</span><br><span class="line"> <span class="number">25</span>     <span class="built_in">printf</span>(<span class="string">&quot;b.zc.age=%d\n&quot;</span>,b.zc.age);</span><br><span class="line"> <span class="number">26</span> </span><br><span class="line"> <span class="number">27</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> <span class="number">28</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="2-结构体指针"><a href="#2-结构体指针" class="headerlink" title="2. 结构体指针"></a>2. 结构体指针</h3><p>本质是一个指针，只是这个指针指向了一个结构体</p>
-<p>一般形式：struct 结构提名 * 指针变量名；</p>
-<p>初始化：struct 结构提名 * 指针变量名=结构体地址；</p>
-<p>指针访问结构体内容：</p>
-<p>两种方式：</p>
-<p>1、（*p）.成员—用的少</p>
-<p>2、p-&gt;成员</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">21 </span>&#123;   </span><br><span class="line"><span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"><span class="number">23</span>     STU *p=&amp;a;<span class="comment">//初始化</span></span><br><span class="line"><span class="number">24</span>     <span class="built_in">printf</span>(<span class="string">&quot;(*p).age=%d\n&quot;</span>,(*p).age);</span><br><span class="line"><span class="number">25</span>     <span class="built_in">printf</span>(<span class="string">&quot;p-&gt;age=%d\n&quot;</span>,p-&gt;age);</span><br><span class="line"><span class="number">26</span> </span><br><span class="line"><span class="number">27</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">28</span> &#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="3-结构体数组："><a href="#3-结构体数组：" class="headerlink" title="3. 结构体数组："></a>3. 结构体数组：</h3><p>本质是一个数组，只是这个数组里面的元素都是结构体</p>
-<p>一般形式：struct 结构提名 数组名【下标】；</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"> 21 </span>&#123;   </span><br><span class="line"> <span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"> <span class="number">23</span>     STU b=&#123;<span class="number">13</span>,<span class="string">&quot;lisi&quot;</span>,<span class="number">47</span>&#125;;</span><br><span class="line"> <span class="number">24</span>     STU c=&#123;<span class="number">15</span>,<span class="string">&quot;wangwu&quot;</span>,<span class="number">50</span>&#125;;</span><br><span class="line"> <span class="number">25</span>     STU s[<span class="number">3</span>]=&#123;a,b,c&#125;;<span class="comment">//初始化</span></span><br><span class="line"> <span class="number">26</span>     <span class="built_in">printf</span>(<span class="string">&quot;s[1].name=%s\n&quot;</span>,s[<span class="number">1</span>].name);</span><br><span class="line"> <span class="number">27</span>     </span><br><span class="line"> <span class="number">28</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> <span class="number">29</span> &#125; </span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<h2 id="二、共用体—union"><a href="#二、共用体—union" class="headerlink" title="二、共用体—union"></a>二、共用体—union</h2><p>也叫联合体</p>
-<p>成员们一起用一片空间地址</p>
-<p>共用体不允许初始化</p>
-<p>STU a={12,”zhangsan”,45};//错误</p>
-<p>赋值只能成员赋值，而且每次只能赋值一个，前面赋值的都会被覆盖</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">8</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"> <span class="number">9</span> <span class="keyword">typedef</span> <span class="keyword">union</span> stu&#123;</span><br><span class="line"><span class="number">10</span>     <span class="keyword">int</span> age;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"><span class="number">12</span>     <span class="keyword">int</span> id;</span><br><span class="line"><span class="number">13</span> &#125;STU;</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">16 </span>&#123;   </span><br><span class="line"><span class="number">17</span>     STU a;</span><br><span class="line"><span class="number">18</span>     a.age=<span class="number">12</span>;</span><br><span class="line"><span class="number">19</span>     <span class="built_in">strcpy</span>(a.name,<span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line"><span class="number">20</span>     a.id=<span class="number">45</span>;</span><br><span class="line"><span class="number">21</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.age=%d\n&quot;</span>,a.age); <span class="comment">//a.age=45</span></span><br><span class="line"><span class="number">22</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.name=%s\n&quot;</span>,a.name); <span class="comment">//a.name=-</span></span><br><span class="line"><span class="number">23</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.id=%d\n&quot;</span>,a.id); <span class="comment">//a.id=45</span></span><br><span class="line"><span class="number">24</span>     </span><br><span class="line"><span class="number">25</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">26</span> &#125; </span><br></pre></td></tr></table></figure>
-
-<p>共用体的大小：</p>
-<p>也要遵循结构体大小的规则，但是只会给最大成员开辟对应的空间地址</p>
-<br>
-<br>
-
-<hr>
-<h2 id="三、枚举型–enum"><a href="#三、枚举型–enum" class="headerlink" title="三、枚举型–enum"></a>三、枚举型–enum</h2><p>成员没有初始化，从0开始往后赋值</p>
-<p>如果有成员赋值，成员后面依次递增+1</p>
-<p>enum里面的成员都是常量，不能修改它们的值</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">10 </span>&#123;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">enum</span> &#123;A,E,B=<span class="number">2</span>,C,D=<span class="number">8</span>,F&#125;;</span><br><span class="line"><span class="number">12</span>     <span class="built_in">printf</span>(<span class="string">&quot;A=%d\n&quot;</span>,A);<span class="comment">//0</span></span><br><span class="line"><span class="number">13</span>     <span class="built_in">printf</span>(<span class="string">&quot;E=%d\n&quot;</span>,E);<span class="comment">//1</span></span><br><span class="line"><span class="number">14</span>     <span class="built_in">printf</span>(<span class="string">&quot;B=%d\n&quot;</span>,B);<span class="comment">//2</span></span><br><span class="line"><span class="number">15</span>     <span class="built_in">printf</span>(<span class="string">&quot;C=%d\n&quot;</span>,C);<span class="comment">//3</span></span><br><span class="line"><span class="number">16</span>     <span class="built_in">printf</span>(<span class="string">&quot;F=%d\n&quot;</span>,F);<span class="comment">//9</span></span><br><span class="line"><span class="number">17</span>     </span><br><span class="line"><span class="number">18</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">19</span> &#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<h2 id="四、gdb调试工具："><a href="#四、gdb调试工具：" class="headerlink" title="四、gdb调试工具："></a>四、gdb调试工具：</h2><p>帮助我们找出代码的问题</p>
-<p>gcc -g 编译的文件名，会生成一个a.out的执行文件，这个执行文件就可以调试</p>
-<p>gdb 执行文件名</p>
-<blockquote>
-<p>r—运行我们的程序<br>l—查看我们的程序代码<br>b—设置断点，让程序跑到我们断点的那一行<br>c–继续运行我们的程序，直到下一个断点，如果没有直接运行完<br>p+变量===查看变量的值<br>n—按行运行，但是不进入函数<br>s—按行运行，会进入函数<br>delete—删除所有断点<br>q—退出dgb调试</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="五、makefile"><a href="#五、makefile" class="headerlink" title="五、makefile"></a>五、makefile</h2><p>makefile是一个文件，里面放的是编译的规则，可以管理多个文件</p>
-<p>make是一个工具，用来解析我们的makefile</p>
-<p>make会根据文件的时间戳进行编译，如果文件的时间戳没有改变，不会编译该文件，节省大量的编译时间</p>
-<p>makefile的逻辑：</p>
-<p>目标文件：依赖文件</p>
-<p>​     （tab）编译语句</p>
-<p>目标文件就是我们最终会生成的文件，要生成这个文件，会去找生成它需要的文件，就叫依赖文件，如果这个依赖文件有需要其他文件来生成，继续找它的依赖文件，直到不需要为止</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> app:<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">2</span>     gcc  <span class="built_in">list</span>.o main.o -o app</span><br><span class="line"> <span class="number">3</span> <span class="built_in">list</span>.o:<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">4</span>     gcc -c <span class="built_in">list</span>.c -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">5</span> main.o:main.c</span><br><span class="line"> <span class="number">6</span>     gcc -c main.c -o main.o</span><br><span class="line"> <span class="number">7</span> clean:</span><br><span class="line"> <span class="number">8</span>     rm main.o <span class="built_in">list</span>.o app </span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>make clean  删除生成的文件（执行clean后面的语句）</p>
-<p>make，默认解析当前目录下的makefile或者Makefile</p>
-<p>make -f 指定的makefile</p>
-<p>调用外部头文件-I 加头文件的路径</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> app:<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">2</span>     gcc  <span class="built_in">list</span>.o main.o -I ./include -o app</span><br><span class="line"> <span class="number">3</span> <span class="built_in">list</span>.o:<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">4</span>     gcc -c <span class="built_in">list</span>.c -I ./include -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">5</span> main.o:main.c</span><br><span class="line"> <span class="number">6</span>     gcc -c main.c -I ./include -o main.o</span><br><span class="line"> <span class="number">7</span> clean:</span><br><span class="line"> <span class="number">8</span>     rm main.o <span class="built_in">list</span>.o app </span><br></pre></td></tr></table></figure>
-
-<h3 id="makefile的变量"><a href="#makefile的变量" class="headerlink" title="makefile的变量"></a>makefile的变量</h3><p>变量的赋值：</p>
-<ul>
-<li>=：给当前变量赋值，但是如果后面有新的赋值，把新的赋值给变量</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b=$(a)</span><br><span class="line">  <span class="number">3</span> a=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">b=<span class="number">34</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>:=—立即赋值,和平时的赋值一样，后面新的赋值不会改变当前值</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">      b=<span class="number">12</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>？=—询问赋值,询问前面有没有赋值，如果有，此次赋值无效</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a?=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">  <span class="number">6</span>     echo $(a)</span><br><span class="line">a=<span class="number">12</span></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>+=：追加赋值</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a+=hello</span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">  <span class="number">6</span>     echo $(a)</span><br><span class="line">a=<span class="number">12</span> hello</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>可以在语句前加@隐藏显示语句</p>
-</blockquote>
-<p>利用变量写makefile：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span> TARGET=app <span class="comment">//相当于代替</span></span><br><span class="line">  <span class="number">2</span> OBJS=<span class="built_in">list</span>.o main.o </span><br><span class="line">  <span class="number">3</span> CC=gcc</span><br><span class="line">  <span class="number">4</span> OBJS2=<span class="built_in">list</span>.c</span><br><span class="line">  <span class="number">5</span> OBJS3=main.c</span><br><span class="line">  <span class="number">6</span> PATH=-I ./include</span><br><span class="line">  <span class="number">7</span> </span><br><span class="line">  <span class="number">8</span> $(TARGET):$(OBJS)</span><br><span class="line">  <span class="number">9</span>     $(CC)  $(OBJS) $(PATH) -o $(TARGET)</span><br><span class="line"> <span class="number">10</span> <span class="built_in">list</span>.o:$(OBJS2)</span><br><span class="line"> <span class="number">11</span>     $(CC) -c $(OBJS2) $(PATH) -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">12</span> main.o:$(OBJS3)</span><br><span class="line"> <span class="number">13</span>     $(CC) -c $(OBJS3) $(PATH) -o main.o</span><br><span class="line"> <span class="number">14</span> clean:</span><br><span class="line"> <span class="number">15</span>     rm $(OBJS) $(TARGET) </span><br><span class="line">~                            </span><br></pre></td></tr></table></figure>
-
-<p>特殊的变量：</p>
-<blockquote>
-<p>$@—目标文件<br>$^—所有依赖文件<br>$&lt;:第一个依赖文件<br>通配符：%</p>
-</blockquote>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">TARGET=app</span><br><span class="line"> <span class="number">2</span> OBJS=<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">3</span> CC=gcc</span><br><span class="line"> <span class="number">4</span> OBJS2=<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">5</span> OBJS3=main.c</span><br><span class="line"> <span class="number">6</span> path=-I ./include</span><br><span class="line"> <span class="number">7</span> $(TARGET):$(OBJS)</span><br><span class="line"> <span class="number">8</span>     $(CC)  $^ $(path) -o $@</span><br><span class="line"> <span class="number">9</span> %.o:%.c</span><br><span class="line"><span class="number">10</span>     $(CC) -c $^ $(path) -o $@</span><br><span class="line"><span class="number">11</span> clean:</span><br><span class="line"><span class="number">12</span>     rm $(TARGET) $(OBJS)</span><br></pre></td></tr></table></figure>
-
-
-
-]]></content>
-      <categories>
-        <category>c语言</category>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>结构体</tag>
-        <tag>gbd</tag>
-        <tag>makefile</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>day19-c函数，结构体</title>
     <url>/2023/03/17/day19-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/</url>
     <content><![CDATA[<h1 id="day19-c函数，结构体"><a href="#day19-c函数，结构体" class="headerlink" title="day19-c函数，结构体"></a><font color="green">day19-c函数，结构体</font></h1><br>
@@ -1609,6 +1488,127 @@
         <tag>c</tag>
         <tag>函数</tag>
         <tag>结构体</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day20-c特殊类型和gbd,makefile</title>
+    <url>/2023/03/17/day20-c%E7%89%B9%E6%AE%8A%E7%B1%BB%E5%9E%8B%E5%92%8Cgbd-makefile/</url>
+    <content><![CDATA[<h1 id="day20-linux基础和c"><a href="#day20-linux基础和c" class="headerlink" title="day20-linux基础和c"></a><font color="green">day20-linux基础和c</font></h1><br>
+<br>
+
+<hr>
+<h2 id="一、结构体："><a href="#一、结构体：" class="headerlink" title="一、结构体："></a>一、结构体：</h2><a id="more"></a>
+
+<h3 id="1-结构体的嵌套："><a href="#1-结构体的嵌套：" class="headerlink" title="1. 结构体的嵌套："></a>1. 结构体的嵌套：</h3><p>结构体里面再放结构体</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line">  <span class="number">8</span> <span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">stu</span>&#123;</span></span><br><span class="line">  <span class="number">9</span>     <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">10</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"> <span class="number">11</span>     <span class="keyword">int</span> id;</span><br><span class="line"> <span class="number">12</span> &#125;STU;</span><br><span class="line"> <span class="number">13</span> </span><br><span class="line"> <span class="number">14</span> <span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">tea</span>&#123;</span></span><br><span class="line"> <span class="number">15</span>     <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">16</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"> <span class="number">17</span>     <span class="keyword">char</span> sex[<span class="number">32</span>];</span><br><span class="line"> <span class="number">18</span>     STU zc;</span><br><span class="line"> <span class="number">19</span> &#125;TEA;</span><br><span class="line"> <span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"> 21 </span>&#123;   </span><br><span class="line"> <span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"> <span class="number">23</span>     TEA b=&#123;<span class="number">30</span>,<span class="string">&quot;lisi&quot;</span>,<span class="string">&quot;man&quot;</span>,a&#125;;</span><br><span class="line"> <span class="number">24</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.age=%d\n&quot;</span>,a.age);</span><br><span class="line"> <span class="number">25</span>     <span class="built_in">printf</span>(<span class="string">&quot;b.zc.age=%d\n&quot;</span>,b.zc.age);</span><br><span class="line"> <span class="number">26</span> </span><br><span class="line"> <span class="number">27</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> <span class="number">28</span> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-结构体指针"><a href="#2-结构体指针" class="headerlink" title="2. 结构体指针"></a>2. 结构体指针</h3><p>本质是一个指针，只是这个指针指向了一个结构体</p>
+<p>一般形式：struct 结构提名 * 指针变量名；</p>
+<p>初始化：struct 结构提名 * 指针变量名=结构体地址；</p>
+<p>指针访问结构体内容：</p>
+<p>两种方式：</p>
+<p>1、（*p）.成员—用的少</p>
+<p>2、p-&gt;成员</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">21 </span>&#123;   </span><br><span class="line"><span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"><span class="number">23</span>     STU *p=&amp;a;<span class="comment">//初始化</span></span><br><span class="line"><span class="number">24</span>     <span class="built_in">printf</span>(<span class="string">&quot;(*p).age=%d\n&quot;</span>,(*p).age);</span><br><span class="line"><span class="number">25</span>     <span class="built_in">printf</span>(<span class="string">&quot;p-&gt;age=%d\n&quot;</span>,p-&gt;age);</span><br><span class="line"><span class="number">26</span> </span><br><span class="line"><span class="number">27</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">28</span> &#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-结构体数组："><a href="#3-结构体数组：" class="headerlink" title="3. 结构体数组："></a>3. 结构体数组：</h3><p>本质是一个数组，只是这个数组里面的元素都是结构体</p>
+<p>一般形式：struct 结构提名 数组名【下标】；</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">20</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"> 21 </span>&#123;   </span><br><span class="line"> <span class="number">22</span>     STU a=&#123;<span class="number">12</span>,<span class="string">&quot;zhangsan&quot;</span>,<span class="number">45</span>&#125;;</span><br><span class="line"> <span class="number">23</span>     STU b=&#123;<span class="number">13</span>,<span class="string">&quot;lisi&quot;</span>,<span class="number">47</span>&#125;;</span><br><span class="line"> <span class="number">24</span>     STU c=&#123;<span class="number">15</span>,<span class="string">&quot;wangwu&quot;</span>,<span class="number">50</span>&#125;;</span><br><span class="line"> <span class="number">25</span>     STU s[<span class="number">3</span>]=&#123;a,b,c&#125;;<span class="comment">//初始化</span></span><br><span class="line"> <span class="number">26</span>     <span class="built_in">printf</span>(<span class="string">&quot;s[1].name=%s\n&quot;</span>,s[<span class="number">1</span>].name);</span><br><span class="line"> <span class="number">27</span>     </span><br><span class="line"> <span class="number">28</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> <span class="number">29</span> &#125; </span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="二、共用体—union"><a href="#二、共用体—union" class="headerlink" title="二、共用体—union"></a>二、共用体—union</h2><p>也叫联合体</p>
+<p>成员们一起用一片空间地址</p>
+<p>共用体不允许初始化</p>
+<p>STU a={12,”zhangsan”,45};//错误</p>
+<p>赋值只能成员赋值，而且每次只能赋值一个，前面赋值的都会被覆盖</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">8</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"> <span class="number">9</span> <span class="keyword">typedef</span> <span class="keyword">union</span> stu&#123;</span><br><span class="line"><span class="number">10</span>     <span class="keyword">int</span> age;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">char</span> name[<span class="number">32</span>];</span><br><span class="line"><span class="number">12</span>     <span class="keyword">int</span> id;</span><br><span class="line"><span class="number">13</span> &#125;STU;</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">16 </span>&#123;   </span><br><span class="line"><span class="number">17</span>     STU a;</span><br><span class="line"><span class="number">18</span>     a.age=<span class="number">12</span>;</span><br><span class="line"><span class="number">19</span>     <span class="built_in">strcpy</span>(a.name,<span class="string">&quot;zhangsan&quot;</span>);</span><br><span class="line"><span class="number">20</span>     a.id=<span class="number">45</span>;</span><br><span class="line"><span class="number">21</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.age=%d\n&quot;</span>,a.age); <span class="comment">//a.age=45</span></span><br><span class="line"><span class="number">22</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.name=%s\n&quot;</span>,a.name); <span class="comment">//a.name=-</span></span><br><span class="line"><span class="number">23</span>     <span class="built_in">printf</span>(<span class="string">&quot;a.id=%d\n&quot;</span>,a.id); <span class="comment">//a.id=45</span></span><br><span class="line"><span class="number">24</span>     </span><br><span class="line"><span class="number">25</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">26</span> &#125; </span><br></pre></td></tr></table></figure>
+
+<p>共用体的大小：</p>
+<p>也要遵循结构体大小的规则，但是只会给最大成员开辟对应的空间地址</p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、枚举型–enum"><a href="#三、枚举型–enum" class="headerlink" title="三、枚举型–enum"></a>三、枚举型–enum</h2><p>成员没有初始化，从0开始往后赋值</p>
+<p>如果有成员赋值，成员后面依次递增+1</p>
+<p>enum里面的成员都是常量，不能修改它们的值</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">7</span> <span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span> <span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function">10 </span>&#123;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">enum</span> &#123;A,E,B=<span class="number">2</span>,C,D=<span class="number">8</span>,F&#125;;</span><br><span class="line"><span class="number">12</span>     <span class="built_in">printf</span>(<span class="string">&quot;A=%d\n&quot;</span>,A);<span class="comment">//0</span></span><br><span class="line"><span class="number">13</span>     <span class="built_in">printf</span>(<span class="string">&quot;E=%d\n&quot;</span>,E);<span class="comment">//1</span></span><br><span class="line"><span class="number">14</span>     <span class="built_in">printf</span>(<span class="string">&quot;B=%d\n&quot;</span>,B);<span class="comment">//2</span></span><br><span class="line"><span class="number">15</span>     <span class="built_in">printf</span>(<span class="string">&quot;C=%d\n&quot;</span>,C);<span class="comment">//3</span></span><br><span class="line"><span class="number">16</span>     <span class="built_in">printf</span>(<span class="string">&quot;F=%d\n&quot;</span>,F);<span class="comment">//9</span></span><br><span class="line"><span class="number">17</span>     </span><br><span class="line"><span class="number">18</span>     <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"><span class="number">19</span> &#125; </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="四、gdb调试工具："><a href="#四、gdb调试工具：" class="headerlink" title="四、gdb调试工具："></a>四、gdb调试工具：</h2><p>帮助我们找出代码的问题</p>
+<p>gcc -g 编译的文件名，会生成一个a.out的执行文件，这个执行文件就可以调试</p>
+<p>gdb 执行文件名</p>
+<blockquote>
+<p>r—运行我们的程序<br>l—查看我们的程序代码<br>b—设置断点，让程序跑到我们断点的那一行<br>c–继续运行我们的程序，直到下一个断点，如果没有直接运行完<br>p+变量===查看变量的值<br>n—按行运行，但是不进入函数<br>s—按行运行，会进入函数<br>delete—删除所有断点<br>q—退出dgb调试</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="五、makefile"><a href="#五、makefile" class="headerlink" title="五、makefile"></a>五、makefile</h2><p>makefile是一个文件，里面放的是编译的规则，可以管理多个文件</p>
+<p>make是一个工具，用来解析我们的makefile</p>
+<p>make会根据文件的时间戳进行编译，如果文件的时间戳没有改变，不会编译该文件，节省大量的编译时间</p>
+<p>makefile的逻辑：</p>
+<p>目标文件：依赖文件</p>
+<p>​     （tab）编译语句</p>
+<p>目标文件就是我们最终会生成的文件，要生成这个文件，会去找生成它需要的文件，就叫依赖文件，如果这个依赖文件有需要其他文件来生成，继续找它的依赖文件，直到不需要为止</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> app:<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">2</span>     gcc  <span class="built_in">list</span>.o main.o -o app</span><br><span class="line"> <span class="number">3</span> <span class="built_in">list</span>.o:<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">4</span>     gcc -c <span class="built_in">list</span>.c -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">5</span> main.o:main.c</span><br><span class="line"> <span class="number">6</span>     gcc -c main.c -o main.o</span><br><span class="line"> <span class="number">7</span> clean:</span><br><span class="line"> <span class="number">8</span>     rm main.o <span class="built_in">list</span>.o app </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>make clean  删除生成的文件（执行clean后面的语句）</p>
+<p>make，默认解析当前目录下的makefile或者Makefile</p>
+<p>make -f 指定的makefile</p>
+<p>调用外部头文件-I 加头文件的路径</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> app:<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">2</span>     gcc  <span class="built_in">list</span>.o main.o -I ./include -o app</span><br><span class="line"> <span class="number">3</span> <span class="built_in">list</span>.o:<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">4</span>     gcc -c <span class="built_in">list</span>.c -I ./include -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">5</span> main.o:main.c</span><br><span class="line"> <span class="number">6</span>     gcc -c main.c -I ./include -o main.o</span><br><span class="line"> <span class="number">7</span> clean:</span><br><span class="line"> <span class="number">8</span>     rm main.o <span class="built_in">list</span>.o app </span><br></pre></td></tr></table></figure>
+
+<h3 id="makefile的变量"><a href="#makefile的变量" class="headerlink" title="makefile的变量"></a>makefile的变量</h3><p>变量的赋值：</p>
+<ul>
+<li>=：给当前变量赋值，但是如果后面有新的赋值，把新的赋值给变量</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b=$(a)</span><br><span class="line">  <span class="number">3</span> a=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">b=<span class="number">34</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>:=—立即赋值,和平时的赋值一样，后面新的赋值不会改变当前值</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">      b=<span class="number">12</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>？=—询问赋值,询问前面有没有赋值，如果有，此次赋值无效</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a?=<span class="number">34</span></span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">  <span class="number">6</span>     echo $(a)</span><br><span class="line">a=<span class="number">12</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>+=：追加赋值</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">2</span> b:=$(a)</span><br><span class="line">  <span class="number">3</span> a+=hello</span><br><span class="line">  <span class="number">4</span> all:</span><br><span class="line">  <span class="number">5</span>     @echo $(b)</span><br><span class="line">  <span class="number">6</span>     echo $(a)</span><br><span class="line">a=<span class="number">12</span> hello</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>可以在语句前加@隐藏显示语句</p>
+</blockquote>
+<p>利用变量写makefile：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"> <span class="number">1</span> TARGET=app <span class="comment">//相当于代替</span></span><br><span class="line">  <span class="number">2</span> OBJS=<span class="built_in">list</span>.o main.o </span><br><span class="line">  <span class="number">3</span> CC=gcc</span><br><span class="line">  <span class="number">4</span> OBJS2=<span class="built_in">list</span>.c</span><br><span class="line">  <span class="number">5</span> OBJS3=main.c</span><br><span class="line">  <span class="number">6</span> PATH=-I ./include</span><br><span class="line">  <span class="number">7</span> </span><br><span class="line">  <span class="number">8</span> $(TARGET):$(OBJS)</span><br><span class="line">  <span class="number">9</span>     $(CC)  $(OBJS) $(PATH) -o $(TARGET)</span><br><span class="line"> <span class="number">10</span> <span class="built_in">list</span>.o:$(OBJS2)</span><br><span class="line"> <span class="number">11</span>     $(CC) -c $(OBJS2) $(PATH) -o <span class="built_in">list</span>.o</span><br><span class="line"> <span class="number">12</span> main.o:$(OBJS3)</span><br><span class="line"> <span class="number">13</span>     $(CC) -c $(OBJS3) $(PATH) -o main.o</span><br><span class="line"> <span class="number">14</span> clean:</span><br><span class="line"> <span class="number">15</span>     rm $(OBJS) $(TARGET) </span><br><span class="line">~                            </span><br></pre></td></tr></table></figure>
+
+<p>特殊的变量：</p>
+<blockquote>
+<p>$@—目标文件<br>$^—所有依赖文件<br>$&lt;:第一个依赖文件<br>通配符：%</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">TARGET=app</span><br><span class="line"> <span class="number">2</span> OBJS=<span class="built_in">list</span>.o main.o</span><br><span class="line"> <span class="number">3</span> CC=gcc</span><br><span class="line"> <span class="number">4</span> OBJS2=<span class="built_in">list</span>.c</span><br><span class="line"> <span class="number">5</span> OBJS3=main.c</span><br><span class="line"> <span class="number">6</span> path=-I ./include</span><br><span class="line"> <span class="number">7</span> $(TARGET):$(OBJS)</span><br><span class="line"> <span class="number">8</span>     $(CC)  $^ $(path) -o $@</span><br><span class="line"> <span class="number">9</span> %.o:%.c</span><br><span class="line"><span class="number">10</span>     $(CC) -c $^ $(path) -o $@</span><br><span class="line"><span class="number">11</span> clean:</span><br><span class="line"><span class="number">12</span>     rm $(TARGET) $(OBJS)</span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>c语言</category>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>结构体</tag>
+        <tag>gbd</tag>
+        <tag>makefile</tag>
       </tags>
   </entry>
   <entry>
@@ -1776,9 +1776,9 @@
 <br>
 
 <hr>
-<h2 id="二、链表图解"><a href="#二、链表图解" class="headerlink" title="二、链表图解"></a>二、链表图解</h2><h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Clianbiao.jpg" alt="链表"></p>
-<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Ccahru.png" alt="链表"></p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Cshanchu.jpg" alt="链表"></p>
+<h2 id="二、链表图解"><a href="#二、链表图解" class="headerlink" title="二、链表图解"></a>二、链表图解</h2><h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Clianbiao.png" alt="链表"></p>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Ccharu.png" alt="链表"></p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Cshanchu.png" alt="链表"></p>
 <br>
 <br>
 
@@ -1798,83 +1798,6 @@
         <tag>数据结构</tag>
         <tag>算法</tag>
         <tag>顺序表</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>嵌入式学习-Linux基础</title>
-    <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
-<a id="more"></a>
-
-<h2 id="2、linux操作系统的基本使用"><a href="#2、linux操作系统的基本使用" class="headerlink" title="2、linux操作系统的基本使用"></a>2、linux操作系统的基本使用</h2><h3 id="0-、linux的文件的系统结构"><a href="#0-、linux的文件的系统结构" class="headerlink" title="(0)、linux的文件的系统结构"></a>(0)、linux的文件的系统结构</h3><blockquote>
-<ul>
-<li>windows：所有文件有分盘(C,D,E,F….)，每个盘中都有子文件或者子目录，对文件存放没有要求，可以放在任意位置</li>
-<li>linux：没有分盘，只有一个大的目录–根目录（’/‘），根目录下的文件夹每一个都有其固定作用</li>
-<li>bin：存放二进制文件或者可执行程序</li>
-<li>dev：存放设备文件</li>
-<li>etc：系统相关的配置文件</li>
-<li>home：用户目录，用户所有操作都在该目录下进行     /home/hqyj 可以用符号(~)表示</li>
-</ul>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h3 id="1-、基本的shell命令"><a href="#1-、基本的shell命令" class="headerlink" title="(1)、基本的shell命令"></a>(1)、基本的shell命令</h3><p>​        shell本质：命令行解释器，将用户输入的特定指令转换为系统能够识别的语言</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    绝对路径：从根目录出发所表示的一个路径</span><br><span class="line">    相对路径：相对于用户当前位置所表示的一个路径</span><br><span class="line"></span><br><span class="line">pwd:显示当前用户在文件系统中的绝对路径</span><br><span class="line">    用法：</span><br><span class="line">    	pwd + 回车</span><br><span class="line">ls:显示当前用户所在路径下的所有文件(不包含隐藏文件)</span><br><span class="line">    用法：</span><br><span class="line">    	ls + 回车</span><br><span class="line">ls -a：显示当前用户所在路径下的所有文件(包含隐藏文件)</span><br><span class="line">    <span class="string">&#x27;.&#x27;</span> == 用户当前目录</span><br><span class="line">    &#x27;..&#x27; == 当前目录的上一级目录</span><br><span class="line">    </span><br><span class="line">ls -l:显示当前用户所在路径下的所有文件的详细信息</span><br><span class="line">    - rw- rw- r--</span><br><span class="line">    第一位代表文件类型：</span><br><span class="line">    	<span class="string">&#x27;-&#x27;</span> :普通文件</span><br><span class="line">    	<span class="string">&#x27;d&#x27;</span> :目录文件</span><br><span class="line">    	<span class="string">&#x27;c&#x27;</span> :字符设备文件</span><br><span class="line">    	<span class="string">&#x27;b&#x27;</span> :块设备文件</span><br><span class="line">    	<span class="string">&#x27;p&#x27;</span> :管道文件</span><br><span class="line">    	<span class="string">&#x27;l&#x27;</span> :符号链接文件</span><br><span class="line">    	<span class="string">&#x27;s&#x27;</span> :套接字文件</span><br><span class="line">            不同操作系统下支持使用的文件类型不同</span><br><span class="line">    	</span><br><span class="line">    后<span class="number">9</span>位代表文件存取权限</span><br><span class="line">         rw-rw-r--  == <span class="number">110</span> <span class="number">110</span> <span class="number">100</span> == <span class="number">0664</span></span><br><span class="line">         权限的前<span class="number">3</span>位表示用户自己的使用权限，如果当前位上没有对应权限用<span class="string">&#x27;-&#x27;</span>表示                      </span><br><span class="line">		 权限的中间<span class="number">3</span>位代表用户组的使用权限        </span><br><span class="line">         权限的最后<span class="number">3</span>位代表其他用户的使用权限</span><br><span class="line">         r -- 具有读权限  w -- 具有写权限  x -- 具有可执行权限</span><br><span class="line">    改变文件权限的命令入下:</span><br><span class="line">         chmod [-R]  xyz  文件或目录</span><br><span class="line">         -R ： 以递归方式进行修改，比如修改某个目录下所有文件的属性。</span><br><span class="line"></span><br><span class="line">cd: 目录跳转	</span><br><span class="line">    用法：</span><br><span class="line">    	cd + 指定路径    </span><br><span class="line"></span><br><span class="line">touch:以不打开的方式创建一个文件，如果文件存在，则修改时间戳</span><br><span class="line">    用法：</span><br><span class="line">    	touch + 文件名</span><br><span class="line">    </span><br><span class="line">rm:删除指定文件</span><br><span class="line">    用法：</span><br><span class="line">    	rm + 文件名</span><br><span class="line">    </span><br><span class="line">cat：显示文件内容</span><br><span class="line">    用法：</span><br><span class="line">    	cat + 文件名</span><br><span class="line">    </span><br><span class="line">cp: 复制文件</span><br><span class="line">    用法：</span><br><span class="line">    	cp + 源文件名 + 路径名</span><br><span class="line">    	cp + 源文件名 + 目标文件名</span><br><span class="line">mv：移动文件</span><br><span class="line">    用法：</span><br><span class="line">    	mv + 源文件名 + 路径名</span><br><span class="line">    	mv + 源文件名 + 目标文件名    </span><br><span class="line"></span><br><span class="line">mkdir: 创建目录</span><br><span class="line">    用法：</span><br><span class="line">    	mkdir + 目录名</span><br><span class="line">    </span><br><span class="line">rmdir: 删除指定目录(空目录)   </span><br><span class="line">    用法：</span><br><span class="line">    	rmdir + 目录名</span><br><span class="line">    </span><br><span class="line">  	删除非空目录：rm -r 目录名</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">clear:清屏    ctrl + l快捷方式也可以清屏</span><br><span class="line">Tab: 命令补全</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<h3 id="2-、vim编辑器"><a href="#2-、vim编辑器" class="headerlink" title="(2)、vim编辑器"></a>(2)、vim编辑器</h3><p>shell命令：vi 或者 vim + 文件名  </p>
-<p>如果文件不存在，则会先创建再进行编辑</p>
-<h4 id="vim编辑器中的三种工作模式："><a href="#vim编辑器中的三种工作模式：" class="headerlink" title="vim编辑器中的三种工作模式："></a>vim编辑器中的三种工作模式：</h4><p>​命令行模式：用户在进入编辑器后默认处于的工作模式</p>
-<p>​        在命令行模式下不能直接输入数据，但是可以对文本进行复制、粘贴、剪切、撤销等操作：</p>
-<p>​            在命令行模式下输入：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">ngg: 光标跳到某一行首</span><br><span class="line"></span><br><span class="line">nyy：将光标以及光标以下的n行数据进行复制</span><br><span class="line"></span><br><span class="line">ndd：将光标以及光标以下的n行数据进行剪切或删除</span><br><span class="line"></span><br><span class="line">p：将复制或者剪切的内容粘贴到光标的下一行</span><br><span class="line"></span><br><span class="line">u：撤回到上一步操作</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>：当前行首</span><br><span class="line"></span><br><span class="line">$：当前行尾</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>​    编辑模式：可以对文本进行编辑操作</p>
-<p>​        在命令行模式下输入：a, i, o都可以进入编辑模式</p>
-<p>​        按Esc退回到命令行模式</p>
-<p>​    </p>
-<p>​    底行模式：对文本进行保存、退出等操作</p>
-<p>​        在命令行模式下输入冒号进入底行模式</p>
-<p>​            在底行模式下输入：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">w：保存文件</span><br><span class="line">q：退出文件</span><br><span class="line">wq：保存并且退出</span><br><span class="line">q！：强制不保存退出</span><br><span class="line">x：保存并且退出</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h4 id="vim文本查找和替换"><a href="#vim文本查找和替换" class="headerlink" title="vim文本查找和替换"></a>vim文本查找和替换</h4><p>在一般模式下，可以执行以下命令。</p>
-<ol>
-<li>查找<br>pattern  从光标开始处向文件尾搜索pattern，后按下n或N</li>
-</ol>
-<p>注意：</p>
-<blockquote>
-<p>n    在同一个方向重复上一次搜索命令<br>N    在反方向重复上一次搜索命令</p>
-</blockquote>
-<p>注意：<br>在/pattern之前先跳到第一行则进行全文件搜索。</p>
-<ol start="2">
-<li>替换<blockquote>
-<p>:%s/p1/p2/g   //将文件中所有的p1均用p2替换<br>:%s/p1/p2/gc  //替换时需要确认<br>“s“ 全称：substitute替换；<br>“g“ 全称：global全局；<br>“c“ 全称：confirm，确认</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="3-、gcc编译工具"><a href="#3-、gcc编译工具" class="headerlink" title="(3)、gcc编译工具"></a>(3)、gcc编译工具</h3><p>​    shell指令：</p>
-<p>​        gcc + c文件名</p>
-<p>​        编译成功之后会在当前目录下产生一个名为a.out的二进制可执行程序</p>
-<p>​            </p>
-<p>​       gcc c文件名 -o 新的二进制可执行文件名</p>
-<p>​    </p>
-<h3 id="4-、执行程序"><a href="#4-、执行程序" class="headerlink" title="(4)、执行程序"></a>(4)、执行程序</h3><p>​    shell命令：</p>
-<p>​        ./可执行的二进制文件名</p>
-<p>​        </p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>嵌入式</tag>
       </tags>
   </entry>
   <entry>
@@ -2110,6 +2033,83 @@
       </categories>
       <tags>
         <tag>算法，排序算法，基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>嵌入式学习-Linux基础</title>
+    <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
+<a id="more"></a>
+
+<h2 id="2、linux操作系统的基本使用"><a href="#2、linux操作系统的基本使用" class="headerlink" title="2、linux操作系统的基本使用"></a>2、linux操作系统的基本使用</h2><h3 id="0-、linux的文件的系统结构"><a href="#0-、linux的文件的系统结构" class="headerlink" title="(0)、linux的文件的系统结构"></a>(0)、linux的文件的系统结构</h3><blockquote>
+<ul>
+<li>windows：所有文件有分盘(C,D,E,F….)，每个盘中都有子文件或者子目录，对文件存放没有要求，可以放在任意位置</li>
+<li>linux：没有分盘，只有一个大的目录–根目录（’/‘），根目录下的文件夹每一个都有其固定作用</li>
+<li>bin：存放二进制文件或者可执行程序</li>
+<li>dev：存放设备文件</li>
+<li>etc：系统相关的配置文件</li>
+<li>home：用户目录，用户所有操作都在该目录下进行     /home/hqyj 可以用符号(~)表示</li>
+</ul>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h3 id="1-、基本的shell命令"><a href="#1-、基本的shell命令" class="headerlink" title="(1)、基本的shell命令"></a>(1)、基本的shell命令</h3><p>​        shell本质：命令行解释器，将用户输入的特定指令转换为系统能够识别的语言</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    绝对路径：从根目录出发所表示的一个路径</span><br><span class="line">    相对路径：相对于用户当前位置所表示的一个路径</span><br><span class="line"></span><br><span class="line">pwd:显示当前用户在文件系统中的绝对路径</span><br><span class="line">    用法：</span><br><span class="line">    	pwd + 回车</span><br><span class="line">ls:显示当前用户所在路径下的所有文件(不包含隐藏文件)</span><br><span class="line">    用法：</span><br><span class="line">    	ls + 回车</span><br><span class="line">ls -a：显示当前用户所在路径下的所有文件(包含隐藏文件)</span><br><span class="line">    <span class="string">&#x27;.&#x27;</span> == 用户当前目录</span><br><span class="line">    &#x27;..&#x27; == 当前目录的上一级目录</span><br><span class="line">    </span><br><span class="line">ls -l:显示当前用户所在路径下的所有文件的详细信息</span><br><span class="line">    - rw- rw- r--</span><br><span class="line">    第一位代表文件类型：</span><br><span class="line">    	<span class="string">&#x27;-&#x27;</span> :普通文件</span><br><span class="line">    	<span class="string">&#x27;d&#x27;</span> :目录文件</span><br><span class="line">    	<span class="string">&#x27;c&#x27;</span> :字符设备文件</span><br><span class="line">    	<span class="string">&#x27;b&#x27;</span> :块设备文件</span><br><span class="line">    	<span class="string">&#x27;p&#x27;</span> :管道文件</span><br><span class="line">    	<span class="string">&#x27;l&#x27;</span> :符号链接文件</span><br><span class="line">    	<span class="string">&#x27;s&#x27;</span> :套接字文件</span><br><span class="line">            不同操作系统下支持使用的文件类型不同</span><br><span class="line">    	</span><br><span class="line">    后<span class="number">9</span>位代表文件存取权限</span><br><span class="line">         rw-rw-r--  == <span class="number">110</span> <span class="number">110</span> <span class="number">100</span> == <span class="number">0664</span></span><br><span class="line">         权限的前<span class="number">3</span>位表示用户自己的使用权限，如果当前位上没有对应权限用<span class="string">&#x27;-&#x27;</span>表示                      </span><br><span class="line">		 权限的中间<span class="number">3</span>位代表用户组的使用权限        </span><br><span class="line">         权限的最后<span class="number">3</span>位代表其他用户的使用权限</span><br><span class="line">         r -- 具有读权限  w -- 具有写权限  x -- 具有可执行权限</span><br><span class="line">    改变文件权限的命令入下:</span><br><span class="line">         chmod [-R]  xyz  文件或目录</span><br><span class="line">         -R ： 以递归方式进行修改，比如修改某个目录下所有文件的属性。</span><br><span class="line"></span><br><span class="line">cd: 目录跳转	</span><br><span class="line">    用法：</span><br><span class="line">    	cd + 指定路径    </span><br><span class="line"></span><br><span class="line">touch:以不打开的方式创建一个文件，如果文件存在，则修改时间戳</span><br><span class="line">    用法：</span><br><span class="line">    	touch + 文件名</span><br><span class="line">    </span><br><span class="line">rm:删除指定文件</span><br><span class="line">    用法：</span><br><span class="line">    	rm + 文件名</span><br><span class="line">    </span><br><span class="line">cat：显示文件内容</span><br><span class="line">    用法：</span><br><span class="line">    	cat + 文件名</span><br><span class="line">    </span><br><span class="line">cp: 复制文件</span><br><span class="line">    用法：</span><br><span class="line">    	cp + 源文件名 + 路径名</span><br><span class="line">    	cp + 源文件名 + 目标文件名</span><br><span class="line">mv：移动文件</span><br><span class="line">    用法：</span><br><span class="line">    	mv + 源文件名 + 路径名</span><br><span class="line">    	mv + 源文件名 + 目标文件名    </span><br><span class="line"></span><br><span class="line">mkdir: 创建目录</span><br><span class="line">    用法：</span><br><span class="line">    	mkdir + 目录名</span><br><span class="line">    </span><br><span class="line">rmdir: 删除指定目录(空目录)   </span><br><span class="line">    用法：</span><br><span class="line">    	rmdir + 目录名</span><br><span class="line">    </span><br><span class="line">  	删除非空目录：rm -r 目录名</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">clear:清屏    ctrl + l快捷方式也可以清屏</span><br><span class="line">Tab: 命令补全</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h3 id="2-、vim编辑器"><a href="#2-、vim编辑器" class="headerlink" title="(2)、vim编辑器"></a>(2)、vim编辑器</h3><p>shell命令：vi 或者 vim + 文件名  </p>
+<p>如果文件不存在，则会先创建再进行编辑</p>
+<h4 id="vim编辑器中的三种工作模式："><a href="#vim编辑器中的三种工作模式：" class="headerlink" title="vim编辑器中的三种工作模式："></a>vim编辑器中的三种工作模式：</h4><p>​命令行模式：用户在进入编辑器后默认处于的工作模式</p>
+<p>​        在命令行模式下不能直接输入数据，但是可以对文本进行复制、粘贴、剪切、撤销等操作：</p>
+<p>​            在命令行模式下输入：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">ngg: 光标跳到某一行首</span><br><span class="line"></span><br><span class="line">nyy：将光标以及光标以下的n行数据进行复制</span><br><span class="line"></span><br><span class="line">ndd：将光标以及光标以下的n行数据进行剪切或删除</span><br><span class="line"></span><br><span class="line">p：将复制或者剪切的内容粘贴到光标的下一行</span><br><span class="line"></span><br><span class="line">u：撤回到上一步操作</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>：当前行首</span><br><span class="line"></span><br><span class="line">$：当前行尾</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​    编辑模式：可以对文本进行编辑操作</p>
+<p>​        在命令行模式下输入：a, i, o都可以进入编辑模式</p>
+<p>​        按Esc退回到命令行模式</p>
+<p>​    </p>
+<p>​    底行模式：对文本进行保存、退出等操作</p>
+<p>​        在命令行模式下输入冒号进入底行模式</p>
+<p>​            在底行模式下输入：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">w：保存文件</span><br><span class="line">q：退出文件</span><br><span class="line">wq：保存并且退出</span><br><span class="line">q！：强制不保存退出</span><br><span class="line">x：保存并且退出</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="vim文本查找和替换"><a href="#vim文本查找和替换" class="headerlink" title="vim文本查找和替换"></a>vim文本查找和替换</h4><p>在一般模式下，可以执行以下命令。</p>
+<ol>
+<li>查找<br>pattern  从光标开始处向文件尾搜索pattern，后按下n或N</li>
+</ol>
+<p>注意：</p>
+<blockquote>
+<p>n    在同一个方向重复上一次搜索命令<br>N    在反方向重复上一次搜索命令</p>
+</blockquote>
+<p>注意：<br>在/pattern之前先跳到第一行则进行全文件搜索。</p>
+<ol start="2">
+<li>替换<blockquote>
+<p>:%s/p1/p2/g   //将文件中所有的p1均用p2替换<br>:%s/p1/p2/gc  //替换时需要确认<br>“s“ 全称：substitute替换；<br>“g“ 全称：global全局；<br>“c“ 全称：confirm，确认</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="3-、gcc编译工具"><a href="#3-、gcc编译工具" class="headerlink" title="(3)、gcc编译工具"></a>(3)、gcc编译工具</h3><p>​    shell指令：</p>
+<p>​        gcc + c文件名</p>
+<p>​        编译成功之后会在当前目录下产生一个名为a.out的二进制可执行程序</p>
+<p>​            </p>
+<p>​       gcc c文件名 -o 新的二进制可执行文件名</p>
+<p>​    </p>
+<h3 id="4-、执行程序"><a href="#4-、执行程序" class="headerlink" title="(4)、执行程序"></a>(4)、执行程序</h3><p>​    shell命令：</p>
+<p>​        ./可执行的二进制文件名</p>
+<p>​        </p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>嵌入式</tag>
       </tags>
   </entry>
   <entry>
