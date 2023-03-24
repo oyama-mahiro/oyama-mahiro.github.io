@@ -1,6 +1,233 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C语言基础-存储类别</title>
+    <url>/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/</url>
+    <content><![CDATA[<h1 id="存储类别"><a href="#存储类别" class="headerlink" title="存储类别"></a><font color="green">存储类别</font></h1><p>在理解存储类别前，先要复习一些概念和术语。</p>
+<ul>
+<li>对象：对于储存在内存中的数据，被储存的每个值都占用一定的物理内存。这样的一块内存成为对象(和面向对象的对象概念不同)</li>
+<li>存储期：对象在内存中保留了多长的时间。</li>
+<li>标识符用于访问对象，可以用<strong>作用域</strong>和<strong>链接</strong>描述标识符，表明了程序的哪些部分可以使用它。</li>
+</ul>
+<p>我们先介绍`作用域、链接和储存期的含义，再介绍具体的存储类别</p>
+<a id="more"></a>
+
+<h2 id="1-作用域"><a href="#1-作用域" class="headerlink" title="1.作用域"></a>1.作用域</h2><p>作用域描述程序中可访问标识符的区域。<br>一个C变量的作用域可以是:</p>
+<ul>
+<li>块作用域：花括号内的代码，if语句或循环所控制的代码</li>
+<li>函数作用域：仅用于goto语句的标签。再块中定义但作用域是整个函数</li>
+<li>函数原型作用域：从形参定义处到原型声明结束</li>
+<li>文件作用域：定义在函数外面，从它的定义到该定义所在的文件的末尾均可见</li>
+</ul>
+<blockquote>
+<p>注意：当一个源代码中包含一个或多个头文件时，会把所有头文件和编译器源代码文件都看成是一个包含信息的单独文件，文件作用域的实际可见范围是整个翻译单元</p>
+</blockquote>
+<h2 id="2-链接"><a href="#2-链接" class="headerlink" title="2.链接"></a>2.链接</h2><p>链接指该变量访问范围<br>C变量有3种链接属性：<strong>外部链接，内部链接或无链接</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;具有块作用域、函数作用域和函数原型作用域的变量都是无链接变量<br>&nbsp;&nbsp;&nbsp;&nbsp;文件作用域的变量可以是外部链接和内部链接，<br>&nbsp;&nbsp;&nbsp;&nbsp;内部链接变量比外部链接变量前面多了个static ，内部链接变量只能在翻译单元中使用，外部链接变量可以在多文件程序中使用</p>
+<h2 id="3-存储期"><a href="#3-存储期" class="headerlink" title="3.存储期"></a>3.存储期</h2><p>作用域和链接描述了标识符的可见性。存储期描述了通过这些标识符访问的对象的生存期。<br>C对象有4种存储期：</p>
+<ol>
+<li>静态存储期：关键字static，如果对象具有静态储存期，那么它在程序的执行期间一直存在   <font color="red">注意：文件作用域变量都具有静态存储期，但它的static表示的是其链接属性</font></li>
+<li>线程存储期: _Thread_local</li>
+<li>自动存储期: 通常是块作用域的变量所具有</li>
+<li>动态分配存储期： 从声明处到块末尾而不是块头到末尾</li>
+</ol>
+<h2 id="5种存储类别"><a href="#5种存储类别" class="headerlink" title="5种存储类别"></a>5种存储类别</h2><table>
+<thead>
+<tr>
+<th>存储类别</th>
+<th>存储期</th>
+<th>作用域</th>
+<th>链接</th>
+<th>声明方式</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>自动(局部变量)</td>
+<td>自动</td>
+<td>块</td>
+<td>无</td>
+<td>块内</td>
+</tr>
+<tr>
+<td>寄存器</td>
+<td>自动</td>
+<td>块</td>
+<td>无</td>
+<td>块内，使用关键字<code>register</code></td>
+</tr>
+<tr>
+<td>静态外部链接(全局变量)</td>
+<td>静态</td>
+<td>文件</td>
+<td>外部</td>
+<td>所有函数外</td>
+</tr>
+<tr>
+<td>静态内部链接(static全局变量)</td>
+<td>静态</td>
+<td>文件</td>
+<td>内部</td>
+<td>所有函数外，翻译单元中，使用关键字<code>static</code></td>
+</tr>
+<tr>
+<td>静态无链接(静态局部变量)</td>
+<td>静态</td>
+<td>块</td>
+<td>无</td>
+<td>块内，使用关键字<code>static</code></td>
+</tr>
+</tbody></table>
+<ul>
+<li>如果内层块种声明的变量和外层块的变量同名时，优先内层块的变量</li>
+<li>寄存器变量储存在寄存器中，所以无法获取其地址</li>
+<li>局部静态变量在程序的执行时间一直存在但只能在块内部使用，其值有继承性（就像Java里面的成员变量）</li>
+<li>要在外部使用全局变量或在块中使用全局变量或static全局变量。也必须先声明，而且声明前面要加关键字extern</li>
+<li>局部变量和静态局部变量在本文件中只能在声明后使用</li>
+</ul>
+<h3 id="存储类别的初始化"><a href="#存储类别的初始化" class="headerlink" title="存储类别的初始化"></a>存储类别的初始化</h3><ul>
+<li>局部变量不会初始化，但其变量值是分配空间范围中的任意值</li>
+<li>静态变量如未人为初始化，则自动初始化为0</li>
+</ul>
+<h3 id="存储类别说明符"><a href="#存储类别说明符" class="headerlink" title="存储类别说明符"></a>存储类别说明符</h3><ul>
+<li>auto:声明局部变量，可忽略</li>
+<li>register:声明寄存器变量</li>
+<li>static:声明静态类型</li>
+<li>extern:  声明时调用（全局/static全局） 变量</li>
+<li>_Thread_local：声明线程存储期，可以和 static或extern一起使用</li>
+</ul>
+<hr>
+<br>
+
+<h2 id="存储类别与函数"><a href="#存储类别与函数" class="headerlink" title="存储类别与函数"></a>存储类别与函数</h2><p>函数也有存储类别。</p>
+<ul>
+<li>外部函数<blockquote>
+<p>double a(int i)</p>
+</blockquote>
+</li>
+<li>静态函数<blockquote>
+<p>static double a(int i)</p>
+</blockquote>
+</li>
+<li>内联函数<blockquote>
+<p>extern double a(int i)</p>
+</blockquote>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>基础</tag>
+        <tag>存储类别</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C语言基础-递归</title>
+    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
+<a id="more"></a>
+
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
+<blockquote>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
+</blockquote>
+</blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
+<ol>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
+</ol>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
+<ol>
+<li>变化的参数</li>
+<li>递归终止条件</li>
+</ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
+<blockquote>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
+<ol>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
+</ol>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
+<ol>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
+</ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
+<br>
+<br>
+
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>递归</tag>
+        <tag>C语言基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Markdown笔记-基础</title>
     <url>/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="Markdown-概述"><a href="#Markdown-概述" class="headerlink" title="Markdown 概述"></a>Markdown 概述</h1><p>Markdown 是一种轻量级标记语言，与 2004 年创建。<br>后缀为<code>.md</code>或<code>.maekdown</code>，可导出 HTML，Word，pdf 等多种格式文档</p>
@@ -185,7 +412,7 @@
 <li>将图片存入本地，通过 <a href="https://blog.csdn.net/chudelong1/article/details/90697409">绝对路径/相对路径</a> 来加载图片(相对路径是以当前的 md 文件所在目录为起点)</li>
 </ol>
 <blockquote>
-<p>![图片出不来了](.\mdphoto\markdownlearn\0.jpg)</p>
+<p>![图片出不来了](./mdphoto/markdownlearn/0.jpg)</p>
 </blockquote>
 <p><img src="/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/0.jpg" alt="图片出不来了"></p>
 <p>当然，当地址过长时也可以像链接那样将(…)变成变量名</p>
@@ -243,129 +470,6 @@
       <tags>
         <tag>Markdown</tag>
         <tag>Markdown基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>C语言基础-存储类别</title>
-    <url>/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/</url>
-    <content><![CDATA[<h1 id="存储类别"><a href="#存储类别" class="headerlink" title="存储类别"></a><font color="green">存储类别</font></h1><p>在理解存储类别前，先要复习一些概念和术语。</p>
-<ul>
-<li>对象：对于储存在内存中的数据，被储存的每个值都占用一定的物理内存。这样的一块内存成为对象(和面向对象的对象概念不同)</li>
-<li>存储期：对象在内存中保留了多长的时间。</li>
-<li>标识符用于访问对象，可以用<strong>作用域</strong>和<strong>链接</strong>描述标识符，表明了程序的哪些部分可以使用它。</li>
-</ul>
-<p>我们先介绍`作用域、链接和储存期的含义，再介绍具体的存储类别</p>
-<a id="more"></a>
-
-<h2 id="1-作用域"><a href="#1-作用域" class="headerlink" title="1.作用域"></a>1.作用域</h2><p>作用域描述程序中可访问标识符的区域。<br>一个C变量的作用域可以是:</p>
-<ul>
-<li>块作用域：花括号内的代码，if语句或循环所控制的代码</li>
-<li>函数作用域：仅用于goto语句的标签。再块中定义但作用域是整个函数</li>
-<li>函数原型作用域：从形参定义处到原型声明结束</li>
-<li>文件作用域：定义在函数外面，从它的定义到该定义所在的文件的末尾均可见</li>
-</ul>
-<blockquote>
-<p>注意：当一个源代码中包含一个或多个头文件时，会把所有头文件和编译器源代码文件都看成是一个包含信息的单独文件，文件作用域的实际可见范围是整个翻译单元</p>
-</blockquote>
-<h2 id="2-链接"><a href="#2-链接" class="headerlink" title="2.链接"></a>2.链接</h2><p>链接指该变量访问范围<br>C变量有3种链接属性：<strong>外部链接，内部链接或无链接</strong><br>&nbsp;&nbsp;&nbsp;&nbsp;具有块作用域、函数作用域和函数原型作用域的变量都是无链接变量<br>&nbsp;&nbsp;&nbsp;&nbsp;文件作用域的变量可以是外部链接和内部链接，<br>&nbsp;&nbsp;&nbsp;&nbsp;内部链接变量比外部链接变量前面多了个static ，内部链接变量只能在翻译单元中使用，外部链接变量可以在多文件程序中使用</p>
-<h2 id="3-存储期"><a href="#3-存储期" class="headerlink" title="3.存储期"></a>3.存储期</h2><p>作用域和链接描述了标识符的可见性。存储期描述了通过这些标识符访问的对象的生存期。<br>C对象有4种存储期：</p>
-<ol>
-<li>静态存储期：关键字static，如果对象具有静态储存期，那么它在程序的执行期间一直存在   <font color="red">注意：文件作用域变量都具有静态存储期，但它的static表示的是其链接属性</font></li>
-<li>线程存储期: _Thread_local</li>
-<li>自动存储期: 通常是块作用域的变量所具有</li>
-<li>动态分配存储期： 从声明处到块末尾而不是块头到末尾</li>
-</ol>
-<h2 id="5种存储类别"><a href="#5种存储类别" class="headerlink" title="5种存储类别"></a>5种存储类别</h2><table>
-<thead>
-<tr>
-<th>存储类别</th>
-<th>存储期</th>
-<th>作用域</th>
-<th>链接</th>
-<th>声明方式</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>自动(局部变量)</td>
-<td>自动</td>
-<td>块</td>
-<td>无</td>
-<td>块内</td>
-</tr>
-<tr>
-<td>寄存器</td>
-<td>自动</td>
-<td>块</td>
-<td>无</td>
-<td>块内，使用关键字<code>register</code></td>
-</tr>
-<tr>
-<td>静态外部链接(全局变量)</td>
-<td>静态</td>
-<td>文件</td>
-<td>外部</td>
-<td>所有函数外</td>
-</tr>
-<tr>
-<td>静态内部链接(static全局变量)</td>
-<td>静态</td>
-<td>文件</td>
-<td>内部</td>
-<td>所有函数外，翻译单元中，使用关键字<code>static</code></td>
-</tr>
-<tr>
-<td>静态无链接(静态局部变量)</td>
-<td>静态</td>
-<td>块</td>
-<td>无</td>
-<td>块内，使用关键字<code>static</code></td>
-</tr>
-</tbody></table>
-<ul>
-<li>如果内层块种声明的变量和外层块的变量同名时，优先内层块的变量</li>
-<li>寄存器变量储存在寄存器中，所以无法获取其地址</li>
-<li>局部静态变量在程序的执行时间一直存在但只能在块内部使用，其值有继承性（就像Java里面的成员变量）</li>
-<li>要在外部使用全局变量或在块中使用全局变量或static全局变量。也必须先声明，而且声明前面要加关键字extern</li>
-<li>局部变量和静态局部变量在本文件中只能在声明后使用</li>
-</ul>
-<h3 id="存储类别的初始化"><a href="#存储类别的初始化" class="headerlink" title="存储类别的初始化"></a>存储类别的初始化</h3><ul>
-<li>局部变量不会初始化，但其变量值是分配空间范围中的任意值</li>
-<li>静态变量如未人为初始化，则自动初始化为0</li>
-</ul>
-<h3 id="存储类别说明符"><a href="#存储类别说明符" class="headerlink" title="存储类别说明符"></a>存储类别说明符</h3><ul>
-<li>auto:声明局部变量，可忽略</li>
-<li>register:声明寄存器变量</li>
-<li>static:声明静态类型</li>
-<li>extern:  声明时调用（全局/static全局） 变量</li>
-<li>_Thread_local：声明线程存储期，可以和 static或extern一起使用</li>
-</ul>
-<hr>
-<br>
-
-<h2 id="存储类别与函数"><a href="#存储类别与函数" class="headerlink" title="存储类别与函数"></a>存储类别与函数</h2><p>函数也有存储类别。</p>
-<ul>
-<li>外部函数<blockquote>
-<p>double a(int i)</p>
-</blockquote>
-</li>
-<li>静态函数<blockquote>
-<p>static double a(int i)</p>
-</blockquote>
-</li>
-<li>内联函数<blockquote>
-<p>extern double a(int i)</p>
-</blockquote>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>基础</tag>
-        <tag>存储类别</tag>
       </tags>
   </entry>
   <entry>
@@ -437,110 +541,6 @@
         <tag>c</tag>
         <tag>指针</tag>
         <tag>数组</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>C语言基础-递归</title>
-    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
-<a id="more"></a>
-
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
-<p>栈：一种数据结构，其特点为先进后出</p>
-<blockquote>
-<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
-</blockquote>
-</blockquote>
-<p>如图( 计算 3! )：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
-<p>解释：</p>
-<ol>
-<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
-<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
-<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
-<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
-<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
-</ol>
-<p>由此可以看成递归的形成至少需要两个条件：</p>
-<ol>
-<li>变化的参数</li>
-<li>递归终止条件</li>
-</ol>
-<blockquote>
-<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
-<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
-<br>
-
-<blockquote>
-<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
-<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
-<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
-<ol>
-<li>我们要把上面的 63 个移动到 B</li>
-<li>把第 64 个移动到 C</li>
-<li>把 B 上的 63 个移动到 C</li>
-</ol>
-<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
-<ol>
-<li>我们要把上面的 62 个移动到 B</li>
-<li>把第 63 个移动到 C</li>
-<li>把 B 上的 62 个移动到 C</li>
-</ol>
-<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
-<p>所以整个过程是</p>
-<ol>
-<li>我们要把上面的<code>n-1</code>个移动到 B</li>
-<li>把第<code>n</code>个移动到 C</li>
-<li>把 B 上的<code>n-1</code>个移动到 C</li>
-</ol>
-<blockquote>
-<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
-</blockquote>
-<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
-<ol>
-<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
-<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
-</ol>
-<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
-<hr>
-<br>
-<br>
-
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>递归</tag>
-        <tag>C语言基础</tag>
       </tags>
   </entry>
   <entry>
@@ -952,201 +952,6 @@
       </tags>
   </entry>
   <entry>
-    <title>day17-Linux基础</title>
-    <url>/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
-<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
-<p>命令行模式：gg=G</p>
-<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
-<p>底行模式：set nonumber  不显示行号，set number 显示行号</p>
-<a id="more"></a>
-
-<br>
-<br>
-
-<hr>
-<h2 id="二、tar-归档和释放"><a href="#二、tar-归档和释放" class="headerlink" title="二、tar-归档和释放"></a>二、tar-归档和释放</h2><blockquote>
-<p>tar<br>-c   创建归档文件<br>-v   显示归档或释放过程<br>-x   释放归档文件<br>-f   用户指定归档文件的文件名，否则使用默认名称<br>-j   以bzip2方式压缩<br>-z   以gzip方式压缩<br>    tar -czvf  要压缩或归档之后的文件名 目标文件名<br>    tar -xvf   目标文件名</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="三、diff"><a href="#三、diff" class="headerlink" title="三、diff"></a>三、diff</h2><p>比较文件的不同</p>
-<br>
-<br>
-
-<hr>
-<h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
-
-<p> wc</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
-
-
-<br>
-<br>
-
-<hr>
-<h2 id="五、工具："><a href="#五、工具：" class="headerlink" title="五、工具："></a>五、工具：</h2><p>vi编辑器</p>
-<p>gedit编辑器</p>
-<p>gcc编译器</p>
-<h2 id="1-下载工具："><a href="#1-下载工具：" class="headerlink" title="1.下载工具："></a>1.下载工具：</h2><blockquote>
-<p>deb（常用的） —-Debian<br>rpm（小红帽）—-Redhat</p>
-</blockquote>
-<br>
-
-<h3 id="（1）dpkg工具—-离线下载，没有依赖文件"><a href="#（1）dpkg工具—-离线下载，没有依赖文件" class="headerlink" title="（1）dpkg工具—-离线下载，没有依赖文件"></a>（1）dpkg工具—-离线下载，没有依赖文件</h3><p>sudo—-暂时赋予用户权限，密码初始都为1，但是不显示密码的输入，确保输出按回车就可以了</p>
-<p>dpkg都要加sudo</p>
-<blockquote>
-<p>sudo dpkg -i 安装包—下载<br>sudo dpkg -r 软件名—卸载</p>
-</blockquote>
-<br>
-
-
-<h3 id="（2）apt工具—在线下载"><a href="#（2）apt工具—在线下载" class="headerlink" title="（2）apt工具—在线下载"></a>（2）apt工具—在线下载</h3><p>下载：</p>
-<blockquote>
-<p>sudo apt-get install sl–跑火车<br>sudo apt-get install frozen-bubble–泡泡龙<br>sudo apt-get install cmatrix–代码雨<br>sudo  apt-get install fortune—-名人名言<br>sudo  apt-get install fortunes-zh—-名人名言（中文）<br>sudo  apt-get install lolcat—-有颜色显示<br>fortune | lolcat<br>卸载：sudo apt-get remove 软件名</p>
-</blockquote>
-<br>
-
-<h3 id="（3）创建共享文件夹："><a href="#（3）创建共享文件夹：" class="headerlink" title="（3）创建共享文件夹："></a>（3）创建共享文件夹：</h3><ol>
-<li>选择虚拟机左上菜单的虚拟机选项，点击设置</li>
-<li>点击选项，找到共享文件夹，选择总是启用</li>
-<li>点击添加，跟着下一步，选择主机（windows）的一个文件作为自己的共享文件夹</li>
-<li>点击完成，点击确定，最后在<code>/mnt/hgfs</code>查看有没有</li>
-</ol>
-<h3 id="（4）网络配置："><a href="#（4）网络配置：" class="headerlink" title="（4）网络配置："></a>（4）网络配置：</h3><p>ping–能不能网络通信</p>
-<p>ping +IP地址</p>
-<ol>
-<li>点击虚拟机菜单的编辑，选择虚拟网络编辑</li>
-<li>点击更改设置（如果没有，直接选择桥接模式），选择桥接模式</li>
-<li>在桥接模式下选择自己windos网络的描述名字，点击确定</li>
-<li>点击虚拟机，选择设置，找到网络适配器，选择自定义模式，选择自己的网络名称(一般为VMnet0)，点击确定</li>
-<li>进入linux系统，断开重连网络（重启网络）</li>
-</ol>
-<p>或者：在终端上输入：</p>
-<p>sudo service network-manager restart</p>
-<blockquote>
-<p>ifconfig—查看linux系统的IP地址<br>ipconfig—查看windows系统的IP地址</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h2><p>(1) 超级用户：</p>
-<blockquote>
-<p>su，开通了所有权限，我们一般不在这里工作，因为一旦删除，找不回来，也容易操作到内核上的东西<br>exit：退出超级用户</p>
-</blockquote>
-<p>(2)查看</p>
-<blockquote>
-<p>查看用户—vi /etc/passwd<br>查看用户组–vi /etc/group</p>
-</blockquote>
-<p>(3)添加用户：</p>
-<blockquote>
-<p>adduser 新添用户名<br>输入密码，不显示，确保输入按回车<br>su 用户名—-进入该用户</p>
-</blockquote>
-<p>(4)删除用户<br>deluser 用户名，但是我们一般进入passwd和group这两个文件去删除 <strong>（加sudo）</strong></p>
-<p>(5)修改密码：passwd</p>
-<br>
-<br>
-
-<hr>
-<h2 id="3-进程管理"><a href="#3-进程管理" class="headerlink" title="3.进程管理"></a>3.进程管理</h2><blockquote>
-<p>ps   查看前台的进程<br>ps -aux  查看所有进程<br>pstree—以树的形式展示进程<br>top—查看进程（从占用cpu最大开始展示），类似于任务管理器<br>kill -9 进程号   —-杀死进程</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="4-shell的特殊字符"><a href="#4-shell的特殊字符" class="headerlink" title="4.shell的特殊字符"></a>4.shell的特殊字符</h2><p>（1）|—管道</p>
-<p>指令1 | 指令2—-把指令1的输出作为指令2的输入</p>
-<p>fortune | lolcat</p>
-<p>（2）` &emsp; `—命令置换<br>指令1 ` &emsp; `    把命令置换里面的内容作为指令1的参数<br>    echo `ls`</p>
-<p>（3）echo–终端的输出</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">echo hello    world---会自动缩进空格字符串之间保留一个空格</span><br><span class="line">echo &#x27;hello    world&#x27;---原样输出</span><br><span class="line">echo <span class="string">&quot;hello    world&quot;</span>---原样输出</span><br></pre></td></tr></table></figure>
-<p>（4）输入输出重定向</p>
-<blockquote>
-<p>&gt;:<br>cat &gt;1.c（覆盖输入）<br> &gt;&gt;:<br>cat &gt;&gt;1.c（追加输入）</p>
-</blockquote>
-<p>注：输入都是读取的键盘输入</p>
-<p>（5）通配符：</p>
-<ul>
-<li>*—匹配所有字符串</li>
-<li>{起始..结束}–可以创建起始到结束的文件</li>
-<li>touch {1..10}.c—-创建1到10的.c文件</li>
-<li>rm 【13579】.c—-删除了1.c 3.c 5.c 7.c 9.c</li>
-<li>rm [1-5].c—-删除了1.c2.c3.c4.c5.c</li>
-<li>rm [^8].c—-删除除了8.c的文件,也只能通配一个</li>
-<li>？—匹配一个字符串<br>rm h？llo.c—删除hello.c hrllo.c</li>
-</ul>
-<p>（6）其他</p>
-<p>shutdown—关机</p>
-<p>shutdown -r now—重启</p>
-<p>vm上的快照–相当于备份</p>
-<br>
-<br>
-
-<hr>
-<h2 id="5-shell脚本："><a href="#5-shell脚本：" class="headerlink" title="5.shell脚本："></a>5.shell脚本：</h2><p>（1）本质：shell命令的有序集合</p>
-<p>解释型语言（python，shell脚本）</p>
-<p>不会检查错误，但是会显示出错误，出现错误会继续执行后面的语句</p>
-<p>需要一个解释器（shell的是bash）</p>
-<p>编译型语言（c语言，c++）</p>
-<p>编译会报错，一旦错误会停止进程</p>
-<p>（2）怎么去写一个shell脚本：</p>
-<ol>
-<li><p>创建一个.sh的文件（也可以没有后缀名）</p>
-</li>
-<li><p>写shell命令</p>
-</li>
-<li><p>执行:</p>
-</li>
-</ol>
-<p>&emsp;&emsp;&emsp;&emsp;a. 通过bash这个解释器来执行，直接bash+要执行的文件</p>
-<p>&emsp;&emsp;&emsp;&emsp;b. 通过chmod给shell文件添加执行权限，然后再执行</p>
-<p><strong>注：第一行一般写：<code>#!/bin/bash</code>，我们解释器的路径</strong></p>
-<p>练习：复制上一级目录的1.c 2.c到当前目录下，然后把hello world写入1.c</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> cd ../</span><br><span class="line">  <span class="number">4</span> touch <span class="number">1.</span>c <span class="number">2.</span>c</span><br><span class="line">  <span class="number">5</span> cp [<span class="number">12</span>].c day2</span><br><span class="line">  <span class="number">6</span> echo <span class="string">&quot;hello world&quot;</span> &gt;day2/<span class="number">1.</span>c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>（3）shell变量</p>
-<ul>
-<li>自定义变量</li>
-</ul>
-<p>没有数据类型，默认为字符串类型</p>
-<p>赋值不能隔开</p>
-<p>变量名=值</p>
-<p>没有分号，换行就相当于分号</p>
-<p>变量的调用需要加钱$</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>位置变量</li>
-</ul>
-<p>命令行参数的变量，即命令即后面的参数作为变量 从bash后面的那个开始为0</p>
-<p>从终端传递参数给shell脚本</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">从$<span class="number">0</span>开始到$<span class="number">9</span>如果要打印<span class="number">9</span>以后的变量需要加&#123;&#125;，例如$&#123;<span class="number">12</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>环境变量</li>
-</ul>
-<p>计算机定义好了的变量</p>
-<p>env可以查看所有环境变量</p>
-<p>调用需要加$</p>
-<p><strong>注：shell中0是真，1是假</strong></p>
-<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>shell</tag>
-        <tag>Linux基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>day18-Linux基础,shell脚本</title>
     <url>/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/</url>
     <content><![CDATA[<h1 id="day18-linux基础-shell脚本"><a href="#day18-linux基础-shell脚本" class="headerlink" title="day18-linux基础,shell脚本"></a><font color="green">day18-linux基础,shell脚本</font></h1><br>
@@ -1351,6 +1156,201 @@
         <tag>shell</tag>
         <tag>Linux基础</tag>
         <tag>shell脚本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day17-Linux基础</title>
+    <url>/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
+<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
+<p>命令行模式：gg=G</p>
+<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
+<p>底行模式：set nonumber  不显示行号，set number 显示行号</p>
+<a id="more"></a>
+
+<br>
+<br>
+
+<hr>
+<h2 id="二、tar-归档和释放"><a href="#二、tar-归档和释放" class="headerlink" title="二、tar-归档和释放"></a>二、tar-归档和释放</h2><blockquote>
+<p>tar<br>-c   创建归档文件<br>-v   显示归档或释放过程<br>-x   释放归档文件<br>-f   用户指定归档文件的文件名，否则使用默认名称<br>-j   以bzip2方式压缩<br>-z   以gzip方式压缩<br>    tar -czvf  要压缩或归档之后的文件名 目标文件名<br>    tar -xvf   目标文件名</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="三、diff"><a href="#三、diff" class="headerlink" title="三、diff"></a>三、diff</h2><p>比较文件的不同</p>
+<br>
+<br>
+
+<hr>
+<h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
+
+<p> wc</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
+
+
+<br>
+<br>
+
+<hr>
+<h2 id="五、工具："><a href="#五、工具：" class="headerlink" title="五、工具："></a>五、工具：</h2><p>vi编辑器</p>
+<p>gedit编辑器</p>
+<p>gcc编译器</p>
+<h2 id="1-下载工具："><a href="#1-下载工具：" class="headerlink" title="1.下载工具："></a>1.下载工具：</h2><blockquote>
+<p>deb（常用的） —-Debian<br>rpm（小红帽）—-Redhat</p>
+</blockquote>
+<br>
+
+<h3 id="（1）dpkg工具—-离线下载，没有依赖文件"><a href="#（1）dpkg工具—-离线下载，没有依赖文件" class="headerlink" title="（1）dpkg工具—-离线下载，没有依赖文件"></a>（1）dpkg工具—-离线下载，没有依赖文件</h3><p>sudo—-暂时赋予用户权限，密码初始都为1，但是不显示密码的输入，确保输出按回车就可以了</p>
+<p>dpkg都要加sudo</p>
+<blockquote>
+<p>sudo dpkg -i 安装包—下载<br>sudo dpkg -r 软件名—卸载</p>
+</blockquote>
+<br>
+
+
+<h3 id="（2）apt工具—在线下载"><a href="#（2）apt工具—在线下载" class="headerlink" title="（2）apt工具—在线下载"></a>（2）apt工具—在线下载</h3><p>下载：</p>
+<blockquote>
+<p>sudo apt-get install sl–跑火车<br>sudo apt-get install frozen-bubble–泡泡龙<br>sudo apt-get install cmatrix–代码雨<br>sudo  apt-get install fortune—-名人名言<br>sudo  apt-get install fortunes-zh—-名人名言（中文）<br>sudo  apt-get install lolcat—-有颜色显示<br>fortune | lolcat<br>卸载：sudo apt-get remove 软件名</p>
+</blockquote>
+<br>
+
+<h3 id="（3）创建共享文件夹："><a href="#（3）创建共享文件夹：" class="headerlink" title="（3）创建共享文件夹："></a>（3）创建共享文件夹：</h3><ol>
+<li>选择虚拟机左上菜单的虚拟机选项，点击设置</li>
+<li>点击选项，找到共享文件夹，选择总是启用</li>
+<li>点击添加，跟着下一步，选择主机（windows）的一个文件作为自己的共享文件夹</li>
+<li>点击完成，点击确定，最后在<code>/mnt/hgfs</code>查看有没有</li>
+</ol>
+<h3 id="（4）网络配置："><a href="#（4）网络配置：" class="headerlink" title="（4）网络配置："></a>（4）网络配置：</h3><p>ping–能不能网络通信</p>
+<p>ping +IP地址</p>
+<ol>
+<li>点击虚拟机菜单的编辑，选择虚拟网络编辑</li>
+<li>点击更改设置（如果没有，直接选择桥接模式），选择桥接模式</li>
+<li>在桥接模式下选择自己windos网络的描述名字，点击确定</li>
+<li>点击虚拟机，选择设置，找到网络适配器，选择自定义模式，选择自己的网络名称(一般为VMnet0)，点击确定</li>
+<li>进入linux系统，断开重连网络（重启网络）</li>
+</ol>
+<p>或者：在终端上输入：</p>
+<p>sudo service network-manager restart</p>
+<blockquote>
+<p>ifconfig—查看linux系统的IP地址<br>ipconfig—查看windows系统的IP地址</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h2><p>(1) 超级用户：</p>
+<blockquote>
+<p>su，开通了所有权限，我们一般不在这里工作，因为一旦删除，找不回来，也容易操作到内核上的东西<br>exit：退出超级用户</p>
+</blockquote>
+<p>(2)查看</p>
+<blockquote>
+<p>查看用户—vi /etc/passwd<br>查看用户组–vi /etc/group</p>
+</blockquote>
+<p>(3)添加用户：</p>
+<blockquote>
+<p>adduser 新添用户名<br>输入密码，不显示，确保输入按回车<br>su 用户名—-进入该用户</p>
+</blockquote>
+<p>(4)删除用户<br>deluser 用户名，但是我们一般进入passwd和group这两个文件去删除 <strong>（加sudo）</strong></p>
+<p>(5)修改密码：passwd</p>
+<br>
+<br>
+
+<hr>
+<h2 id="3-进程管理"><a href="#3-进程管理" class="headerlink" title="3.进程管理"></a>3.进程管理</h2><blockquote>
+<p>ps   查看前台的进程<br>ps -aux  查看所有进程<br>pstree—以树的形式展示进程<br>top—查看进程（从占用cpu最大开始展示），类似于任务管理器<br>kill -9 进程号   —-杀死进程</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="4-shell的特殊字符"><a href="#4-shell的特殊字符" class="headerlink" title="4.shell的特殊字符"></a>4.shell的特殊字符</h2><p>（1）|—管道</p>
+<p>指令1 | 指令2—-把指令1的输出作为指令2的输入</p>
+<p>fortune | lolcat</p>
+<p>（2）` &emsp; `—命令置换<br>指令1 ` &emsp; `    把命令置换里面的内容作为指令1的参数<br>    echo `ls`</p>
+<p>（3）echo–终端的输出</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">echo hello    world---会自动缩进空格字符串之间保留一个空格</span><br><span class="line">echo &#x27;hello    world&#x27;---原样输出</span><br><span class="line">echo <span class="string">&quot;hello    world&quot;</span>---原样输出</span><br></pre></td></tr></table></figure>
+<p>（4）输入输出重定向</p>
+<blockquote>
+<p>&gt;:<br>cat &gt;1.c（覆盖输入）<br> &gt;&gt;:<br>cat &gt;&gt;1.c（追加输入）</p>
+</blockquote>
+<p>注：输入都是读取的键盘输入</p>
+<p>（5）通配符：</p>
+<ul>
+<li>*—匹配所有字符串</li>
+<li>{起始..结束}–可以创建起始到结束的文件</li>
+<li>touch {1..10}.c—-创建1到10的.c文件</li>
+<li>rm 【13579】.c—-删除了1.c 3.c 5.c 7.c 9.c</li>
+<li>rm [1-5].c—-删除了1.c2.c3.c4.c5.c</li>
+<li>rm [^8].c—-删除除了8.c的文件,也只能通配一个</li>
+<li>？—匹配一个字符串<br>rm h？llo.c—删除hello.c hrllo.c</li>
+</ul>
+<p>（6）其他</p>
+<p>shutdown—关机</p>
+<p>shutdown -r now—重启</p>
+<p>vm上的快照–相当于备份</p>
+<br>
+<br>
+
+<hr>
+<h2 id="5-shell脚本："><a href="#5-shell脚本：" class="headerlink" title="5.shell脚本："></a>5.shell脚本：</h2><p>（1）本质：shell命令的有序集合</p>
+<p>解释型语言（python，shell脚本）</p>
+<p>不会检查错误，但是会显示出错误，出现错误会继续执行后面的语句</p>
+<p>需要一个解释器（shell的是bash）</p>
+<p>编译型语言（c语言，c++）</p>
+<p>编译会报错，一旦错误会停止进程</p>
+<p>（2）怎么去写一个shell脚本：</p>
+<ol>
+<li><p>创建一个.sh的文件（也可以没有后缀名）</p>
+</li>
+<li><p>写shell命令</p>
+</li>
+<li><p>执行:</p>
+</li>
+</ol>
+<p>&emsp;&emsp;&emsp;&emsp;a. 通过bash这个解释器来执行，直接bash+要执行的文件</p>
+<p>&emsp;&emsp;&emsp;&emsp;b. 通过chmod给shell文件添加执行权限，然后再执行</p>
+<p><strong>注：第一行一般写：<code>#!/bin/bash</code>，我们解释器的路径</strong></p>
+<p>练习：复制上一级目录的1.c 2.c到当前目录下，然后把hello world写入1.c</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> cd ../</span><br><span class="line">  <span class="number">4</span> touch <span class="number">1.</span>c <span class="number">2.</span>c</span><br><span class="line">  <span class="number">5</span> cp [<span class="number">12</span>].c day2</span><br><span class="line">  <span class="number">6</span> echo <span class="string">&quot;hello world&quot;</span> &gt;day2/<span class="number">1.</span>c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>（3）shell变量</p>
+<ul>
+<li>自定义变量</li>
+</ul>
+<p>没有数据类型，默认为字符串类型</p>
+<p>赋值不能隔开</p>
+<p>变量名=值</p>
+<p>没有分号，换行就相当于分号</p>
+<p>变量的调用需要加钱$</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>位置变量</li>
+</ul>
+<p>命令行参数的变量，即命令即后面的参数作为变量 从bash后面的那个开始为0</p>
+<p>从终端传递参数给shell脚本</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">从$<span class="number">0</span>开始到$<span class="number">9</span>如果要打印<span class="number">9</span>以后的变量需要加&#123;&#125;，例如$&#123;<span class="number">12</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>环境变量</li>
+</ul>
+<p>计算机定义好了的变量</p>
+<p>env可以查看所有环境变量</p>
+<p>调用需要加$</p>
+<p><strong>注：shell中0是真，1是假</strong></p>
+<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>shell</tag>
+        <tag>Linux基础</tag>
       </tags>
   </entry>
   <entry>
@@ -1776,9 +1776,9 @@
 <br>
 
 <hr>
-<h2 id="二、链表图解"><a href="#二、链表图解" class="headerlink" title="二、链表图解"></a>二、链表图解</h2><h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Clianbiao.png" alt="链表"></p>
-<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Ccharu.png" alt="链表"></p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/day23-%E9%93%BE%E8%A1%A8%5Cshanchu.png" alt="链表"></p>
+<h2 id="二、链表图解"><a href="#二、链表图解" class="headerlink" title="二、链表图解"></a>二、链表图解</h2><h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/lianbiao.jpg" alt="链表"></p>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/charu.jpg" alt="链表"></p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/shanchu.jpg" alt="链表"></p>
 <br>
 <br>
 
