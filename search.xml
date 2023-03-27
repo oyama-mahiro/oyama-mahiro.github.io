@@ -1,6 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C语言基础-递归</title>
+    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
+<a id="more"></a>
+
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
+<blockquote>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
+</blockquote>
+</blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
+<ol>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
+</ol>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
+<ol>
+<li>变化的参数</li>
+<li>递归终止条件</li>
+</ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
+<blockquote>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
+<ol>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
+</ol>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
+<ol>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
+</ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
+<br>
+<br>
+
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>C语言</tag>
+        <tag>递归</tag>
+        <tag>C语言基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>C语言基础-存储类别</title>
     <url>/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/</url>
     <content><![CDATA[<h1 id="存储类别"><a href="#存储类别" class="headerlink" title="存储类别"></a><font color="green">存储类别</font></h1><p>在理解存储类别前，先要复习一些概念和术语。</p>
@@ -117,114 +221,10 @@
         <category>c语言</category>
       </categories>
       <tags>
-        <tag>C语言</tag>
         <tag>c</tag>
+        <tag>C语言</tag>
         <tag>基础</tag>
         <tag>存储类别</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>C语言基础-递归</title>
-    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
-<a id="more"></a>
-
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
-<p>栈：一种数据结构，其特点为先进后出</p>
-<blockquote>
-<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
-</blockquote>
-</blockquote>
-<p>如图( 计算 3! )：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
-<p>解释：</p>
-<ol>
-<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
-<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
-<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
-<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
-<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
-</ol>
-<p>由此可以看成递归的形成至少需要两个条件：</p>
-<ol>
-<li>变化的参数</li>
-<li>递归终止条件</li>
-</ol>
-<blockquote>
-<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
-<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
-<br>
-
-<blockquote>
-<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
-<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
-<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
-<ol>
-<li>我们要把上面的 63 个移动到 B</li>
-<li>把第 64 个移动到 C</li>
-<li>把 B 上的 63 个移动到 C</li>
-</ol>
-<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
-<ol>
-<li>我们要把上面的 62 个移动到 B</li>
-<li>把第 63 个移动到 C</li>
-<li>把 B 上的 62 个移动到 C</li>
-</ol>
-<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
-<p>所以整个过程是</p>
-<ol>
-<li>我们要把上面的<code>n-1</code>个移动到 B</li>
-<li>把第<code>n</code>个移动到 C</li>
-<li>把 B 上的<code>n-1</code>个移动到 C</li>
-</ol>
-<blockquote>
-<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
-</blockquote>
-<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
-<ol>
-<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
-<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
-</ol>
-<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
-<hr>
-<br>
-<br>
-
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>递归</tag>
-        <tag>C语言基础</tag>
       </tags>
   </entry>
   <entry>
@@ -537,8 +537,8 @@
         <category>c语言</category>
       </categories>
       <tags>
-        <tag>C语言</tag>
         <tag>c</tag>
+        <tag>C语言</tag>
         <tag>指针</tag>
         <tag>数组</tag>
       </tags>
@@ -608,6 +608,57 @@
         <tag>c</tag>
         <tag>指针</tag>
         <tag>c语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day14-c函数</title>
+    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
+<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
+<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
+<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
+<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
+<p>​    (3)全局变量传参</p>
+<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
+<p>​    (2)字符数组：只需要传入数组首地址</p>
+<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
+<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>​            </p>
+<p>​                </p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>c语言</tag>
+        <tag>函数</tag>
       </tags>
   </entry>
   <entry>
@@ -714,57 +765,6 @@
       <tags>
         <tag>c</tag>
         <tag>指针</tag>
-        <tag>c语言</tag>
-        <tag>函数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day14-c函数</title>
-    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
-<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
-<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
-<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
-<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
-<p>​    (3)全局变量传参</p>
-<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
-<p>​    (2)字符数组：只需要传入数组首地址</p>
-<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
-<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>​            </p>
-<p>​                </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
         <tag>c语言</tag>
         <tag>函数</tag>
       </tags>
@@ -941,6 +941,201 @@
 <h3 id="5-文件的压缩与解压"><a href="#5-文件的压缩与解压" class="headerlink" title="5.文件的压缩与解压"></a>5.文件的压缩与解压</h3><blockquote>
 <p>gzip—压缩文件，原文件被替换成压缩之后的文件，，会生成一个.gz的压缩文件，用vi能看到源文件内容，用cat在终端查看乱码<br>gunzip—解压文件<br>bzip2—压缩文件，原文件被替换成压缩之后的文件，，会生成一个.bz2的压缩文件，压缩功能相对于gzip较弱，但是压缩时间缩短<br>bunzip–解压文件<br>xz—压缩文件，原文件被替换成压缩之后的文件，，会生成一个.xz的压缩文件，压缩功能相对于gzip较弱，但是压缩时间缩短<br>unxz–解压文件</p>
 </blockquote>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>shell</tag>
+        <tag>Linux基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day17-Linux基础</title>
+    <url>/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
+<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
+<p>命令行模式：gg=G</p>
+<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
+<p>底行模式：set nonumber  不显示行号，set number 显示行号</p>
+<a id="more"></a>
+
+<br>
+<br>
+
+<hr>
+<h2 id="二、tar-归档和释放"><a href="#二、tar-归档和释放" class="headerlink" title="二、tar-归档和释放"></a>二、tar-归档和释放</h2><blockquote>
+<p>tar<br>-c   创建归档文件<br>-v   显示归档或释放过程<br>-x   释放归档文件<br>-f   用户指定归档文件的文件名，否则使用默认名称<br>-j   以bzip2方式压缩<br>-z   以gzip方式压缩<br>    tar -czvf  要压缩或归档之后的文件名 目标文件名<br>    tar -xvf   目标文件名</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="三、diff"><a href="#三、diff" class="headerlink" title="三、diff"></a>三、diff</h2><p>比较文件的不同</p>
+<br>
+<br>
+
+<hr>
+<h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
+
+<p> wc</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
+
+
+<br>
+<br>
+
+<hr>
+<h2 id="五、工具："><a href="#五、工具：" class="headerlink" title="五、工具："></a>五、工具：</h2><p>vi编辑器</p>
+<p>gedit编辑器</p>
+<p>gcc编译器</p>
+<h2 id="1-下载工具："><a href="#1-下载工具：" class="headerlink" title="1.下载工具："></a>1.下载工具：</h2><blockquote>
+<p>deb（常用的） —-Debian<br>rpm（小红帽）—-Redhat</p>
+</blockquote>
+<br>
+
+<h3 id="（1）dpkg工具—-离线下载，没有依赖文件"><a href="#（1）dpkg工具—-离线下载，没有依赖文件" class="headerlink" title="（1）dpkg工具—-离线下载，没有依赖文件"></a>（1）dpkg工具—-离线下载，没有依赖文件</h3><p>sudo—-暂时赋予用户权限，密码初始都为1，但是不显示密码的输入，确保输出按回车就可以了</p>
+<p>dpkg都要加sudo</p>
+<blockquote>
+<p>sudo dpkg -i 安装包—下载<br>sudo dpkg -r 软件名—卸载</p>
+</blockquote>
+<br>
+
+
+<h3 id="（2）apt工具—在线下载"><a href="#（2）apt工具—在线下载" class="headerlink" title="（2）apt工具—在线下载"></a>（2）apt工具—在线下载</h3><p>下载：</p>
+<blockquote>
+<p>sudo apt-get install sl–跑火车<br>sudo apt-get install frozen-bubble–泡泡龙<br>sudo apt-get install cmatrix–代码雨<br>sudo  apt-get install fortune—-名人名言<br>sudo  apt-get install fortunes-zh—-名人名言（中文）<br>sudo  apt-get install lolcat—-有颜色显示<br>fortune | lolcat<br>卸载：sudo apt-get remove 软件名</p>
+</blockquote>
+<br>
+
+<h3 id="（3）创建共享文件夹："><a href="#（3）创建共享文件夹：" class="headerlink" title="（3）创建共享文件夹："></a>（3）创建共享文件夹：</h3><ol>
+<li>选择虚拟机左上菜单的虚拟机选项，点击设置</li>
+<li>点击选项，找到共享文件夹，选择总是启用</li>
+<li>点击添加，跟着下一步，选择主机（windows）的一个文件作为自己的共享文件夹</li>
+<li>点击完成，点击确定，最后在<code>/mnt/hgfs</code>查看有没有</li>
+</ol>
+<h3 id="（4）网络配置："><a href="#（4）网络配置：" class="headerlink" title="（4）网络配置："></a>（4）网络配置：</h3><p>ping–能不能网络通信</p>
+<p>ping +IP地址</p>
+<ol>
+<li>点击虚拟机菜单的编辑，选择虚拟网络编辑</li>
+<li>点击更改设置（如果没有，直接选择桥接模式），选择桥接模式</li>
+<li>在桥接模式下选择自己windos网络的描述名字，点击确定</li>
+<li>点击虚拟机，选择设置，找到网络适配器，选择自定义模式，选择自己的网络名称(一般为VMnet0)，点击确定</li>
+<li>进入linux系统，断开重连网络（重启网络）</li>
+</ol>
+<p>或者：在终端上输入：</p>
+<p>sudo service network-manager restart</p>
+<blockquote>
+<p>ifconfig—查看linux系统的IP地址<br>ipconfig—查看windows系统的IP地址</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h2><p>(1) 超级用户：</p>
+<blockquote>
+<p>su，开通了所有权限，我们一般不在这里工作，因为一旦删除，找不回来，也容易操作到内核上的东西<br>exit：退出超级用户</p>
+</blockquote>
+<p>(2)查看</p>
+<blockquote>
+<p>查看用户—vi /etc/passwd<br>查看用户组–vi /etc/group</p>
+</blockquote>
+<p>(3)添加用户：</p>
+<blockquote>
+<p>adduser 新添用户名<br>输入密码，不显示，确保输入按回车<br>su 用户名—-进入该用户</p>
+</blockquote>
+<p>(4)删除用户<br>deluser 用户名，但是我们一般进入passwd和group这两个文件去删除 <strong>（加sudo）</strong></p>
+<p>(5)修改密码：passwd</p>
+<br>
+<br>
+
+<hr>
+<h2 id="3-进程管理"><a href="#3-进程管理" class="headerlink" title="3.进程管理"></a>3.进程管理</h2><blockquote>
+<p>ps   查看前台的进程<br>ps -aux  查看所有进程<br>pstree—以树的形式展示进程<br>top—查看进程（从占用cpu最大开始展示），类似于任务管理器<br>kill -9 进程号   —-杀死进程</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="4-shell的特殊字符"><a href="#4-shell的特殊字符" class="headerlink" title="4.shell的特殊字符"></a>4.shell的特殊字符</h2><p>（1）|—管道</p>
+<p>指令1 | 指令2—-把指令1的输出作为指令2的输入</p>
+<p>fortune | lolcat</p>
+<p>（2）` &emsp; `—命令置换<br>指令1 ` &emsp; `    把命令置换里面的内容作为指令1的参数<br>    echo `ls`</p>
+<p>（3）echo–终端的输出</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">echo hello    world---会自动缩进空格字符串之间保留一个空格</span><br><span class="line">echo &#x27;hello    world&#x27;---原样输出</span><br><span class="line">echo <span class="string">&quot;hello    world&quot;</span>---原样输出</span><br></pre></td></tr></table></figure>
+<p>（4）输入输出重定向</p>
+<blockquote>
+<p>&gt;:<br>cat &gt;1.c（覆盖输入）<br> &gt;&gt;:<br>cat &gt;&gt;1.c（追加输入）</p>
+</blockquote>
+<p>注：输入都是读取的键盘输入</p>
+<p>（5）通配符：</p>
+<ul>
+<li>*—匹配所有字符串</li>
+<li>{起始..结束}–可以创建起始到结束的文件</li>
+<li>touch {1..10}.c—-创建1到10的.c文件</li>
+<li>rm 【13579】.c—-删除了1.c 3.c 5.c 7.c 9.c</li>
+<li>rm [1-5].c—-删除了1.c2.c3.c4.c5.c</li>
+<li>rm [^8].c—-删除除了8.c的文件,也只能通配一个</li>
+<li>？—匹配一个字符串<br>rm h？llo.c—删除hello.c hrllo.c</li>
+</ul>
+<p>（6）其他</p>
+<p>shutdown—关机</p>
+<p>shutdown -r now—重启</p>
+<p>vm上的快照–相当于备份</p>
+<br>
+<br>
+
+<hr>
+<h2 id="5-shell脚本："><a href="#5-shell脚本：" class="headerlink" title="5.shell脚本："></a>5.shell脚本：</h2><p>（1）本质：shell命令的有序集合</p>
+<p>解释型语言（python，shell脚本）</p>
+<p>不会检查错误，但是会显示出错误，出现错误会继续执行后面的语句</p>
+<p>需要一个解释器（shell的是bash）</p>
+<p>编译型语言（c语言，c++）</p>
+<p>编译会报错，一旦错误会停止进程</p>
+<p>（2）怎么去写一个shell脚本：</p>
+<ol>
+<li><p>创建一个.sh的文件（也可以没有后缀名）</p>
+</li>
+<li><p>写shell命令</p>
+</li>
+<li><p>执行:</p>
+</li>
+</ol>
+<p>&emsp;&emsp;&emsp;&emsp;a. 通过bash这个解释器来执行，直接bash+要执行的文件</p>
+<p>&emsp;&emsp;&emsp;&emsp;b. 通过chmod给shell文件添加执行权限，然后再执行</p>
+<p><strong>注：第一行一般写：<code>#!/bin/bash</code>，我们解释器的路径</strong></p>
+<p>练习：复制上一级目录的1.c 2.c到当前目录下，然后把hello world写入1.c</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> cd ../</span><br><span class="line">  <span class="number">4</span> touch <span class="number">1.</span>c <span class="number">2.</span>c</span><br><span class="line">  <span class="number">5</span> cp [<span class="number">12</span>].c day2</span><br><span class="line">  <span class="number">6</span> echo <span class="string">&quot;hello world&quot;</span> &gt;day2/<span class="number">1.</span>c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>（3）shell变量</p>
+<ul>
+<li>自定义变量</li>
+</ul>
+<p>没有数据类型，默认为字符串类型</p>
+<p>赋值不能隔开</p>
+<p>变量名=值</p>
+<p>没有分号，换行就相当于分号</p>
+<p>变量的调用需要加钱$</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>位置变量</li>
+</ul>
+<p>命令行参数的变量，即命令即后面的参数作为变量 从bash后面的那个开始为0</p>
+<p>从终端传递参数给shell脚本</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">从$<span class="number">0</span>开始到$<span class="number">9</span>如果要打印<span class="number">9</span>以后的变量需要加&#123;&#125;，例如$&#123;<span class="number">12</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>环境变量</li>
+</ul>
+<p>计算机定义好了的变量</p>
+<p>env可以查看所有环境变量</p>
+<p>调用需要加$</p>
+<p><strong>注：shell中0是真，1是假</strong></p>
+<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
+
 ]]></content>
       <categories>
         <category>Linux</category>
@@ -1156,201 +1351,6 @@
         <tag>shell</tag>
         <tag>Linux基础</tag>
         <tag>shell脚本</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day17-Linux基础</title>
-    <url>/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
-<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
-<p>命令行模式：gg=G</p>
-<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
-<p>底行模式：set nonumber  不显示行号，set number 显示行号</p>
-<a id="more"></a>
-
-<br>
-<br>
-
-<hr>
-<h2 id="二、tar-归档和释放"><a href="#二、tar-归档和释放" class="headerlink" title="二、tar-归档和释放"></a>二、tar-归档和释放</h2><blockquote>
-<p>tar<br>-c   创建归档文件<br>-v   显示归档或释放过程<br>-x   释放归档文件<br>-f   用户指定归档文件的文件名，否则使用默认名称<br>-j   以bzip2方式压缩<br>-z   以gzip方式压缩<br>    tar -czvf  要压缩或归档之后的文件名 目标文件名<br>    tar -xvf   目标文件名</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="三、diff"><a href="#三、diff" class="headerlink" title="三、diff"></a>三、diff</h2><p>比较文件的不同</p>
-<br>
-<br>
-
-<hr>
-<h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
-
-<p> wc</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
-
-
-<br>
-<br>
-
-<hr>
-<h2 id="五、工具："><a href="#五、工具：" class="headerlink" title="五、工具："></a>五、工具：</h2><p>vi编辑器</p>
-<p>gedit编辑器</p>
-<p>gcc编译器</p>
-<h2 id="1-下载工具："><a href="#1-下载工具：" class="headerlink" title="1.下载工具："></a>1.下载工具：</h2><blockquote>
-<p>deb（常用的） —-Debian<br>rpm（小红帽）—-Redhat</p>
-</blockquote>
-<br>
-
-<h3 id="（1）dpkg工具—-离线下载，没有依赖文件"><a href="#（1）dpkg工具—-离线下载，没有依赖文件" class="headerlink" title="（1）dpkg工具—-离线下载，没有依赖文件"></a>（1）dpkg工具—-离线下载，没有依赖文件</h3><p>sudo—-暂时赋予用户权限，密码初始都为1，但是不显示密码的输入，确保输出按回车就可以了</p>
-<p>dpkg都要加sudo</p>
-<blockquote>
-<p>sudo dpkg -i 安装包—下载<br>sudo dpkg -r 软件名—卸载</p>
-</blockquote>
-<br>
-
-
-<h3 id="（2）apt工具—在线下载"><a href="#（2）apt工具—在线下载" class="headerlink" title="（2）apt工具—在线下载"></a>（2）apt工具—在线下载</h3><p>下载：</p>
-<blockquote>
-<p>sudo apt-get install sl–跑火车<br>sudo apt-get install frozen-bubble–泡泡龙<br>sudo apt-get install cmatrix–代码雨<br>sudo  apt-get install fortune—-名人名言<br>sudo  apt-get install fortunes-zh—-名人名言（中文）<br>sudo  apt-get install lolcat—-有颜色显示<br>fortune | lolcat<br>卸载：sudo apt-get remove 软件名</p>
-</blockquote>
-<br>
-
-<h3 id="（3）创建共享文件夹："><a href="#（3）创建共享文件夹：" class="headerlink" title="（3）创建共享文件夹："></a>（3）创建共享文件夹：</h3><ol>
-<li>选择虚拟机左上菜单的虚拟机选项，点击设置</li>
-<li>点击选项，找到共享文件夹，选择总是启用</li>
-<li>点击添加，跟着下一步，选择主机（windows）的一个文件作为自己的共享文件夹</li>
-<li>点击完成，点击确定，最后在<code>/mnt/hgfs</code>查看有没有</li>
-</ol>
-<h3 id="（4）网络配置："><a href="#（4）网络配置：" class="headerlink" title="（4）网络配置："></a>（4）网络配置：</h3><p>ping–能不能网络通信</p>
-<p>ping +IP地址</p>
-<ol>
-<li>点击虚拟机菜单的编辑，选择虚拟网络编辑</li>
-<li>点击更改设置（如果没有，直接选择桥接模式），选择桥接模式</li>
-<li>在桥接模式下选择自己windos网络的描述名字，点击确定</li>
-<li>点击虚拟机，选择设置，找到网络适配器，选择自定义模式，选择自己的网络名称(一般为VMnet0)，点击确定</li>
-<li>进入linux系统，断开重连网络（重启网络）</li>
-</ol>
-<p>或者：在终端上输入：</p>
-<p>sudo service network-manager restart</p>
-<blockquote>
-<p>ifconfig—查看linux系统的IP地址<br>ipconfig—查看windows系统的IP地址</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h2><p>(1) 超级用户：</p>
-<blockquote>
-<p>su，开通了所有权限，我们一般不在这里工作，因为一旦删除，找不回来，也容易操作到内核上的东西<br>exit：退出超级用户</p>
-</blockquote>
-<p>(2)查看</p>
-<blockquote>
-<p>查看用户—vi /etc/passwd<br>查看用户组–vi /etc/group</p>
-</blockquote>
-<p>(3)添加用户：</p>
-<blockquote>
-<p>adduser 新添用户名<br>输入密码，不显示，确保输入按回车<br>su 用户名—-进入该用户</p>
-</blockquote>
-<p>(4)删除用户<br>deluser 用户名，但是我们一般进入passwd和group这两个文件去删除 <strong>（加sudo）</strong></p>
-<p>(5)修改密码：passwd</p>
-<br>
-<br>
-
-<hr>
-<h2 id="3-进程管理"><a href="#3-进程管理" class="headerlink" title="3.进程管理"></a>3.进程管理</h2><blockquote>
-<p>ps   查看前台的进程<br>ps -aux  查看所有进程<br>pstree—以树的形式展示进程<br>top—查看进程（从占用cpu最大开始展示），类似于任务管理器<br>kill -9 进程号   —-杀死进程</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="4-shell的特殊字符"><a href="#4-shell的特殊字符" class="headerlink" title="4.shell的特殊字符"></a>4.shell的特殊字符</h2><p>（1）|—管道</p>
-<p>指令1 | 指令2—-把指令1的输出作为指令2的输入</p>
-<p>fortune | lolcat</p>
-<p>（2）` &emsp; `—命令置换<br>指令1 ` &emsp; `    把命令置换里面的内容作为指令1的参数<br>    echo `ls`</p>
-<p>（3）echo–终端的输出</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">echo hello    world---会自动缩进空格字符串之间保留一个空格</span><br><span class="line">echo &#x27;hello    world&#x27;---原样输出</span><br><span class="line">echo <span class="string">&quot;hello    world&quot;</span>---原样输出</span><br></pre></td></tr></table></figure>
-<p>（4）输入输出重定向</p>
-<blockquote>
-<p>&gt;:<br>cat &gt;1.c（覆盖输入）<br> &gt;&gt;:<br>cat &gt;&gt;1.c（追加输入）</p>
-</blockquote>
-<p>注：输入都是读取的键盘输入</p>
-<p>（5）通配符：</p>
-<ul>
-<li>*—匹配所有字符串</li>
-<li>{起始..结束}–可以创建起始到结束的文件</li>
-<li>touch {1..10}.c—-创建1到10的.c文件</li>
-<li>rm 【13579】.c—-删除了1.c 3.c 5.c 7.c 9.c</li>
-<li>rm [1-5].c—-删除了1.c2.c3.c4.c5.c</li>
-<li>rm [^8].c—-删除除了8.c的文件,也只能通配一个</li>
-<li>？—匹配一个字符串<br>rm h？llo.c—删除hello.c hrllo.c</li>
-</ul>
-<p>（6）其他</p>
-<p>shutdown—关机</p>
-<p>shutdown -r now—重启</p>
-<p>vm上的快照–相当于备份</p>
-<br>
-<br>
-
-<hr>
-<h2 id="5-shell脚本："><a href="#5-shell脚本：" class="headerlink" title="5.shell脚本："></a>5.shell脚本：</h2><p>（1）本质：shell命令的有序集合</p>
-<p>解释型语言（python，shell脚本）</p>
-<p>不会检查错误，但是会显示出错误，出现错误会继续执行后面的语句</p>
-<p>需要一个解释器（shell的是bash）</p>
-<p>编译型语言（c语言，c++）</p>
-<p>编译会报错，一旦错误会停止进程</p>
-<p>（2）怎么去写一个shell脚本：</p>
-<ol>
-<li><p>创建一个.sh的文件（也可以没有后缀名）</p>
-</li>
-<li><p>写shell命令</p>
-</li>
-<li><p>执行:</p>
-</li>
-</ol>
-<p>&emsp;&emsp;&emsp;&emsp;a. 通过bash这个解释器来执行，直接bash+要执行的文件</p>
-<p>&emsp;&emsp;&emsp;&emsp;b. 通过chmod给shell文件添加执行权限，然后再执行</p>
-<p><strong>注：第一行一般写：<code>#!/bin/bash</code>，我们解释器的路径</strong></p>
-<p>练习：复制上一级目录的1.c 2.c到当前目录下，然后把hello world写入1.c</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> cd ../</span><br><span class="line">  <span class="number">4</span> touch <span class="number">1.</span>c <span class="number">2.</span>c</span><br><span class="line">  <span class="number">5</span> cp [<span class="number">12</span>].c day2</span><br><span class="line">  <span class="number">6</span> echo <span class="string">&quot;hello world&quot;</span> &gt;day2/<span class="number">1.</span>c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>（3）shell变量</p>
-<ul>
-<li>自定义变量</li>
-</ul>
-<p>没有数据类型，默认为字符串类型</p>
-<p>赋值不能隔开</p>
-<p>变量名=值</p>
-<p>没有分号，换行就相当于分号</p>
-<p>变量的调用需要加钱$</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>位置变量</li>
-</ul>
-<p>命令行参数的变量，即命令即后面的参数作为变量 从bash后面的那个开始为0</p>
-<p>从终端传递参数给shell脚本</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">从$<span class="number">0</span>开始到$<span class="number">9</span>如果要打印<span class="number">9</span>以后的变量需要加&#123;&#125;，例如$&#123;<span class="number">12</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>环境变量</li>
-</ul>
-<p>计算机定义好了的变量</p>
-<p>env可以查看所有环境变量</p>
-<p>调用需要加$</p>
-<p><strong>注：shell中0是真，1是假</strong></p>
-<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>shell</tag>
-        <tag>Linux基础</tag>
       </tags>
   </entry>
   <entry>
@@ -1766,6 +1766,83 @@
       </tags>
   </entry>
   <entry>
+    <title>day24-栈与队列</title>
+    <url>/2023/03/27/day24-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/</url>
+    <content><![CDATA[<h1 id="day24-栈与队列"><a href="#day24-栈与队列" class="headerlink" title="day24-栈与队列"></a><font color="green">day24-栈与队列</font></h1><h2 id="一、基本结构"><a href="#一、基本结构" class="headerlink" title="一、基本结构"></a>一、基本结构</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h3><p>&emsp;&emsp;栈和队列是两种常见的数据结构。它们都是线性结构，但它们的操作方式不同。栈是一种后进先出（LIFO）的数据结构，即最后进入的元素最先被访问。而队列是一种先进先出（FIFO）的数据结构，即最先进入的元素最先被访问。</p>
+<p>&emsp;&emsp;在具体实现时，栈和队列也有所不同。栈只在一端进行插入和删除操作，这一端称为栈顶。而队列则在两端进行插入和删除操作，分别称为队头和队尾。</p>
+<h3 id="2-实现方式"><a href="#2-实现方式" class="headerlink" title="2. 实现方式"></a>2. 实现方式</h3><p>栈和队列的实现方式有很多种，这里我提供一些常见的实现方式。</p>
+<p>栈的实现方式：</p>
+<ol>
+<li>用数组来模拟栈，用top变量表示栈顶元素的下标，用push()方法向栈顶添加元素，用pop()方法弹出栈顶元素。</li>
+<li>用链表来模拟栈，用head指针表示栈顶元素，用push()方法向栈顶添加元素，用pop()方法弹出栈顶元素。</li>
+<li>用双端队列（deque）来模拟栈，用append()方法向栈顶添加元素，用pop()方法弹出栈顶元素。</li>
+</ol>
+<p>队列的实现方式：</p>
+<ol>
+<li>用数组来模拟队列，用front和rear变量分别表示队头和队尾的下标，用push()方法向队尾添加元素，用pop()方法弹出队头元素。为了节省空间，常用循环队列来存放数据。循环队列的核心在于<code>求余%</code></li>
+<li>用链表来模拟队列，用head和tail指针分别表示队头和队尾元素，用push()方法向队尾添加元素，用pop()方法弹出队头元素。</li>
+<li>用两个栈来模拟队列，一个栈作为输入栈，一个栈作为输出栈。当需要弹出队头元素时，如果输出栈为空，则将输入栈中的所有元素依次弹出并压入输出栈中；否则直接从输出栈中弹出。</li>
+</ol>
+<blockquote>
+<p>注：队列可以分为两种模式：</p>
+<blockquote>
+<ol>
+<li>front存第一个数据，rear指向最后一个数据的下一个位置。数据是从0开始存的。</li>
+<li>fornt指向第一个数据的上一个位置，rear存最后一个数据。数据是从1开始存的。</li>
+</ol>
+</blockquote>
+</blockquote>
+<h3 id="3-结构图解"><a href="#3-结构图解" class="headerlink" title="3. 结构图解"></a>3. 结构图解</h3><h4 id="栈的实现图解"><a href="#栈的实现图解" class="headerlink" title="栈的实现图解"></a>栈的实现图解</h4><ol>
+<li>数组栈</li>
+</ol>
+<p><img src="/2023/03/27/day24-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/zhan.jpg" alt="数组栈"></p>
+<ol start="2">
+<li>链表栈   </li>
+</ol>
+<p>入栈<br><img src="/2023/03/27/day24-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/jinzhan_lian.gif" alt="链表入栈">  </p>
+<p>出栈<br><img src="/2023/03/27/day24-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/chuzhan_lian.gif" alt="链表入栈"></p>
+<h4 id="队列的实现图解"><a href="#队列的实现图解" class="headerlink" title="队列的实现图解"></a>队列的实现图解</h4><ol>
+<li>数组队列(用的1的模式)</li>
+</ol>
+<p><img src="/2023/03/27/day24-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/duilie_shuzu.jpg" alt="数组队列">  </p>
+<ol start="2">
+<li>链表队列</li>
+</ol>
+<p><img src="/2023/03/27/day24-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/duilie_lianbiao.jpg" alt="数组队列"></p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、栈与队列的c语言实现"><a href="#二、栈与队列的c语言实现" class="headerlink" title="二、栈与队列的c语言实现"></a>二、栈与队列的c语言实现</h2><h3 id="顺序栈"><a href="#顺序栈" class="headerlink" title="顺序栈"></a>顺序栈</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE 10 </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">data_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造顺序栈类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">	<span class="keyword">data_t</span> data[SIZE];<span class="comment">//顺序栈</span></span><br><span class="line">	<span class="keyword">int</span> top;<span class="comment">//保存栈顶元素的下标</span></span><br><span class="line">&#125;<span class="built_in">stack</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建空栈</span></span><br><span class="line"><span class="function"><span class="built_in">stack</span> *<span class="title">createSeqstack</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="built_in">stack</span> *sq = (<span class="built_in">stack</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="built_in">stack</span>));<span class="comment">//给顺序栈开空间</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	<span class="built_in">memset</span>(sq-&gt;data, <span class="number">0</span>, <span class="keyword">sizeof</span>(sq-&gt;data));<span class="comment">//清空顺序栈</span></span><br><span class="line">	sq-&gt;top = <span class="number">-1</span>;<span class="comment">//说明栈中无元素</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> sq;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">seqstack_is_empty</span><span class="params">(<span class="built_in">stack</span> *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">return</span> ((sq-&gt;top == <span class="number">-1</span>)?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判满</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">seqstack_is_full</span><span class="params">(<span class="built_in">stack</span> *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">return</span> ((sq-&gt;top == SIZE<span class="number">-1</span>)?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//求栈中元素个数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getLengthStack</span><span class="params">(<span class="built_in">stack</span> *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(sq == <span class="literal">NULL</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">return</span> (sq-&gt;top+<span class="number">1</span>);</span><br><span class="line">&#125;	</span><br><span class="line"></span><br><span class="line"><span class="comment">//进栈</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pushStack</span><span class="params">(<span class="built_in">stack</span> *sq, <span class="keyword">data_t</span> data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">if</span>(seqstack_is_full(sq))<span class="comment">//判满</span></span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	</span><br><span class="line">	sq-&gt;data[sq-&gt;top+<span class="number">1</span>] = data;</span><br><span class="line">	sq-&gt;top++;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//出栈</span></span><br><span class="line"><span class="function"><span class="keyword">data_t</span> <span class="title">popStack</span><span class="params">(<span class="built_in">stack</span> *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(sq == <span class="literal">NULL</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">if</span>(seqstack_is_empty(sq))</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">		</span><br><span class="line">	<span class="keyword">data_t</span> data = sq-&gt;data[sq-&gt;top];<span class="comment">//data变量保存栈顶元素的值</span></span><br><span class="line">	sq-&gt;top--;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//打印栈中元素</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printStack</span><span class="params">(<span class="built_in">stack</span> *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	<span class="keyword">if</span>(seqstack_is_empty(sq))</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	<span class="keyword">int</span> i;</span><br><span class="line">	<span class="keyword">for</span>(i=sq-&gt;top;i&gt;=<span class="number">0</span>;i--)</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,sq-&gt;data[i]);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+<br>
+
+<h3 id="链表栈"><a href="#链表栈" class="headerlink" title="链表栈"></a>链表栈</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">data_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//构造链式栈节点类型</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></span><br><span class="line">	<span class="keyword">data_t</span> data;<span class="comment">//节点的数据域</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">next</span>;</span><span class="comment">//保存下一个节点的地址</span></span><br><span class="line">&#125;lstack;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建空链式栈</span></span><br><span class="line"><span class="function">lstack *<span class="title">createLstack</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	lstack *top = (lstack *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(lstack));</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == top)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">	top-&gt;data = <span class="number">-1</span>;</span><br><span class="line">	top-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> top;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lstack_is_empty</span><span class="params">(lstack *top)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == top)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">else</span></span><br><span class="line">		<span class="keyword">return</span> ((top-&gt;next == <span class="literal">NULL</span>)?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//求栈中节点个数</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getLengthLstack</span><span class="params">(lstack *top)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == top)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">	lstack *p = top-&gt;next;</span><br><span class="line">	<span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		num++;</span><br><span class="line">		p = p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//入栈</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pushLstack</span><span class="params">(lstack *top, <span class="keyword">data_t</span> data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == top)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	lstack *<span class="keyword">new</span> = (lstack *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(lstack));</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == <span class="keyword">new</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">new</span>-&gt;data = data;</span><br><span class="line">	<span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//将 new节点插入到栈顶位置，即  pos=0 位置处</span></span><br><span class="line">	<span class="keyword">new</span>-&gt;next = top-&gt;next;</span><br><span class="line">	top-&gt;next = <span class="keyword">new</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//出栈</span></span><br><span class="line"><span class="function"><span class="keyword">data_t</span> <span class="title">popLstack</span><span class="params">(lstack *top)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == top)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	<span class="keyword">if</span>(lstack_is_empty(top))</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">	lstack *p = top-&gt;next;<span class="comment">//p指针保存的是栈顶元素的地址</span></span><br><span class="line">	<span class="keyword">data_t</span> data = p-&gt;data;<span class="comment">//data变量保存的是栈顶节点的值</span></span><br><span class="line">	top-&gt;next = p-&gt;next;</span><br><span class="line">	<span class="built_in">free</span>(p);</span><br><span class="line">	p = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//打印栈中各个节点的data值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printfLstack</span><span class="params">(lstack *top)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == top)</span><br><span class="line">		<span class="keyword">return</span> ;</span><br><span class="line">	<span class="keyword">if</span>(lstack_is_empty(top))</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line">	lstack *p = top-&gt;next;</span><br><span class="line">	<span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,p-&gt;data);</span><br><span class="line">		p = p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+<br>
+
+<h3 id="数组队列-求余思想"><a href="#数组队列-求余思想" class="headerlink" title="数组队列(求余思想)"></a>数组队列(求余思想)</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SIZE 10</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">data_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">	<span class="keyword">data_t</span> data[SIZE];</span><br><span class="line">	<span class="keyword">int</span> front; <span class="comment">//对头元素的位置</span></span><br><span class="line">	<span class="keyword">int</span> rear; <span class="comment">//队尾元素的下一个位置</span></span><br><span class="line">&#125;squeue;</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建</span></span><br><span class="line"><span class="function">squeue *<span class="title">createSqueue</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	squeue *sq = (squeue *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(squeue));</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">memset</span>(sq-&gt;data, <span class="number">0</span>, <span class="keyword">sizeof</span>(sq-&gt;data));</span><br><span class="line"></span><br><span class="line">	sq-&gt;front = sq-&gt;rear = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> sq;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">squeue_is_empty</span><span class="params">(squeue *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> ((sq-&gt;front == sq-&gt;rear)?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判满</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">squeue_is_full</span><span class="params">(squeue *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (sq-&gt;front == (sq-&gt;rear+<span class="number">1</span>)%SIZE )?<span class="number">1</span>:<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//求长度</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">squeue_length</span><span class="params">(squeue *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">	int num= 0;</span></span><br><span class="line"><span class="comment">	int temp = sq-&gt;front;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">	while(temp != sq-&gt;rear)</span></span><br><span class="line"><span class="comment">	&#123;</span></span><br><span class="line"><span class="comment">		num++;</span></span><br><span class="line"><span class="comment">	</span></span><br><span class="line"><span class="comment">		temp = (temp+1)%SIZE;</span></span><br><span class="line"><span class="comment">	&#125;</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">	return num;</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">	<span class="keyword">return</span> (sq-&gt;rear  + SIZE  -  sq-&gt;front)%SIZE;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//入队, 在队尾进行入队操作</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">squeue_in</span><span class="params">(squeue *sq, <span class="keyword">data_t</span> data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(sq-&gt;rear != <span class="number">0</span> &amp;&amp; sq-&gt;rear%(SIZE<span class="number">-1</span>)==<span class="number">0</span>)</span><br><span class="line">		sq-&gt;rear = (sq-&gt;rear+<span class="number">1</span>)%SIZE;</span><br><span class="line"></span><br><span class="line">	sq-&gt;data[sq-&gt;rear] = data;</span><br><span class="line"></span><br><span class="line">	sq-&gt;rear = (sq-&gt;rear+<span class="number">1</span>)%SIZE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//出队</span></span><br><span class="line"><span class="function"><span class="keyword">data_t</span> <span class="title">squeue_out</span><span class="params">(squeue *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(squeue_is_empty(sq) == <span class="number">1</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">data_t</span> data = sq-&gt;data[sq-&gt;front];</span><br><span class="line"></span><br><span class="line">	sq-&gt;front = (sq-&gt;front+<span class="number">1</span>)%SIZE;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//打印</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dispalySqueue</span><span class="params">(squeue *sq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == sq)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> temp = sq-&gt;front;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(temp != sq-&gt;rear)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, sq-&gt;data[temp]);</span><br><span class="line">	</span><br><span class="line">		temp = (temp+<span class="number">1</span>)%SIZE;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<br>
+<br>
+<br>
+
+<h3 id="链表队列"><a href="#链表队列" class="headerlink" title="链表队列"></a>链表队列</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">data_t</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">node</span>&#123;</span></span><br><span class="line">	<span class="keyword">data_t</span> data;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125;linklist;</span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span>&#123;</span></span><br><span class="line">	linklist *front; <span class="comment">//指向对头元素的前一个位置</span></span><br><span class="line">	linklist *rear; <span class="comment">//指向队尾元素的位置</span></span><br><span class="line">&#125;lqueue;</span><br><span class="line"></span><br><span class="line"><span class="function">lqueue *<span class="title">createLqueue</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	lqueue *lq = (lqueue *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(lqueue));</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == lq)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	lq-&gt;front = (linklist *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist)); <span class="comment">//返回头结点的地址</span></span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == lq-&gt;front)</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	lq-&gt;rear = lq-&gt;front;</span><br><span class="line"></span><br><span class="line">	lq-&gt;front-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> lq;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lqueue_is_empty</span><span class="params">(lqueue *lq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == lq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> (lq-&gt;front == lq-&gt;rear)?<span class="number">1</span>:<span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//求长度</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lqueue_length</span><span class="params">(lqueue *lq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == lq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	linklist *p = lq-&gt;front-&gt;next; <span class="comment">//p指向第一个有效结点</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		num++;</span><br><span class="line"></span><br><span class="line">		p=p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> num;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//入队</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">lqueue_in</span><span class="params">(lqueue *lq, <span class="keyword">data_t</span> data)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == lq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	linklist *<span class="keyword">new</span> = (linklist *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist));</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == <span class="keyword">new</span>)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">new</span>-&gt;data = data;</span><br><span class="line">	<span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	lq-&gt;rear-&gt;next = <span class="keyword">new</span>; </span><br><span class="line"></span><br><span class="line">	lq-&gt;rear = <span class="keyword">new</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//出队</span></span><br><span class="line"><span class="function"><span class="keyword">data_t</span> <span class="title">lqueue_out</span><span class="params">(lqueue *lq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == lq)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(lqueue_is_empty(lq))</span><br><span class="line">		<span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line"></span><br><span class="line">	linklist *p = lq-&gt;front-&gt;next; <span class="comment">//指向对头元素</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">data_t</span> data = p-&gt;data;</span><br><span class="line"></span><br><span class="line">	lq-&gt;front-&gt;next = p-&gt;next;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span>(lq-&gt;front-&gt;next == <span class="literal">NULL</span>)</span><br><span class="line">		lq-&gt;front == lq-&gt;rear;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">free</span>(p);</span><br><span class="line">	p = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> data;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//打印</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">displayLqueue</span><span class="params">(lqueue *lq)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="literal">NULL</span> == lq)</span><br><span class="line">		<span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">	linklist *p = lq-&gt;front-&gt;next;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, p-&gt;data);</span><br><span class="line"></span><br><span class="line">		p=p-&gt;next;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="built_in">puts</span>(<span class="string">&quot;&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>算法</tag>
+        <tag>栈，队列</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>day23-链表</title>
     <url>/2023/03/23/day23-%E9%93%BE%E8%A1%A8/</url>
     <content><![CDATA[<h1 id="day23-链表"><a href="#day23-链表" class="headerlink" title="day23-链表"></a><font color="green">day23-链表</font></h1><h2 id="一、基本结构"><a href="#一、基本结构" class="headerlink" title="一、基本结构"></a>一、基本结构</h2><p>链表是一种常见的数据结构，由一系列节点组成，每个节点包含数据和指向下一个节点的指针。</p>
@@ -1790,7 +1867,20 @@
 
 <hr>
 <h2 id="四、单向循环链表"><a href="#四、单向循环链表" class="headerlink" title="四、单向循环链表"></a>四、单向循环链表</h2><p>即把链表代码中表示的最后一位的NULL都改为head就行。</p>
-]]></content>
+<br>
+<br>
+
+<hr>
+<h2 id="五、双向链表"><a href="#五、双向链表" class="headerlink" title="五、双向链表"></a>五、双向链表</h2><p>双向链表的主要不同点便是</p>
+<ol>
+<li>头插法插入时要判断后面是否是NULL，按位置插入和删除时要判断是否是尾部</li>
+<li>插入的顺序主要分四部：(先右后左，先赋值给new再把原数据指向new)<blockquote>
+<p>new-&gt;next=p-&gt;next;<br>p-&gt;next-&gt;piror=new;<br>new-&gt;prior=p;<br>p-&gt;next=new;</p>
+</blockquote>
+</li>
+</ol>
+<p>下面是双向链表的c的实现</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;dlinklist.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建链表头节点</span></span><br><span class="line"><span class="function">dlinklist* <span class="title">create_dlinklist</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dlinklist* head = (dlinklist*) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    head-&gt;data = <span class="number">-1</span>;</span><br><span class="line">    head-&gt;prior = head-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//head-&gt;prior = NULL; </span></span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dlinklist_is_empty</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> ((head-&gt;next == head-&gt;prior) ?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//求有效节点个数(求长度)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_num_dlinklist</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    dlinklist *p = head-&gt;next; <span class="comment">//定义p指针指向第一个有效节点</span></span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)  <span class="comment">//循环遍历</span></span><br><span class="line">    &#123;</span><br><span class="line">        num++;              <span class="comment">//统计节点数</span></span><br><span class="line">        p = p-&gt;next;        <span class="comment">//p指针向后偏移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//头插法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_head_dlinklist</span><span class="params">(dlinklist* head, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点</span></span><br><span class="line">    dlinklist *<span class="keyword">new</span>  = (dlinklist *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val; <span class="comment">//</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">new</span>-&gt;prior = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//头插法 插入</span></span><br><span class="line">    <span class="keyword">if</span>(head-&gt;next   == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = head-&gt;next;</span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = head;</span><br><span class="line">        head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = head-&gt;next;</span><br><span class="line">        head-&gt;next-&gt;prior = <span class="keyword">new</span>; </span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = head;</span><br><span class="line">        head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//打印有效节点的值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span>;</span><br><span class="line">    dlinklist *p = head-&gt;next;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%-4d&quot;</span>,p-&gt;data);</span><br><span class="line">        p = p-&gt;next; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按位置插入</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_by_pos_dlinklist</span><span class="params">(dlinklist *head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_dlinklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点 和p 指针 </span></span><br><span class="line">    dlinklist* p = head; </span><br><span class="line">    dlinklist* <span class="keyword">new</span> = (dlinklist*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val;</span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">new</span>-&gt;prior = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//将p 找到pos-1的位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//将新节点插入pos 位置</span></span><br><span class="line">    <span class="keyword">if</span>(p-&gt;next == <span class="literal">NULL</span>) <span class="comment">//尾插</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = p;</span><br><span class="line">        p-&gt;next = <span class="keyword">new</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = p-&gt;next;</span><br><span class="line">        p-&gt;next-&gt;prior = <span class="keyword">new</span>;</span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = p;</span><br><span class="line">        p-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//按位置删除</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">delete_by_pos_dlinklist</span><span class="params">(dlinklist* head, <span class="keyword">int</span> pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(dlinklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_dlinklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备p 指向pos-1， q 指向要删除的pos 节点</span></span><br><span class="line">    dlinklist* p = head;</span><br><span class="line">    dlinklist* q = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//找到pos -1位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--) <span class="comment">// pos -1</span></span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//连接</span></span><br><span class="line">    <span class="comment">//q = p-&gt;next ; </span></span><br><span class="line">    <span class="comment">//if(q-&gt;next == NULL) //尾删</span></span><br><span class="line">    <span class="keyword">if</span>(p-&gt;next-&gt;next == <span class="literal">NULL</span>) <span class="comment">//尾删</span></span><br><span class="line">    &#123;</span><br><span class="line">        q = p-&gt;next;</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">free</span>(q);</span><br><span class="line">        q = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        q = p-&gt;next;</span><br><span class="line">        p-&gt;next = q-&gt;next;</span><br><span class="line">        q-&gt;next-&gt;prior = p; </span><br><span class="line">        <span class="built_in">free</span>(q);</span><br><span class="line">        q = <span class="literal">NULL</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
       <categories>
         <category>数据结构</category>
       </categories>
@@ -1798,6 +1888,19 @@
         <tag>数据结构</tag>
         <tag>算法</tag>
         <tag>顺序表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day25-二叉树</title>
+    <url>/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
+    <content><![CDATA[<h1 id="day25-二叉树"><a href="#day25-二叉树" class="headerlink" title="day25-二叉树"></a><font color="green">day25-二叉树</font></h1>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>算法</tag>
+        <tag>二叉树</tag>
       </tags>
   </entry>
   <entry>
@@ -1875,6 +1978,115 @@
       <tags>
         <tag>Linux</tag>
         <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法分析</title>
+    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
+<ol>
+<li>确定输入模型，定义问题规模（n）</li>
+<li>识别循环与递归</li>
+<li>根据内循环或每部递归的操作确定成本模型</li>
+<li>对于给定的输入，判断这些操作的执行频率</li>
+</ol>
+<hr>
+<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
+<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
+</blockquote>
+<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
+<blockquote>
+<p>渐进分析：</p>
+<ol>
+<li>忽略依赖于机器性能的常量</li>
+<li>只关注运行时间的增长</li>
+</ol>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
+<blockquote>
+<p>例：$2n^2 = O(n^3)$</p>
+</blockquote>
+<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
+<blockquote>
+<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
+</blockquote>
+<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
+<blockquote>
+<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
+</blockquote>
+<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
+<p>理解：左右两边增长速率一样</p>
+<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
+<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
+<ul>
+<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
+<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
+</ul>
+<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
+<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
+<ol>
+<li>证明 n=1 时成立</li>
+<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
+<li>则命题成立</li>
+</ol>
+<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
+<li>先猜答案得到最高阶</li>
+<li>验证这个递归式是否按照数学归纳法满足条件</li>
+</ol>
+<blockquote>
+<p>例：T(n)=4T(n/2)+n</p>
+<ol>
+<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
+<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
+<p>$O(n^2)$=$c(n)^2$</p>
+</blockquote>
+</li>
+<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
+</ol>
+</blockquote>
+<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
+<blockquote>
+<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
+</blockquote>
+<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
+<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
+<li>根据每层的和的规律，求出总子叶节点<ul>
+<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
+<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
+</blockquote>
+</li>
+<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
+</ul>
+</li>
+<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
+</ol>
+<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
+<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
+<p>1.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
+<p>2.</p>
+<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
+<p>3.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>概念</tag>
+        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
@@ -2110,115 +2322,6 @@
       </categories>
       <tags>
         <tag>算法，排序算法，基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法分析</title>
-    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
-<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
-<ol>
-<li>确定输入模型，定义问题规模（n）</li>
-<li>识别循环与递归</li>
-<li>根据内循环或每部递归的操作确定成本模型</li>
-<li>对于给定的输入，判断这些操作的执行频率</li>
-</ol>
-<hr>
-<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
-<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
-</blockquote>
-<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
-<blockquote>
-<p>渐进分析：</p>
-<ol>
-<li>忽略依赖于机器性能的常量</li>
-<li>只关注运行时间的增长</li>
-</ol>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
-<blockquote>
-<p>例：$2n^2 = O(n^3)$</p>
-</blockquote>
-<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
-<blockquote>
-<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
-</blockquote>
-<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
-<blockquote>
-<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
-</blockquote>
-<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
-<p>理解：左右两边增长速率一样</p>
-<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
-<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
-<ul>
-<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
-<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
-</ul>
-<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
-<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
-<ol>
-<li>证明 n=1 时成立</li>
-<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
-<li>则命题成立</li>
-</ol>
-<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
-<li>先猜答案得到最高阶</li>
-<li>验证这个递归式是否按照数学归纳法满足条件</li>
-</ol>
-<blockquote>
-<p>例：T(n)=4T(n/2)+n</p>
-<ol>
-<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
-<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
-<p>$O(n^2)$=$c(n)^2$</p>
-</blockquote>
-</li>
-<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
-</ol>
-</blockquote>
-<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
-<blockquote>
-<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
-</blockquote>
-<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
-<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
-<li>根据每层的和的规律，求出总子叶节点<ul>
-<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
-<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
-</blockquote>
-</li>
-<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
-</ul>
-</li>
-<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
-</ol>
-<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
-<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
-<p>1.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
-<p>2.</p>
-<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
-<p>3.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>算法</tag>
-        <tag>概念</tag>
-        <tag>数据结构与算法</tag>
       </tags>
   </entry>
 </search>
