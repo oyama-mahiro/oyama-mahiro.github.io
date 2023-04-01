@@ -185,7 +185,7 @@
 </li>
 <li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
 </ol>
-<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
+<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
 <h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
 <p>1.</p>
 <p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
@@ -658,6 +658,15 @@
 </script>
 
 <!-- Katex -->
+
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        
+    
+
 
 <!-- busuanzi  -->
 

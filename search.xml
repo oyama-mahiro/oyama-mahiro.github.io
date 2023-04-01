@@ -1,6 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>C语言基础-递归</title>
+    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
+<a id="more"></a>
+
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
+<blockquote>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
+</blockquote>
+</blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
+<ol>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
+</ol>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
+<ol>
+<li>变化的参数</li>
+<li>递归终止条件</li>
+</ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
+<blockquote>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
+<ol>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
+</ol>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
+<ol>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
+</ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
+<br>
+<br>
+
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>C语言</tag>
+        <tag>递归</tag>
+        <tag>C语言基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>C语言基础-存储类别</title>
     <url>/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/</url>
     <content><![CDATA[<h1 id="存储类别"><a href="#存储类别" class="headerlink" title="存储类别"></a><font color="green">存储类别</font></h1><p>在理解存储类别前，先要复习一些概念和术语。</p>
@@ -117,114 +221,10 @@
         <category>c语言</category>
       </categories>
       <tags>
-        <tag>C语言</tag>
         <tag>c</tag>
+        <tag>C语言</tag>
         <tag>基础</tag>
         <tag>存储类别</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>C语言基础-递归</title>
-    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
-<a id="more"></a>
-
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
-<p>栈：一种数据结构，其特点为先进后出</p>
-<blockquote>
-<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
-</blockquote>
-</blockquote>
-<p>如图( 计算 3! )：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
-<p>解释：</p>
-<ol>
-<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
-<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
-<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
-<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
-<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
-</ol>
-<p>由此可以看成递归的形成至少需要两个条件：</p>
-<ol>
-<li>变化的参数</li>
-<li>递归终止条件</li>
-</ol>
-<blockquote>
-<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
-<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
-<br>
-
-<blockquote>
-<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
-<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
-<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
-<ol>
-<li>我们要把上面的 63 个移动到 B</li>
-<li>把第 64 个移动到 C</li>
-<li>把 B 上的 63 个移动到 C</li>
-</ol>
-<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
-<ol>
-<li>我们要把上面的 62 个移动到 B</li>
-<li>把第 63 个移动到 C</li>
-<li>把 B 上的 62 个移动到 C</li>
-</ol>
-<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
-<p>所以整个过程是</p>
-<ol>
-<li>我们要把上面的<code>n-1</code>个移动到 B</li>
-<li>把第<code>n</code>个移动到 C</li>
-<li>把 B 上的<code>n-1</code>个移动到 C</li>
-</ol>
-<blockquote>
-<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
-</blockquote>
-<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
-<ol>
-<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
-<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
-</ol>
-<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
-<hr>
-<br>
-<br>
-
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>递归</tag>
-        <tag>C语言基础</tag>
       </tags>
   </entry>
   <entry>
@@ -537,8 +537,8 @@
         <category>c语言</category>
       </categories>
       <tags>
-        <tag>C语言</tag>
         <tag>c</tag>
+        <tag>C语言</tag>
         <tag>指针</tag>
         <tag>数组</tag>
       </tags>
@@ -608,57 +608,6 @@
         <tag>c</tag>
         <tag>指针</tag>
         <tag>c语言</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day14-c函数</title>
-    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
-<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
-<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
-<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
-<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
-<p>​    (3)全局变量传参</p>
-<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
-<p>​    (2)字符数组：只需要传入数组首地址</p>
-<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
-<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>​            </p>
-<p>​                </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>c语言</tag>
-        <tag>函数</tag>
       </tags>
   </entry>
   <entry>
@@ -770,41 +719,29 @@
       </tags>
   </entry>
   <entry>
-    <title>day15-c函数，结构体</title>
-    <url>/2023/03/12/day15-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/</url>
-    <content><![CDATA[<h1 id="day15-c函数，结构体"><a href="#day15-c函数，结构体" class="headerlink" title=" day15-c函数，结构体"></a><font color="green"> day15-c函数，结构体</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><hr>
-<h3 id="1、指针函数："><a href="#1、指针函数：" class="headerlink" title="1、指针函数："></a>1、指针函数：</h3><p>​    本质：是一个函数，指针函数的返回值是一个地址</p>
+    <title>day14-c函数</title>
+    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
 <a id="more"></a>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt;* 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    代码模块;</span><br><span class="line">    <span class="keyword">return</span> 地址量; <span class="comment">//合法地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="2、函数指针："><a href="#2、函数指针：" class="headerlink" title="2、函数指针："></a>2、函数指针：</h3><p>​    本质：是一个指针，指向一个函数的首地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义的一般形式：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针变量名)(参数列表);</span><br><span class="line"></span><br><span class="line">	例：</span><br><span class="line">        <span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y);</span><br><span class="line">	数据类型：跟指针指向的函数的数据类型一致</span><br><span class="line">	参数列表：跟指针指向的函数的参数列表一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">p = add;  <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line">(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//调用add函数传入实参为2和3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="二、函数"><a href="#二、函数" class="headerlink" title="二、函数"></a>二、函数</h2><h3 id="1、函数指针数组"><a href="#1、函数指针数组" class="headerlink" title="1、函数指针数组"></a>1、函数指针数组</h3><p>​    本质：是一个数组, 存放的全部都是函数指针类型的数据</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义的一般形式：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针数组名[元素个数])(参数列表);</span><br><span class="line">	例：</span><br><span class="line">    	<span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">		<span class="keyword">int</span> (*arr[<span class="number">2</span>])(<span class="keyword">int</span> x, <span class="keyword">int</span> y) = &#123;add, sub&#125;;</span><br><span class="line">        <span class="comment">//定义了一个名为arr的函数指针数组，数组中最多可以存放两个 int(* )(int, int)类型的数据</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、递归函数"><a href="#2、递归函数" class="headerlink" title="2、递归函数"></a>2、递归函数</h3><p>​    练习：计算一个正整数的阶乘，用函数封装功能</p>
-<p>​    概念：在一个函数中直接或者间接调用函数本身</p>
-<p>​    </p>
-<p>​    递归函数的特点：</p>
-<p>​            1：递推公式</p>
-<p>​            2：设置有退出条件</p>
-<p>​    优点：能够让代码整体更加简洁</p>
-<p>​    缺点：需要消耗大量系统资源</p>
-<p>​                必须要设置退出条件</p>
-<h2 id="三、结构体"><a href="#三、结构体" class="headerlink" title="三、结构体"></a>三、结构体</h2><p>​    跟数组一样，是用户自定义的一种数据类型</p>
-<p>​    结构体中可以存放多个不同数据类型的数据</p>
-<h3 id="1、结构体的定义"><a href="#1、结构体的定义" class="headerlink" title="1、结构体的定义"></a>1、结构体的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> 结构体名</span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">       数据类型 成员名<span class="number">1</span>;</span><br><span class="line">       数据类型 成员名<span class="number">2</span>;        	</span><br><span class="line">       数据类型 成员名<span class="number">3</span>; </span><br><span class="line">        ......</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">	例：</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">stu</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> name[<span class="number">50</span>]; </span><br><span class="line">            <span class="keyword">int</span>	age;</span><br><span class="line">            <span class="keyword">char</span> sex;</span><br><span class="line">            <span class="keyword">double</span> height;</span><br><span class="line">            <span class="keyword">char</span> address[<span class="number">50</span>];</span><br><span class="line">            <span class="keyword">char</span> hobby[<span class="number">50</span>];</span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、结构体变量"><a href="#2、结构体变量" class="headerlink" title="2、结构体变量"></a>2、结构体变量</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> 结构体名 结构体变量名;</span></span><br><span class="line">	例：</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu1</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu2</span>;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、访问结构体成员"><a href="#3、访问结构体成员" class="headerlink" title="3、访问结构体成员"></a>3、访问结构体成员</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    结构体变量名.成员名;  </span><br><span class="line">	stu1.age = <span class="number">18</span>;  <span class="comment">//访问1号学生stu1中的年龄，赋值为18；	</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4、结构体变量的初始化"><a href="#4、结构体变量的初始化" class="headerlink" title="4、结构体变量的初始化"></a>4、结构体变量的初始化</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> 结构体名 结构体变量名 = &#123;</span>依次给每一个成员赋值&#125;;  <span class="comment">//成员之间用逗号隔开</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu2</span> = &#123;</span><span class="string">&quot;张三&quot;</span>, <span class="number">19</span>, <span class="string">&#x27;m&#x27;</span>, <span class="number">182.1</span>, <span class="string">&quot;成都&quot;</span>, <span class="string">&quot;sing and dance&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
+<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
+<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
+<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
+<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
+<p>​    (3)全局变量传参</p>
+<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
+<p>​    (2)字符数组：只需要传入数组首地址</p>
+<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
+<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="5、结构体指针"><a href="#5、结构体指针" class="headerlink" title="5、结构体指针"></a>5、结构体指针</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu1</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> *<span class="title">p</span> = &amp;<span class="title">stu1</span>;</span></span><br><span class="line">(*p).name       <span class="comment">//stu1中的name成员</span></span><br><span class="line">p-&gt;name == (*p).name</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
 
@@ -820,10 +757,8 @@
 
 
 
-
-
-
-
+<p>​            </p>
+<p>​                </p>
 ]]></content>
       <categories>
         <category>c语言</category>
@@ -832,7 +767,6 @@
         <tag>c</tag>
         <tag>c语言</tag>
         <tag>函数</tag>
-        <tag>结构体</tag>
       </tags>
   </entry>
   <entry>
@@ -949,6 +883,72 @@
         <tag>Linux</tag>
         <tag>shell</tag>
         <tag>Linux基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day15-c函数，结构体</title>
+    <url>/2023/03/12/day15-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/</url>
+    <content><![CDATA[<h1 id="day15-c函数，结构体"><a href="#day15-c函数，结构体" class="headerlink" title=" day15-c函数，结构体"></a><font color="green"> day15-c函数，结构体</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><hr>
+<h3 id="1、指针函数："><a href="#1、指针函数：" class="headerlink" title="1、指针函数："></a>1、指针函数：</h3><p>​    本质：是一个函数，指针函数的返回值是一个地址</p>
+<a id="more"></a>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt;* 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    代码模块;</span><br><span class="line">    <span class="keyword">return</span> 地址量; <span class="comment">//合法地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、函数指针："><a href="#2、函数指针：" class="headerlink" title="2、函数指针："></a>2、函数指针：</h3><p>​    本质：是一个指针，指向一个函数的首地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义的一般形式：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针变量名)(参数列表);</span><br><span class="line"></span><br><span class="line">	例：</span><br><span class="line">        <span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y);</span><br><span class="line">	数据类型：跟指针指向的函数的数据类型一致</span><br><span class="line">	参数列表：跟指针指向的函数的参数列表一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">p = add;  <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line">(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//调用add函数传入实参为2和3</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="二、函数"><a href="#二、函数" class="headerlink" title="二、函数"></a>二、函数</h2><h3 id="1、函数指针数组"><a href="#1、函数指针数组" class="headerlink" title="1、函数指针数组"></a>1、函数指针数组</h3><p>​    本质：是一个数组, 存放的全部都是函数指针类型的数据</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义的一般形式：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针数组名[元素个数])(参数列表);</span><br><span class="line">	例：</span><br><span class="line">    	<span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">		<span class="function"><span class="keyword">int</span> <span class="title">sub</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line">		<span class="keyword">int</span> (*arr[<span class="number">2</span>])(<span class="keyword">int</span> x, <span class="keyword">int</span> y) = &#123;add, sub&#125;;</span><br><span class="line">        <span class="comment">//定义了一个名为arr的函数指针数组，数组中最多可以存放两个 int(* )(int, int)类型的数据</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、递归函数"><a href="#2、递归函数" class="headerlink" title="2、递归函数"></a>2、递归函数</h3><p>​    练习：计算一个正整数的阶乘，用函数封装功能</p>
+<p>​    概念：在一个函数中直接或者间接调用函数本身</p>
+<p>​    </p>
+<p>​    递归函数的特点：</p>
+<p>​            1：递推公式</p>
+<p>​            2：设置有退出条件</p>
+<p>​    优点：能够让代码整体更加简洁</p>
+<p>​    缺点：需要消耗大量系统资源</p>
+<p>​                必须要设置退出条件</p>
+<h2 id="三、结构体"><a href="#三、结构体" class="headerlink" title="三、结构体"></a>三、结构体</h2><p>​    跟数组一样，是用户自定义的一种数据类型</p>
+<p>​    结构体中可以存放多个不同数据类型的数据</p>
+<h3 id="1、结构体的定义"><a href="#1、结构体的定义" class="headerlink" title="1、结构体的定义"></a>1、结构体的定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> 结构体名</span></span><br><span class="line"><span class="class">    &#123;</span></span><br><span class="line">       数据类型 成员名<span class="number">1</span>;</span><br><span class="line">       数据类型 成员名<span class="number">2</span>;        	</span><br><span class="line">       数据类型 成员名<span class="number">3</span>; </span><br><span class="line">        ......</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">	例：</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">stu</span></span></span><br><span class="line"><span class="class">        &#123;</span></span><br><span class="line">            <span class="keyword">char</span> name[<span class="number">50</span>]; </span><br><span class="line">            <span class="keyword">int</span>	age;</span><br><span class="line">            <span class="keyword">char</span> sex;</span><br><span class="line">            <span class="keyword">double</span> height;</span><br><span class="line">            <span class="keyword">char</span> address[<span class="number">50</span>];</span><br><span class="line">            <span class="keyword">char</span> hobby[<span class="number">50</span>];</span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、结构体变量"><a href="#2、结构体变量" class="headerlink" title="2、结构体变量"></a>2、结构体变量</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> 结构体名 结构体变量名;</span></span><br><span class="line">	例：</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu1</span>;</span></span><br><span class="line">		<span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu2</span>;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、访问结构体成员"><a href="#3、访问结构体成员" class="headerlink" title="3、访问结构体成员"></a>3、访问结构体成员</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    结构体变量名.成员名;  </span><br><span class="line">	stu1.age = <span class="number">18</span>;  <span class="comment">//访问1号学生stu1中的年龄，赋值为18；	</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4、结构体变量的初始化"><a href="#4、结构体变量的初始化" class="headerlink" title="4、结构体变量的初始化"></a>4、结构体变量的初始化</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> 结构体名 结构体变量名 = &#123;</span>依次给每一个成员赋值&#125;;  <span class="comment">//成员之间用逗号隔开</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu2</span> = &#123;</span><span class="string">&quot;张三&quot;</span>, <span class="number">19</span>, <span class="string">&#x27;m&#x27;</span>, <span class="number">182.1</span>, <span class="string">&quot;成都&quot;</span>, <span class="string">&quot;sing and dance&quot;</span>&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="5、结构体指针"><a href="#5、结构体指针" class="headerlink" title="5、结构体指针"></a>5、结构体指针</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> <span class="title">stu1</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">stu</span> *<span class="title">p</span> = &amp;<span class="title">stu1</span>;</span></span><br><span class="line">(*p).name       <span class="comment">//stu1中的name成员</span></span><br><span class="line">p-&gt;name == (*p).name</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>c语言</tag>
+        <tag>函数</tag>
+        <tag>结构体</tag>
       </tags>
   </entry>
   <entry>
@@ -1894,7 +1894,19 @@
   <entry>
     <title>day25-二叉树</title>
     <url>/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
-    <content><![CDATA[<h1 id="day25-二叉树"><a href="#day25-二叉树" class="headerlink" title="day25-二叉树"></a><font color="green">day25-二叉树</font></h1>]]></content>
+    <content><![CDATA[<h1 id="day25-二叉树"><a href="#day25-二叉树" class="headerlink" title="day25-二叉树"></a><font color="green">day25-二叉树</font></h1><h2 id="一、树的概念"><a href="#一、树的概念" class="headerlink" title="一、树的概念"></a>一、树的概念</h2><h3 id="1-树形结构的形式化"><a href="#1-树形结构的形式化" class="headerlink" title="1. 树形结构的形式化"></a>1. 树形结构的形式化</h3><h4 id="1-1-序偶"><a href="#1-1-序偶" class="headerlink" title="1.1 序偶"></a>1.1 序偶</h4><p>定义：设有两个元素x和y，由x和y构成的序偶记为&lt;x,y&gt;。  </p>
+<blockquote>
+<p>序偶可以描述有先后顺序要求的一对元素之间的关系，顺序很重要&lt;x,y&gt; $\not =$ &lt;y,x&gt;  </p>
+</blockquote>
+<h4 id="1-2-树的直接定义"><a href="#1-2-树的直接定义" class="headerlink" title="1.2 树的直接定义"></a>1.2 树的直接定义</h4><p>&emsp;&emsp;树是包括n（n$\geq$0）个元素的集合D，R是D中元素的序偶集合，若D为空，R也为空，此时为空树，否则R满足以下要求：</p>
+<ul>
+<li>有且仅有一个结点a $\in$ D，不存在任何节点v $\in$ D,v $\not =$ a，使得&lt;v,a&gt; $\in$ R,该结点为树的根。<font color="blue">如果树不为空，则树的根节点是唯一的</font></li>
+<li>对于除根结点a以外任一结点u $\in$ D而言，都有且仅有一个结点 v $\in$ D，v $\not =$ u，使得&lt;v,u&gt; $\in$ R成立。<font color="blue">根节点没有前驱，其他结点均有唯一前驱</font></li>
+</ul>
+<p><img src="/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/%E6%A0%91%E7%9A%84%E7%9B%B4%E6%8E%A5%E5%AE%9A%E4%B9%89.jpg" alt="树的直接定义"></p>
+<h4 id="1-3-树的递归定义"><a href="#1-3-树的递归定义" class="headerlink" title="1.3 树的递归定义"></a>1.3 树的递归定义</h4><p>&emsp;&emsp;树是包括n个结点的有限集T，若n=0，则该数为空树；否则为非空树，在该非空树中，有且仅有一个特定的称为根的结点（r），其余结点(T-{r})划分成m(m$\geq$0)个互不相交的子集 $ T_1,T_2,…T_m $,其中，每个子集 $T_i$都是树，也称为树根节点r的子树。</p>
+<p><img src="/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/%E6%A0%91%E7%9A%84%E9%80%92%E5%BD%92%E5%AE%9A%E4%B9%89.jpg" alt="树的递归定义"></p>
+]]></content>
       <categories>
         <category>数据结构</category>
       </categories>
@@ -1902,6 +1914,31 @@
         <tag>数据结构</tag>
         <tag>算法</tag>
         <tag>二叉树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day26-图</title>
+    <url>/2023/04/01/day26-%E5%9B%BE/</url>
+    <content><![CDATA[<h1 id="day26-图"><a href="#day26-图" class="headerlink" title="day26-图"></a><font color="green">day26-图</font></h1>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>算法</tag>
+        <tag>图</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day27-文件与系统IO</title>
+    <url>/2023/04/01/day27-%E6%96%87%E4%BB%B6%E4%B8%8E%E7%B3%BB%E7%BB%9FIO/</url>
+    <content><![CDATA[<h1 id="day27-文件与系统IO"><a href="#day27-文件与系统IO" class="headerlink" title="day27-文件与系统IO"></a><font color="green">day27-文件与系统IO</font></h1>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>LINUX</tag>
+        <tag>IO</tag>
       </tags>
   </entry>
   <entry>
@@ -1974,11 +2011,23 @@
 <p>​        </p>
 ]]></content>
       <categories>
-        <category>linux</category>
+        <category>Linux</category>
       </categories>
       <tags>
         <tag>Linux</tag>
         <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day28-进程线程</title>
+    <url>/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>进程线程</tag>
       </tags>
   </entry>
   <entry>
@@ -2071,7 +2120,7 @@
 </li>
 <li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
 </ol>
-<p>例：<br><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diGuiShuFa.jpg" alt="递归树"></p>
+<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
 <h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
 <p>1.</p>
 <p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
