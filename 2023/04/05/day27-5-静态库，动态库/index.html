@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    day28-进程线程 |  
+    day27.5-静态库，动态库 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-day28-进程线程"
+  id="post-day27-5-静态库，动态库"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,18 +55,18 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  day28-进程线程
+  day27.5-静态库，动态库
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" class="article-date">
-  <time datetime="2023-04-01T01:08:23.000Z" itemprop="datePublished">2023-04-01</time>
+      <a href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/" class="article-date">
+  <time datetime="2023-04-05T02:32:28.000Z" itemprop="datePublished">2023-04-05</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
   </div>
   
 <div class="word_count">
@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">969</span>
+            <span class="post-count">1.2k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">3 min</span>
+            <span class="post-count">4 min</span>
         </span>
     </span>
 </div>
@@ -98,27 +98,76 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-程序和进程"><a href="#1-程序和进程" class="headerlink" title="1. 程序和进程"></a>1. 程序和进程</h3><p>&emsp;&emsp;程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”<br>&emsp;&emsp;进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</p>
-<h3 id="2-守护进程"><a href="#2-守护进程" class="headerlink" title="2. 守护进程"></a>2. 守护进程</h3><p>&emsp;&emsp;守护进程：在某些用户空间中，即使用户退出登录，仍然会有一些后台进程在运行，不会被用户或终端影响，这些进程被称为<code>守护进程</code>。<br>&emsp;&emsp;Linux 中有一种特殊的守护进程被称为<code>计划守护进程</code>，计划守护进程可以每分钟醒来一次检查是否有工作要做，做完会继续回到睡眠状态等待下一次唤醒。</p>
-<h3 id="3-父进程与子进程"><a href="#3-父进程与子进程" class="headerlink" title="3. 父进程与子进程"></a>3. 父进程与子进程</h3><p>&emsp;&emsp;在 Linux 系统中，进程通过非常简单的方式来创建，<code>fork</code>系统调用会创建一个源进程的拷贝(副本)。调用<code>fork</code>函数的进程被称为<code>父进程</code>，使用 fork 函数创建出来的进程被称为 <code>子进程</code>。父进程和子进程都有自己的内存映像。<strong>如果在子进程创建出来后</strong>，父进程修改了一些变量等，那么子进程是看不到这些变化的，也就是<code>fork</code>后，父进程和子进程相互独立。</p>
-<p>&emsp;&emsp;虽然父进程和子进程保持相互独立，但是它们却能够共享相同的文件，如果在 fork 之前，父进程已经打开了某个文件，那么 fork 后，父进程和子进程仍然共享这个打开的文件。对共享文件的修改会对父进程和子进程同时可见。</p>
-<p>&emsp;&emsp;那么该如何区分父进程和子进程呢？子进程只是父进程的拷贝，所以它们几乎所有的情况都一样，包括内存映像、变量、寄存器等。区分的关键在于fork函数调用后的返回值，如果fork后返回一个非零值，这个非零值即是子进程的<code>进程标识符</code>(pid)，而会给子进程返回一个零值,<font color="blue">即在程序中,<code>pid==0</code>的代码为子进程的代码，而<code>pid &gt; 0</code>的代码为父进程的代码</font>。父进程在 fork 后会得到子进程的 PID，这个 PID 即能代表这个子进程的唯一标识符也就是 PID。如果子进程想要知道自己的 PID，可以调用<code>getpid</code>方法。父进程可以生成多个子进程，子进程也能生成自己的子进程。</p>
-<h3 id="4-Linux进程间的通信"><a href="#4-Linux进程间的通信" class="headerlink" title="4. Linux进程间的通信"></a>4. Linux进程间的通信</h3><p>Linux进程间的通信（IPC）大致可以分为6种</p>
-<ol>
-<li>信号 signal</li>
-<li>无名管道 pipe</li>
-<li>共享内存 shared memory</li>
-<li>先入先出队列（也叫有名管道） fifo</li>
-<li>消息队列 message queue</li>
-<li>套接字 socket</li>
-</ol>
-<h4 id="4-1-信号"><a href="#4-1-信号" class="headerlink" title="4.1 信号"></a>4.1 信号</h4><p>&emsp;&emsp;信号是在软件层次对中断机制的一种模拟，是一种异步通信方式。信号可以直接进行用户空间进程和内核之间的交互，内核也能利用它来通知用户空间进程发生了哪些系统事件</p>
-<h3 id="1-1-系统调用fork"><a href="#1-1-系统调用fork" class="headerlink" title="1.1 系统调用fork"></a>1.1 系统调用fork</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pid_t fork(void);</span><br><span class="line">功能：创建一个子进程出来</span><br><span class="line">返回值：0表示子进程，大于0表示父进程，-1出错</span><br></pre></td></tr></table></figure>
+  <h1 id="day27-5-静态库，动态库"><a href="#day27-5-静态库，动态库" class="headerlink" title="day27.5-静态库，动态库"></a><font color="green">day27.5-静态库，动态库</font></h1><hr>
+<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>c语言程序编译的步骤（源文件到可执行文件的编译）：</p>
+<blockquote>
+<p>预处理 -&gt; 编译 -&gt; 汇编 -&gt; 链接</p>
+</blockquote>
+<a id="more"></a>
 
-<p>注：父进程和子进程空间完全独立</p>
-<p>写时拷贝 – 现在的Linux一直在用</p>
-<p>vfork：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pid_t vfork(void);</span><br><span class="line">功能：创建一个子进程出来</span><br><span class="line">返回值：0表示子进程，大于0表示父进程，-1出错</span><br><span class="line"></span><br><span class="line">一定是子进程先运行，并且子进程不结束exit()或者不调用exec函数簇，父进程不会运行（正确运行）</span><br></pre></td></tr></table></figure>
+<p>预处理：是使用预编译器cpp进行处理.c源文件和.h头文件，最终生成一个.i的文件。</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">gcc -E hello.c -o hello.i</span><br><span class="line">或</span><br><span class="line">cpp hello.c &gt; hello.i</span><br></pre></td></tr></table></figure>
+<p>编译：是将<code>预处理</code>完的文件进行一系列的词法分析、语法分析、语义分析及优化，最后生成 .s 汇编代码文件。</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -S hello.i -o hello.s</span><br></pre></td></tr></table></figure>
+<p>汇编：将汇编代码转变成机器可以执行的指令， 每一条汇编代码几乎都对应着一条机器指令。</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gcc -c hello.s -o hello.o 或者 as hello.s -o hello.o</span><br></pre></td></tr></table></figure>
+
+<p>链接：链接的作用就是我们这篇文章的重点，就是将我们编译出来的<code>目标文件</code>和我们代码所用到的<code>库文件</code>一起打包成一个<code>可执行文件</code>的过程。例如hello.c中的打印函数printf，这个函数不是凭空出现的，在链接的过程中就要连同对应库文件一起打包，最终可执行文件才能正常运行。</p>
+<p><img src="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B.jpg" alt="编译"></p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、静态库与动态库概念"><a href="#二、静态库与动态库概念" class="headerlink" title="二、静态库与动态库概念"></a>二、静态库与动态库概念</h2><h3 id="2-1-C头文件的编译"><a href="#2-1-C头文件的编译" class="headerlink" title="2.1 C头文件的编译"></a>2.1 C头文件的编译</h3><p>对于&lt;&gt;文件，gcc会在系统预设包含文件目录(如/usr/include)中搜寻相应的文件</p>
+<blockquote>
+<p> cpp-v：查看默认搜索头文件路径<br>对于””文件，gcc会首先当前目录中搜寻头文件，如没有则需要在编译选项中使用<code>-I 头文件所在目录</code> 到指定的目录下寻找头文件</p>
+</blockquote>
+<h3 id="2-2-库的概念"><a href="#2-2-库的概念" class="headerlink" title="2.2 库的概念"></a>2.2 库的概念</h3><ul>
+<li><p>库函数：由某些组织或机构提供的，应用程序员可以直接调用。如Printf等</p>
+</li>
+<li><p>库：若干个函数的可执行代码，打包为库文件，提供了系统调用和c库的基本函数。</p>
+</li>
+<li><p>静态库：把需要的.c文件做出一个.a库文件，gcc编译时直接编译进可执行文件中。就只需要链接这个库文件。会让可执行文件变大。而且如果库文件更新了，可执行文件就需要重新编译</p>
+</li>
+<li><p>动态库：把需要的.c文件做出一个.so库文件，动态库中的代码是可执行文件在运行中加载执行的，gcc编译时不会编译进可执行的文件中。而是留好了记号，库文件更新了，可执行文件不用重新编译。</p>
+</li>
+</ul>
+<br>
+<br>
+
+<hr>
+<h2 id="三、静态库和动态库的使用"><a href="#三、静态库和动态库的使用" class="headerlink" title="三、静态库和动态库的使用"></a>三、静态库和动态库的使用</h2><h3 id="3-1-静态库"><a href="#3-1-静态库" class="headerlink" title="3.1 静态库"></a>3.1 静态库</h3><ul>
+<li><p>生成静态库：</p>
+<blockquote>
+<ol>
+<li>把库函数所属的.c文件编译成.o文件</li>
+<li>用ar命令归档，生成文件libmyc.a。<code>ar -rc &lt;生成的档案文件名&gt; &lt;.o文件名列表&gt;</code>(一般取名是  <code>lib+名字+.a</code>)</li>
+</ol>
+</blockquote>
+</li>
+<li><p>使用静态库<br>假设头文件在includes目录中，生成的libmymath.a库在libs中</p>
+<blockquote>
+<ol>
+<li>编译头文件：<code>gcc -c -I ./includes</code></li>
+<li>链接静态库：<code>gcc -o main.o -L ./libs -lmymath</code> (链接库的名字时只需要<code>-l+名字</code>，不用加前面的lib)</li>
+</ol>
+</blockquote>
+</li>
+<li><p>用makefile实现</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">ALL := main                          <span class="comment"># := 是递归赋值，即使变量已经被赋值了还能赋值</span></span><br><span class="line">CC := gcc</span><br><span class="line">CFLAGS := -Wall -g -I ./includes/    <span class="comment">#wall：显示所有警告信息 -g：编译时生成调试信息 “-I ./includes/”表示将当前目录下的“includes”文件夹添加到头文件搜索路径中</span></span><br><span class="line">LDFLAGS := -L ./libs -lmamath        <span class="comment">#-L ./libs -lymamath”。其中，“-L ./libs”表示将当前目录下的“libs”文件夹添加到链接库搜索路径中，“-lymamath”表示链接名为“libymamath.so”的库文件。</span></span><br><span class="line">SRC := $(wildcard *.c)               <span class="comment">#用“wildcard”函获取当前目录下的所有.c文件</span></span><br><span class="line">OBJ := $(patsubst %.c, %.o , $(SRC)) <span class="comment">#用“patsubst”函数将变量SRC中的每个文件名中的“.c”替换为“.o”</span></span><br><span class="line">$(ALL) : $(OBJ)</span><br><span class="line">    $(CC) -o <span class="variable">$@</span> $^ $(LDFLAGS)        <span class="comment">#$@”表示规则的目标文件，“$^”表示规则的所有依赖文件。</span></span><br><span class="line">%.o : %.c</span><br><span class="line">    $(CC) -c $&lt; $(CFLAGS)            <span class="comment">#编译所有的C源文件，生成对应的目标文件,其中$&lt;表示的是第一个依赖文件，也就是当前正在被编译的c源文件</span></span><br><span class="line">clean:</span><br><span class="line">    rm main *.o</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="3-2-动态库"><a href="#3-2-动态库" class="headerlink" title="3.2 动态库"></a>3.2 动态库</h3></li>
+<li><p>动态库的封装</p>
+</li>
+</ul>
+<blockquote>
+<p>对要封装的.c文件（假设是mymath.c）使用指令：<code>gcc -o libmymath.so -shared -fPIC mymath.c</code></p>
+</blockquote>
+<ul>
+<li>动态库的使用</li>
+</ul>
+<blockquote>
+<p>编译：和静态库差不多，编译头文件：<code>gcc -c -I ./includes</code><br>再编译动态库：<code>gcc -o main.o -L ./libs -lmymath</code>(记得去掉打头的lib和结尾的.so)<br>运行：先把编译的库的目录加入到环境变量中（设库目录是./libs）：<code>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./libs</code>(将./libs追加到环境变量的后面)。再启动执行文件</p>
+</blockquote>
  
       <!-- reward -->
       
@@ -189,12 +238,12 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" rel="tag">进程线程</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c%EF%BC%8C%E5%B0%81%E8%A3%85/" rel="tag">c，封装</a></li></ul>
 
     </footer>
   </div>
@@ -202,19 +251,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            day27.5-静态库，动态库
-          
-        </div>
-      </a>
     
-    
-      <a href="/2023/04/01/day27-%E6%96%87%E4%BB%B6%E4%B8%8E%E7%B3%BB%E7%BB%9FIO/" class="article-nav-link">
+      <a href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">day27-文件与系统IO</div>
+        <div class="article-nav-title">day28-进程线程</div>
       </a>
     
   </nav>

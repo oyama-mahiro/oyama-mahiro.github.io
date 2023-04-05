@@ -97,6 +97,66 @@
     
     
     <article
+  id="post-day27-5-静态库，动态库"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/"
+    >day27.5-静态库，动态库</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/" class="article-date">
+  <time datetime="2023-04-05T02:32:28.000Z" itemprop="datePublished">2023-04-05</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day27-5-静态库，动态库"><a href="#day27-5-静态库，动态库" class="headerlink" title="day27.5-静态库，动态库"></a><font color="green">day27.5-静态库，动态库</font></h1><hr>
+<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>c语言程序编译的步骤（源文件到可执行文件的编译）：</p>
+<blockquote>
+<p>预处理 -&gt; 编译 -&gt; 汇编 -&gt; 链接</p>
+</blockquote> 
+      <a class="article-more-link" href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c%EF%BC%8C%E5%B0%81%E8%A3%85/" rel="tag">c，封装</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-day28-进程线程"
   class="article article-type-post"
   itemscope
@@ -127,7 +187,28 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1> 
+  <h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-程序和进程"><a href="#1-程序和进程" class="headerlink" title="1. 程序和进程"></a>1. 程序和进程</h3><p>&emsp;&emsp;程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”<br>&emsp;&emsp;进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</p>
+<h3 id="2-守护进程"><a href="#2-守护进程" class="headerlink" title="2. 守护进程"></a>2. 守护进程</h3><p>&emsp;&emsp;守护进程：在某些用户空间中，即使用户退出登录，仍然会有一些后台进程在运行，不会被用户或终端影响，这些进程被称为<code>守护进程</code>。<br>&emsp;&emsp;Linux 中有一种特殊的守护进程被称为<code>计划守护进程</code>，计划守护进程可以每分钟醒来一次检查是否有工作要做，做完会继续回到睡眠状态等待下一次唤醒。</p>
+<h3 id="3-父进程与子进程"><a href="#3-父进程与子进程" class="headerlink" title="3. 父进程与子进程"></a>3. 父进程与子进程</h3><p>&emsp;&emsp;在 Linux 系统中，进程通过非常简单的方式来创建，<code>fork</code>系统调用会创建一个源进程的拷贝(副本)。调用<code>fork</code>函数的进程被称为<code>父进程</code>，使用 fork 函数创建出来的进程被称为 <code>子进程</code>。父进程和子进程都有自己的内存映像。<strong>如果在子进程创建出来后</strong>，父进程修改了一些变量等，那么子进程是看不到这些变化的，也就是<code>fork</code>后，父进程和子进程相互独立。</p>
+<p>&emsp;&emsp;虽然父进程和子进程保持相互独立，但是它们却能够共享相同的文件，如果在 fork 之前，父进程已经打开了某个文件，那么 fork 后，父进程和子进程仍然共享这个打开的文件。对共享文件的修改会对父进程和子进程同时可见。</p>
+<p>&emsp;&emsp;那么该如何区分父进程和子进程呢？子进程只是父进程的拷贝，所以它们几乎所有的情况都一样，包括内存映像、变量、寄存器等。区分的关键在于fork函数调用后的返回值，如果fork后返回一个非零值，这个非零值即是子进程的<code>进程标识符</code>(pid)，而会给子进程返回一个零值,<font color="blue">即在程序中,<code>pid==0</code>的代码为子进程的代码，而<code>pid &gt; 0</code>的代码为父进程的代码</font>。父进程在 fork 后会得到子进程的 PID，这个 PID 即能代表这个子进程的唯一标识符也就是 PID。如果子进程想要知道自己的 PID，可以调用<code>getpid</code>方法。父进程可以生成多个子进程，子进程也能生成自己的子进程。</p>
+<h3 id="4-Linux进程间的通信"><a href="#4-Linux进程间的通信" class="headerlink" title="4. Linux进程间的通信"></a>4. Linux进程间的通信</h3><p>Linux进程间的通信（IPC）大致可以分为6种</p>
+<ol>
+<li>信号 signal</li>
+<li>无名管道 pipe</li>
+<li>共享内存 shared memory</li>
+<li>先入先出队列（也叫有名管道） fifo</li>
+<li>消息队列 message queue</li>
+<li>套接字 socket</li>
+</ol>
+<h4 id="4-1-信号"><a href="#4-1-信号" class="headerlink" title="4.1 信号"></a>4.1 信号</h4><p>&emsp;&emsp;信号是在软件层次对中断机制的一种模拟，是一种异步通信方式。信号可以直接进行用户空间进程和内核之间的交互，内核也能利用它来通知用户空间进程发生了哪些系统事件</p>
+<h3 id="1-1-系统调用fork"><a href="#1-1-系统调用fork" class="headerlink" title="1.1 系统调用fork"></a>1.1 系统调用fork</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pid_t fork(void);</span><br><span class="line">功能：创建一个子进程出来</span><br><span class="line">返回值：0表示子进程，大于0表示父进程，-1出错</span><br></pre></td></tr></table></figure>
+
+<p>注：父进程和子进程空间完全独立</p>
+<p>写时拷贝 – 现在的Linux一直在用</p>
+<p>vfork：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">pid_t vfork(void);</span><br><span class="line">功能：创建一个子进程出来</span><br><span class="line">返回值：0表示子进程，大于0表示父进程，-1出错</span><br><span class="line"></span><br><span class="line">一定是子进程先运行，并且子进程不结束exit()或者不调用exec函数簇，父进程不会运行（正确运行）</span><br></pre></td></tr></table></figure>
+ 
       <!-- reward -->
       
     </div>
@@ -614,67 +695,6 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%87%BD%E6%95%B0/" rel="tag">函数</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BB%93%E6%9E%84%E4%BD%93/" rel="tag">结构体</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-day18-Linux基础,shell脚本"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/"
-    >day18-Linux基础,shell脚本</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/" class="article-date">
-  <time datetime="2023-03-15T15:49:45.000Z" itemprop="datePublished">2023-03-15</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="day18-linux基础-shell脚本"><a href="#day18-linux基础-shell脚本" class="headerlink" title="day18-linux基础,shell脚本"></a><font color="green">day18-linux基础,shell脚本</font></h1><br>
-<br>
-
-
-<hr>
-<h2 id="一、变量的四则运算："><a href="#一、变量的四则运算：" class="headerlink" title="一、变量的四则运算："></a>一、变量的四则运算：</h2> 
-      <a class="article-more-link" href="/2023/03/15/day18-Linux%E5%9F%BA%E7%A1%80,shell%E8%84%9A%E6%9C%AC/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux%E5%9F%BA%E7%A1%80/" rel="tag">Linux基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell%E8%84%9A%E6%9C%AC/" rel="tag">shell脚本</a></li></ul>
 
     </footer>
   </div>
