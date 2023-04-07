@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">969</span>
+            <span class="post-count">6.9k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">3 min</span>
+            <span class="post-count">24 min</span>
         </span>
     </span>
 </div>
@@ -98,8 +98,14 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-程序和进程"><a href="#1-程序和进程" class="headerlink" title="1. 程序和进程"></a>1. 程序和进程</h3><p>&emsp;&emsp;程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”<br>&emsp;&emsp;进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</p>
-<h3 id="2-守护进程"><a href="#2-守护进程" class="headerlink" title="2. 守护进程"></a>2. 守护进程</h3><p>&emsp;&emsp;守护进程：在某些用户空间中，即使用户退出登录，仍然会有一些后台进程在运行，不会被用户或终端影响，这些进程被称为<code>守护进程</code>。<br>&emsp;&emsp;Linux 中有一种特殊的守护进程被称为<code>计划守护进程</code>，计划守护进程可以每分钟醒来一次检查是否有工作要做，做完会继续回到睡眠状态等待下一次唤醒。</p>
+  <h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-进程和线程"><a href="#1-进程和线程" class="headerlink" title="1. 进程和线程"></a>1. 进程和线程</h3><ul>
+<li>程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”</li>
+<li>进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</li>
+<li>页表：<br>&emsp;&emsp;在 Linux 中，每个进程都有自己的页表，用于映射虚拟地址到物理地址。页表是由一系列页表项（PTE）组成的数据结构，每个页表项对应着虚拟地址空间中的一个页面（通常是4KB），并描述了该页面的物理地址、访问权限等信息。<br>&emsp;&emsp;Linux 中的页表采用了多级页表的结构，即每个页表项可以指向下一级的页表，最终指向物理页面。<br>&emsp;&emsp;Linux 中的页表是按需分配的，即当进程需要访问某个虚拟地址时，如果该地址对应的页表项不存在，则会触发缺页异常，内核会根据需要分配新的物理页面，并更新页表项，使得虚拟地址能够正确映射到物理地址。</li>
+<li>线程：线程是进程中的执行单元，它与进程共享同一个地址空间，因此线程之间可以直接共享数据。线程相对于进程来说更加轻量级。<a id="more"></a>
+<h3 id="2-守护进程"><a href="#2-守护进程" class="headerlink" title="2. 守护进程"></a>2. 守护进程</h3></li>
+</ul>
+<p>&emsp;&emsp;守护进程：在某些用户空间中，即使用户退出登录，仍然会有一些后台进程在运行，不会被用户或终端影响，这些进程被称为<code>守护进程</code>。<br>&emsp;&emsp;Linux 中有一种特殊的守护进程被称为<code>计划守护进程</code>，计划守护进程可以每分钟醒来一次检查是否有工作要做，做完会继续回到睡眠状态等待下一次唤醒。</p>
 <h3 id="3-父进程与子进程"><a href="#3-父进程与子进程" class="headerlink" title="3. 父进程与子进程"></a>3. 父进程与子进程</h3><p>&emsp;&emsp;在 Linux 系统中，进程通过非常简单的方式来创建，<code>fork</code>系统调用会创建一个源进程的拷贝(副本)。调用<code>fork</code>函数的进程被称为<code>父进程</code>，使用 fork 函数创建出来的进程被称为 <code>子进程</code>。父进程和子进程都有自己的内存映像。<strong>如果在子进程创建出来后</strong>，父进程修改了一些变量等，那么子进程是看不到这些变化的，也就是<code>fork</code>后，父进程和子进程相互独立。</p>
 <p>&emsp;&emsp;虽然父进程和子进程保持相互独立，但是它们却能够共享相同的文件，如果在 fork 之前，父进程已经打开了某个文件，那么 fork 后，父进程和子进程仍然共享这个打开的文件。对共享文件的修改会对父进程和子进程同时可见。</p>
 <p>&emsp;&emsp;那么该如何区分父进程和子进程呢？子进程只是父进程的拷贝，所以它们几乎所有的情况都一样，包括内存映像、变量、寄存器等。区分的关键在于fork函数调用后的返回值，如果fork后返回一个非零值，这个非零值即是子进程的<code>进程标识符</code>(pid)，而会给子进程返回一个零值,<font color="blue">即在程序中,<code>pid==0</code>的代码为子进程的代码，而<code>pid &gt; 0</code>的代码为父进程的代码</font>。父进程在 fork 后会得到子进程的 PID，这个 PID 即能代表这个子进程的唯一标识符也就是 PID。如果子进程想要知道自己的 PID，可以调用<code>getpid</code>方法。父进程可以生成多个子进程，子进程也能生成自己的子进程。</p>
@@ -112,7 +118,103 @@
 <li>消息队列 message queue</li>
 <li>套接字 socket</li>
 </ol>
-<h4 id="4-1-信号"><a href="#4-1-信号" class="headerlink" title="4.1 信号"></a>4.1 信号</h4><p>&emsp;&emsp;信号是在软件层次对中断机制的一种模拟，是一种异步通信方式。信号可以直接进行用户空间进程和内核之间的交互，内核也能利用它来通知用户空间进程发生了哪些系统事件</p>
+<blockquote>
+<p>有两个东西可以标识一个IPC结构：标识符(ID)和键(key)。</p>
+<p>ID是IPC结构的内部名。内部即在进程内部使用，这样的标识方法是不能支持进程间通信的。</p>
+<p>key就是IPC结构的外部名。当多个进程，针对同一个key调用get函数(msgget等)，这些进程得到的ID其实是标识了同一个IPC结构。多个进程间就可以通过这个IPC结构通信。</p>
+</blockquote>
+<br>
+
+<h4 id="4-1-信号-signal"><a href="#4-1-信号-signal" class="headerlink" title="4.1 信号 signal"></a>4.1 信号 signal</h4><h5 id="4-1-1-信号的基本概念"><a href="#4-1-1-信号的基本概念" class="headerlink" title="4.1.1 信号的基本概念"></a>4.1.1 信号的基本概念</h5><p>&emsp;&emsp;信号是在软件层次对中断机制的一种模拟，是一种异步通信方式。信号可以直接进行用户空间进程和内核之间的交互，内核也能利用它来通知用户空间进程发生了哪些系统事件。</p>
+<h5 id="4-1-2-信号的处理流程"><a href="#4-1-2-信号的处理流程" class="headerlink" title="4.1.2 信号的处理流程"></a>4.1.2 信号的处理流程</h5><p>&emsp;&emsp;操作系统给进程发送信号，本质上是给进程的task_struct（是 Linux 内核中的一个通过双向链表来组织的结构体，它代表了一个进程或线程）中写入数据，修改相应的task_struct字段(里面有进程 ID、进程状态、进程优先级、进程的父进程、进程的子进程等等)，然后进程在合适的时间(内核态发回用户态时)去处理所接受的信号。<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg" alt="信号处理"></p>
+<p>例子说明：</p>
+<blockquote>
+<ol>
+<li>假设用户启动一个交互式的前台进程，然后输入ctrl+c结束它，系统通过键盘产生一个硬件中断。</li>
+<li>cpu暂停用户空间的代码，cpu从用户态切换至内核态处理中断</li>
+<li>系统驱动程序将ctlr+c解释为一个SIGINT信号，并将其记在该进程的task_struct中的信号位上；</li>
+<li>当某时刻进程从内核态返回用户态继续执行之前，检查task_struct中的信号域，SIGINT信号的默认处理动作为终止进程，所以直接终止进程而不再返回到它的用户空间代码。</li>
+</ol>
+</blockquote>
+<h5 id="4-1-3-常用的信号-前面是它的编号"><a href="#4-1-3-常用的信号-前面是它的编号" class="headerlink" title="4.1.3 常用的信号(前面是它的编号)"></a>4.1.3 常用的信号(前面是它的编号)</h5><p>Linux 中可以通过<code>kill -l</code>查看信号表</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">1.  SIGHUP：   本信号在用户终端结束时发出，通常是在终端的控制进程结束时，通知同一会话期内的各个作业，这时他们与控制终端不在关联。比如，登录Linux时，系统会自动分配给登录用户一个控制终端，在这个终端运行的所有程序，包括前台和后台进程组，一般都属于同一个会话。当用户退出时，所有进程组都将收到该信号，这个信号的默认操作是终止进程。此外对于与终端脱离关系的守护进程，这个信号用于通知它重新读取配置文件。</span><br><span class="line">2.  SIGINT：   程序终止信号。当用户按下CRTL+C时通知前台进程组终止进程。</span><br><span class="line">3.  SIGQUIT：  Ctrl+<span class="tag">\<span class="name">控</span></span>制，进程收到该信号退出时会产生core文件，类似于程序错误信号。</span><br><span class="line">4.  SIGILL：   执行了非法指令。通常是因为可执行文件本身出现错误，或者数据段、堆栈溢出时也有可能产生这个信号。</span><br><span class="line">5.  SIGTRAP：  由断点指令或其他陷进指令产生，由调试器使用。</span><br><span class="line">6.  SIGABRT：  调用abort函数产生，将会使程序非正常结束。</span><br><span class="line">7.  SIGBUS：   非法地址。包括内存地址对齐出错。比如访问一个4个字长的整数，但其地址不是4的倍数。它与SIGSEGV的区别在于后者是由于对合法地址的非法访问触发。</span><br><span class="line">8.  SIGFPE：   发生致命的算术运算错误。</span><br><span class="line">9.  SIGKILL：  用来立即结束程序的运行。不能被捕捉、阻塞或忽略，只能执行默认动作。</span><br><span class="line">10. SIGUSR1：  留给用户使用，用户可自定义。</span><br><span class="line">11. SIGSEGV：  访问未分配给用户的内存区。或操作没有权限的区域。</span><br><span class="line">12. SIGUSR2：  留给用户使用，用户可自定义。</span><br><span class="line">13. SIGPIPE：  管道破裂信号。当对一个读进程已经运行结束的管道执行写操作时产生。</span><br><span class="line">14. SIGALRM：  时钟定时信号。由alarm函数设定的时间终止时产生。</span><br><span class="line">15. SIGTERM：  程序结束信号。shell使用kill产生该信号，当结束不了该进程，尝试使用SIGKILL信号。</span><br><span class="line">16. SIGSTKFLT：堆栈错误。</span><br><span class="line">17. SIGCHLD：  子进程结束，父进程会收到。如果子进程结束时父进程不等待或不处理该信号，子进程会变成僵尸进程。</span><br><span class="line">18. SIGCONT：  让一个停止的进程继续执行。</span><br><span class="line">19. SIGSTOP：  停止进程执行。不能被捕捉、阻塞或忽略，只能执行默认动作。</span><br><span class="line">20. SIGTSTP：  停止终端交互运行，可以被忽略。按下Ctrl+z发出这个信号。</span><br><span class="line">21. SIGTTIN：  当后台进程需要从终端接收数据时，所有进程会收到该信号，暂停执行。</span><br><span class="line">22. SIGTTOU：  与SIGTTIN类似，在后台的进程向终端输出数据时产生。</span><br><span class="line">23. SIGURG：   套接字上出现紧急情况时产生。向当前正在运行的进程发出些信号，报告有紧急数据到达，如网络带外数据到达。</span><br><span class="line">24. SIGXCPU：  超过CPU时间资源限制时产生的信号。</span><br><span class="line">25. SIGXFSZ：  当进程企图扩大文件以至于超过文件大小资源限制时产生。</span><br><span class="line">26. SIGVTALRM：虚拟使用信号。计算的是进程占用CPU调用的时间。</span><br><span class="line">27. SIGPROF：  包括进程使用CPU的时间以及系统调用的时间。</span><br><span class="line">28. SIGWINCH： 窗口大小改变时。</span><br><span class="line">29. SIGIO：    文件描述符准备就绪，表示可以进行输入输出操作。</span><br><span class="line">30. SIGPWR：   电源失效信号，即关机。</span><br><span class="line">31. SIGSYS：   非法的系统调用。</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-1-4-信号的处理"><a href="#4-1-4-信号的处理" class="headerlink" title="4.1.4 信号的处理"></a>4.1.4 信号的处理</h5><p>信号的3种状态：</p>
+<blockquote>
+<p>未决：进程接收到信号，但是还没有处理它。这个信号会被添加到进程的信号掩码中，等待进程处理。<br>阻塞：进程可以选择阻塞某些信号，这样当这些信号发送时，进程不会接收到它们。阻塞信号可以通过 sigprocmask() 函数设置。<br>处理：当进程接收到一个信号时，它需要处理这个信号。处理信号的方式可以是执行一个信号处理函数，或者使用默认的信号处理方式。可以使用 signal() 函数或 sigaction() 函数来设置信号处理函数。</p>
+</blockquote>
+<p>信号的5种默认处理动作</p>
+<blockquote>
+<p>Term    终止进程<br>Ign    当前进程忽略此信号<br>Core    终止进程，并生成一个Core文件<br>Stop    暂停当前进程<br>Cont    继续执行当前被暂停的进程</p>
+</blockquote>
+<h5 id="4-1-5-信号集"><a href="#4-1-5-信号集" class="headerlink" title="4.1.5 信号集"></a>4.1.5 信号集</h5><p>信号集：顾名思义，就是信号的集合。在linux中，它的类型是<code>sigset_t</code>,大小是64bits。（Linux中一个只有64个信号）。在头文件<code>signal.h</code>提供了五个处理信号集的函数。</p>
+<br>
+
+<h4 id="4-2-无名管道-pipe"><a href="#4-2-无名管道-pipe" class="headerlink" title="4.2 无名管道 pipe"></a>4.2 无名管道 pipe</h4><h5 id="4-2-1-pipe的基本概念"><a href="#4-2-1-pipe的基本概念" class="headerlink" title="4.2.1 pipe的基本概念"></a>4.2.1 pipe的基本概念</h5><p>&emsp;&emsp;管道是一种最基本的IPC机制，作用于有血缘关系的进程之间，完成数据传递。调用pipe系统函数即可创建一个管道。有如下特质：</p>
+<ol>
+<li><p>其本质是一个伪文件(实为内核缓冲区)</p>
+</li>
+<li><p>由两个文件描述符引用，一个表示读端，一个表示写端。</p>
+</li>
+<li><p>规定数据从管道的写端流入管道，从读端流出。</p>
+</li>
+</ol>
+<p>管道的原理: 管道实为内核使用环形队列机制，借助内核缓冲区(4k)实现。</p>
+<p>管道的局限性：<br>① 数据自己读不能自己写。<br>② 数据一旦被读走，便不在管道中存在，不可反复读取。<br>③ 由于管道采用半双工通信方式。因此，数据只能在一个方向上流动。<br>④ 只能在有公共祖先的进程间使用管道。<br>常见的通信方式有，单工通信、半双工通信、全双工通信。</p>
+<h5 id="4-2-2-pipe的创建"><a href="#4-2-2-pipe的创建" class="headerlink" title="4.2.2 pipe的创建"></a>4.2.2 pipe的创建</h5><p>&emsp;&emsp;管道两端可分别用描述符fd[0] 以及fd[1]来描述。需要注意的是，管道两端的任务是固定的，一端只能用于读，由描述符fd[0]表示，称其为管道读端，另一端只能用于写，由描述符fd[1]来表示，称其为管道写端。如果试图从管道写端读数据，或者向管道读端写数据都将导致出错。</p>
+<p>&emsp;&emsp;管道是一种文件，因此对文件操作的I/O函数都可以用于管道，如read，write等。</p>
+<h5 id="4-2-3-pipe的读写"><a href="#4-2-3-pipe的读写" class="headerlink" title="4.2.3 pipe的读写"></a>4.2.3 pipe的读写</h5><p>&emsp;&emsp;如果某个进程要读取管道中的数据，那么该进程应当关闭fd[1]，向管道写数据的进程应当关闭fd[0]。因为管道只能用于具有亲缘关系的进程间的通信，在进行通信时，他们共享文件描述符。在使用前，应及时地关闭不需要的管道的另一端，以避免意外错误的发生。</p>
+<p>&emsp;&emsp;进程在管道的读端读数据时，如果管道的写端不存在，则读进程认为已经读到了数据的末尾，读函数返回读出的字节数为0；管道的写端如果存在，且请求读取的字节数大于PIPE_BUF，则返回管道中现有的所有数据；如果请求的字节数不大于PIPE_BUF，则返回管道中现有的所有数据（此时，管道中数据量小于请求的数据量），或者返回请求的字节数（此时，管道中数据量大于等于请求的数据量）。</p>
+<h4 id="4-3-共享内存-shared-memory"><a href="#4-3-共享内存-shared-memory" class="headerlink" title="4.3 共享内存 shared memory"></a>4.3 共享内存 shared memory</h4><h5 id="4-3-1-共享内存概念"><a href="#4-3-1-共享内存概念" class="headerlink" title="4.3.1 共享内存概念"></a>4.3.1 共享内存概念</h5><p>&emsp;&emsp;实现进程间通信最简单也是最直接的方法就是共享内存——为参与通信的多个进程在内存中开辟一个共享区。由于进程可以直接对共享内存进行读写操作，因此这种通信方式效率特别高，但其弱点是，它没有互斥机制，需要信号量之类的手段来配合。</p>
+<h5 id="4-3-2-共享内存方法"><a href="#4-3-2-共享内存方法" class="headerlink" title="4.3.2 共享内存方法"></a>4.3.2 共享内存方法</h5><blockquote>
+<p>为了实现共享内存，就需要做两件事：</p>
+<ol>
+<li>在内存划出一块区域来作为共享区；</li>
+<li>把这个区域映射到参与通信的各个进程空间。</li>
+</ol>
+</blockquote>
+<p>&emsp;&emsp;在Linux中，共享内存有两种方式：System V IPC和POSIX IPC。</p>
+<p>&emsp;&emsp;System V IPC：System V IPC是一种传统的IPC机制，它提供了三种IPC方式：消息队列、共享内存和信号量。其中，共享内存是一种最快的IPC方式，因为它直接将内存映射到进程的地址空间中，避免了数据的拷贝和内核态和用户态之间的切换。共享内存的使用需要调用一系列的函数，包括shmget()、shmat()、shmdt()和shmctl()等。</p>
+<p>&emsp;&emsp;POSIX IPC：POSIX IPC是一种比System V IPC更加灵活和可移植的IPC机制，它提供了两种IPC方式：消息队列和共享内存。与System V IPC不同的是，POSIX IPC使用命名对象来标识IPC资源，这些对象存储在文件系统中，可以在进程间共享。POSIX共享内存的使用需要调用一系列的函数，包括shm_open()、shm_unlink()、mmap()和munmap()等。</p>
+<h5 id="4-3-3-文件映射"><a href="#4-3-3-文件映射" class="headerlink" title="4.3.3 文件映射"></a>4.3.3 文件映射</h5><h6 id="4-3-3-1-mmap的基本概念"><a href="#4-3-3-1-mmap的基本概念" class="headerlink" title="4.3.3.1 mmap的基本概念"></a>4.3.3.1 mmap的基本概念</h6><p>&emsp;&emsp;通常在内存划出一个区域的方法是，在内存中打开一个文件，若通过系统调用<code>mmap()</code>把这个文件所占用的内存空间映射到参与通信的各个进程地址空间，则这些进程就都可以看到这个共享区域，进而实现进程间的通信。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面（脏页面是指已经被修改但还没有被写回到磁盘的页面）到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。<br>&emsp;&emsp;总而言之，常规文件操作需要从磁盘到页缓存再到用户主存的两次数据拷贝。而mmap操控文件，只需要从磁盘到用户主存的一次数据拷贝过程。而且这个映射的过程是动态的，即请求多少映射多少。所以mmap适用与大型文件的操作。<br>&emsp;&emsp;mmap()原型如下：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);</span><br><span class="line"></span><br><span class="line">功能：将一个文件或者其它对象映射到进程的地址空间中，从而让进程可以像访问内存一样访问这些对象。</span><br><span class="line">返回值：返回映射区域的起始地址。如果调用失败，则返回MAP_FAILED宏。</span><br><span class="line">addr：指定映射的起始地址，通常设置为0，表示让系统自动选择一个合适的地址。</span><br><span class="line">length：指定映射区域的长度，单位是字节。</span><br><span class="line">prot：指定映射区域的保护方式，可以是以下值的按位或：</span><br><span class="line">    PROT_EXEC：可执行</span><br><span class="line">    PROT_READ：可读</span><br><span class="line">    PROT_WRITE：可写</span><br><span class="line">    PROT_NONE：不可访问</span><br><span class="line">flags：指定映射区域的标志，可以是以下值的按位或：</span><br><span class="line">    MAP_SHARED：共享映射</span><br><span class="line">    MAP_PRIVATE：私有映射</span><br><span class="line">    MAP_ANONYMOUS：匿名映射</span><br><span class="line">fd：指定要映射的文件描述符，如果是匿名映射，则设置为-1。</span><br><span class="line">offset：指定映射区域在文件中的偏移量，通常设置为0。。</span><br></pre></td></tr></table></figure>
+<h6 id="4-3-3-2-mmap的文件映射过程"><a href="#4-3-3-2-mmap的文件映射过程" class="headerlink" title="4.3.3.2 mmap的文件映射过程"></a>4.3.3.2 mmap的文件映射过程</h6><p><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/mmap.jpg" alt="mmap"><br>mmap本身其实是一个很简单的操作，在进程页表中添加一个页表项，该页表项是物理内存的地址。调用mmap的时候，内核会在该进程的地址空间的映射区域查找一块满足需求的空间用于映射该文件，然后生成该虚拟地址的页表项，改页表项此时的有效位（标志是否已经在物理内存中）为0，页表项的内容是文件的磁盘地址，此时mmap的任务已经完成。第一次访问该块内存的时候，因为页表项的有效位还是0，就会发生缺页中断，然后CPU会使用该页表项的内容也就是磁盘的文件地址，讲该地址指向的内容加载到物理内存，并需改页表项的内容为该物理地址，有效位置为1。 </p>
+<p>简而言之，就是在进程对应的虚存段添加一个段，也就是创建一个新的vm_area_struct结构，并将其与文件的物理磁盘地址相连。在创建虚拟区间并完成地址映射，但是并没有将任何文件数据的拷贝至主存。真正的文件读取是当进程发起读或写操作时。进程的读或写操作访问虚拟地址空间这一段映射地址，通过查询页表，引发缺页异常（缺页指的是当进程需要访问的页面不在物理内存中时，就会发生缺页中断，此时操作系统会将该页面从磁盘中读取到内存中，以满足进程的需求。），内核进行请页。</p>
+<p><font color="blue">再简单点，就是在进程的虚拟地址的合适位置添加一个vm_area_struct结构体。而进程的页表用于映射虚拟地址到物理地址，所以会给添加的结构体添加一个页表项即物理内存的地址。通过这个进程中映射的地址就能访问到共享的物理地址了</font><br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/mmap2.jpg" alt="mmap"></p>
+<h5 id="4-3-4-共享内存的映射"><a href="#4-3-4-共享内存的映射" class="headerlink" title="4.3.4 共享内存的映射"></a>4.3.4 共享内存的映射</h5><p>&emsp;&emsp;共享内存通信方式与上面的mmap()方式极为相似，但因为建立一个文件的目的仅是为了通信，于是这种文件没有永久保存的意义，因此IPC并没有使用正规的文件系统，而是在系统初始化时在磁盘交换区建立了一个专门用来实现共享内存的特殊临时文件系统shm，当系统断电后，其中的文件会全部自行销毁。（不是人为的，mapp创造的内存空间随着进程的消亡而消亡，而共享内存的是在断电后才消失）</p>
+<h5 id="4-3-5-共享内存的结构"><a href="#4-3-5-共享内存的结构" class="headerlink" title="4.3.5 共享内存的结构"></a>4.3.5 共享内存的结构</h5><p>在 Linux 中，kern_ipc_perm 结构体用于跟踪进程间通信（IPC）对象的权限。IPC 对象包括消息队列、信号量和共享内存段等。<br>(这里只展示了有关共享内存的结构体，IPC还有很多其它的结构体，shmid_kernel，ipc_id_ary，ipc_ids是共享内存中独有的，而kern_ipc_perm也能用于其它IPC中)</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span> &#123;</span></span><br><span class="line">    <span class="keyword">key_t</span> key;          <span class="comment">/* 键值 */</span></span><br><span class="line">    <span class="keyword">uid_t</span> uid;          <span class="comment">/* 拥有者的用户 ID */</span></span><br><span class="line">    <span class="keyword">gid_t</span> gid;          <span class="comment">/* 拥有者的组 ID */</span></span><br><span class="line">    <span class="keyword">uid_t</span> cuid;         <span class="comment">/* 创建者的用户 ID */</span></span><br><span class="line">    <span class="keyword">gid_t</span> cgid;         <span class="comment">/* 创建者的组 ID */</span></span><br><span class="line">    <span class="keyword">mode_t</span> mode;        <span class="comment">/* 访问权限 */</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">short</span> seq; <span class="comment">/* 序列号 */</span></span><br><span class="line">    <span class="keyword">key_serial_t</span> sem_perm_seq;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>共享内存段的内核数据结构shmid_kernel如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">shmid_kernel</span> /* <span class="title">private</span> <span class="title">to</span> <span class="title">the</span> <span class="title">kernel</span> */</span></span><br><span class="line"><span class="class">&#123;</span>	</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span>	<span class="title">shm_perm</span>;</span>        <span class="comment">//描述进程间通信许可的结构</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file</span> *		<span class="title">shm_file</span>;</span>            <span class="comment">//指向共享内存文件的指针</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		shm_nattch;            <span class="comment">//挂接到本段共享内存的进程数</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		shm_segsz;            <span class="comment">//段大小</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_atim;            <span class="comment">//最后挂接时间</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_dtim;            <span class="comment">//最后解除挂接时间</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_ctim;            <span class="comment">//最后变化时间</span></span><br><span class="line">	<span class="keyword">pid_t</span>			shm_cprid;            <span class="comment">//创建进程的PID</span></span><br><span class="line">	<span class="keyword">pid_t</span>			shm_lprid;            <span class="comment">//最后使用进程的PID</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">user_struct</span>	*<span class="title">mlock_user</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>为了便于管理，内核把共享内存区的所有描述结构shmid_kernel都存放在结构ipc_id_ary中的一个数组中。结构ipc_id_ary的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_id_ary</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="keyword">int</span> size;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span> *<span class="title">p</span>[0];</span>            <span class="comment">//存放段描述结构的数组</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>同样，为了描述一个共享内存区的概貌，内核使用了数据结构ipc_ids。该结构的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_ids</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> in_use;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span> seq;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span> seq_max;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">rw_semaphore</span> <span class="title">rw_mutex</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr</span> <span class="title">ipcs_idr</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ipc_id_ary</span> *<span class="title">entries</span>;</span>        <span class="comment">//指向struct ipc_id_ary的指针</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>由多个共享段组成的共享区的结构如下所示：<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/%E5%85%B1%E4%BA%AB%E5%8C%BA%E7%BB%93%E6%9E%84.jpg" alt="共享区结构"><br>IPC内核中有许多的结构体：</p>
+<p>在共享内存中，ipc_ids结构体维护了所有共享内存的ID，ipc_id_ary结构体维护了共享内存的索引，kern_ipc_perm结构体维护了共享内存的权限信息，shmid_kernel结构体维护了共享内存的管理信息。这些结构体相互配合，实现了IPC机制的管理和控制。</p>
+<p>它们之间的关系如下所示：</p>
+<p>ipc_ids中存储了所有IPC对象的ID，每个ID对应一个ipc_id_ary中的元素。</p>
+<p>ipc_id_ary中存储了所有IPC对象的ID，每个ID对应一个kern_ipc_perm结构体。</p>
+<p>kern_ipc_perm结构体中包含了一个指向共享内存的指针，这个指针指向一个shmid_kernel结构体。</p>
+<h4 id="4-4-先入先出队列（也叫有名管道）-fifo"><a href="#4-4-先入先出队列（也叫有名管道）-fifo" class="headerlink" title="4.4 先入先出队列（也叫有名管道） fifo"></a>4.4 先入先出队列（也叫有名管道） fifo</h4><p>&emsp;&emsp;FIFO和Pipe都可以用于进程间通信，但它们的实现方式略有不同。Pipe是一种匿名管道，它只存在于内存中，而FIFO是一种特殊的文件类型，它存在于文件系统中。因此，FIFO可以用于不同进程甚至不同计算机之间的通信，而Pipe只能用于具有亲缘关系的进程之间的通信。</p>
+<p>&emsp;&emsp;FIFO主要用于缓冲速度不匹配的通信。例如生产者（数据产生者）可能在短时间内生成大量数据，导致消费者（数据使用方）无法立即处理完，那么就需要用到队列。生产者可以突然生成大量数据存到队列中，然后就去休息，消费者再有条不紊地将数据一条条取出解析。通常会结合DMA操作。</p>
+<p>&emsp;&emsp;FIFO为一种特殊的文件类型，它在文件系统中有对应的路径。当一个进程以读(r)的方式打开该文件，而另一个进程以写(w)的方式打开该文件，那么内核就会在这两个进程之间建立管道，所以FIFO实际上也由内核管理，不与硬盘打交道。之所以叫FIFO，是因为管道本质上是一个先进先出的队列数据结构，最早放入的数据被最先读出来，从而保证信息交流的顺序。FIFO只是借用了文件系统(file system,命名管道是一种特殊类型的文件，因为Linux中所有事物都是文件，它在文件系统中以文件名的形式存在。)来为管道命名。写模式的进程向FIFO文件中写入，而读模式的进程从FIFO文件中读出。当删除FIFO文件时，管道连接也随之消失。FIFO的好处在于我们可以通过文件的路径来识别管道，从而让没有亲缘关系的进程之间建立连接</p>
+<h5 id="4-4-1-fifo的实现方式"><a href="#4-4-1-fifo的实现方式" class="headerlink" title="4.4.1 fifo的实现方式"></a>4.4.1 fifo的实现方式</h5><p>fifo 是用户空间的实现，而 kfifo 是内核空间的实现。</p>
+<p>kfifo是linux内核的对队列功能的实现。在内核中，它被称为无锁环形队列。</p>
+<p>所谓无锁，就是当只有一个生产者和只有一个消费者时，操作fifo不需要加锁。这是因为kfifo出队和入队时，不会改动到相同的变量。</p>
+<p>kfifo使用了in和out两个变量分别作为入队和出队的索引：<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/kfifo.jpg" alt="kfifo"></p>
+<ul>
+<li>入队n个数据时，in变量就+n</li>
+<li>出队k个数据时，out变量就+k</li>
+<li>out不允许大于in（out等于in时表示fifo为空）</li>
+<li>in不允许比out大超过fifo空间（比如上图，in最多比out多8，此时表示fifo已满）<br>如果in和out大于fifo空间了，比如上图中的8，会减去8后重新开始吗？</li>
+</ul>
+<p>不，这两个索引会一直往前加，不轻易回头，为出入队操作省下了几个指令周期。</p>
+<p>那入队和出队的数据从哪里开始存储/读取呢，我们第一时间会想到，把 in/out 用“%”对fifo大小取余就行了，是吧？</p>
+<p>不，取余这种耗费资源的运算，内核开发者怎会轻易采用呢，kfifo的办法是，把 <code>in/out &amp; fifo-&gt;mask</code>。这个mask等于fifo的空间大小减一（其要求fifo的空间必须是2的次方大小）。这个“与”操作可比取余操作快得多了。</p>
+<p>由此，kfifo就实现了“无锁”“环形”队列。</p>
+<p>了解了上述原理，我们就能意识到，这个无锁只是针对“单生产者-单消费者”而言的。“多生产者”时，则需要对入队操作进行加锁；同样的，“多消费者”时需要对出队操作进行加锁。</p>
 <h3 id="1-1-系统调用fork"><a href="#1-1-系统调用fork" class="headerlink" title="1.1 系统调用fork"></a>1.1 系统调用fork</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pid_t fork(void);</span><br><span class="line">功能：创建一个子进程出来</span><br><span class="line">返回值：0表示子进程，大于0表示父进程，-1出错</span><br></pre></td></tr></table></figure>
 
 <p>注：父进程和子进程空间完全独立</p>
