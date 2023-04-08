@@ -124,110 +124,6 @@
       </tags>
   </entry>
   <entry>
-    <title>C语言基础-递归</title>
-    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
-<a id="more"></a>
-
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
-<p>栈：一种数据结构，其特点为先进后出</p>
-<blockquote>
-<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
-</blockquote>
-</blockquote>
-<p>如图( 计算 3! )：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
-<p>解释：</p>
-<ol>
-<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
-<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
-<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
-<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
-<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
-</ol>
-<p>由此可以看成递归的形成至少需要两个条件：</p>
-<ol>
-<li>变化的参数</li>
-<li>递归终止条件</li>
-</ol>
-<blockquote>
-<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
-<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
-<br>
-
-<blockquote>
-<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
-<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
-<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
-<ol>
-<li>我们要把上面的 63 个移动到 B</li>
-<li>把第 64 个移动到 C</li>
-<li>把 B 上的 63 个移动到 C</li>
-</ol>
-<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
-<ol>
-<li>我们要把上面的 62 个移动到 B</li>
-<li>把第 63 个移动到 C</li>
-<li>把 B 上的 62 个移动到 C</li>
-</ol>
-<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
-<p>所以整个过程是</p>
-<ol>
-<li>我们要把上面的<code>n-1</code>个移动到 B</li>
-<li>把第<code>n</code>个移动到 C</li>
-<li>把 B 上的<code>n-1</code>个移动到 C</li>
-</ol>
-<blockquote>
-<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
-</blockquote>
-<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
-<ol>
-<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
-<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
-</ol>
-<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
-<hr>
-<br>
-<br>
-
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>递归</tag>
-        <tag>C语言基础</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Markdown笔记-基础</title>
     <url>/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="Markdown-概述"><a href="#Markdown-概述" class="headerlink" title="Markdown 概述"></a>Markdown 概述</h1><p>Markdown 是一种轻量级标记语言，与 2004 年创建。<br>后缀为<code>.md</code>或<code>.maekdown</code>，可导出 HTML，Word，pdf 等多种格式文档</p>
@@ -473,6 +369,110 @@
       </tags>
   </entry>
   <entry>
+    <title>C语言基础-递归</title>
+    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
+<a id="more"></a>
+
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
+<blockquote>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
+</blockquote>
+</blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
+<ol>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
+</ol>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
+<ol>
+<li>变化的参数</li>
+<li>递归终止条件</li>
+</ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
+<blockquote>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
+<ol>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
+</ol>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
+<ol>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
+</ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
+<br>
+<br>
+
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>递归</tag>
+        <tag>C语言基础</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>day11-c数组与指针</title>
     <url>/2023/03/08/day11-c%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/</url>
     <content><![CDATA[<h1 id="day11-c数组与指针"><a href="#day11-c数组与指针" class="headerlink" title="day11-c数组与指针"></a><font color="green">day11-c数组与指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h3><p>​    字符数组和字符串</p>
@@ -611,165 +611,6 @@
       </tags>
   </entry>
   <entry>
-    <title>day13-c指针，函数</title>
-    <url>/2023/03/08/day13-c%E6%8C%87%E9%92%88%EF%BC%8C%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="day13-c指针，函数"><a href="#day13-c指针，函数" class="headerlink" title="day13-c指针，函数"></a><font color="green">day13-c指针，函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​    本质：数组</p>
-<a id="more"></a>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt;*指针数组名[元素个数];</span><br><span class="line">	<span class="keyword">char</span> a[<span class="number">50</span>] = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">	<span class="keyword">char</span> b[<span class="number">50</span>] = <span class="string">&quot;asd&quot;</span>;</span><br><span class="line">	<span class="keyword">char</span> c[<span class="number">50</span>] = <span class="string">&quot;qwe&quot;</span>;</span><br><span class="line">	<span class="keyword">char</span> *p[<span class="number">3</span>] = &#123;a, b, c&#125;;</span><br><span class="line">	p[<span class="number">0</span>] == a;</span><br><span class="line">	p[<span class="number">2</span>] == b;</span><br><span class="line">	p[<span class="number">3</span>] <span class="comment">//error</span></span><br><span class="line">    *(p[<span class="number">0</span>]) == <span class="string">&#x27;h&#x27;</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">char</span> **q = p = &amp;a;</span><br><span class="line">	q+<span class="number">1</span> = p+<span class="number">1</span> = &amp;b;</span><br><span class="line">	*q = *p = *(&amp;a) == a;</span><br><span class="line">	**q = *a = <span class="string">&#x27;h&#x27;</span>     </span><br><span class="line">        </span><br><span class="line">    p == &amp;p[<span class="number">0</span>];    </span><br><span class="line">        </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	<span class="keyword">int</span> *p[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line">	*(p[<span class="number">0</span>]) == **p == p[<span class="number">0</span>][<span class="number">0</span>] = a[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、二级指针"><a href="#2、二级指针" class="headerlink" title="2、二级指针"></a>2、二级指针</h3><p>​     将一级指针的地址称为二级指针</p>
-<p>​        int a = 2;</p>
-<p>​        int *p = &a;</p>
-<p>​        int **q = &p;  //q就是定义的一个二级指针，地址中存放一级指针的值</p>
-<h3 id="3、const指针"><a href="#3、const指针" class="headerlink" title="3、const指针"></a>3、const指针</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *<span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4、void指针"><a href="#4、void指针" class="headerlink" title="4、void指针"></a>4、void指针</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;k&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">p+<span class="number">1</span> <span class="comment">// error  void类型指针在使用时需要类型强转</span></span><br><span class="line">(<span class="keyword">int</span> *)p+<span class="number">1</span> <span class="comment">// 偏移4字节</span></span><br><span class="line">(<span class="keyword">char</span> *)p+<span class="number">1</span> <span class="comment">// 偏移1字节</span></span><br><span class="line"></span><br><span class="line">注意：<span class="keyword">void</span>类型的指针不能使用递增递减运算符</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="5、字符指针和字符串"><a href="#5、字符指针和字符串" class="headerlink" title="5、字符指针和字符串"></a>5、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">6</span>] = <span class="string">&quot;haha&quot;</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//将字符串hello的首地址赋值给指针变量p</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%c\n&quot;</span>, *p); <span class="comment">//right</span></span><br><span class="line">*p = <span class="string">&#x27;z&#x27;</span>; <span class="comment">//error hello是一个字符串常量，不能修改里面的字符</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">strcpy</span>(p, <span class="string">&quot;asd&quot;</span>); <span class="comment">//error</span></span><br><span class="line"><span class="built_in">strcpy</span>(a, <span class="string">&quot;asd&quot;</span>); <span class="comment">//right	</span></span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="二、函数"><a href="#二、函数" class="headerlink" title="二、函数"></a>二、函数</h2><p>概念：函数是一个实现特定功能的代码模块，函数有返回值，也可能没有</p>
-<p>​            返回值：函数的结果</p>
-<h3 id="1、函数的封装-定义"><a href="#1、函数的封装-定义" class="headerlink" title="1、函数的封装(定义)"></a>1、函数的封装(定义)</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">	&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">	&#123;</span><br><span class="line">    	功能代码模块;  <span class="comment">//语句块</span></span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">return</span> 表达式; </span><br><span class="line">	&#125;</span><br><span class="line">	数据类型：跟函数返回值的类型一致，如果一个函数没有返回值，则填<span class="keyword">void</span></span><br><span class="line">    函数名：遵循标识符标识符的命名规范，函数命名一般和功能相关。函数名也代表函数的起始地址</span><br><span class="line">    形式参数：形式参数决定了，函数调用时需要传入的实参的个数、类型、顺序，多个形式参数之间用逗号隔开。</span><br><span class="line">    如果函数不需要形式参数，可以省略不写，或者填<span class="keyword">void</span></span><br><span class="line">    <span class="keyword">return</span>：函数结束的标志，后面的表达式的值为函数的结果。如果没有返回值，可以选择不填或者只填<span class="keyword">return</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="2、函数的调用"><a href="#2、函数的调用" class="headerlink" title="2、函数的调用"></a>2、函数的调用</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    函数名(实际参数);</span><br><span class="line">	实际参数必须跟形式参数的个数、类型、顺序一致。如果没有形式参数，那么实际参数可以省略</span><br></pre></td></tr></table></figure>
-
-<h3 id="3、函数的声明"><a href="#3、函数的声明" class="headerlink" title="3、函数的声明"></a>3、函数的声明</h3><p>​    在使用函数之前需要对函数进行函数声明</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">声明的一般形式：</span><br><span class="line">   &lt;数据类型&gt; 函数名(形式参数); 	</span><br><span class="line"></span><br><span class="line">	函数的声明中变量名是可以省略的</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>注：在add.h中声明了#include &lt;stdio.h&gt;后，在其他要用到#include &lt;stdio.h&gt;的函数中可以直接声明#include”add.h”就行。</p>
-</blockquote>
-<h3 id="4、头文件一般格式"><a href="#4、头文件一般格式" class="headerlink" title="4、头文件一般格式"></a>4、头文件一般格式</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __ADD_H__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __ADD_H__</span></span><br><span class="line"></span><br><span class="line">头文件声明</span><br><span class="line"></span><br><span class="line">函数声明</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="5、函数的传参"><a href="#5、函数的传参" class="headerlink" title="5、函数的传参"></a>5、函数的传参</h3><p>(1)赋值传递</p>
-<p>&emsp;&emsp;在调用函数时，将普通变量的值直接赋值给形参。因为形式参数和实际参数在内存中存储的地址不同，所以        在函数中无论怎样改变形式参数的值，对实际参数是没有任何影响的</p>
-<p>(2)地址传递</p>
-<p>&emsp;&emsp;在调用函数时，将普通变量的地址直接赋值给形参。可以通过修改形式参数，间接修改实参的值</p>
-<p>(3)全局变量</p>
-<p>&emsp;&emsp;因为全局变量的作用域在整个文件中有效，所有在当前文件的任何一个函数中都可以当作参数使用</p>
-<h3 id="6、数组传参"><a href="#6、数组传参" class="headerlink" title="6、数组传参"></a>6、数组传参</h3><p>&emsp;&emsp;数组传参需要传入指定数组的首地址，如果该数组是一个整型数组，那么在传入数组首地址的同时，还需要传入数组元素的个数</p>
-<hr>
-   <br>
-   <br>
-
-<h2 id="7、易错点"><a href="#7、易错点" class="headerlink" title="7、易错点"></a>7、易错点</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p[<span class="number">3</span>]=a; <span class="comment">//error</span></span><br><span class="line"><span class="keyword">int</span> *p=a;<span class="comment">//error</span></span><br><span class="line"><span class="keyword">sizeof</span>(a[<span class="number">0</span>]);<span class="comment">//error一定为8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> row=a[<span class="number">1</span>]-a[<span class="number">0</span>];   <span class="comment">//二维数组列数计算，用下一行的地址减去第一行的地址。即使二维数组只有一列也行</span></span><br><span class="line"><span class="keyword">int</span> line=<span class="keyword">sizeof</span>(a)/(row*<span class="keyword">sizeof</span>(a[<span class="number">0</span>][<span class="number">0</span>]));​   <span class="comment">//二维数组行数计算</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="指针数组与数组指针的区别"><a href="#指针数组与数组指针的区别" class="headerlink" title="指针数组与数组指针的区别"></a>指针数组与数组指针的区别</h3><p>例：<br>int a[2][3]={1,2,3,4,5,6};<br>int (*p)[3]=a;<br>int *p[2]={a[0],a[1]};</p>
-<table>
-<thead>
-<tr>
-<th align="center"></th>
-<th align="center">指针数组</th>
-<th align="center">数组指针</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">本质</td>
-<td align="center">元素是指针的数组</td>
-<td align="center">指向数组的行指针</td>
-</tr>
-<tr>
-<td align="center">形式</td>
-<td align="center">int *p[3]={a[0],a[1]};</td>
-<td align="center">int (*p)[3]=a;</td>
-</tr>
-<tr>
-<td align="center">p+1</td>
-<td align="center">=&amp;p[1]=&amp;a[1]=&amp;&amp;a[1][0]</td>
-<td align="center">=&amp;p[1]=&amp;a[1]=&amp;&amp;a[1][0]</td>
-</tr>
-<tr>
-<td align="center">sizeof(p)</td>
-<td align="center">整个数组的大小</td>
-<td align="center">一定为8(即指针的大小)</td>
-</tr>
-<tr>
-<td align="center">*(p+1)<strong>值一样但形式不一样</strong></td>
-<td align="center">p[1]=a[1]=&amp;a[1][0]</td>
-<td align="center">=a[1]=&amp;a[1][0]</td>
-</tr>
-<tr>
-<td align="center">sizeof(*p)</td>
-<td align="center">一定为8(即指针的大小)</td>
-<td align="center">一列的大小</td>
-</tr>
-<tr>
-<td align="center">二级指针x</td>
-<td align="center">有二级指针 int **x=p</td>
-<td align="center">没有二级指针，<font color="red">不能 int **x=p</font></td>
-</tr>
-<tr>
-<td align="center">**p</td>
-<td align="center">=**x=*p[0]=*a[0]=a[0][0]</td>
-<td align="center">=*a[0]=a[0][0]</td>
-</tr>
-</tbody></table>
-<p>​                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>指针</tag>
-        <tag>c语言</tag>
-        <tag>函数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day14-c函数</title>
-    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
-    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
-<a id="more"></a>
-
-<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
-<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
-<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
-<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
-<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
-<p>​    (3)全局变量传参</p>
-<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
-<p>​    (2)字符数组：只需要传入数组首地址</p>
-<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
-<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>​            </p>
-<p>​                </p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>c</tag>
-        <tag>c语言</tag>
-        <tag>函数</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>day15-c函数，结构体</title>
     <url>/2023/03/12/day15-c%E5%87%BD%E6%95%B0%EF%BC%8C%E7%BB%93%E6%9E%84%E4%BD%93/</url>
     <content><![CDATA[<h1 id="day15-c函数，结构体"><a href="#day15-c函数，结构体" class="headerlink" title=" day15-c函数，结构体"></a><font color="green"> day15-c函数，结构体</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><hr>
@@ -833,6 +674,57 @@
         <tag>c语言</tag>
         <tag>函数</tag>
         <tag>结构体</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day14-c函数</title>
+    <url>/2023/03/10/day14-c%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="day14-c函数"><a href="#day14-c函数" class="headerlink" title="day14-c函数"></a><font color="green">day14-c函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、函数定义"><a href="#1、函数定义" class="headerlink" title="1、函数定义"></a>1、函数定义</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 表达式;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">函数名：也代表函数的首地址</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+
+<h3 id="2、函数调用"><a href="#2、函数调用" class="headerlink" title="2、函数调用"></a>2、函数调用</h3><p>​    函数名(实际参数);</p>
+<p>​    实际参数必须和形参的个数、类型、顺序一致</p>
+<h3 id="3、函数声明"><a href="#3、函数声明" class="headerlink" title="3、函数声明"></a>3、函数声明</h3><p>​    &lt;数据类型&gt; 函数名(形式参数);</p>
+<h3 id="4、函数的传参"><a href="#4、函数的传参" class="headerlink" title="4、函数的传参"></a>4、函数的传参</h3><p>​    (1)赋值传递</p>
+<p>​    (2)地址传递：将数据的地址赋值给形参进行初始化</p>
+<p>​    (3)全局变量传参</p>
+<h3 id="5、数组传参"><a href="#5、数组传参" class="headerlink" title="5、数组传参"></a>5、数组传参</h3><p>​    (1)整型数组：要传入数组的首地址，还要传入数组的元素个数</p>
+<p>​    (2)字符数组：只需要传入数组首地址</p>
+<p>练习：定义一个函数，计算二维整型数组的所有元素的和</p>
+<h2 id="二、函数和指针"><a href="#二、函数和指针" class="headerlink" title="二、函数和指针"></a>二、函数和指针</h2><h3 id="1、指针函数"><a href="#1、指针函数" class="headerlink" title="1、指针函数"></a>1、指针函数</h3><p>​        如果一个函数的返回值是一个地址值，那么该函数就称为指针函数</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;数据类型&gt; *函数名(形式参数)</span><br><span class="line">&#123;</span><br><span class="line">    功能代码;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> 地址值; <span class="comment">//合法安全的地址</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="2、函数指针"><a href="#2、函数指针" class="headerlink" title="2、函数指针"></a>2、函数指针</h3><p>​    本质：指针，指向一个函数的首地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">定义：</span><br><span class="line">    &lt;数据类型&gt; (*函数指针名)(形式参数);</span><br><span class="line">	数据类型：跟指向的函数的返回值一致</span><br><span class="line">    形式参数：跟指向函数的形参一致</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span></span>;</span><br><span class="line"><span class="keyword">int</span> (*p)(<span class="keyword">int</span> x, <span class="keyword">int</span> y); <span class="comment">//定义了一个函数指针，指向的函数--&gt;返回值为int，参数是两个int类型数据</span></span><br><span class="line">p = add; <span class="comment">//将函数add的首地址赋值给函数指针变量p</span></span><br><span class="line"></span><br><span class="line">调用函数方法：</span><br><span class="line">    add(<span class="number">2</span>, <span class="number">3</span>); <span class="comment">//通过函数名+实参 调用函数</span></span><br><span class="line">	(*p)(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">//通过访问函数指针内容+实参 调用函数</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>​            </p>
+<p>​                </p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>c语言</tag>
+        <tag>函数</tag>
       </tags>
   </entry>
   <entry>
@@ -952,198 +844,111 @@
       </tags>
   </entry>
   <entry>
-    <title>day17-Linux基础</title>
-    <url>/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/</url>
-    <content><![CDATA[<h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
-<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
-<p>命令行模式：gg=G</p>
-<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
-<p>底行模式：set nonumber  不显示行号，set number 显示行号</p>
+    <title>day13-c指针，函数</title>
+    <url>/2023/03/08/day13-c%E6%8C%87%E9%92%88%EF%BC%8C%E5%87%BD%E6%95%B0/</url>
+    <content><![CDATA[<h1 id="day13-c指针，函数"><a href="#day13-c指针，函数" class="headerlink" title="day13-c指针，函数"></a><font color="green">day13-c指针，函数</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、指针数组"><a href="#1、指针数组" class="headerlink" title="1、指针数组"></a>1、指针数组</h3><p>​    本质：数组</p>
 <a id="more"></a>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt;*指针数组名[元素个数];</span><br><span class="line">	<span class="keyword">char</span> a[<span class="number">50</span>] = <span class="string">&quot;hello&quot;</span>;</span><br><span class="line">	<span class="keyword">char</span> b[<span class="number">50</span>] = <span class="string">&quot;asd&quot;</span>;</span><br><span class="line">	<span class="keyword">char</span> c[<span class="number">50</span>] = <span class="string">&quot;qwe&quot;</span>;</span><br><span class="line">	<span class="keyword">char</span> *p[<span class="number">3</span>] = &#123;a, b, c&#125;;</span><br><span class="line">	p[<span class="number">0</span>] == a;</span><br><span class="line">	p[<span class="number">2</span>] == b;</span><br><span class="line">	p[<span class="number">3</span>] <span class="comment">//error</span></span><br><span class="line">    *(p[<span class="number">0</span>]) == <span class="string">&#x27;h&#x27;</span></span><br><span class="line">        </span><br><span class="line">    <span class="keyword">char</span> **q = p = &amp;a;</span><br><span class="line">	q+<span class="number">1</span> = p+<span class="number">1</span> = &amp;b;</span><br><span class="line">	*q = *p = *(&amp;a) == a;</span><br><span class="line">	**q = *a = <span class="string">&#x27;h&#x27;</span>     </span><br><span class="line">        </span><br><span class="line">    p == &amp;p[<span class="number">0</span>];    </span><br><span class="line">        </span><br><span class="line">	<span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line">	<span class="keyword">int</span> *p[<span class="number">2</span>] = &#123;a[<span class="number">0</span>], a[<span class="number">1</span>]&#125;;</span><br><span class="line">	*(p[<span class="number">0</span>]) == **p == p[<span class="number">0</span>][<span class="number">0</span>] = a[<span class="number">0</span>][<span class="number">0</span>];</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<br>
-<br>
+<h3 id="2、二级指针"><a href="#2、二级指针" class="headerlink" title="2、二级指针"></a>2、二级指针</h3><p>​     将一级指针的地址称为二级指针</p>
+<p>​        int a = 2;</p>
+<p>​        int *p = &a;</p>
+<p>​        int **q = &p;  //q就是定义的一个二级指针，地址中存放一级指针的值</p>
+<h3 id="3、const指针"><a href="#3、const指针" class="headerlink" title="3、const指针"></a>3、const指针</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//right</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> * <span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//right</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *<span class="keyword">const</span> p = &amp;a;</span><br><span class="line">p = &amp;b; <span class="comment">//error</span></span><br><span class="line">*p = <span class="number">10</span>; <span class="comment">//error</span></span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="二、tar-归档和释放"><a href="#二、tar-归档和释放" class="headerlink" title="二、tar-归档和释放"></a>二、tar-归档和释放</h2><blockquote>
-<p>tar<br>-c   创建归档文件<br>-v   显示归档或释放过程<br>-x   释放归档文件<br>-f   用户指定归档文件的文件名，否则使用默认名称<br>-j   以bzip2方式压缩<br>-z   以gzip方式压缩<br>    tar -czvf  要压缩或归档之后的文件名 目标文件名<br>    tar -xvf   目标文件名</p>
-</blockquote>
-<br>
-<br>
+<h3 id="4、void指针"><a href="#4、void指针" class="headerlink" title="4、void指针"></a>4、void指针</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">char</span> b = <span class="string">&#x27;k&#x27;</span>;</span><br><span class="line"><span class="keyword">void</span> *p = &amp;a;</span><br><span class="line">p = &amp;b;</span><br><span class="line">p+<span class="number">1</span> <span class="comment">// error  void类型指针在使用时需要类型强转</span></span><br><span class="line">(<span class="keyword">int</span> *)p+<span class="number">1</span> <span class="comment">// 偏移4字节</span></span><br><span class="line">(<span class="keyword">char</span> *)p+<span class="number">1</span> <span class="comment">// 偏移1字节</span></span><br><span class="line"></span><br><span class="line">注意：<span class="keyword">void</span>类型的指针不能使用递增递减运算符</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="三、diff"><a href="#三、diff" class="headerlink" title="三、diff"></a>三、diff</h2><p>比较文件的不同</p>
-<br>
-<br>
-
-<hr>
-<h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
-
-<p> wc</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
+<h3 id="5、字符指针和字符串"><a href="#5、字符指针和字符串" class="headerlink" title="5、字符指针和字符串"></a>5、字符指针和字符串</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">char</span> a[<span class="number">6</span>] = <span class="string">&quot;haha&quot;</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">//将字符串hello的首地址赋值给指针变量p</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%c\n&quot;</span>, *p); <span class="comment">//right</span></span><br><span class="line">*p = <span class="string">&#x27;z&#x27;</span>; <span class="comment">//error hello是一个字符串常量，不能修改里面的字符</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">strcpy</span>(p, <span class="string">&quot;asd&quot;</span>); <span class="comment">//error</span></span><br><span class="line"><span class="built_in">strcpy</span>(a, <span class="string">&quot;asd&quot;</span>); <span class="comment">//right	</span></span><br></pre></td></tr></table></figure>
 
 
-<br>
-<br>
 
-<hr>
-<h2 id="五、工具："><a href="#五、工具：" class="headerlink" title="五、工具："></a>五、工具：</h2><p>vi编辑器</p>
-<p>gedit编辑器</p>
-<p>gcc编译器</p>
-<h2 id="1-下载工具："><a href="#1-下载工具：" class="headerlink" title="1.下载工具："></a>1.下载工具：</h2><blockquote>
-<p>deb（常用的） —-Debian<br>rpm（小红帽）—-Redhat</p>
-</blockquote>
-<br>
+<h2 id="二、函数"><a href="#二、函数" class="headerlink" title="二、函数"></a>二、函数</h2><p>概念：函数是一个实现特定功能的代码模块，函数有返回值，也可能没有</p>
+<p>​            返回值：函数的结果</p>
+<h3 id="1、函数的封装-定义"><a href="#1、函数的封装-定义" class="headerlink" title="1、函数的封装(定义)"></a>1、函数的封装(定义)</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">	&lt;数据类型&gt; 函数名(形式参数)</span><br><span class="line">	&#123;</span><br><span class="line">    	功能代码模块;  <span class="comment">//语句块</span></span><br><span class="line">    </span><br><span class="line">    	<span class="keyword">return</span> 表达式; </span><br><span class="line">	&#125;</span><br><span class="line">	数据类型：跟函数返回值的类型一致，如果一个函数没有返回值，则填<span class="keyword">void</span></span><br><span class="line">    函数名：遵循标识符标识符的命名规范，函数命名一般和功能相关。函数名也代表函数的起始地址</span><br><span class="line">    形式参数：形式参数决定了，函数调用时需要传入的实参的个数、类型、顺序，多个形式参数之间用逗号隔开。</span><br><span class="line">    如果函数不需要形式参数，可以省略不写，或者填<span class="keyword">void</span></span><br><span class="line">    <span class="keyword">return</span>：函数结束的标志，后面的表达式的值为函数的结果。如果没有返回值，可以选择不填或者只填<span class="keyword">return</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="（1）dpkg工具—-离线下载，没有依赖文件"><a href="#（1）dpkg工具—-离线下载，没有依赖文件" class="headerlink" title="（1）dpkg工具—-离线下载，没有依赖文件"></a>（1）dpkg工具—-离线下载，没有依赖文件</h3><p>sudo—-暂时赋予用户权限，密码初始都为1，但是不显示密码的输入，确保输出按回车就可以了</p>
-<p>dpkg都要加sudo</p>
+<h3 id="2、函数的调用"><a href="#2、函数的调用" class="headerlink" title="2、函数的调用"></a>2、函数的调用</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">一般形式：</span><br><span class="line">    函数名(实际参数);</span><br><span class="line">	实际参数必须跟形式参数的个数、类型、顺序一致。如果没有形式参数，那么实际参数可以省略</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、函数的声明"><a href="#3、函数的声明" class="headerlink" title="3、函数的声明"></a>3、函数的声明</h3><p>​    在使用函数之前需要对函数进行函数声明</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">声明的一般形式：</span><br><span class="line">   &lt;数据类型&gt; 函数名(形式参数); 	</span><br><span class="line"></span><br><span class="line">	函数的声明中变量名是可以省略的</span><br></pre></td></tr></table></figure>
+
 <blockquote>
-<p>sudo dpkg -i 安装包—下载<br>sudo dpkg -r 软件名—卸载</p>
+<p>注：在add.h中声明了#include &lt;stdio.h&gt;后，在其他要用到#include &lt;stdio.h&gt;的函数中可以直接声明#include”add.h”就行。</p>
 </blockquote>
-<br>
+<h3 id="4、头文件一般格式"><a href="#4、头文件一般格式" class="headerlink" title="4、头文件一般格式"></a>4、头文件一般格式</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> __ADD_H__</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> __ADD_H__</span></span><br><span class="line"></span><br><span class="line">头文件声明</span><br><span class="line"></span><br><span class="line">函数声明</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-<h3 id="（2）apt工具—在线下载"><a href="#（2）apt工具—在线下载" class="headerlink" title="（2）apt工具—在线下载"></a>（2）apt工具—在线下载</h3><p>下载：</p>
-<blockquote>
-<p>sudo apt-get install sl–跑火车<br>sudo apt-get install frozen-bubble–泡泡龙<br>sudo apt-get install cmatrix–代码雨<br>sudo  apt-get install fortune—-名人名言<br>sudo  apt-get install fortunes-zh—-名人名言（中文）<br>sudo  apt-get install lolcat—-有颜色显示<br>fortune | lolcat<br>卸载：sudo apt-get remove 软件名</p>
-</blockquote>
-<br>
-
-<h3 id="（3）创建共享文件夹："><a href="#（3）创建共享文件夹：" class="headerlink" title="（3）创建共享文件夹："></a>（3）创建共享文件夹：</h3><ol>
-<li>选择虚拟机左上菜单的虚拟机选项，点击设置</li>
-<li>点击选项，找到共享文件夹，选择总是启用</li>
-<li>点击添加，跟着下一步，选择主机（windows）的一个文件作为自己的共享文件夹</li>
-<li>点击完成，点击确定，最后在<code>/mnt/hgfs</code>查看有没有</li>
-</ol>
-<h3 id="（4）网络配置："><a href="#（4）网络配置：" class="headerlink" title="（4）网络配置："></a>（4）网络配置：</h3><p>ping–能不能网络通信</p>
-<p>ping +IP地址</p>
-<ol>
-<li>点击虚拟机菜单的编辑，选择虚拟网络编辑</li>
-<li>点击更改设置（如果没有，直接选择桥接模式），选择桥接模式</li>
-<li>在桥接模式下选择自己windos网络的描述名字，点击确定</li>
-<li>点击虚拟机，选择设置，找到网络适配器，选择自定义模式，选择自己的网络名称(一般为VMnet0)，点击确定</li>
-<li>进入linux系统，断开重连网络（重启网络）</li>
-</ol>
-<p>或者：在终端上输入：</p>
-<p>sudo service network-manager restart</p>
-<blockquote>
-<p>ifconfig—查看linux系统的IP地址<br>ipconfig—查看windows系统的IP地址</p>
-</blockquote>
-<br>
-<br>
-
+<h3 id="5、函数的传参"><a href="#5、函数的传参" class="headerlink" title="5、函数的传参"></a>5、函数的传参</h3><p>(1)赋值传递</p>
+<p>&emsp;&emsp;在调用函数时，将普通变量的值直接赋值给形参。因为形式参数和实际参数在内存中存储的地址不同，所以        在函数中无论怎样改变形式参数的值，对实际参数是没有任何影响的</p>
+<p>(2)地址传递</p>
+<p>&emsp;&emsp;在调用函数时，将普通变量的地址直接赋值给形参。可以通过修改形式参数，间接修改实参的值</p>
+<p>(3)全局变量</p>
+<p>&emsp;&emsp;因为全局变量的作用域在整个文件中有效，所有在当前文件的任何一个函数中都可以当作参数使用</p>
+<h3 id="6、数组传参"><a href="#6、数组传参" class="headerlink" title="6、数组传参"></a>6、数组传参</h3><p>&emsp;&emsp;数组传参需要传入指定数组的首地址，如果该数组是一个整型数组，那么在传入数组首地址的同时，还需要传入数组元素的个数</p>
 <hr>
-<h2 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h2><p>(1) 超级用户：</p>
-<blockquote>
-<p>su，开通了所有权限，我们一般不在这里工作，因为一旦删除，找不回来，也容易操作到内核上的东西<br>exit：退出超级用户</p>
-</blockquote>
-<p>(2)查看</p>
-<blockquote>
-<p>查看用户—vi /etc/passwd<br>查看用户组–vi /etc/group</p>
-</blockquote>
-<p>(3)添加用户：</p>
-<blockquote>
-<p>adduser 新添用户名<br>输入密码，不显示，确保输入按回车<br>su 用户名—-进入该用户</p>
-</blockquote>
-<p>(4)删除用户<br>deluser 用户名，但是我们一般进入passwd和group这两个文件去删除 <strong>（加sudo）</strong></p>
-<p>(5)修改密码：passwd</p>
-<br>
-<br>
+   <br>
+   <br>
 
-<hr>
-<h2 id="3-进程管理"><a href="#3-进程管理" class="headerlink" title="3.进程管理"></a>3.进程管理</h2><blockquote>
-<p>ps   查看前台的进程<br>ps -aux  查看所有进程<br>pstree—以树的形式展示进程<br>top—查看进程（从占用cpu最大开始展示），类似于任务管理器<br>kill -9 进程号   —-杀死进程</p>
-</blockquote>
-<br>
-<br>
+<h2 id="7、易错点"><a href="#7、易错点" class="headerlink" title="7、易错点"></a>7、易错点</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p[<span class="number">3</span>]=a; <span class="comment">//error</span></span><br><span class="line"><span class="keyword">int</span> *p=a;<span class="comment">//error</span></span><br><span class="line"><span class="keyword">sizeof</span>(a[<span class="number">0</span>]);<span class="comment">//error一定为8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> row=a[<span class="number">1</span>]-a[<span class="number">0</span>];   <span class="comment">//二维数组列数计算，用下一行的地址减去第一行的地址。即使二维数组只有一列也行</span></span><br><span class="line"><span class="keyword">int</span> line=<span class="keyword">sizeof</span>(a)/(row*<span class="keyword">sizeof</span>(a[<span class="number">0</span>][<span class="number">0</span>]));​   <span class="comment">//二维数组行数计算</span></span><br></pre></td></tr></table></figure>
 
-<hr>
-<h2 id="4-shell的特殊字符"><a href="#4-shell的特殊字符" class="headerlink" title="4.shell的特殊字符"></a>4.shell的特殊字符</h2><p>（1）|—管道</p>
-<p>指令1 | 指令2—-把指令1的输出作为指令2的输入</p>
-<p>fortune | lolcat</p>
-<p>（2）` &emsp; `—命令置换<br>指令1 ` &emsp; `    把命令置换里面的内容作为指令1的参数<br>    echo `ls`</p>
-<p>（3）echo–终端的输出</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">echo hello    world---会自动缩进空格字符串之间保留一个空格</span><br><span class="line">echo &#x27;hello    world&#x27;---原样输出</span><br><span class="line">echo <span class="string">&quot;hello    world&quot;</span>---原样输出</span><br></pre></td></tr></table></figure>
-<p>（4）输入输出重定向</p>
-<blockquote>
-<p>&gt;:<br>cat &gt;1.c（覆盖输入）<br> &gt;&gt;:<br>cat &gt;&gt;1.c（追加输入）</p>
-</blockquote>
-<p>注：输入都是读取的键盘输入</p>
-<p>（5）通配符：</p>
-<ul>
-<li>*—匹配所有字符串</li>
-<li>{起始..结束}–可以创建起始到结束的文件</li>
-<li>touch {1..10}.c—-创建1到10的.c文件</li>
-<li>rm 【13579】.c—-删除了1.c 3.c 5.c 7.c 9.c</li>
-<li>rm [1-5].c—-删除了1.c2.c3.c4.c5.c</li>
-<li>rm [^8].c—-删除除了8.c的文件,也只能通配一个</li>
-<li>？—匹配一个字符串<br>rm h？llo.c—删除hello.c hrllo.c</li>
-</ul>
-<p>（6）其他</p>
-<p>shutdown—关机</p>
-<p>shutdown -r now—重启</p>
-<p>vm上的快照–相当于备份</p>
-<br>
-<br>
-
-<hr>
-<h2 id="5-shell脚本："><a href="#5-shell脚本：" class="headerlink" title="5.shell脚本："></a>5.shell脚本：</h2><p>（1）本质：shell命令的有序集合</p>
-<p>解释型语言（python，shell脚本）</p>
-<p>不会检查错误，但是会显示出错误，出现错误会继续执行后面的语句</p>
-<p>需要一个解释器（shell的是bash）</p>
-<p>编译型语言（c语言，c++）</p>
-<p>编译会报错，一旦错误会停止进程</p>
-<p>（2）怎么去写一个shell脚本：</p>
-<ol>
-<li><p>创建一个.sh的文件（也可以没有后缀名）</p>
-</li>
-<li><p>写shell命令</p>
-</li>
-<li><p>执行:</p>
-</li>
-</ol>
-<p>&emsp;&emsp;&emsp;&emsp;a. 通过bash这个解释器来执行，直接bash+要执行的文件</p>
-<p>&emsp;&emsp;&emsp;&emsp;b. 通过chmod给shell文件添加执行权限，然后再执行</p>
-<p><strong>注：第一行一般写：<code>#!/bin/bash</code>，我们解释器的路径</strong></p>
-<p>练习：复制上一级目录的1.c 2.c到当前目录下，然后把hello world写入1.c</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> cd ../</span><br><span class="line">  <span class="number">4</span> touch <span class="number">1.</span>c <span class="number">2.</span>c</span><br><span class="line">  <span class="number">5</span> cp [<span class="number">12</span>].c day2</span><br><span class="line">  <span class="number">6</span> echo <span class="string">&quot;hello world&quot;</span> &gt;day2/<span class="number">1.</span>c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>（3）shell变量</p>
-<ul>
-<li>自定义变量</li>
-</ul>
-<p>没有数据类型，默认为字符串类型</p>
-<p>赋值不能隔开</p>
-<p>变量名=值</p>
-<p>没有分号，换行就相当于分号</p>
-<p>变量的调用需要加钱$</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>位置变量</li>
-</ul>
-<p>命令行参数的变量，即命令即后面的参数作为变量 从bash后面的那个开始为0</p>
-<p>从终端传递参数给shell脚本</p>
-<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">从$<span class="number">0</span>开始到$<span class="number">9</span>如果要打印<span class="number">9</span>以后的变量需要加&#123;&#125;，例如$&#123;<span class="number">12</span>&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>环境变量</li>
-</ul>
-<p>计算机定义好了的变量</p>
-<p>env可以查看所有环境变量</p>
-<p>调用需要加$</p>
-<p><strong>注：shell中0是真，1是假</strong></p>
-<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
-
+<h3 id="指针数组与数组指针的区别"><a href="#指针数组与数组指针的区别" class="headerlink" title="指针数组与数组指针的区别"></a>指针数组与数组指针的区别</h3><p>例：<br>int a[2][3]={1,2,3,4,5,6};<br>int (*p)[3]=a;<br>int *p[2]={a[0],a[1]};</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">指针数组</th>
+<th align="center">数组指针</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">本质</td>
+<td align="center">元素是指针的数组</td>
+<td align="center">指向数组的行指针</td>
+</tr>
+<tr>
+<td align="center">形式</td>
+<td align="center">int *p[3]={a[0],a[1]};</td>
+<td align="center">int (*p)[3]=a;</td>
+</tr>
+<tr>
+<td align="center">p+1</td>
+<td align="center">=&amp;p[1]=&amp;a[1]=&amp;&amp;a[1][0]</td>
+<td align="center">=&amp;p[1]=&amp;a[1]=&amp;&amp;a[1][0]</td>
+</tr>
+<tr>
+<td align="center">sizeof(p)</td>
+<td align="center">整个数组的大小</td>
+<td align="center">一定为8(即指针的大小)</td>
+</tr>
+<tr>
+<td align="center">*(p+1)<strong>值一样但形式不一样</strong></td>
+<td align="center">p[1]=a[1]=&amp;a[1][0]</td>
+<td align="center">=a[1]=&amp;a[1][0]</td>
+</tr>
+<tr>
+<td align="center">sizeof(*p)</td>
+<td align="center">一定为8(即指针的大小)</td>
+<td align="center">一列的大小</td>
+</tr>
+<tr>
+<td align="center">二级指针x</td>
+<td align="center">有二级指针 int **x=p</td>
+<td align="center">没有二级指针，<font color="red">不能 int **x=p</font></td>
+</tr>
+<tr>
+<td align="center">**p</td>
+<td align="center">=**x=*p[0]=*a[0]=a[0][0]</td>
+<td align="center">=*a[0]=a[0][0]</td>
+</tr>
+</tbody></table>
+<p>​                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               </p>
 ]]></content>
       <categories>
-        <category>Linux</category>
+        <category>c语言</category>
       </categories>
       <tags>
-        <tag>Linux</tag>
-        <tag>shell</tag>
-        <tag>Linux基础</tag>
+        <tag>c</tag>
+        <tag>指针</tag>
+        <tag>c语言</tag>
+        <tag>函数</tag>
       </tags>
   </entry>
   <entry>
@@ -1351,6 +1156,201 @@
         <tag>shell</tag>
         <tag>Linux基础</tag>
         <tag>shell脚本</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day17-Linux基础</title>
+    <url>/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/</url>
+    <content><![CDATA[<h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
+<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
+<p>命令行模式：gg=G</p>
+<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
+<p>底行模式：set nonumber  不显示行号，set number 显示行号</p>
+<a id="more"></a>
+
+<br>
+<br>
+
+<hr>
+<h2 id="二、tar-归档和释放"><a href="#二、tar-归档和释放" class="headerlink" title="二、tar-归档和释放"></a>二、tar-归档和释放</h2><blockquote>
+<p>tar<br>-c   创建归档文件<br>-v   显示归档或释放过程<br>-x   释放归档文件<br>-f   用户指定归档文件的文件名，否则使用默认名称<br>-j   以bzip2方式压缩<br>-z   以gzip方式压缩<br>    tar -czvf  要压缩或归档之后的文件名 目标文件名<br>    tar -xvf   目标文件名</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="三、diff"><a href="#三、diff" class="headerlink" title="三、diff"></a>三、diff</h2><p>比较文件的不同</p>
+<br>
+<br>
+
+<hr>
+<h2 id="四、grep–查询"><a href="#四、grep–查询" class="headerlink" title="四、grep–查询"></a>四、grep–查询</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">grep  查询的字符串 查询文件名---查询特定文件的内容</span><br><span class="line">grep  -r 查询的字符串 路径----查询一个路径下所有文件的内容</span><br></pre></td></tr></table></figure>
+
+<p> wc</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">wc 文件名： 行数 单词个数 单个字符个数 文件名</span><br><span class="line"> -l：只查看行数</span><br><span class="line"> -w：只查看单词个数（看空格)</span><br><span class="line"> -c：只查看单个字符个数</span><br></pre></td></tr></table></figure>
+
+
+<br>
+<br>
+
+<hr>
+<h2 id="五、工具："><a href="#五、工具：" class="headerlink" title="五、工具："></a>五、工具：</h2><p>vi编辑器</p>
+<p>gedit编辑器</p>
+<p>gcc编译器</p>
+<h2 id="1-下载工具："><a href="#1-下载工具：" class="headerlink" title="1.下载工具："></a>1.下载工具：</h2><blockquote>
+<p>deb（常用的） —-Debian<br>rpm（小红帽）—-Redhat</p>
+</blockquote>
+<br>
+
+<h3 id="（1）dpkg工具—-离线下载，没有依赖文件"><a href="#（1）dpkg工具—-离线下载，没有依赖文件" class="headerlink" title="（1）dpkg工具—-离线下载，没有依赖文件"></a>（1）dpkg工具—-离线下载，没有依赖文件</h3><p>sudo—-暂时赋予用户权限，密码初始都为1，但是不显示密码的输入，确保输出按回车就可以了</p>
+<p>dpkg都要加sudo</p>
+<blockquote>
+<p>sudo dpkg -i 安装包—下载<br>sudo dpkg -r 软件名—卸载</p>
+</blockquote>
+<br>
+
+
+<h3 id="（2）apt工具—在线下载"><a href="#（2）apt工具—在线下载" class="headerlink" title="（2）apt工具—在线下载"></a>（2）apt工具—在线下载</h3><p>下载：</p>
+<blockquote>
+<p>sudo apt-get install sl–跑火车<br>sudo apt-get install frozen-bubble–泡泡龙<br>sudo apt-get install cmatrix–代码雨<br>sudo  apt-get install fortune—-名人名言<br>sudo  apt-get install fortunes-zh—-名人名言（中文）<br>sudo  apt-get install lolcat—-有颜色显示<br>fortune | lolcat<br>卸载：sudo apt-get remove 软件名</p>
+</blockquote>
+<br>
+
+<h3 id="（3）创建共享文件夹："><a href="#（3）创建共享文件夹：" class="headerlink" title="（3）创建共享文件夹："></a>（3）创建共享文件夹：</h3><ol>
+<li>选择虚拟机左上菜单的虚拟机选项，点击设置</li>
+<li>点击选项，找到共享文件夹，选择总是启用</li>
+<li>点击添加，跟着下一步，选择主机（windows）的一个文件作为自己的共享文件夹</li>
+<li>点击完成，点击确定，最后在<code>/mnt/hgfs</code>查看有没有</li>
+</ol>
+<h3 id="（4）网络配置："><a href="#（4）网络配置：" class="headerlink" title="（4）网络配置："></a>（4）网络配置：</h3><p>ping–能不能网络通信</p>
+<p>ping +IP地址</p>
+<ol>
+<li>点击虚拟机菜单的编辑，选择虚拟网络编辑</li>
+<li>点击更改设置（如果没有，直接选择桥接模式），选择桥接模式</li>
+<li>在桥接模式下选择自己windos网络的描述名字，点击确定</li>
+<li>点击虚拟机，选择设置，找到网络适配器，选择自定义模式，选择自己的网络名称(一般为VMnet0)，点击确定</li>
+<li>进入linux系统，断开重连网络（重启网络）</li>
+</ol>
+<p>或者：在终端上输入：</p>
+<p>sudo service network-manager restart</p>
+<blockquote>
+<p>ifconfig—查看linux系统的IP地址<br>ipconfig—查看windows系统的IP地址</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="2-用户管理"><a href="#2-用户管理" class="headerlink" title="2.用户管理"></a>2.用户管理</h2><p>(1) 超级用户：</p>
+<blockquote>
+<p>su，开通了所有权限，我们一般不在这里工作，因为一旦删除，找不回来，也容易操作到内核上的东西<br>exit：退出超级用户</p>
+</blockquote>
+<p>(2)查看</p>
+<blockquote>
+<p>查看用户—vi /etc/passwd<br>查看用户组–vi /etc/group</p>
+</blockquote>
+<p>(3)添加用户：</p>
+<blockquote>
+<p>adduser 新添用户名<br>输入密码，不显示，确保输入按回车<br>su 用户名—-进入该用户</p>
+</blockquote>
+<p>(4)删除用户<br>deluser 用户名，但是我们一般进入passwd和group这两个文件去删除 <strong>（加sudo）</strong></p>
+<p>(5)修改密码：passwd</p>
+<br>
+<br>
+
+<hr>
+<h2 id="3-进程管理"><a href="#3-进程管理" class="headerlink" title="3.进程管理"></a>3.进程管理</h2><blockquote>
+<p>ps   查看前台的进程<br>ps -aux  查看所有进程<br>pstree—以树的形式展示进程<br>top—查看进程（从占用cpu最大开始展示），类似于任务管理器<br>kill -9 进程号   —-杀死进程</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="4-shell的特殊字符"><a href="#4-shell的特殊字符" class="headerlink" title="4.shell的特殊字符"></a>4.shell的特殊字符</h2><p>（1）|—管道</p>
+<p>指令1 | 指令2—-把指令1的输出作为指令2的输入</p>
+<p>fortune | lolcat</p>
+<p>（2）` &emsp; `—命令置换<br>指令1 ` &emsp; `    把命令置换里面的内容作为指令1的参数<br>    echo `ls`</p>
+<p>（3）echo–终端的输出</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">echo hello    world---会自动缩进空格字符串之间保留一个空格</span><br><span class="line">echo &#x27;hello    world&#x27;---原样输出</span><br><span class="line">echo <span class="string">&quot;hello    world&quot;</span>---原样输出</span><br></pre></td></tr></table></figure>
+<p>（4）输入输出重定向</p>
+<blockquote>
+<p>&gt;:<br>cat &gt;1.c（覆盖输入）<br> &gt;&gt;:<br>cat &gt;&gt;1.c（追加输入）</p>
+</blockquote>
+<p>注：输入都是读取的键盘输入</p>
+<p>（5）通配符：</p>
+<ul>
+<li>*—匹配所有字符串</li>
+<li>{起始..结束}–可以创建起始到结束的文件</li>
+<li>touch {1..10}.c—-创建1到10的.c文件</li>
+<li>rm 【13579】.c—-删除了1.c 3.c 5.c 7.c 9.c</li>
+<li>rm [1-5].c—-删除了1.c2.c3.c4.c5.c</li>
+<li>rm [^8].c—-删除除了8.c的文件,也只能通配一个</li>
+<li>？—匹配一个字符串<br>rm h？llo.c—删除hello.c hrllo.c</li>
+</ul>
+<p>（6）其他</p>
+<p>shutdown—关机</p>
+<p>shutdown -r now—重启</p>
+<p>vm上的快照–相当于备份</p>
+<br>
+<br>
+
+<hr>
+<h2 id="5-shell脚本："><a href="#5-shell脚本：" class="headerlink" title="5.shell脚本："></a>5.shell脚本：</h2><p>（1）本质：shell命令的有序集合</p>
+<p>解释型语言（python，shell脚本）</p>
+<p>不会检查错误，但是会显示出错误，出现错误会继续执行后面的语句</p>
+<p>需要一个解释器（shell的是bash）</p>
+<p>编译型语言（c语言，c++）</p>
+<p>编译会报错，一旦错误会停止进程</p>
+<p>（2）怎么去写一个shell脚本：</p>
+<ol>
+<li><p>创建一个.sh的文件（也可以没有后缀名）</p>
+</li>
+<li><p>写shell命令</p>
+</li>
+<li><p>执行:</p>
+</li>
+</ol>
+<p>&emsp;&emsp;&emsp;&emsp;a. 通过bash这个解释器来执行，直接bash+要执行的文件</p>
+<p>&emsp;&emsp;&emsp;&emsp;b. 通过chmod给shell文件添加执行权限，然后再执行</p>
+<p><strong>注：第一行一般写：<code>#!/bin/bash</code>，我们解释器的路径</strong></p>
+<p>练习：复制上一级目录的1.c 2.c到当前目录下，然后把hello world写入1.c</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> cd ../</span><br><span class="line">  <span class="number">4</span> touch <span class="number">1.</span>c <span class="number">2.</span>c</span><br><span class="line">  <span class="number">5</span> cp [<span class="number">12</span>].c day2</span><br><span class="line">  <span class="number">6</span> echo <span class="string">&quot;hello world&quot;</span> &gt;day2/<span class="number">1.</span>c</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>（3）shell变量</p>
+<ul>
+<li>自定义变量</li>
+</ul>
+<p>没有数据类型，默认为字符串类型</p>
+<p>赋值不能隔开</p>
+<p>变量名=值</p>
+<p>没有分号，换行就相当于分号</p>
+<p>变量的调用需要加钱$</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span> #!/bin/bash</span><br><span class="line">  <span class="number">2</span> </span><br><span class="line">  <span class="number">3</span> a=<span class="number">12</span></span><br><span class="line">  <span class="number">4</span> echo $a</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>位置变量</li>
+</ul>
+<p>命令行参数的变量，即命令即后面的参数作为变量 从bash后面的那个开始为0</p>
+<p>从终端传递参数给shell脚本</p>
+<figure class="highlight c#"><table><tr><td class="code"><pre><span class="line">从$<span class="number">0</span>开始到$<span class="number">9</span>如果要打印<span class="number">9</span>以后的变量需要加&#123;&#125;，例如$&#123;<span class="number">12</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>环境变量</li>
+</ul>
+<p>计算机定义好了的变量</p>
+<p>env可以查看所有环境变量</p>
+<p>调用需要加$</p>
+<p><strong>注：shell中0是真，1是假</strong></p>
+<h4 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h4><p>计算机给一些特殊变量赋予特殊意义</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">$*--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$@--打印的是命令行参数的所有变量，不包括$<span class="number">0</span></span><br><span class="line">$#--打印的是命令行参数的个数，不包括$<span class="number">0</span></span><br><span class="line">$?--打印上一次的返回状态（<span class="number">0</span>代表真，<span class="number">1</span>代表假）</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>shell</tag>
+        <tag>Linux基础</tag>
       </tags>
   </entry>
   <entry>
@@ -1961,19 +1961,6 @@
       </tags>
   </entry>
   <entry>
-    <title>day26-图</title>
-    <url>/2023/04/01/day26-%E5%9B%BE/</url>
-    <content><![CDATA[<h1 id="day26-图"><a href="#day26-图" class="headerlink" title="day26-图"></a><font color="green">day26-图</font></h1>]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-        <tag>算法</tag>
-        <tag>图</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>day27.5-静态库，动态库</title>
     <url>/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/</url>
     <content><![CDATA[<h1 id="day27-5-静态库，动态库"><a href="#day27-5-静态库，动态库" class="headerlink" title="day27.5-静态库，动态库"></a><font color="green">day27.5-静态库，动态库</font></h1><hr>
@@ -2056,6 +2043,19 @@
       </tags>
   </entry>
   <entry>
+    <title>day26-图</title>
+    <url>/2023/04/01/day26-%E5%9B%BE/</url>
+    <content><![CDATA[<h1 id="day26-图"><a href="#day26-图" class="headerlink" title="day26-图"></a><font color="green">day26-图</font></h1>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>算法</tag>
+        <tag>图</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>嵌入式学习-Linux基础</title>
     <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
@@ -2130,115 +2130,6 @@
       <tags>
         <tag>Linux</tag>
         <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法分析</title>
-    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
-<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
-<ol>
-<li>确定输入模型，定义问题规模（n）</li>
-<li>识别循环与递归</li>
-<li>根据内循环或每部递归的操作确定成本模型</li>
-<li>对于给定的输入，判断这些操作的执行频率</li>
-</ol>
-<hr>
-<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
-<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
-</blockquote>
-<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
-<blockquote>
-<p>渐进分析：</p>
-<ol>
-<li>忽略依赖于机器性能的常量</li>
-<li>只关注运行时间的增长</li>
-</ol>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
-<blockquote>
-<p>例：$2n^2 = O(n^3)$</p>
-</blockquote>
-<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
-<blockquote>
-<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
-</blockquote>
-<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
-<blockquote>
-<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
-</blockquote>
-<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
-<p>理解：左右两边增长速率一样</p>
-<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
-<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
-<ul>
-<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
-<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
-</ul>
-<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
-<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
-<ol>
-<li>证明 n=1 时成立</li>
-<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
-<li>则命题成立</li>
-</ol>
-<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
-<li>先猜答案得到最高阶</li>
-<li>验证这个递归式是否按照数学归纳法满足条件</li>
-</ol>
-<blockquote>
-<p>例：T(n)=4T(n/2)+n</p>
-<ol>
-<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
-<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
-<p>$O(n^2)$=$c(n)^2$</p>
-</blockquote>
-</li>
-<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
-</ol>
-</blockquote>
-<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
-<blockquote>
-<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
-</blockquote>
-<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
-<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
-<li>根据每层的和的规律，求出总子叶节点<ul>
-<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
-<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
-</blockquote>
-</li>
-<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
-</ul>
-</li>
-<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
-</ol>
-<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
-<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
-<p>1.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
-<p>2.</p>
-<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
-<p>3.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>算法</tag>
-        <tag>概念</tag>
-        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
@@ -2423,141 +2314,6 @@
       <tags>
         <tag>LINUX</tag>
         <tag>IO</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day28-进程线程</title>
-    <url>/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/</url>
-    <content><![CDATA[<h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-进程和线程"><a href="#1-进程和线程" class="headerlink" title="1. 进程和线程"></a>1. 进程和线程</h3><ul>
-<li>程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”</li>
-<li>进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</li>
-<li>页表：<br>&emsp;&emsp;在 Linux 中，每个进程都有自己的页表，用于映射虚拟地址到物理地址。页表是由一系列页表项（PTE）组成的数据结构，每个页表项对应着虚拟地址空间中的一个页面（通常是4KB），并描述了该页面的物理地址、访问权限等信息。<br>&emsp;&emsp;Linux 中的页表采用了多级页表的结构，即每个页表项可以指向下一级的页表，最终指向物理页面。<br>&emsp;&emsp;Linux 中的页表是按需分配的，即当进程需要访问某个虚拟地址时，如果该地址对应的页表项不存在，则会触发缺页异常，内核会根据需要分配新的物理页面，并更新页表项，使得虚拟地址能够正确映射到物理地址。</li>
-<li>线程：线程是进程中的执行单元，它与进程共享同一个地址空间，因此线程之间可以直接共享数据。线程相对于进程来说更加轻量级。<a id="more"></a>
-<h3 id="2-守护进程"><a href="#2-守护进程" class="headerlink" title="2. 守护进程"></a>2. 守护进程</h3></li>
-</ul>
-<p>&emsp;&emsp;守护进程：在某些用户空间中，即使用户退出登录，仍然会有一些后台进程在运行，不会被用户或终端影响，这些进程被称为<code>守护进程</code>。<br>&emsp;&emsp;Linux 中有一种特殊的守护进程被称为<code>计划守护进程</code>，计划守护进程可以每分钟醒来一次检查是否有工作要做，做完会继续回到睡眠状态等待下一次唤醒。</p>
-<h3 id="3-父进程与子进程"><a href="#3-父进程与子进程" class="headerlink" title="3. 父进程与子进程"></a>3. 父进程与子进程</h3><p>&emsp;&emsp;在 Linux 系统中，进程通过非常简单的方式来创建，<code>fork</code>系统调用会创建一个源进程的拷贝(副本)。调用<code>fork</code>函数的进程被称为<code>父进程</code>，使用 fork 函数创建出来的进程被称为 <code>子进程</code>。父进程和子进程都有自己的内存映像。<strong>如果在子进程创建出来后</strong>，父进程修改了一些变量等，那么子进程是看不到这些变化的，也就是<code>fork</code>后，父进程和子进程相互独立。</p>
-<p>&emsp;&emsp;虽然父进程和子进程保持相互独立，但是它们却能够共享相同的文件，如果在 fork 之前，父进程已经打开了某个文件，那么 fork 后，父进程和子进程仍然共享这个打开的文件。对共享文件的修改会对父进程和子进程同时可见。</p>
-<p>&emsp;&emsp;那么该如何区分父进程和子进程呢？子进程只是父进程的拷贝，所以它们几乎所有的情况都一样，包括内存映像、变量、寄存器等。区分的关键在于fork函数调用后的返回值，如果fork后返回一个非零值，这个非零值即是子进程的<code>进程标识符</code>(pid)，而会给子进程返回一个零值,<font color="blue">即在程序中,<code>pid==0</code>的代码为子进程的代码，而<code>pid &gt; 0</code>的代码为父进程的代码</font>。父进程在 fork 后会得到子进程的 PID，这个 PID 即能代表这个子进程的唯一标识符也就是 PID。如果子进程想要知道自己的 PID，可以调用<code>getpid</code>方法。父进程可以生成多个子进程，子进程也能生成自己的子进程。</p>
-<h3 id="4-Linux进程间的通信"><a href="#4-Linux进程间的通信" class="headerlink" title="4. Linux进程间的通信"></a>4. Linux进程间的通信</h3><p>Linux进程间的通信（IPC）大致可以分为6种</p>
-<ol>
-<li>信号 signal</li>
-<li>无名管道 pipe</li>
-<li>共享内存 shared memory</li>
-<li>先入先出队列（也叫有名管道） fifo</li>
-<li>消息队列 message queue</li>
-<li>套接字 socket</li>
-</ol>
-<blockquote>
-<p>有两个东西可以标识一个IPC结构：标识符(ID)和键(key)。</p>
-<p>ID是IPC结构的内部名。内部即在进程内部使用，这样的标识方法是不能支持进程间通信的。</p>
-<p>key就是IPC结构的外部名。当多个进程，针对同一个key调用get函数(msgget等)，这些进程得到的ID其实是标识了同一个IPC结构。多个进程间就可以通过这个IPC结构通信。</p>
-</blockquote>
-<br>
-
-<h4 id="4-1-信号-signal"><a href="#4-1-信号-signal" class="headerlink" title="4.1 信号 signal"></a>4.1 信号 signal</h4><h5 id="4-1-1-信号的基本概念"><a href="#4-1-1-信号的基本概念" class="headerlink" title="4.1.1 信号的基本概念"></a>4.1.1 信号的基本概念</h5><p>&emsp;&emsp;信号是在软件层次对中断机制的一种模拟，是一种异步通信方式。信号可以直接进行用户空间进程和内核之间的交互，内核也能利用它来通知用户空间进程发生了哪些系统事件。</p>
-<h5 id="4-1-2-信号的处理流程"><a href="#4-1-2-信号的处理流程" class="headerlink" title="4.1.2 信号的处理流程"></a>4.1.2 信号的处理流程</h5><p>&emsp;&emsp;操作系统给进程发送信号，本质上是给进程的task_struct（是 Linux 内核中的一个通过双向链表来组织的结构体，它代表了一个进程或线程）中写入数据，修改相应的task_struct字段(里面有进程 ID、进程状态、进程优先级、进程的父进程、进程的子进程等等)，然后进程在合适的时间(内核态发回用户态时)去处理所接受的信号。<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg" alt="信号处理"></p>
-<p>例子说明：</p>
-<blockquote>
-<ol>
-<li>假设用户启动一个交互式的前台进程，然后输入ctrl+c结束它，系统通过键盘产生一个硬件中断。</li>
-<li>cpu暂停用户空间的代码，cpu从用户态切换至内核态处理中断</li>
-<li>系统驱动程序将ctlr+c解释为一个SIGINT信号，并将其记在该进程的task_struct中的信号位上；</li>
-<li>当某时刻进程从内核态返回用户态继续执行之前，检查task_struct中的信号域，SIGINT信号的默认处理动作为终止进程，所以直接终止进程而不再返回到它的用户空间代码。</li>
-</ol>
-</blockquote>
-<h5 id="4-1-3-常用的信号-前面是它的编号"><a href="#4-1-3-常用的信号-前面是它的编号" class="headerlink" title="4.1.3 常用的信号(前面是它的编号)"></a>4.1.3 常用的信号(前面是它的编号)</h5><p>Linux 中可以通过<code>kill -l</code>查看信号表</p>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">1.  SIGHUP：   本信号在用户终端结束时发出，通常是在终端的控制进程结束时，通知同一会话期内的各个作业，这时他们与控制终端不在关联。比如，登录Linux时，系统会自动分配给登录用户一个控制终端，在这个终端运行的所有程序，包括前台和后台进程组，一般都属于同一个会话。当用户退出时，所有进程组都将收到该信号，这个信号的默认操作是终止进程。此外对于与终端脱离关系的守护进程，这个信号用于通知它重新读取配置文件。</span><br><span class="line">2.  SIGINT：   程序终止信号。当用户按下CRTL+C时通知前台进程组终止进程。</span><br><span class="line">3.  SIGQUIT：  Ctrl+<span class="tag">\<span class="name">控</span></span>制，进程收到该信号退出时会产生core文件，类似于程序错误信号。</span><br><span class="line">4.  SIGILL：   执行了非法指令。通常是因为可执行文件本身出现错误，或者数据段、堆栈溢出时也有可能产生这个信号。</span><br><span class="line">5.  SIGTRAP：  由断点指令或其他陷进指令产生，由调试器使用。</span><br><span class="line">6.  SIGABRT：  调用abort函数产生，将会使程序非正常结束。</span><br><span class="line">7.  SIGBUS：   非法地址。包括内存地址对齐出错。比如访问一个4个字长的整数，但其地址不是4的倍数。它与SIGSEGV的区别在于后者是由于对合法地址的非法访问触发。</span><br><span class="line">8.  SIGFPE：   发生致命的算术运算错误。</span><br><span class="line">9.  SIGKILL：  用来立即结束程序的运行。不能被捕捉、阻塞或忽略，只能执行默认动作。</span><br><span class="line">10. SIGUSR1：  留给用户使用，用户可自定义。</span><br><span class="line">11. SIGSEGV：  访问未分配给用户的内存区。或操作没有权限的区域。</span><br><span class="line">12. SIGUSR2：  留给用户使用，用户可自定义。</span><br><span class="line">13. SIGPIPE：  管道破裂信号。当对一个读进程已经运行结束的管道执行写操作时产生。</span><br><span class="line">14. SIGALRM：  时钟定时信号。由alarm函数设定的时间终止时产生。</span><br><span class="line">15. SIGTERM：  程序结束信号。shell使用kill产生该信号，当结束不了该进程，尝试使用SIGKILL信号。</span><br><span class="line">16. SIGSTKFLT：堆栈错误。</span><br><span class="line">17. SIGCHLD：  子进程结束，父进程会收到。如果子进程结束时父进程不等待或不处理该信号，子进程会变成僵尸进程。</span><br><span class="line">18. SIGCONT：  让一个停止的进程继续执行。</span><br><span class="line">19. SIGSTOP：  停止进程执行。不能被捕捉、阻塞或忽略，只能执行默认动作。</span><br><span class="line">20. SIGTSTP：  停止终端交互运行，可以被忽略。按下Ctrl+z发出这个信号。</span><br><span class="line">21. SIGTTIN：  当后台进程需要从终端接收数据时，所有进程会收到该信号，暂停执行。</span><br><span class="line">22. SIGTTOU：  与SIGTTIN类似，在后台的进程向终端输出数据时产生。</span><br><span class="line">23. SIGURG：   套接字上出现紧急情况时产生。向当前正在运行的进程发出些信号，报告有紧急数据到达，如网络带外数据到达。</span><br><span class="line">24. SIGXCPU：  超过CPU时间资源限制时产生的信号。</span><br><span class="line">25. SIGXFSZ：  当进程企图扩大文件以至于超过文件大小资源限制时产生。</span><br><span class="line">26. SIGVTALRM：虚拟使用信号。计算的是进程占用CPU调用的时间。</span><br><span class="line">27. SIGPROF：  包括进程使用CPU的时间以及系统调用的时间。</span><br><span class="line">28. SIGWINCH： 窗口大小改变时。</span><br><span class="line">29. SIGIO：    文件描述符准备就绪，表示可以进行输入输出操作。</span><br><span class="line">30. SIGPWR：   电源失效信号，即关机。</span><br><span class="line">31. SIGSYS：   非法的系统调用。</span><br></pre></td></tr></table></figure>
-
-<h5 id="4-1-4-信号的处理"><a href="#4-1-4-信号的处理" class="headerlink" title="4.1.4 信号的处理"></a>4.1.4 信号的处理</h5><p>信号的3种状态：</p>
-<blockquote>
-<p>未决：进程接收到信号，但是还没有处理它。这个信号会被添加到进程的信号掩码中，等待进程处理。<br>阻塞：进程可以选择阻塞某些信号，这样当这些信号发送时，进程不会接收到它们。阻塞信号可以通过 sigprocmask() 函数设置。<br>处理：当进程接收到一个信号时，它需要处理这个信号。处理信号的方式可以是执行一个信号处理函数，或者使用默认的信号处理方式。可以使用 signal() 函数或 sigaction() 函数来设置信号处理函数。</p>
-</blockquote>
-<p>信号的5种默认处理动作</p>
-<blockquote>
-<p>Term    终止进程<br>Ign    当前进程忽略此信号<br>Core    终止进程，并生成一个Core文件<br>Stop    暂停当前进程<br>Cont    继续执行当前被暂停的进程</p>
-</blockquote>
-<h5 id="4-1-5-信号集"><a href="#4-1-5-信号集" class="headerlink" title="4.1.5 信号集"></a>4.1.5 信号集</h5><p>信号集：顾名思义，就是信号的集合。在linux中，它的类型是<code>sigset_t</code>,大小是64bits。（Linux中一个只有64个信号）。在头文件<code>signal.h</code>提供了五个处理信号集的函数。</p>
-<br>
-
-<h4 id="4-2-无名管道-pipe"><a href="#4-2-无名管道-pipe" class="headerlink" title="4.2 无名管道 pipe"></a>4.2 无名管道 pipe</h4><h5 id="4-2-1-pipe的基本概念"><a href="#4-2-1-pipe的基本概念" class="headerlink" title="4.2.1 pipe的基本概念"></a>4.2.1 pipe的基本概念</h5><p>&emsp;&emsp;管道是一种最基本的IPC机制，作用于有血缘关系的进程之间，完成数据传递。调用pipe系统函数即可创建一个管道。有如下特质：</p>
-<ol>
-<li><p>其本质是一个伪文件(实为内核缓冲区)</p>
-</li>
-<li><p>由两个文件描述符引用，一个表示读端，一个表示写端。</p>
-</li>
-<li><p>规定数据从管道的写端流入管道，从读端流出。</p>
-</li>
-</ol>
-<p>管道的原理: 管道实为内核使用环形队列机制，借助内核缓冲区(4k)实现。</p>
-<p>管道的局限性：<br>① 数据自己读不能自己写。<br>② 数据一旦被读走，便不在管道中存在，不可反复读取。<br>③ 由于管道采用半双工通信方式。因此，数据只能在一个方向上流动。<br>④ 只能在有公共祖先的进程间使用管道。<br>常见的通信方式有，单工通信、半双工通信、全双工通信。</p>
-<h5 id="4-2-2-pipe的创建"><a href="#4-2-2-pipe的创建" class="headerlink" title="4.2.2 pipe的创建"></a>4.2.2 pipe的创建</h5><p>&emsp;&emsp;管道两端可分别用描述符fd[0] 以及fd[1]来描述。需要注意的是，管道两端的任务是固定的，一端只能用于读，由描述符fd[0]表示，称其为管道读端，另一端只能用于写，由描述符fd[1]来表示，称其为管道写端。如果试图从管道写端读数据，或者向管道读端写数据都将导致出错。</p>
-<p>&emsp;&emsp;管道是一种文件，因此对文件操作的I/O函数都可以用于管道，如read，write等。</p>
-<h5 id="4-2-3-pipe的读写"><a href="#4-2-3-pipe的读写" class="headerlink" title="4.2.3 pipe的读写"></a>4.2.3 pipe的读写</h5><p>&emsp;&emsp;如果某个进程要读取管道中的数据，那么该进程应当关闭fd[1]，向管道写数据的进程应当关闭fd[0]。因为管道只能用于具有亲缘关系的进程间的通信，在进行通信时，他们共享文件描述符。在使用前，应及时地关闭不需要的管道的另一端，以避免意外错误的发生。</p>
-<p>&emsp;&emsp;进程在管道的读端读数据时，如果管道的写端不存在，则读进程认为已经读到了数据的末尾，读函数返回读出的字节数为0；管道的写端如果存在，且请求读取的字节数大于PIPE_BUF，则返回管道中现有的所有数据；如果请求的字节数不大于PIPE_BUF，则返回管道中现有的所有数据（此时，管道中数据量小于请求的数据量），或者返回请求的字节数（此时，管道中数据量大于等于请求的数据量）。</p>
-<h4 id="4-3-共享内存-shared-memory"><a href="#4-3-共享内存-shared-memory" class="headerlink" title="4.3 共享内存 shared memory"></a>4.3 共享内存 shared memory</h4><h5 id="4-3-1-共享内存概念"><a href="#4-3-1-共享内存概念" class="headerlink" title="4.3.1 共享内存概念"></a>4.3.1 共享内存概念</h5><p>&emsp;&emsp;实现进程间通信最简单也是最直接的方法就是共享内存——为参与通信的多个进程在内存中开辟一个共享区。由于进程可以直接对共享内存进行读写操作，因此这种通信方式效率特别高，但其弱点是，它没有互斥机制，需要信号量之类的手段来配合。</p>
-<h5 id="4-3-2-共享内存方法"><a href="#4-3-2-共享内存方法" class="headerlink" title="4.3.2 共享内存方法"></a>4.3.2 共享内存方法</h5><blockquote>
-<p>为了实现共享内存，就需要做两件事：</p>
-<ol>
-<li>在内存划出一块区域来作为共享区；</li>
-<li>把这个区域映射到参与通信的各个进程空间。</li>
-</ol>
-</blockquote>
-<p>&emsp;&emsp;在Linux中，共享内存有两种方式：System V IPC和POSIX IPC。</p>
-<p>&emsp;&emsp;System V IPC：System V IPC是一种传统的IPC机制，它提供了三种IPC方式：消息队列、共享内存和信号量。其中，共享内存是一种最快的IPC方式，因为它直接将内存映射到进程的地址空间中，避免了数据的拷贝和内核态和用户态之间的切换。共享内存的使用需要调用一系列的函数，包括shmget()、shmat()、shmdt()和shmctl()等。</p>
-<p>&emsp;&emsp;POSIX IPC：POSIX IPC是一种比System V IPC更加灵活和可移植的IPC机制，它提供了两种IPC方式：消息队列和共享内存。与System V IPC不同的是，POSIX IPC使用命名对象来标识IPC资源，这些对象存储在文件系统中，可以在进程间共享。POSIX共享内存的使用需要调用一系列的函数，包括shm_open()、shm_unlink()、mmap()和munmap()等。</p>
-<h5 id="4-3-3-文件映射"><a href="#4-3-3-文件映射" class="headerlink" title="4.3.3 文件映射"></a>4.3.3 文件映射</h5><h6 id="4-3-3-1-mmap的基本概念"><a href="#4-3-3-1-mmap的基本概念" class="headerlink" title="4.3.3.1 mmap的基本概念"></a>4.3.3.1 mmap的基本概念</h6><p>&emsp;&emsp;通常在内存划出一个区域的方法是，在内存中打开一个文件，若通过系统调用<code>mmap()</code>把这个文件所占用的内存空间映射到参与通信的各个进程地址空间，则这些进程就都可以看到这个共享区域，进而实现进程间的通信。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面（脏页面是指已经被修改但还没有被写回到磁盘的页面）到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。<br>&emsp;&emsp;总而言之，常规文件操作需要从磁盘到页缓存再到用户主存的两次数据拷贝。而mmap操控文件，只需要从磁盘到用户主存的一次数据拷贝过程。而且这个映射的过程是动态的，即请求多少映射多少。所以mmap适用与大型文件的操作。<br>&emsp;&emsp;mmap()原型如下：</p>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);</span><br><span class="line"></span><br><span class="line">功能：将一个文件或者其它对象映射到进程的地址空间中，从而让进程可以像访问内存一样访问这些对象。</span><br><span class="line">返回值：返回映射区域的起始地址。如果调用失败，则返回MAP_FAILED宏。</span><br><span class="line">addr：指定映射的起始地址，通常设置为0，表示让系统自动选择一个合适的地址。</span><br><span class="line">length：指定映射区域的长度，单位是字节。</span><br><span class="line">prot：指定映射区域的保护方式，可以是以下值的按位或：</span><br><span class="line">    PROT_EXEC：可执行</span><br><span class="line">    PROT_READ：可读</span><br><span class="line">    PROT_WRITE：可写</span><br><span class="line">    PROT_NONE：不可访问</span><br><span class="line">flags：指定映射区域的标志，可以是以下值的按位或：</span><br><span class="line">    MAP_SHARED：共享映射</span><br><span class="line">    MAP_PRIVATE：私有映射</span><br><span class="line">    MAP_ANONYMOUS：匿名映射</span><br><span class="line">fd：指定要映射的文件描述符，如果是匿名映射，则设置为-1。</span><br><span class="line">offset：指定映射区域在文件中的偏移量，通常设置为0。。</span><br></pre></td></tr></table></figure>
-<h6 id="4-3-3-2-mmap的文件映射过程"><a href="#4-3-3-2-mmap的文件映射过程" class="headerlink" title="4.3.3.2 mmap的文件映射过程"></a>4.3.3.2 mmap的文件映射过程</h6><p><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/mmap.jpg" alt="mmap"><br>mmap本身其实是一个很简单的操作，在进程页表中添加一个页表项，该页表项是物理内存的地址。调用mmap的时候，内核会在该进程的地址空间的映射区域查找一块满足需求的空间用于映射该文件，然后生成该虚拟地址的页表项，改页表项此时的有效位（标志是否已经在物理内存中）为0，页表项的内容是文件的磁盘地址，此时mmap的任务已经完成。第一次访问该块内存的时候，因为页表项的有效位还是0，就会发生缺页中断，然后CPU会使用该页表项的内容也就是磁盘的文件地址，讲该地址指向的内容加载到物理内存，并需改页表项的内容为该物理地址，有效位置为1。 </p>
-<p>简而言之，就是在进程对应的虚存段添加一个段，也就是创建一个新的vm_area_struct结构，并将其与文件的物理磁盘地址相连。在创建虚拟区间并完成地址映射，但是并没有将任何文件数据的拷贝至主存。真正的文件读取是当进程发起读或写操作时。进程的读或写操作访问虚拟地址空间这一段映射地址，通过查询页表，引发缺页异常（缺页指的是当进程需要访问的页面不在物理内存中时，就会发生缺页中断，此时操作系统会将该页面从磁盘中读取到内存中，以满足进程的需求。），内核进行请页。</p>
-<p><font color="blue">再简单点，就是在进程的虚拟地址的合适位置添加一个vm_area_struct结构体。而进程的页表用于映射虚拟地址到物理地址，所以会给添加的结构体添加一个页表项即物理内存的地址。通过这个进程中映射的地址就能访问到共享的物理地址了</font><br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/mmap2.jpg" alt="mmap"></p>
-<h5 id="4-3-4-共享内存的映射"><a href="#4-3-4-共享内存的映射" class="headerlink" title="4.3.4 共享内存的映射"></a>4.3.4 共享内存的映射</h5><p>&emsp;&emsp;共享内存通信方式与上面的mmap()方式极为相似，但因为建立一个文件的目的仅是为了通信，于是这种文件没有永久保存的意义，因此IPC并没有使用正规的文件系统，而是在系统初始化时在磁盘交换区建立了一个专门用来实现共享内存的特殊临时文件系统shm，当系统断电后，其中的文件会全部自行销毁。（不是人为的，mapp创造的内存空间随着进程的消亡而消亡，而共享内存的是在断电后才消失）</p>
-<h5 id="4-3-5-共享内存的结构"><a href="#4-3-5-共享内存的结构" class="headerlink" title="4.3.5 共享内存的结构"></a>4.3.5 共享内存的结构</h5><p>在 Linux 中，kern_ipc_perm 结构体用于跟踪进程间通信（IPC）对象的权限。IPC 对象包括消息队列、信号量和共享内存段等。<br>(这里只展示了有关共享内存的结构体，IPC还有很多其它的结构体，shmid_kernel，ipc_id_ary，ipc_ids是共享内存中独有的，而kern_ipc_perm也能用于其它IPC中)</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span> &#123;</span></span><br><span class="line">    <span class="keyword">key_t</span> key;          <span class="comment">/* 键值 */</span></span><br><span class="line">    <span class="keyword">uid_t</span> uid;          <span class="comment">/* 拥有者的用户 ID */</span></span><br><span class="line">    <span class="keyword">gid_t</span> gid;          <span class="comment">/* 拥有者的组 ID */</span></span><br><span class="line">    <span class="keyword">uid_t</span> cuid;         <span class="comment">/* 创建者的用户 ID */</span></span><br><span class="line">    <span class="keyword">gid_t</span> cgid;         <span class="comment">/* 创建者的组 ID */</span></span><br><span class="line">    <span class="keyword">mode_t</span> mode;        <span class="comment">/* 访问权限 */</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">short</span> seq; <span class="comment">/* 序列号 */</span></span><br><span class="line">    <span class="keyword">key_serial_t</span> sem_perm_seq;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>共享内存段的内核数据结构shmid_kernel如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">shmid_kernel</span> /* <span class="title">private</span> <span class="title">to</span> <span class="title">the</span> <span class="title">kernel</span> */</span></span><br><span class="line"><span class="class">&#123;</span>	</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span>	<span class="title">shm_perm</span>;</span>        <span class="comment">//描述进程间通信许可的结构</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file</span> *		<span class="title">shm_file</span>;</span>            <span class="comment">//指向共享内存文件的指针</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		shm_nattch;            <span class="comment">//挂接到本段共享内存的进程数</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		shm_segsz;            <span class="comment">//段大小</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_atim;            <span class="comment">//最后挂接时间</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_dtim;            <span class="comment">//最后解除挂接时间</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_ctim;            <span class="comment">//最后变化时间</span></span><br><span class="line">	<span class="keyword">pid_t</span>			shm_cprid;            <span class="comment">//创建进程的PID</span></span><br><span class="line">	<span class="keyword">pid_t</span>			shm_lprid;            <span class="comment">//最后使用进程的PID</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">user_struct</span>	*<span class="title">mlock_user</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>为了便于管理，内核把共享内存区的所有描述结构shmid_kernel都存放在结构ipc_id_ary中的一个数组中。结构ipc_id_ary的定义如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_id_ary</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="keyword">int</span> size;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span> *<span class="title">p</span>[0];</span>            <span class="comment">//存放段描述结构的数组</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>同样，为了描述一个共享内存区的概貌，内核使用了数据结构ipc_ids。该结构的定义如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_ids</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> in_use;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span> seq;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span> seq_max;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">rw_semaphore</span> <span class="title">rw_mutex</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr</span> <span class="title">ipcs_idr</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ipc_id_ary</span> *<span class="title">entries</span>;</span>        <span class="comment">//指向struct ipc_id_ary的指针</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>由多个共享段组成的共享区的结构如下所示：<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/%E5%85%B1%E4%BA%AB%E5%8C%BA%E7%BB%93%E6%9E%84.jpg" alt="共享区结构"><br>IPC内核中有许多的结构体：</p>
-<p>在共享内存中，ipc_ids结构体维护了所有共享内存的ID，ipc_id_ary结构体维护了共享内存的索引，kern_ipc_perm结构体维护了共享内存的权限信息，shmid_kernel结构体维护了共享内存的管理信息。这些结构体相互配合，实现了IPC机制的管理和控制。</p>
-<p>它们之间的关系如下所示：</p>
-<p>ipc_ids中存储了所有IPC对象的ID，每个ID对应一个ipc_id_ary中的元素。</p>
-<p>ipc_id_ary中存储了所有IPC对象的ID，每个ID对应一个kern_ipc_perm结构体。</p>
-<p>kern_ipc_perm结构体中包含了一个指向共享内存的指针，这个指针指向一个shmid_kernel结构体。</p>
-<h4 id="4-4-先入先出队列（也叫有名管道）-fifo"><a href="#4-4-先入先出队列（也叫有名管道）-fifo" class="headerlink" title="4.4 先入先出队列（也叫有名管道） fifo"></a>4.4 先入先出队列（也叫有名管道） fifo</h4><p>&emsp;&emsp;FIFO和Pipe都可以用于进程间通信，但它们的实现方式略有不同。Pipe是一种匿名管道，它只存在于内存中，而FIFO是一种特殊的文件类型，它存在于文件系统中。因此，FIFO可以用于不同进程甚至不同计算机之间的通信，而Pipe只能用于具有亲缘关系的进程之间的通信。</p>
-<p>&emsp;&emsp;FIFO主要用于缓冲速度不匹配的通信。例如生产者（数据产生者）可能在短时间内生成大量数据，导致消费者（数据使用方）无法立即处理完，那么就需要用到队列。生产者可以突然生成大量数据存到队列中，然后就去休息，消费者再有条不紊地将数据一条条取出解析。通常会结合DMA操作。</p>
-<p>&emsp;&emsp;FIFO为一种特殊的文件类型，它在文件系统中有对应的路径。当一个进程以读(r)的方式打开该文件，而另一个进程以写(w)的方式打开该文件，那么内核就会在这两个进程之间建立管道，所以FIFO实际上也由内核管理，不与硬盘打交道。之所以叫FIFO，是因为管道本质上是一个先进先出的队列数据结构，最早放入的数据被最先读出来，从而保证信息交流的顺序。FIFO只是借用了文件系统(file system,命名管道是一种特殊类型的文件，因为Linux中所有事物都是文件，它在文件系统中以文件名的形式存在。)来为管道命名。写模式的进程向FIFO文件中写入，而读模式的进程从FIFO文件中读出。当删除FIFO文件时，管道连接也随之消失。FIFO的好处在于我们可以通过文件的路径来识别管道，从而让没有亲缘关系的进程之间建立连接</p>
-<h5 id="4-4-1-fifo的实现方式"><a href="#4-4-1-fifo的实现方式" class="headerlink" title="4.4.1 fifo的实现方式"></a>4.4.1 fifo的实现方式</h5><p>fifo 是用户空间的实现，而 kfifo 是内核空间的实现。</p>
-<p>kfifo是linux内核的对队列功能的实现。在内核中，它被称为无锁环形队列。</p>
-<p>所谓无锁，就是当只有一个生产者和只有一个消费者时，操作fifo不需要加锁。这是因为kfifo出队和入队时，不会改动到相同的变量。</p>
-<p>kfifo使用了in和out两个变量分别作为入队和出队的索引：<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/kfifo.jpg" alt="kfifo"></p>
-<ul>
-<li>入队n个数据时，in变量就+n</li>
-<li>出队k个数据时，out变量就+k</li>
-<li>out不允许大于in（out等于in时表示fifo为空）</li>
-<li>in不允许比out大超过fifo空间（比如上图，in最多比out多8，此时表示fifo已满）<br>如果in和out大于fifo空间了，比如上图中的8，会减去8后重新开始吗？</li>
-</ul>
-<p>不，这两个索引会一直往前加，不轻易回头，为出入队操作省下了几个指令周期。</p>
-<p>那入队和出队的数据从哪里开始存储/读取呢，我们第一时间会想到，把 in/out 用“%”对fifo大小取余就行了，是吧？</p>
-<p>不，取余这种耗费资源的运算，内核开发者怎会轻易采用呢，kfifo的办法是，把 <code>in/out &amp; fifo-&gt;mask</code>。这个mask等于fifo的空间大小减一（其要求fifo的空间必须是2的次方大小）。这个“与”操作可比取余操作快得多了。</p>
-<p>由此，kfifo就实现了“无锁”“环形”队列。</p>
-<p>了解了上述原理，我们就能意识到，这个无锁只是针对“单生产者-单消费者”而言的。“多生产者”时，则需要对入队操作进行加锁；同样的，“多消费者”时需要对出队操作进行加锁。</p>
-<h3 id="1-1-系统调用fork"><a href="#1-1-系统调用fork" class="headerlink" title="1.1 系统调用fork"></a>1.1 系统调用fork</h3><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">pid_t fork(void);</span><br><span class="line">功能：创建一个子进程出来</span><br><span class="line">返回值：0表示子进程，大于0表示父进程，-1出错</span><br></pre></td></tr></table></figure>
-
-<p>注：父进程和子进程空间完全独立</p>
-<p>写时拷贝 – 现在的Linux一直在用</p>
-<p>vfork：</p>
-<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">pid_t vfork(void);</span><br><span class="line">功能：创建一个子进程出来</span><br><span class="line">返回值：0表示子进程，大于0表示父进程，-1出错</span><br><span class="line"></span><br><span class="line">一定是子进程先运行，并且子进程不结束exit()或者不调用exec函数簇，父进程不会运行（正确运行）</span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>进程线程</tag>
       </tags>
   </entry>
   <entry>
@@ -2793,6 +2549,379 @@
       </categories>
       <tags>
         <tag>算法，排序算法，基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法分析</title>
+    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
+<ol>
+<li>确定输入模型，定义问题规模（n）</li>
+<li>识别循环与递归</li>
+<li>根据内循环或每部递归的操作确定成本模型</li>
+<li>对于给定的输入，判断这些操作的执行频率</li>
+</ol>
+<hr>
+<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
+<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
+</blockquote>
+<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
+<blockquote>
+<p>渐进分析：</p>
+<ol>
+<li>忽略依赖于机器性能的常量</li>
+<li>只关注运行时间的增长</li>
+</ol>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
+<blockquote>
+<p>例：$2n^2 = O(n^3)$</p>
+</blockquote>
+<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
+<blockquote>
+<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
+</blockquote>
+<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
+<blockquote>
+<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
+</blockquote>
+<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
+<p>理解：左右两边增长速率一样</p>
+<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
+<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
+<ul>
+<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
+<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
+</ul>
+<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
+<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
+<ol>
+<li>证明 n=1 时成立</li>
+<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
+<li>则命题成立</li>
+</ol>
+<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
+<li>先猜答案得到最高阶</li>
+<li>验证这个递归式是否按照数学归纳法满足条件</li>
+</ol>
+<blockquote>
+<p>例：T(n)=4T(n/2)+n</p>
+<ol>
+<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
+<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
+<p>$O(n^2)$=$c(n)^2$</p>
+</blockquote>
+</li>
+<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
+</ol>
+</blockquote>
+<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
+<blockquote>
+<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
+</blockquote>
+<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
+<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
+<li>根据每层的和的规律，求出总子叶节点<ul>
+<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
+<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
+</blockquote>
+</li>
+<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
+</ul>
+</li>
+<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
+</ol>
+<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
+<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
+<p>1.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
+<p>2.</p>
+<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
+<p>3.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>概念</tag>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day28-进程线程</title>
+    <url>/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><p>下面当我问你LINUX下的c语言中的函数是，你要从函数原型，功能，头文件，返回值，参数这几个方面讲解，并给出示例代码和使用函数的注意事项，明白了吗</p>
+<h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-进程和线程"><a href="#1-进程和线程" class="headerlink" title="1. 进程和线程"></a>1. 进程和线程</h3><ul>
+<li>程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”</li>
+<li>进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</li>
+<li>页表：<br>&emsp;&emsp;在 Linux 中，每个进程都有自己的页表，用于映射虚拟地址到物理地址。页表是由一系列页表项（PTE）组成的数据结构，每个页表项对应着虚拟地址空间中的一个页面（通常是4KB），并描述了该页面的物理地址、访问权限等信息。<br>&emsp;&emsp;Linux 中的页表采用了多级页表的结构，即每个页表项可以指向下一级的页表，最终指向物理页面。<br>&emsp;&emsp;Linux 中的页表是按需分配的，即当进程需要访问某个虚拟地址时，如果该地址对应的页表项不存在，则会触发缺页异常，内核会根据需要分配新的物理页面，并更新页表项，使得虚拟地址能够正确映射到物理地址。</li>
+<li>线程：线程是进程中的执行单元，它与进程共享同一个地址空间，因此线程之间可以直接共享数据。线程相对于进程来说更加轻量级。多个线程可以共享一个进程的以下资源(可执行的指令,静态数据,进程中打开的文件描述符,信号处理函数,当前工作目录用户ID,用户组ID)<a id="more"></a>
+<h3 id="2-守护进程"><a href="#2-守护进程" class="headerlink" title="2. 守护进程"></a>2. 守护进程</h3></li>
+</ul>
+<p>&emsp;&emsp;守护进程：在某些用户空间中，即使用户退出登录，仍然会有一些后台进程在运行，不会被用户或终端影响，这些进程被称为<code>守护进程</code>。<br>&emsp;&emsp;Linux 中有一种特殊的守护进程被称为<code>计划守护进程</code>，计划守护进程可以每分钟醒来一次检查是否有工作要做，做完会继续回到睡眠状态等待下一次唤醒。</p>
+<h3 id="3-父进程与子进程"><a href="#3-父进程与子进程" class="headerlink" title="3. 父进程与子进程"></a>3. 父进程与子进程</h3><p>&emsp;&emsp;在 Linux 系统中，进程通过非常简单的方式来创建，<code>fork</code>系统调用会创建一个源进程的拷贝(副本)。调用<code>fork</code>函数的进程被称为<code>父进程</code>，使用 fork 函数创建出来的进程被称为 <code>子进程</code>。父进程和子进程都有自己的内存映像。<strong>如果在子进程创建出来后</strong>，父进程修改了一些变量等，那么子进程是看不到这些变化的，也就是<code>fork</code>后，父进程和子进程相互独立。</p>
+<p>&emsp;&emsp;虽然父进程和子进程保持相互独立，但是它们却能够共享相同的文件，如果在 fork 之前，父进程已经打开了某个文件，那么 fork 后，父进程和子进程仍然共享这个打开的文件。对共享文件的修改会对父进程和子进程同时可见。</p>
+<p>&emsp;&emsp;那么该如何区分父进程和子进程呢？子进程只是父进程的拷贝，所以它们几乎所有的情况都一样，包括内存映像、变量、寄存器等。区分的关键在于fork函数调用后的返回值，如果fork后返回一个非零值，这个非零值即是子进程的<code>进程标识符</code>(pid)，而会给子进程返回一个零值,<font color="blue">即在程序中,<code>pid==0</code>的代码为子进程的代码，而<code>pid &gt; 0</code>的代码为父进程的代码</font>。父进程在 fork 后会得到子进程的 PID，这个 PID 即能代表这个子进程的唯一标识符也就是 PID。如果子进程想要知道自己的 PID，可以调用<code>getpid</code>方法。父进程可以生成多个子进程，子进程也能生成自己的子进程。</p>
+<h3 id="4-Linux进程间的通信"><a href="#4-Linux进程间的通信" class="headerlink" title="4. Linux进程间的通信"></a>4. Linux进程间的通信</h3><p>Linux进程间的通信（IPC）大致可以分为6种</p>
+<ol>
+<li>信号 signal</li>
+<li>无名管道 pipe</li>
+<li>共享内存 shared memory</li>
+<li>先入先出队列（也叫有名管道） fifo</li>
+<li>消息队列 message queue</li>
+<li>套接字 socket</li>
+</ol>
+<blockquote>
+<p>有两个东西可以标识一个IPC结构：标识符(ID)和键(key)。</p>
+<p>ID是IPC结构的内部名。内部即在进程内部使用，这样的标识方法是不能支持进程间通信的。</p>
+<p>key就是IPC结构的外部名。当多个进程，针对同一个key调用get函数(msgget等)，这些进程得到的ID其实是标识了同一个IPC结构。多个进程间就可以通过这个IPC结构通信。</p>
+</blockquote>
+<br>
+
+<h4 id="4-1-信号-signal"><a href="#4-1-信号-signal" class="headerlink" title="4.1 信号 signal"></a>4.1 信号 signal</h4><h5 id="4-1-1-信号的基本概念"><a href="#4-1-1-信号的基本概念" class="headerlink" title="4.1.1 信号的基本概念"></a>4.1.1 信号的基本概念</h5><p>&emsp;&emsp;信号是在软件层次对中断机制的一种模拟，是一种异步通信方式。信号可以直接进行用户空间进程和内核之间的交互，内核也能利用它来通知用户空间进程发生了哪些系统事件。</p>
+<h5 id="4-1-2-信号的处理流程"><a href="#4-1-2-信号的处理流程" class="headerlink" title="4.1.2 信号的处理流程"></a>4.1.2 信号的处理流程</h5><p>&emsp;&emsp;操作系统给进程发送信号，本质上是给进程的task_struct（是 Linux 内核中的一个通过双向链表来组织的结构体，它代表了一个进程或线程）中写入数据，修改相应的task_struct字段(里面有进程 ID、进程状态、进程优先级、进程的父进程、进程的子进程等等)，然后进程在合适的时间(内核态发回用户态时)去处理所接受的信号。<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/%E4%BF%A1%E5%8F%B7%E5%A4%84%E7%90%86%E6%B5%81%E7%A8%8B.jpg" alt="信号处理"></p>
+<p>例子说明：</p>
+<blockquote>
+<ol>
+<li>假设用户启动一个交互式的前台进程，然后输入ctrl+c结束它，系统通过键盘产生一个硬件中断。</li>
+<li>cpu暂停用户空间的代码，cpu从用户态切换至内核态处理中断</li>
+<li>系统驱动程序将ctlr+c解释为一个SIGINT信号，并将其记在该进程的task_struct中的信号位上；</li>
+<li>当某时刻进程从内核态返回用户态继续执行之前，检查task_struct中的信号域，SIGINT信号的默认处理动作为终止进程，所以直接终止进程而不再返回到它的用户空间代码。</li>
+</ol>
+</blockquote>
+<h5 id="4-1-3-常用的信号-前面是它的编号"><a href="#4-1-3-常用的信号-前面是它的编号" class="headerlink" title="4.1.3 常用的信号(前面是它的编号)"></a>4.1.3 常用的信号(前面是它的编号)</h5><p>Linux 中可以通过<code>kill -l</code>查看信号表</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">1.  SIGHUP：   本信号在用户终端结束时发出，通常是在终端的控制进程结束时，通知同一会话期内的各个作业，这时他们与控制终端不在关联。比如，登录Linux时，系统会自动分配给登录用户一个控制终端，在这个终端运行的所有程序，包括前台和后台进程组，一般都属于同一个会话。当用户退出时，所有进程组都将收到该信号，这个信号的默认操作是终止进程。此外对于与终端脱离关系的守护进程，这个信号用于通知它重新读取配置文件。</span><br><span class="line">2.  SIGINT：   程序终止信号。当用户按下CRTL+C时通知前台进程组终止进程。</span><br><span class="line">3.  SIGQUIT：  Ctrl+<span class="tag">\<span class="name">控</span></span>制，进程收到该信号退出时会产生core文件，类似于程序错误信号。</span><br><span class="line">4.  SIGILL：   执行了非法指令。通常是因为可执行文件本身出现错误，或者数据段、堆栈溢出时也有可能产生这个信号。</span><br><span class="line">5.  SIGTRAP：  由断点指令或其他陷进指令产生，由调试器使用。</span><br><span class="line">6.  SIGABRT：  调用abort函数产生，将会使程序非正常结束。</span><br><span class="line">7.  SIGBUS：   非法地址。包括内存地址对齐出错。比如访问一个4个字长的整数，但其地址不是4的倍数。它与SIGSEGV的区别在于后者是由于对合法地址的非法访问触发。</span><br><span class="line">8.  SIGFPE：   发生致命的算术运算错误。</span><br><span class="line">9.  SIGKILL：  用来立即结束程序的运行。不能被捕捉、阻塞或忽略，只能执行默认动作。</span><br><span class="line">10. SIGUSR1：  留给用户使用，用户可自定义。</span><br><span class="line">11. SIGSEGV：  访问未分配给用户的内存区。或操作没有权限的区域。</span><br><span class="line">12. SIGUSR2：  留给用户使用，用户可自定义。</span><br><span class="line">13. SIGPIPE：  管道破裂信号。当对一个读进程已经运行结束的管道执行写操作时产生。</span><br><span class="line">14. SIGALRM：  时钟定时信号。由alarm函数设定的时间终止时产生。</span><br><span class="line">15. SIGTERM：  程序结束信号。shell使用kill产生该信号，当结束不了该进程，尝试使用SIGKILL信号。</span><br><span class="line">16. SIGSTKFLT：堆栈错误。</span><br><span class="line">17. SIGCHLD：  子进程结束，父进程会收到。如果子进程结束时父进程不等待或不处理该信号，子进程会变成僵尸进程。</span><br><span class="line">18. SIGCONT：  让一个停止的进程继续执行。</span><br><span class="line">19. SIGSTOP：  停止进程执行。不能被捕捉、阻塞或忽略，只能执行默认动作。</span><br><span class="line">20. SIGTSTP：  停止终端交互运行，可以被忽略。按下Ctrl+z发出这个信号。</span><br><span class="line">21. SIGTTIN：  当后台进程需要从终端接收数据时，所有进程会收到该信号，暂停执行。</span><br><span class="line">22. SIGTTOU：  与SIGTTIN类似，在后台的进程向终端输出数据时产生。</span><br><span class="line">23. SIGURG：   套接字上出现紧急情况时产生。向当前正在运行的进程发出些信号，报告有紧急数据到达，如网络带外数据到达。</span><br><span class="line">24. SIGXCPU：  超过CPU时间资源限制时产生的信号。</span><br><span class="line">25. SIGXFSZ：  当进程企图扩大文件以至于超过文件大小资源限制时产生。</span><br><span class="line">26. SIGVTALRM：虚拟使用信号。计算的是进程占用CPU调用的时间。</span><br><span class="line">27. SIGPROF：  包括进程使用CPU的时间以及系统调用的时间。</span><br><span class="line">28. SIGWINCH： 窗口大小改变时。</span><br><span class="line">29. SIGIO：    文件描述符准备就绪，表示可以进行输入输出操作。</span><br><span class="line">30. SIGPWR：   电源失效信号，即关机。</span><br><span class="line">31. SIGSYS：   非法的系统调用。</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-1-4-信号的处理"><a href="#4-1-4-信号的处理" class="headerlink" title="4.1.4 信号的处理"></a>4.1.4 信号的处理</h5><p>信号的3种状态：</p>
+<blockquote>
+<p>未决：进程接收到信号，但是还没有处理它。这个信号会被添加到进程的信号掩码中，等待进程处理。<br>阻塞：进程可以选择阻塞某些信号，这样当这些信号发送时，进程不会接收到它们。阻塞信号可以通过 sigprocmask() 函数设置。<br>处理：当进程接收到一个信号时，它需要处理这个信号。处理信号的方式可以是执行一个信号处理函数，或者使用默认的信号处理方式。可以使用 signal() 函数或 sigaction() 函数来设置信号处理函数。</p>
+</blockquote>
+<p>信号的5种默认处理动作</p>
+<blockquote>
+<p>Term    终止进程<br>Ign    当前进程忽略此信号<br>Core    终止进程，并生成一个Core文件<br>Stop    暂停当前进程<br>Cont    继续执行当前被暂停的进程</p>
+</blockquote>
+<h5 id="4-1-5-信号集"><a href="#4-1-5-信号集" class="headerlink" title="4.1.5 信号集"></a>4.1.5 信号集</h5><p>信号集：顾名思义，就是信号的集合。在linux中，它的类型是<code>sigset_t</code>,大小是64bits。（Linux中一个只有64个信号）。在头文件<code>signal.h</code>提供了五个处理信号集的函数。</p>
+<br>
+
+<h4 id="4-2-无名管道-pipe"><a href="#4-2-无名管道-pipe" class="headerlink" title="4.2 无名管道 pipe"></a>4.2 无名管道 pipe</h4><h5 id="4-2-1-pipe的基本概念"><a href="#4-2-1-pipe的基本概念" class="headerlink" title="4.2.1 pipe的基本概念"></a>4.2.1 pipe的基本概念</h5><p>&emsp;&emsp;管道是一种最基本的IPC机制，作用于有血缘关系的进程之间，完成数据传递。调用pipe系统函数即可创建一个管道。有如下特质：</p>
+<ol>
+<li><p>其本质是一个伪文件(实为内核缓冲区)</p>
+</li>
+<li><p>由两个文件描述符引用，一个表示读端，一个表示写端。</p>
+</li>
+<li><p>规定数据从管道的写端流入管道，从读端流出。</p>
+</li>
+</ol>
+<p>管道的原理: 管道实为内核使用环形队列机制，借助内核缓冲区(4k)实现。</p>
+<p>管道的局限性：<br>① 数据自己读不能自己写。<br>② 数据一旦被读走，便不在管道中存在，不可反复读取。<br>③ 由于管道采用半双工通信方式。因此，数据只能在一个方向上流动。<br>④ 只能在有公共祖先的进程间使用管道。<br>常见的通信方式有，单工通信、半双工通信、全双工通信。</p>
+<h5 id="4-2-2-pipe的创建"><a href="#4-2-2-pipe的创建" class="headerlink" title="4.2.2 pipe的创建"></a>4.2.2 pipe的创建</h5><p>&emsp;&emsp;管道两端可分别用描述符fd[0] 以及fd[1]来描述。需要注意的是，管道两端的任务是固定的，一端只能用于读，由描述符fd[0]表示，称其为管道读端，另一端只能用于写，由描述符fd[1]来表示，称其为管道写端。如果试图从管道写端读数据，或者向管道读端写数据都将导致出错。</p>
+<p>&emsp;&emsp;管道是一种文件，因此对文件操作的I/O函数都可以用于管道，如read，write等。</p>
+<h5 id="4-2-3-pipe的读写"><a href="#4-2-3-pipe的读写" class="headerlink" title="4.2.3 pipe的读写"></a>4.2.3 pipe的读写</h5><p>&emsp;&emsp;如果某个进程要读取管道中的数据，那么该进程应当关闭fd[1]，向管道写数据的进程应当关闭fd[0]。因为管道只能用于具有亲缘关系的进程间的通信，在进行通信时，他们共享文件描述符。在使用前，应及时地关闭不需要的管道的另一端，以避免意外错误的发生。</p>
+<p>&emsp;&emsp;进程在管道的读端读数据时，如果管道的写端不存在，则读进程认为已经读到了数据的末尾，读函数返回读出的字节数为0；管道的写端如果存在，且请求读取的字节数大于PIPE_BUF，则返回管道中现有的所有数据；如果请求的字节数不大于PIPE_BUF，则返回管道中现有的所有数据（此时，管道中数据量小于请求的数据量），或者返回请求的字节数（此时，管道中数据量大于等于请求的数据量）。</p>
+<h5 id="4-2-4-pipe的实现细节"><a href="#4-2-4-pipe的实现细节" class="headerlink" title="4.2.4 pipe的实现细节"></a>4.2.4 pipe的实现细节</h5><p>在 Linux 中，管道的实现并没有使用专门的数据结构，而是借助了文件系统的file结构和VFS的索引节点inode。通过将两个 file 结构指向同一个临时的 VFS 索引节点，而这个 VFS 索引节点又指向一个物理页面而实现的。如下图<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/pipe.jpg" alt="pipe"></p>
+<h4 id="4-3-共享内存-shared-memory"><a href="#4-3-共享内存-shared-memory" class="headerlink" title="4.3 共享内存 shared memory"></a>4.3 共享内存 shared memory</h4><h5 id="4-3-1-共享内存概念"><a href="#4-3-1-共享内存概念" class="headerlink" title="4.3.1 共享内存概念"></a>4.3.1 共享内存概念</h5><p>&emsp;&emsp;实现进程间通信最简单也是最直接的方法就是共享内存——为参与通信的多个进程在内存中开辟一个共享区。由于进程可以直接对共享内存进行读写操作，因此这种通信方式效率特别高，但其弱点是，它没有互斥机制，需要信号量之类的手段来配合。</p>
+<h5 id="4-3-2-共享内存方法"><a href="#4-3-2-共享内存方法" class="headerlink" title="4.3.2 共享内存方法"></a>4.3.2 共享内存方法</h5><blockquote>
+<p>为了实现共享内存，就需要做两件事：</p>
+<ol>
+<li>在内存划出一块区域来作为共享区；</li>
+<li>把这个区域映射到参与通信的各个进程空间。</li>
+</ol>
+</blockquote>
+<p>&emsp;&emsp;在Linux中，共享内存有两种方式：System V IPC和POSIX IPC。</p>
+<p>&emsp;&emsp;System V IPC：System V IPC是一种传统的IPC机制，它提供了三种IPC方式：消息队列、共享内存和信号量。其中，共享内存是一种最快的IPC方式，因为它直接将内存映射到进程的地址空间中，避免了数据的拷贝和内核态和用户态之间的切换。共享内存的使用需要调用一系列的函数，包括shmget()、shmat()、shmdt()和shmctl()等。</p>
+<p>&emsp;&emsp;POSIX IPC：POSIX IPC是一种比System V IPC更加灵活和可移植的IPC机制，它提供了两种IPC方式：消息队列和共享内存。与System V IPC不同的是，POSIX IPC使用命名对象来标识IPC资源，这些对象存储在文件系统中，可以在进程间共享。POSIX共享内存的使用需要调用一系列的函数，包括shm_open()、shm_unlink()、mmap()和munmap()等。</p>
+<h5 id="4-3-3-文件映射"><a href="#4-3-3-文件映射" class="headerlink" title="4.3.3 文件映射"></a>4.3.3 文件映射</h5><h6 id="4-3-3-1-mmap的基本概念"><a href="#4-3-3-1-mmap的基本概念" class="headerlink" title="4.3.3.1 mmap的基本概念"></a>4.3.3.1 mmap的基本概念</h6><p>&emsp;&emsp;通常在内存划出一个区域的方法是，在内存中打开一个文件，若通过系统调用<code>mmap()</code>把这个文件所占用的内存空间映射到参与通信的各个进程地址空间，则这些进程就都可以看到这个共享区域，进而实现进程间的通信。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面（脏页面是指已经被修改但还没有被写回到磁盘的页面）到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。<br>&emsp;&emsp;总而言之，常规文件操作需要从磁盘到页缓存再到用户主存的两次数据拷贝。而mmap操控文件，只需要从磁盘到用户主存的一次数据拷贝过程。而且这个映射的过程是动态的，即请求多少映射多少。所以mmap适用与大型文件的操作。<br>&emsp;&emsp;mmap()原型如下：</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">void *mmap(void *addr, size_t length, int prot, int flags, int fd, off_t offset);</span><br><span class="line"></span><br><span class="line">功能：将一个文件或者其它对象映射到进程的地址空间中，从而让进程可以像访问内存一样访问这些对象。</span><br><span class="line">返回值：返回映射区域的起始地址。如果调用失败，则返回MAP_FAILED宏。</span><br><span class="line">addr：指定映射的起始地址，通常设置为0，表示让系统自动选择一个合适的地址。</span><br><span class="line">length：指定映射区域的长度，单位是字节。</span><br><span class="line">prot：指定映射区域的保护方式，可以是以下值的按位或：</span><br><span class="line">    PROT_EXEC：可执行</span><br><span class="line">    PROT_READ：可读</span><br><span class="line">    PROT_WRITE：可写</span><br><span class="line">    PROT_NONE：不可访问</span><br><span class="line">flags：指定映射区域的标志，可以是以下值的按位或：</span><br><span class="line">    MAP_SHARED：共享映射</span><br><span class="line">    MAP_PRIVATE：私有映射</span><br><span class="line">    MAP_ANONYMOUS：匿名映射</span><br><span class="line">fd：指定要映射的文件描述符，如果是匿名映射，则设置为-1。</span><br><span class="line">offset：指定映射区域在文件中的偏移量，通常设置为0。。</span><br></pre></td></tr></table></figure>
+<h6 id="4-3-3-2-mmap的文件映射过程"><a href="#4-3-3-2-mmap的文件映射过程" class="headerlink" title="4.3.3.2 mmap的文件映射过程"></a>4.3.3.2 mmap的文件映射过程</h6><p><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/mmap.jpg" alt="mmap"><br>mmap本身其实是一个很简单的操作，在进程页表中添加一个页表项，该页表项是物理内存的地址。调用mmap的时候，内核会在该进程的地址空间的映射区域查找一块满足需求的空间用于映射该文件，然后生成该虚拟地址的页表项，改页表项此时的有效位（标志是否已经在物理内存中）为0，页表项的内容是文件的磁盘地址，此时mmap的任务已经完成。第一次访问该块内存的时候，因为页表项的有效位还是0，就会发生缺页中断，然后CPU会使用该页表项的内容也就是磁盘的文件地址，讲该地址指向的内容加载到物理内存，并需改页表项的内容为该物理地址，有效位置为1。 </p>
+<p>简而言之，就是在进程对应的虚存段添加一个段，也就是创建一个新的vm_area_struct结构，并将其与文件的物理磁盘地址相连。在创建虚拟区间并完成地址映射，但是并没有将任何文件数据的拷贝至主存。真正的文件读取是当进程发起读或写操作时。进程的读或写操作访问虚拟地址空间这一段映射地址，通过查询页表，引发缺页异常（缺页指的是当进程需要访问的页面不在物理内存中时，就会发生缺页中断，此时操作系统会将该页面从磁盘中读取到内存中，以满足进程的需求。），内核进行请页。</p>
+<p><font color="blue">再简单点，就是在进程的虚拟地址的合适位置添加一个vm_area_struct结构体。而进程的页表用于映射虚拟地址到物理地址，所以会给添加的结构体添加一个页表项即物理内存的地址。通过这个进程中映射的地址就能访问到共享的物理地址了</font><br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/mmap2.jpg" alt="mmap"></p>
+<h5 id="4-3-4-共享内存的映射"><a href="#4-3-4-共享内存的映射" class="headerlink" title="4.3.4 共享内存的映射"></a>4.3.4 共享内存的映射</h5><p>&emsp;&emsp;共享内存通信方式与上面的mmap()方式极为相似，但因为建立一个文件的目的仅是为了通信，于是这种文件没有永久保存的意义，因此IPC并没有使用正规的文件系统，而是在系统初始化时在磁盘交换区建立了一个专门用来实现共享内存的特殊临时文件系统shm，当系统断电后，其中的文件会全部自行销毁。（不是人为的，mapp创造的内存空间随着进程的消亡而消亡，而共享内存的是在断电后才消失）</p>
+<h5 id="4-3-5-共享内存的结构"><a href="#4-3-5-共享内存的结构" class="headerlink" title="4.3.5 共享内存的结构"></a>4.3.5 共享内存的结构</h5><p>在 Linux 中，kern_ipc_perm 结构体用于跟踪进程间通信（IPC）对象的权限。IPC 对象包括消息队列、信号量和共享内存段等。<br>(这里只展示了有关共享内存的结构体，IPC还有很多其它的结构体，shmid_kernel，ipc_id_ary，ipc_ids是共享内存中独有的，而kern_ipc_perm也能用于其它IPC中)</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span> &#123;</span></span><br><span class="line">    <span class="keyword">key_t</span> key;          <span class="comment">/* 键值 */</span></span><br><span class="line">    <span class="keyword">uid_t</span> uid;          <span class="comment">/* 拥有者的用户 ID */</span></span><br><span class="line">    <span class="keyword">gid_t</span> gid;          <span class="comment">/* 拥有者的组 ID */</span></span><br><span class="line">    <span class="keyword">uid_t</span> cuid;         <span class="comment">/* 创建者的用户 ID */</span></span><br><span class="line">    <span class="keyword">gid_t</span> cgid;         <span class="comment">/* 创建者的组 ID */</span></span><br><span class="line">    <span class="keyword">mode_t</span> mode;        <span class="comment">/* 访问权限 */</span></span><br><span class="line">    <span class="keyword">unsigned</span> <span class="keyword">short</span> seq; <span class="comment">/* 序列号 */</span></span><br><span class="line">    <span class="keyword">key_serial_t</span> sem_perm_seq;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>共享内存段的内核数据结构shmid_kernel如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">shmid_kernel</span> /* <span class="title">private</span> <span class="title">to</span> <span class="title">the</span> <span class="title">kernel</span> */</span></span><br><span class="line"><span class="class">&#123;</span>	</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span>	<span class="title">shm_perm</span>;</span>        <span class="comment">//描述进程间通信许可的结构</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file</span> *		<span class="title">shm_file</span>;</span>            <span class="comment">//指向共享内存文件的指针</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		shm_nattch;            <span class="comment">//挂接到本段共享内存的进程数</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span>		shm_segsz;            <span class="comment">//段大小</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_atim;            <span class="comment">//最后挂接时间</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_dtim;            <span class="comment">//最后解除挂接时间</span></span><br><span class="line">	<span class="keyword">time_t</span>			shm_ctim;            <span class="comment">//最后变化时间</span></span><br><span class="line">	<span class="keyword">pid_t</span>			shm_cprid;            <span class="comment">//创建进程的PID</span></span><br><span class="line">	<span class="keyword">pid_t</span>			shm_lprid;            <span class="comment">//最后使用进程的PID</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">user_struct</span>	*<span class="title">mlock_user</span>;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>为了便于管理，内核把共享内存区的所有描述结构shmid_kernel都存放在结构ipc_id_ary中的一个数组中。结构ipc_id_ary的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_id_ary</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">        <span class="keyword">int</span> size;</span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">kern_ipc_perm</span> *<span class="title">p</span>[0];</span>            <span class="comment">//存放段描述结构的数组</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>同样，为了描述一个共享内存区的概貌，内核使用了数据结构ipc_ids。该结构的定义如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ipc_ids</span> &#123;</span></span><br><span class="line">	<span class="keyword">int</span> in_use;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span> seq;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span> seq_max;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">rw_semaphore</span> <span class="title">rw_mutex</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">idr</span> <span class="title">ipcs_idr</span>;</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">ipc_id_ary</span> *<span class="title">entries</span>;</span>        <span class="comment">//指向struct ipc_id_ary的指针</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>由多个共享段组成的共享区的结构如下所示：<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/%E5%85%B1%E4%BA%AB%E5%8C%BA%E7%BB%93%E6%9E%84.jpg" alt="共享区结构"><br>IPC内核中有许多的结构体：</p>
+<p>在共享内存中，ipc_ids结构体维护了所有共享内存的ID，ipc_id_ary结构体维护了共享内存的索引，kern_ipc_perm结构体维护了共享内存的权限信息，shmid_kernel结构体维护了共享内存的管理信息。这些结构体相互配合，实现了IPC机制的管理和控制。</p>
+<p>它们之间的关系如下所示：</p>
+<p>ipc_ids中存储了所有IPC对象的ID，每个ID对应一个ipc_id_ary中的元素。</p>
+<p>ipc_id_ary中存储了所有IPC对象的ID，每个ID对应一个kern_ipc_perm结构体。</p>
+<p>kern_ipc_perm结构体中包含了一个指向共享内存的指针，这个指针指向一个shmid_kernel结构体。</p>
+<h4 id="4-4-先入先出队列（也叫有名管道）-fifo"><a href="#4-4-先入先出队列（也叫有名管道）-fifo" class="headerlink" title="4.4 先入先出队列（也叫有名管道） fifo"></a>4.4 先入先出队列（也叫有名管道） fifo</h4><p>&emsp;&emsp;FIFO和Pipe都可以用于进程间通信，但它们的实现方式略有不同。Pipe是一种匿名管道，它只存在于内存中，而FIFO是一种特殊的文件类型，它存在于文件系统中。因此，FIFO可以用于不同进程甚至不同计算机之间的通信，而Pipe只能用于具有亲缘关系的进程之间的通信。</p>
+<p>&emsp;&emsp;FIFO主要用于缓冲速度不匹配的通信。例如生产者（数据产生者）可能在短时间内生成大量数据，导致消费者（数据使用方）无法立即处理完，那么就需要用到队列。生产者可以突然生成大量数据存到队列中，然后就去休息，消费者再有条不紊地将数据一条条取出解析。通常会结合DMA操作。</p>
+<p>&emsp;&emsp;FIFO为一种特殊的文件类型，它在文件系统中有对应的路径。当一个进程以读(r)的方式打开该文件，而另一个进程以写(w)的方式打开该文件，那么内核就会在这两个进程之间建立管道，所以FIFO实际上也由内核管理，不与硬盘打交道。之所以叫FIFO，是因为管道本质上是一个先进先出的队列数据结构，最早放入的数据被最先读出来，从而保证信息交流的顺序。FIFO只是借用了文件系统(file system,命名管道是一种特殊类型的文件，因为Linux中所有事物都是文件，它在文件系统中以文件名的形式存在。)来为管道命名。写模式的进程向FIFO文件中写入，而读模式的进程从FIFO文件中读出。当删除FIFO文件时，管道连接也随之消失。FIFO的好处在于我们可以通过文件的路径来识别管道，从而让没有亲缘关系的进程之间建立连接</p>
+<h5 id="4-4-1-fifo的实现方式"><a href="#4-4-1-fifo的实现方式" class="headerlink" title="4.4.1 fifo的实现方式"></a>4.4.1 fifo的实现方式</h5><p>fifo 是用户空间的实现，而 kfifo 是内核空间的实现。</p>
+<p>kfifo是linux内核的对队列功能的实现。在内核中，它被称为无锁环形队列。</p>
+<p>所谓无锁，就是当只有一个生产者和只有一个消费者时，操作fifo不需要加锁。这是因为kfifo出队和入队时，不会改动到相同的变量。</p>
+<p>kfifo使用了in和out两个变量分别作为入队和出队的索引：<br><img src="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/kfifo.jpg" alt="kfifo"></p>
+<ul>
+<li>入队n个数据时，in变量就+n</li>
+<li>出队k个数据时，out变量就+k</li>
+<li>out不允许大于in（out等于in时表示fifo为空）</li>
+<li>in不允许比out大超过fifo空间（比如上图，in最多比out多8，此时表示fifo已满）<br>如果in和out大于fifo空间了，比如上图中的8，会减去8后重新开始吗？</li>
+</ul>
+<p>不，这两个索引会一直往前加，不轻易回头，为出入队操作省下了几个指令周期。</p>
+<p>那入队和出队的数据从哪里开始存储/读取呢，我们第一时间会想到，把 in/out 用“%”对fifo大小取余就行了，是吧？</p>
+<p>不，取余这种耗费资源的运算，内核开发者怎会轻易采用呢，kfifo的办法是，把 <code>in/out &amp; fifo-&gt;mask</code>。这个mask等于fifo的空间大小减一（其要求fifo的空间必须是2的次方大小）。这个“与”操作可比取余操作快得多了。</p>
+<p>由此，kfifo就实现了“无锁”“环形”队列。</p>
+<p>了解了上述原理，我们就能意识到，这个无锁只是针对“单生产者-单消费者”而言的。“多生产者”时，则需要对入队操作进行加锁；同样的，“多消费者”时需要对出队操作进行加锁。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、相关函数使用"><a href="#二、相关函数使用" class="headerlink" title="二、相关函数使用"></a>二、相关函数使用</h2><h3 id="2-1-进程"><a href="#2-1-进程" class="headerlink" title="2.1 进程"></a>2.1 进程</h3><h4 id="2-1-1-进程的创建"><a href="#2-1-1-进程的创建" class="headerlink" title="2.1.1 进程的创建"></a>2.1.1 进程的创建</h4><h5 id="子进程创建fork"><a href="#子进程创建fork" class="headerlink" title="子进程创建fork"></a>子进程创建fork</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">pid_t fork(void);</span><br><span class="line">功能：创建一个子进程出来，并和父进程并发执行</span><br><span class="line">头文件：#include &lt;unistd.h&gt;</span><br><span class="line">返回值：如果调用成功，fork()函数将返回两次。在父进程中，它返回子进程的进程ID，而在子进程中，它返回0。如果调用失败，则返回一个负值，表示错误类型。(可以用pid是否等于0来分别编写子进程函数(==0)和父进程函数(&gt;0))</span><br><span class="line"></span><br><span class="line">注：父进程和子进程空间完全独立</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> pid;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    pid = fork();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">&quot;Fork failed\n&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">// 子进程</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;I am the child process, x = %d\n&quot;</span>, ++x);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123; <span class="comment">// 父进程</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;I am the parent process, x = %d\n&quot;</span>, --x);</span><br><span class="line">        wait(<span class="literal">NULL</span>); <span class="comment">// 父进程等待子进程执行完毕</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//以上示例代码创建了一个新的进程，它的执行结果取决于操作系统调度进程的顺序。在该示例代码中，父进程和子进程分别执行不同的代码段，从而改变变量x的值。父进程调用wait()函数等待子进程执行完毕，以便正确处理进程的退出状态。</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="实时拷贝vfork："><a href="#实时拷贝vfork：" class="headerlink" title="实时拷贝vfork："></a>实时拷贝vfork：</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">pid_t vfork(void);</span><br><span class="line">功能：创建一个子进程出来,创建的新进程与父进程共享同一个地址空间，因此在子进程中修改变量或调用函数可能会影响到父进程的数据。</span><br><span class="line">头文件：#include &lt;unistd.h&gt;</span><br><span class="line">返回值：返回0给子进程，返回子进程的id(&gt;0)给父进程，-1出错</span><br><span class="line"></span><br><span class="line">注：一定是子进程先运行，并且子进程不结束exit()或者不调用exec函数簇，父进程不会运行（正确运行）</span><br></pre></td></tr></table></figure>
+<h5 id="进程替换exec族："><a href="#进程替换exec族：" class="headerlink" title="进程替换exec族："></a>进程替换exec族：</h5><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int execl(const char *path, const char *arg0, ..., const char *argn, (char *) NULL);</span><br><span class="line">int execlp(const char *file, const char *arg0, ..., const char *argn, (char *) NULL);</span><br><span class="line">int execle(const char *path, const char *arg0, ..., const char *argn, (char *) NULL, char *const envp[]);</span><br><span class="line">int execv(const char *path, char *const argv[]);</span><br><span class="line">int execvp(const char *file, char *const argv[]);</span><br><span class="line">int execve(const char *path, char *const argv[], char *const envp[]);</span><br><span class="line"></span><br><span class="line">功能：</span><br><span class="line">exec()函数族用于在当前进程中执行一个新的程序，替换当前进程的镜像。这些函数的不同之处在于它们的参数形式和处理方式不同。换句话说，就是在调用进程内部执行一个可执行文件。进程 ID 并未改变。exec 只是用另一个新程序替换了当前进程的正文、数据、堆和栈段（进程替换）。</span><br><span class="line">execl()函数将程序名和参数逐个列举出来，每个参数都是一个独立的字符串，以NULL指针结束。</span><br><span class="line">execlp()函数与execl()函数相似，但是它还允许通过PATH环境变量查找可执行文件。</span><br><span class="line">execle()函数与execl()函数类似，但是它还允许指定环境变量。</span><br><span class="line">execv()函数和execl()函数类似，但是它接受一个字符串数组作为参数列表。</span><br><span class="line">execvp()函数和execlp()函数类似，但是它接受一个字符串数组作为参数列表。</span><br><span class="line">execve()函数和execle()函数类似，但是它接受一个字符串数组作为参数列表，并允许指定环境变量。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">头文件：#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">返回值：如果调用成功，exec()函数将不会返回。如果调用失败，则返回-1</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">参数：</span><br><span class="line">path：要执行的程序的路径名。</span><br><span class="line">file：要执行的程序的文件名，如果没有指定路径，则使用PATH环境变量查找可执行文件。</span><br><span class="line">arg0 ~ argn：要传递给新程序的参数列表。</span><br><span class="line">argv：一个字符串数组，包含要传递给新程序的参数列表。</span><br><span class="line">envp：一个字符串数组，包含要传递给新程序的环境变量列表，**以NULL指针结束**。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">注意：argn和envp数组要用NULL来表示结束，否则会出错</span><br></pre></td></tr></table></figure>
+<p>示例代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">char</span> *envp[] = &#123;<span class="string">&quot;USER=chatgpt&quot;</span>, <span class="string">&quot;PATH=/bin&quot;</span>, <span class="literal">NULL</span>&#125;; <span class="comment">//</span></span><br><span class="line">  execle(<span class="string">&quot;/bin/ls&quot;</span>, <span class="string">&quot;ls&quot;</span>, <span class="string">&quot;-l&quot;</span>, <span class="literal">NULL</span>, envp);</span><br><span class="line">  <span class="built_in">printf</span>(<span class="string">&quot;这行代码不会执行，除非 execle() 失败。\n&quot;</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这个程序将使用 execle() 函数执行 /bin/ls 程序，并使用 ls -l 作为命令行参数。它还将设置两个新的环境变量 USER 和 PATH。如果 execle() 函数成功，则它不会返回，而是执行 /bin/ls 程序，如果失败则会返回-1。</span></span><br></pre></td></tr></table></figure>
+<br>
+
+<h4 id="2-1-2-进程的退出"><a href="#2-1-2-进程的退出" class="headerlink" title="2.1.2 进程的退出"></a>2.1.2 进程的退出</h4><h5 id="进程退出exit"><a href="#进程退出exit" class="headerlink" title="进程退出exit"></a>进程退出exit</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">void exit(int status);</span><br><span class="line">功能：终止程序的执行，并返回给操作系统一个退出状态。</span><br><span class="line">头文件：#include &lt;stdlib.h&gt;</span><br><span class="line">返回值：无返回值，程序将终止执行。</span><br><span class="line">参数：</span><br><span class="line">    status：可选参数，用于指定程序的退出状态。</span><br></pre></td></tr></table></figure>
+<h5 id="exit"><a href="#exit" class="headerlink" title="_exit"></a>_exit</h5><p>_exit() 函数也用于终止程序的执行，但它不会执行任何清理工作，例如关闭文件描述符或刷新流缓冲区等操作。不刷新缓冲区的话，可能会导致输出的内容不及时或不完整。</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">#include &lt;unistd.h&gt;</span><br><span class="line"></span><br><span class="line">void _exit(int status);</span><br></pre></td></tr></table></figure>
+<h4 id="2-1-2-进程的等待wait"><a href="#2-1-2-进程的等待wait" class="headerlink" title="2.1.2 进程的等待wait"></a>2.1.2 进程的等待wait</h4><h5 id="wait"><a href="#wait" class="headerlink" title="wait"></a>wait</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">pid_t wait(int *status);</span><br><span class="line">功能：调用该函数进程阻塞，直到任一一个子进程结束或者是该进程接收到了一个信号为止，如果该进程没有子进程或者其子进程已经结束，wait函数会立即返回。</span><br><span class="line">头文件：#include &lt;sys/types.h&gt;、#include &lt;sys/wait.h&gt;</span><br><span class="line">返回值：如果成功，则返回子进程的进程 ID，否则返回-1。</span><br><span class="line">参数：</span><br><span class="line">    status：可选参数，用于获取子进程的退出状态。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>示例代码:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/wait.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">pid_t</span> pid = fork();</span><br><span class="line">  <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;创建子进程失败。\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;这是子进程，进程 ID 为 %d。\n&quot;</span>, getpid());</span><br><span class="line">    sleep(<span class="number">3</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子进程结束。\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;这是父进程，进程 ID 为 %d。\n&quot;</span>, getpid());</span><br><span class="line">    <span class="keyword">int</span> status;</span><br><span class="line">    <span class="keyword">pid_t</span> child_pid = wait(&amp;status);</span><br><span class="line">    <span class="keyword">if</span> (child_pid == <span class="number">-1</span>) &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;等待子进程结束失败。\n&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">printf</span>(<span class="string">&quot;子进程 %d 结束，退出状态为 %d。\n&quot;</span>, child_pid, status);</span><br><span class="line">      <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这个程序创建了一个子进程，并在子进程中等待 3 秒钟后退出，并返回状态码 42。在父进程中，我们使用 wait() 函数等待子进程的结束，并获取其退出状态。如果 wait() 函数成功，则返回子进程的进程 ID，并将子进程的退出状态存储在 status 参数中。在本例中，父进程将打印子进程的进程 ID 和退出状态。如果等待子进程结束失败，则程序将返回非零值</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="waitpid"><a href="#waitpid" class="headerlink" title="waitpid"></a>waitpid</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">pid_t waitpid(pid_t pid, int *status, int options);</span><br><span class="line">功能：waitpid() 函数与 wait() 函数类似，也用于等待一个子进程的结束，并获取该子进程的退出状态。但 waitpid() 函数提供了更多的控制选项，例如可以等待特定进程的结束，可以在不阻塞的情况下查询进程状态等。</span><br><span class="line">头文件：#include &lt;sys/types.h&gt;、#include &lt;sys/wait.h&gt;</span><br><span class="line">返回值：如果成功，则返回子进程的进程 ID，否则返回-1。</span><br><span class="line">参数：</span><br><span class="line">    pid：要等待的进程 ID，如果为-1，则表示等待任何子进程的结束。</span><br><span class="line">    status：可选参数，用于获取子进程的退出状态。</span><br><span class="line">    options：等待选项，可以是 0（阻塞模式）或 WNOHANG（非阻塞模式）。</span><br><span class="line"></span><br><span class="line">注：非阻塞模式下父进程可能会在子进程结束前就执行过了waitpid导致接收不到子进程的退出状态。</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-1-3-守护进程"><a href="#2-1-3-守护进程" class="headerlink" title="2.1.3 守护进程"></a>2.1.3 守护进程</h4><h5 id="守护进程的定义"><a href="#守护进程的定义" class="headerlink" title="守护进程的定义"></a>守护进程的定义</h5><ol>
+<li><p>守护进程是脱离于终端并且在后台运行的进程</p>
+</li>
+<li><p>守护进程脱离终端是为了避免在执行过程中的信息在任何终端上显示，并且不被任何终端产生的终端信息所打断</p>
+</li>
+<li><p>守护进程通常在系统引导装入时启动</p>
+</li>
+</ol>
+<h5 id="守护进程的作用"><a href="#守护进程的作用" class="headerlink" title="守护进程的作用"></a>守护进程的作用</h5><ol>
+<li><p>守护进程是一个生存周期较长的进程，通常独立于控制终端并且周期性的执行某种任务或者等待处理某些待发生的事件</p>
+</li>
+<li><p>大多数服务都是通过守护进程实现的</p>
+</li>
+<li><p>关闭终端，相应的进程都会被关闭，而守护进程却能够突破这种限制</p>
+</li>
+</ol>
+<h5 id="守护进程的创建过程："><a href="#守护进程的创建过程：" class="headerlink" title="守护进程的创建过程："></a>守护进程的创建过程：</h5><blockquote>
+<ol>
+<li>创建子进程，父进程退出。这样可以使子进程成为孤儿进程，从而被init进程收养，避免成为僵尸进程。</li>
+<li>在子进程中创建新会话。这样可以使子进程摆脱原来的会话，进程组，控制终端的影响，成为新会话的首进程和组长进程。</li>
+<li>改变当前工作目录为根目录。这样可以使子进程不依赖于原来的工作目录，避免影响文件系统的卸载和挂载。</li>
+<li>重设文件权限掩码。这样可以使子进程拥有更大的文件操作权限，避免受到原来的权限掩码的限制。</li>
+<li>关闭不需要的文件描述符。这样可以使子进程释放无用的资源，避免占用系统资源和引起安全问题。</li>
+</ol>
+</blockquote>
+<h5 id="查看系统中的守护进程"><a href="#查看系统中的守护进程" class="headerlink" title="查看系统中的守护进程"></a>查看系统中的守护进程</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">ps -axj</span><br><span class="line"></span><br><span class="line">PPID：父进程ID</span><br><span class="line">PID： 进程ID</span><br><span class="line">PGID：进程组ID</span><br><span class="line">SID:  会话期ID</span><br><span class="line">TTY:  终端ID</span><br><span class="line">TPGID:终端进程组ID</span><br><span class="line">STAT: 状态</span><br><span class="line">UID:  用户</span><br><span class="line">TIME: 运行时间</span><br></pre></td></tr></table></figure>
+<h5 id="守护进程的创建的代码实现："><a href="#守护进程的创建的代码实现：" class="headerlink" title="守护进程的创建的代码实现："></a>守护进程的创建的代码实现：</h5><p>需要用到的函数</p>
+<ul>
+<li><p>setsid函数</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">pid_t setsid(void);</span><br><span class="line"></span><br><span class="line">功能：用于创建一个新的会话，该会话成为当前进程的会话，同时将当前进程设置为该会话的首进程，该函数还将当前进程的进程组ID设置为其进程ID。这意味着当前进程将成为一个新的进程组和会话的首进程，不再属于原来的进程组或会话。</span><br><span class="line">头文件：#include &lt;unistd.h&gt;</span><br><span class="line">返回值：函数成功调用返回新会话的ID号，如果出错则返回-1。</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>getdtablesize函数</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int getdtablesize(void);</span><br><span class="line"></span><br><span class="line">功能：getdtablesize()函数用于获取当前进程可以打开的最大文件描述符数量，但由于该函数已经过时，不再被建议使用。取而代之的是使用getrlimit()函数来获取最大文件描述符数量。</span><br><span class="line">头文件：#include &lt;unistd.h&gt;</span><br><span class="line">返回值：函数成功调用返回当前进程可以打开的最大文件描述符数量，如果出错则返回-1。</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>getrlimit函数</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int getrlimit(int resource, struct rlimit *rlim);</span><br><span class="line">int setrlimit(int resource, const struct rlimit *rlim);</span><br><span class="line"></span><br><span class="line">功能：   getrlimit()函数用于获取指定资源的当前软限制和硬限制值。</span><br><span class="line">        setrlimit()函数则用于设置指定资源的软限制和硬限制值。</span><br><span class="line">头文件：#include &lt;sys/time.h&gt;  #include &lt;sys/resource.h&gt;</span><br><span class="line">返回值：getrlimit()函数成功调用返回0，失败返回-1；</span><br><span class="line">        setrlimit()函数成功调用返回0，失败返回-1。</span><br><span class="line">参数：getrlimit()函数有两个参数，分别是资源类型和rlim结构体的指针，其中rlim结构体用来存储获取到的软限制和硬限制值。资源类型可以是以下常量之一：</span><br><span class="line">    RLIMIT_CPU：CPU时间限制。</span><br><span class="line">    RLIMIT_FSIZE：文件大小限制。</span><br><span class="line">    RLIMIT_DATA：数据段大小限制。</span><br><span class="line">    RLIMIT_STACK：栈大小限制。</span><br><span class="line">    RLIMIT_CORE：核心转储文件大小限制。</span><br><span class="line">    RLIMIT_RSS：驻留内存集大小限制。</span><br><span class="line">    RLIMIT_NOFILE：打开的文件数量限制。</span><br><span class="line">    RLIMIT_AS：虚拟内存总量限制。</span><br><span class="line">    RLIMIT_NPROC：进程数量限制。</span><br><span class="line">    RLIMIT_MEMLOCK：内存锁定大小限制。</span><br><span class="line">    RLIMIT_LOCKS：文件锁数量限制。</span><br><span class="line">    RLIMIT_SIGPENDING：挂起的信号数量限制。</span><br><span class="line">    RLIMIT_MSGQUEUE：POSIX消息队列的大小限制。</span><br><span class="line">    RLIMIT_NICE：优先级限制。</span><br><span class="line">    RLIMIT_RTPRIO：实时优先级限制。</span><br><span class="line">    RLIMIT_RTTIME：实时时间限制。</span><br><span class="line">setrlimit()函数有两个参数，分别是资源类型和rlim结构体的指针，其中rlim结构体用来存储新的软限制和硬限制值。</span><br><span class="line"></span><br><span class="line">rlimt结构体定义如下：</span><br><span class="line">struct rlimit &#123;</span><br><span class="line">    rlim_t rlim_cur;  // 软限制值</span><br><span class="line">    rlim_t rlim_max;  // 硬限制值</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">rlim_t是一个无符号整型类型</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li><p>umask函数</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">mode_t umask(mode_t cmask);</span><br><span class="line"></span><br><span class="line">功能：用来设置当前进程的文件创建屏蔽字。文件创建屏蔽字是一种文件权限掩码，用来掩盖掉新建的文件的某些权限。文件创建屏蔽字是一个由9个常量按位或构成的mode_t类型的值，对应9种访问权限。在文件创建时，系统会将umask值和用户创建一个新文件或目录时指定一个文件权限值按位取反后进行按位与操作，以得到最终权限值。文件创建屏蔽字可以分为硬限制和软限制。</span><br><span class="line"></span><br><span class="line">头文件：#include &lt;sys/stat.h&gt;</span><br><span class="line">返回值：函数成功调用返回原文件创建屏蔽字的值，如果出错则返回-1。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>chdir函数</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int chdir(const char *path);</span><br><span class="line"></span><br><span class="line">功能：用来改变当前进程的工作目录，即将当前工作目录更改为path指定的目录。</span><br><span class="line">头文件：#include &lt;unistd.h&gt;</span><br><span class="line">返回值：函数成功调用返回0，失败返回-1。</span><br><span class="line">参数：path，表示要改变的工作目录路径。</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;signal.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">handle_signal</span><span class="params">(<span class="keyword">int</span> sig)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// 处理信号</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">pid_t</span> pid;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建子进程</span></span><br><span class="line">    pid = fork();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 创建子进程失败</span></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pid &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 父进程退出</span></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 子进程继续执行</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 脱离终端</span></span><br><span class="line">    setsid();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭文件描述符,gettablesize()用于获取当前进程的文件描述符数量上限,循环关闭</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//int fdtablesize = getdtablesize();</span></span><br><span class="line">    <span class="comment">//for(fd = 0;fd&lt;fdtablesize;fd++) close(fd);</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">rlimit</span> <span class="title">rlim</span>;</span></span><br><span class="line">    <span class="keyword">int</span> ret = getrlimit(RLIMIT_NOFILE, &amp;rlim);</span><br><span class="line">    <span class="keyword">for</span>(fd=<span class="number">0</span>;fd &lt; ret:fd++) close(fd);</span><br><span class="line">    <span class="comment">// 设置文件权限掩码，umask(0)不屏蔽任何权限</span></span><br><span class="line">    umask(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 改变工作目录 通常是把&quot;/&quot;或&quot;/tmp&quot;作为守护进程的当前目录</span></span><br><span class="line">    chdir(<span class="string">&quot;/&quot;</span>);</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">    <span class="comment">// 处理信号</span></span><br><span class="line">    signal(SIGCHLD, SIG_IGN);</span><br><span class="line">    signal(SIGHUP, handle_signal);</span><br><span class="line">    signal(SIGTERM, handle_signal);</span><br><span class="line">    signal(SIGINT, handle_signal);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 启动守护进程</span></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="comment">// 守护进程的主要工作</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="2-2-线程"><a href="#2-2-线程" class="headerlink" title="2.2 线程"></a>2.2 线程</h3><h4 id="2-2-1-线程的创建"><a href="#2-2-1-线程的创建" class="headerlink" title="2.2.1 线程的创建"></a>2.2.1 线程的创建</h4><h5 id="进程创建pthread-create"><a href="#进程创建pthread-create" class="headerlink" title="进程创建pthread_create"></a>进程创建pthread_create</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);</span><br><span class="line"></span><br><span class="line">功能：用于创建一个新的线程，并执行指定的函数。线程创建后立即执行指定的函数，如果指定的函数执行完毕后没有调用pthread_exit函数或返回值为NULL，则线程将自动调用pthread_exit函数并返回NULL。</span><br><span class="line"></span><br><span class="line">头文件：#include &lt;pthread.h&gt;</span><br><span class="line">返回值：函数成功调用返回0，失败返回错误码。</span><br><span class="line">参数：</span><br><span class="line">    thread：指向线程ID的指针，用于存储新线程的ID。</span><br><span class="line">    attr：指向线程属性结构体的指针，用于指定新线程的属性，如果为NULL则使用默认属性。</span><br><span class="line">    start_routine：指向线程函数的指针，表示新线程要执行的函数。</span><br><span class="line">    arg：指向void类型的指针，表示传递给线程函数的参数。</span><br><span class="line"></span><br><span class="line">注意：用了pthred函数后编译时要在后面链接一个phread库。-lpthread</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-2-线程的等待pthread-join"><a href="#2-2-2-线程的等待pthread-join" class="headerlink" title="2.2.2 线程的等待pthread_join"></a>2.2.2 线程的等待pthread_join</h4><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int pthread_join(pthread_t thread, void **retval);</span><br><span class="line"></span><br><span class="line">功能：用于等待指定的线程结束，并获取线程的返回值。如果指定的线程已经结束，则该函数会立即返回；否则该函数会阻塞当前线程，直到指定的线程结束为止。</span><br><span class="line"></span><br><span class="line">头文件：#include &lt;pthread.h&gt;</span><br><span class="line">返回值：函数成功调用返回0，失败返回错误码。</span><br><span class="line">参数：</span><br><span class="line">    thread：要等待的线程ID。</span><br><span class="line">    retval：指向指针的指针，用于存储线程的返回值。</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-2-3-线程的取消pthread-cancel"><a href="#2-2-3-线程的取消pthread-cancel" class="headerlink" title="2.2.3 线程的取消pthread_cancel"></a>2.2.3 线程的取消pthread_cancel</h4><blockquote>
+<p>线程有取消类型：</p>
+<p>是否允许取消，pthread_setcancelstate()，参数可选值：</p>
+<blockquote>
+<p>PTHREAD_CANCEL_ENABLE 这是默认值，该线程可以响应取消请求。<br>PTHREAD_CANCEL_DISABLE 无法响应取消请求</p>
+</blockquote>
+<p>设置取消类型，pthread_setcanceltype()，参数可选值：</p>
+<blockquote>
+<p>PTHREAD_CANCEL_ASYNCHRONOUS，异步方式，当发出取消请求后，线程可能会在任何点被杀死。<br>PTHREAD_CANCEL_DEFERRED，延迟方式，线程只会在特定的取消点（cancellation points，调用某个函数前）被杀死。</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>在Linux系统中，以下是一些常见的取消点：</p>
+<blockquote>
+<ul>
+<li>I/O操作，如read、write、open等</li>
+<li>等待信号，如sigsuspend、sigwait等</li>
+<li>等待锁，如pthreadmutexlock、pthreadmutextimedlock等</li>
+<li>等待条件变量，如pthreadcondwait、pthreadcondtimedwait等</li>
+<li>睡眠，如sleep、nanosleep等</li>
+</ul>
+</blockquote>
+</blockquote>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int pthread_cancel(pthread_t thread);</span><br><span class="line"></span><br><span class="line">功能：pthread_cancel函数用于请求取消指定的线程。线程在接收到取消请求后，可以选择立即取消或者继续执行直到响应取消请求为止。线程可以通过设置线程取消状态来控制是否接收取消请求。</span><br><span class="line"></span><br><span class="line">头文件：#include &lt;pthread.h&gt;</span><br><span class="line">返回值：函数成功调用返回0，失败返回错误码。</span><br><span class="line">参数：</span><br><span class="line">    thread：要取消的线程ID。</span><br><span class="line"></span><br><span class="line">注意：pthread_cancel只是像线程发送了一个取消请求，如果线程的退出</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">thread_func</span><span class="params">(<span class="keyword">void</span> *arg)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Thread is running.\n&quot;</span>);</span><br><span class="line">    sleep(<span class="number">10</span>);  <span class="comment">// 线程执行10秒</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Thread is exiting.\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">pthread_t</span> thread_id;</span><br><span class="line">    <span class="keyword">if</span> (pthread_create(&amp;thread_id, <span class="literal">NULL</span>, thread_func, <span class="literal">NULL</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Failed to create new thread.\n&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;New thread created successfully.\n&quot;</span>);</span><br><span class="line">        sleep(<span class="number">2</span>);  <span class="comment">// 稍微等待一下</span></span><br><span class="line">        <span class="keyword">if</span> (pthread_cancel(thread_id) != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Failed to cancel thread.\n&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Thread is canceled.\n&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        pthread_join(thread_id, <span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这个程序中创建了一个线程并让线程运行10秒，主线程运行2秒后调pthread_cancel取消线程，并pthread_join等待阻塞,但因为sleep是一个取消点，线程会被取消返回，所以整个进程在大概2秒后结束。如果 pthread_join 在 pthread_cancel之前或者没有取消点，整个进程则会运行大概10秒后结束。</span></span><br></pre></td></tr></table></figure>
+<h4 id="2-2-4-线程的退出pthread-exit"><a href="#2-2-4-线程的退出pthread-exit" class="headerlink" title="2.2.4 线程的退出pthread_exit"></a>2.2.4 线程的退出pthread_exit</h4><ul>
+<li>需要回收的pthread_exit和自然退出<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">void pthread_exit(void *retval);</span><br><span class="line"></span><br><span class="line">功能:pthread_exit()函数用于结束当前线程的执行，并返回一个指定的返回值。如果没有调用pthread_exit()函数，线程将在函数返回时自动退出。</span><br><span class="line"></span><br><span class="line">头文件: #include &lt;pthread.h&gt;</span><br><span class="line"></span><br><span class="line">返回值:pthread_exit()函数没有返回值，它只是用于结束当前线程的执行。</span><br><span class="line"></span><br><span class="line">参数：</span><br><span class="line">    void *retval：即线程返回值的指针（记得要是void）。retval参数可以用来指定当前线程的返回值，这个返回值可以被其他线程调用pthread_join()函数获取。</span><br><span class="line"></span><br><span class="line">注意：</span><br><span class="line">    1. pthread_exit函数和return语句的区别是，pthread_exit函数只会终止当前线程，不会影响进程中其他线程的执行，而return语句会终止整个进程。此外，pthread_exit函数可以自动调用线程清理程序和析构函数</span><br><span class="line">    2. pthread_exit函数和pthread_cancel函数的区别是，pthread_exit函数是线程主动退出的方式，它可以指定一个返回值给其他线程；pthread_cancel函数是线程被动退出的方式，它是由其他线程发送一个取消请求给目标线程，然后目标线程在取消点检查并终止执行。被取消的线程可以选择忽略取消或者控制如何被取消。</span><br><span class="line">    3. pthread_detach函数可以使线程与主线程分离，不需要等待或回收，而pthread_exit函数可以使线程退出，但需要其他线程调用pthread_join函数来等待或回收（自然退出也是）。另外，pthread_detach函数是在线程运行过程中调用的，pthread_exit函数是在线程结束时调用的。</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>示例代码</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">thread_func</span><span class="params">(<span class="keyword">void</span> *arg)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *value_ptr = (<span class="keyword">int</span> *) arg;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Thread function started with value %d\n&quot;</span>, *value_ptr);</span><br><span class="line">    *value_ptr += <span class="number">1</span>;</span><br><span class="line">    pthread_exit(value_ptr);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">pthread_t</span> thread;</span><br><span class="line">    <span class="keyword">int</span> value = <span class="number">42</span>;</span><br><span class="line">    <span class="keyword">int</span> *return_value_ptr;</span><br><span class="line"></span><br><span class="line">    pthread_create(&amp;thread, <span class="literal">NULL</span>, thread_func, &amp;value);</span><br><span class="line">    pthread_join(thread, (<span class="keyword">void</span> **) &amp;return_value_ptr);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Thread returned value %d\n&quot;</span>, *return_value_ptr);</span><br><span class="line">    <span class="built_in">free</span>(return_value_ptr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">    <span class="comment">//在这个例子中，我们使用 pthread_create 创建了一个新线程，并传递了一个指向整数值 value 的指针。线程函数 thread_func 接受这个值，将其加 1，然后使用指向更新后值的指针调用 pthread_exit。在主线程中，我们调用 pthread_join 等待子线程终止并检索其返回值。然后我们打印出返回值并释放其分配的内存。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>自动回收的pthread_detach</li>
+</ul>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int pthread_detach(pthread_t thread);</span><br><span class="line"></span><br><span class="line">功能：主线程中使用，用于将指定的线程标记为可被回收资源的状态，从而让线程在终止时能够自动释放占用的资源，无需其他线程调用pthread_join来等待其退出。</span><br><span class="line">头文件：#include &lt;pthread.h&gt;</span><br><span class="line">返回值：函数返回值为0表示成功，返回其他值表示失败。</span><br><span class="line">函数参数：</span><br><span class="line">  thread: 要被标记为可被回收状态的线程的线程ID。</span><br><span class="line"></span><br><span class="line">注意：只能对还未被其他线程使用pthread_join函数等待的线程进行pthread_detach操作。</span><br></pre></td></tr></table></figure>
+<br>
+
+<h3 id="2-3-进程间通信"><a href="#2-3-进程间通信" class="headerlink" title="2.3 进程间通信"></a>2.3 进程间通信</h3><h4 id="2-3-1-无名管道pipe"><a href="#2-3-1-无名管道pipe" class="headerlink" title="2.3.1 无名管道pipe"></a>2.3.1 无名管道pipe</h4><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int pipe(int pipefd[2]);</span><br><span class="line"></span><br><span class="line">功能:用于创建一个管道，它返回两个文件描述符，一个用于读取管道中的数据，一个用于写入数据到管道中。</span><br><span class="line">头文件:在使用pipe函数时需要包含头文件&lt;unistd.h&gt;，该头文件中包含了pipe函数的声明。</span><br><span class="line">返回值:pipe函数成功执行时返回0，失败时返回-1。</span><br><span class="line">参数:</span><br><span class="line">    fd:该数组用于存储创建的管道的读取和写入文件描述符。fd[0]用于读取管道中的数据，fd[1]用于向管道中写入数据。</span><br><span class="line"></span><br><span class="line">注意：pipe有读写特性</span><br><span class="line">读特性</span><br><span class="line">	写端存在：</span><br><span class="line">        管道中有数据：返回读到的字节数</span><br><span class="line">        管道中无数据：阻塞</span><br><span class="line">    写端不存在：</span><br><span class="line">       	管道中有数据：返回读到的字节数</span><br><span class="line">        管道中无数据：返回0</span><br><span class="line">写特性</span><br><span class="line">    读端存在：</span><br><span class="line">        空间足够：返回写入的字节数</span><br><span class="line">        空间不足：阻塞</span><br><span class="line">    读端不存在：    </span><br><span class="line">        无论是否有空间：管道破裂</span><br></pre></td></tr></table></figure>
+<p>示例代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> pipefd[<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">char</span> buf[<span class="number">256</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (pipe(pipefd) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;pipe error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (pid == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;fork error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">// 子进程</span></span><br><span class="line">        close(pipefd[<span class="number">0</span>]); <span class="comment">// 关闭读端</span></span><br><span class="line">        <span class="keyword">char</span>* msg = <span class="string">&quot;Hello, parent process!&quot;</span>;</span><br><span class="line">        write(pipefd[<span class="number">1</span>], msg, <span class="built_in">strlen</span>(msg) + <span class="number">1</span>); <span class="comment">// 写入管道</span></span><br><span class="line">        <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123; <span class="comment">// 父进程</span></span><br><span class="line">        close(pipefd[<span class="number">1</span>]); <span class="comment">// 关闭写端</span></span><br><span class="line">        <span class="keyword">ssize_t</span> num = read(pipefd[<span class="number">0</span>], buf, <span class="keyword">sizeof</span>(buf)); <span class="comment">// 读取管道数据</span></span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;Received message from child process: %s\n&quot;</span>, buf);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_SUCCESS);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//创建一个子进程，并在父子进程间创建一个管道，子进程写管道，父进程读管道</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-2-有名管道fifo"><a href="#2-3-2-有名管道fifo" class="headerlink" title="2.3.2 有名管道fifo"></a>2.3.2 有名管道fifo</h4><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int mkfifo(const char *pathname, mode_t mode);</span><br><span class="line"></span><br><span class="line">功能：mkfifo函数用于创建一个FIFO文件，FIFO文件是一种特殊的文件，可以实现进程间通信。</span><br><span class="line">头文件：#include &lt;sys/types.h&gt;  #include &lt;sys/stat.h&gt;</span><br><span class="line">返回值：函数返回值为0表示成功，返回其他值表示失败。</span><br><span class="line">参数：</span><br><span class="line">    pathname: FIFO文件的路径和名称。</span><br><span class="line">    mode: FIFO文件的权限。</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/types.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/stat.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">char</span>* fifo_name = <span class="string">&quot;./myfifo&quot;</span>;</span><br><span class="line">    <span class="keyword">int</span> fd;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建FIFO文件</span></span><br><span class="line">    <span class="keyword">if</span> (mkfifo(fifo_name, <span class="number">0666</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;mkfifo error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">pid_t</span> pid = fork();</span><br><span class="line">    <span class="keyword">if</span> (pid == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;fork error&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">// 子进程</span></span><br><span class="line">        <span class="keyword">char</span> buf[<span class="number">256</span>];</span><br><span class="line">        <span class="built_in">memset</span>(buf, <span class="number">0</span>, <span class="keyword">sizeof</span>(buf));</span><br><span class="line">        <span class="comment">// 打开FIFO文件</span></span><br><span class="line">        <span class="keyword">if</span> ((fd = open(fifo_name, O_RDONLY)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;open error&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 从FIFO读取数据</span></span><br><span class="line">        <span class="keyword">if</span> (read(fd, buf, <span class="keyword">sizeof</span>(buf)) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="built_in">printf</span>(<span class="string">&quot;Received message from parent: %s\n&quot;</span>, buf);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 关闭FIFO文件</span></span><br><span class="line">        close(fd);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 父进程</span></span><br><span class="line">        <span class="comment">// 打开FIFO文件</span></span><br><span class="line">        <span class="keyword">if</span> ((fd = open(fifo_name, O_WRONLY)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;open error&quot;</span>);</span><br><span class="line">            <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 向FIFO写入数据</span></span><br><span class="line">        <span class="keyword">char</span>* message = <span class="string">&quot;Hello, child process!&quot;</span>;</span><br><span class="line">        <span class="keyword">if</span> (write(fd, message, <span class="built_in">strlen</span>(message)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            perror(<span class="string">&quot;write error&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 关闭FIFO文件</span></span><br><span class="line">        close(fd);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 删除FIFO文件</span></span><br><span class="line">    <span class="keyword">if</span> (unlink(fifo_name) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;unlink error&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在这个示例代码中，使用mkfifo函数创建一个名为&quot;myfifo&quot;的FIFO文件，然后创建子进程。在父进程中，使用open函数打开FIFO文件，并使用write函数向其中写入一条消息。在子进程中，使用open函数打开FIFO文件，并使用read函数从其中读取一条消息。在最后，使用unlink函数删除FIFO文件。</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-3-共享内存"><a href="#2-3-3-共享内存" class="headerlink" title="2.3.3 共享内存"></a>2.3.3 共享内存</h4><h5 id="生成键值-ftok"><a href="#生成键值-ftok" class="headerlink" title="生成键值 ftok"></a>生成键值 ftok</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">key_t ftok(const char *pathname, int proj_id);</span><br><span class="line"></span><br><span class="line">功能：ftok函数用于生成一个唯一的键值，这个键值通常用于创建或获取共享内存、消息队列等系统对象。</span><br><span class="line">头文件：#include &lt;sys/types.h&gt;  #include &lt;sys/ipc.h&gt;</span><br><span class="line">返回值：函数返回值为一个非零整数，如果生成键值失败则返回-1。</span><br><span class="line">函数参数：</span><br><span class="line">    pathname: 文件路径和名称，用于生成键值。</span><br><span class="line">    proj_id: 项目ID，用于进一步生成键值。</span><br><span class="line">注意事项：</span><br><span class="line">    1. ftok函数根据文件路径和名称以及项目ID生成一个唯一的键值，这个键值通常用于创建或获取共享内存、消息队列等系统对象。</span><br><span class="line">    2. 为了保证生成的键值唯一，需要选择一个具有唯一性的文件路径和名称以及项目ID。</span><br><span class="line">    3. 在使用ftok函数生成键值时，需要注意文件路径和名称的正确性以及是否具有可读可写的权限。</span><br></pre></td></tr></table></figure>
+
+<h5 id="创建共享内存shmget"><a href="#创建共享内存shmget" class="headerlink" title="创建共享内存shmget"></a>创建共享内存shmget</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int shmget(key_t key, size_t size, int shmflg);</span><br><span class="line"></span><br><span class="line">功能：shmget函数用于创建或获取一个共享内存段。</span><br><span class="line">头文件：#include &lt;sys/types.h&gt; #include &lt;sys/ipc.h&gt; #include &lt;sys/shm.h&gt;</span><br><span class="line">返回值：函数返回值为共享内存段的标识符，如果创建或获取共享内存段失败则返回-1。</span><br><span class="line">函数参数：</span><br><span class="line">    key: 共享内存段的键值。</span><br><span class="line">    size: 共享内存段的大小。</span><br><span class="line">    shmflg: 共享内存段的标志位，用于指定共享内存的权限和创建方式等。中间用 | 来连接。</span><br><span class="line">        - IPC_CREAT：如果共享内存段不存在，则创建它。</span><br><span class="line">        - IPC_EXCL：如果同时指定了 IPC_CREAT 和 IPC_EXCL，并且共享内存段已经存在，则返回错误。</span><br><span class="line">        - SHM_HUGETLB：使用大页面分配共享内存段。</span><br><span class="line">        - SHM_NORESERVE：不为共享内存段保留交换空间。</span><br><span class="line">        - 0664：共享内存的权限（也可以是其它的数）</span><br></pre></td></tr></table></figure>
+
+<h5 id="映射共享内存shmat"><a href="#映射共享内存shmat" class="headerlink" title="映射共享内存shmat"></a>映射共享内存shmat</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">void *shmat(int shmid, const void *shmaddr, int shmflg);</span><br><span class="line"></span><br><span class="line">功能：shmat函数用于将共享内存段映射到当前进程的地址空间，并返回共享内存段的起始地址。</span><br><span class="line">头文件：#include &lt;sys/types.h&gt;  #include &lt;sys/shm.h&gt;</span><br><span class="line">返回值：函数返回值为共享内存段的起始地址，如果映射失败则返回-1。</span><br><span class="line">函数参数：</span><br><span class="line">    shmid: 共享内存段的标识符。</span><br><span class="line">    shmaddr: 映射共享内存段的首地址，通常设置为NULL。</span><br><span class="line">    shmflg: 映射共享内存段的标志位，用于指定映射的方式和权限等。</span><br></pre></td></tr></table></figure>
+
+<h5 id="解除共享内存的映射shmdt"><a href="#解除共享内存的映射shmdt" class="headerlink" title="解除共享内存的映射shmdt"></a>解除共享内存的映射shmdt</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int shmdt(const void *shmaddr);</span><br><span class="line"></span><br><span class="line">功能：shmdt函数用于解除共享内存段和当前进程地址空间的映射。</span><br><span class="line">头文件：#include &lt;sys/shm.h&gt;</span><br><span class="line">返回值：函数成功时返回 0，失败时返回 -1。</span><br><span class="line">函数参数：</span><br><span class="line">    shmaddr：指向共享内存区域的指针。通常，该指针是由 shmat() 函数返回的共享内存区域地址。</span><br><span class="line">注意事项：</span><br><span class="line">    1. 在调用 shmdt 函数分离共享内存区域后，程序不应该再使用该指针访问共享内存，因为这样会导致未定义的行为。</span><br><span class="line">    2. 如果当前进程是最后一个附加到该共享内存区域的进程，那么该共享内存区域会被系统自动删除。</span><br></pre></td></tr></table></figure>
+
+<h5 id="控制共享内存shmctl"><a href="#控制共享内存shmctl" class="headerlink" title="控制共享内存shmctl"></a>控制共享内存shmctl</h5><figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">int shmctl(int shmid, int cmd, struct shmid_ds *buf);</span><br><span class="line"></span><br><span class="line">功能：shmctl 函数用于对共享内存区域进行控制操作，包括获取共享内存区域的状态信息、修改共享内存区域的权限和删除共享内存区域等操作。</span><br><span class="line"></span><br><span class="line">头文件：#include &lt;sys/shm.h&gt;</span><br><span class="line"></span><br><span class="line">返回值：函数成功时返回 0，失败时返回 -1。</span><br><span class="line"></span><br><span class="line">函数参数：</span><br><span class="line"></span><br><span class="line">    shmid：共享内存区域的标识符，由 shmget 函数返回。</span><br><span class="line">    cmd：控制操作命令。常见的操作命令包括：</span><br><span class="line">        IPC_STAT：获取共享内存区域的状态信息，将共享内存的相关信息保存到 buf 结构体中。</span><br><span class="line">        IPC_SET：修改共享内存区域的状态信息，使用 buf 结构体中的信息更新共享内存的相关属性。</span><br><span class="line">        IPC_RMID：删除共享内存区域。</span><br><span class="line">    buf：指向 shmid_ds 结构体的指针，用于存储共享内存区域的状态信息或更新共享内存的相关属性。如果 cmd 参数为 IPC_STAT 或 IPC_SET，则需要传入一个有效的 shmid_ds 结构体指针。</span><br><span class="line">注意事项：</span><br><span class="line"></span><br><span class="line">    1. 在使用 shmctl 函数删除共享内存区域时，应该确保没有任何进程正在使用该共享内存，否则删除操作会失败。</span><br><span class="line">    2. 如果 shmctl 函数的 cmd 参数为 IPC_RMID，则系统会立即删除共享内存区域，而不管当前是否有进程正在使用该共享内存。</span><br></pre></td></tr></table></figure>
+
+<h5 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h5><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/ipc.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;sys/shm.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> SHM_SIZE 1024</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> shmid;</span><br><span class="line">    <span class="keyword">key_t</span> key;</span><br><span class="line">    <span class="keyword">char</span> *shm, *s;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 生成一个唯一的 key</span></span><br><span class="line">    <span class="keyword">if</span> ((key = ftok(<span class="string">&quot;.&quot;</span>, <span class="string">&#x27;R&#x27;</span>)) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;ftok&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建共享内存段</span></span><br><span class="line">    <span class="keyword">if</span> ((shmid = shmget(key, SHM_SIZE, <span class="number">0644</span> | IPC_CREAT)) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;shmget&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将共享内存段连接到当前进程的地址空间</span></span><br><span class="line">    <span class="keyword">if</span> ((shm = shmat(shmid, <span class="literal">NULL</span>, <span class="number">0</span>)) == (<span class="keyword">char</span> *) <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;shmat&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 向共享内存段写入数据</span></span><br><span class="line">    s = shm;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">char</span> c = <span class="string">&#x27;a&#x27;</span>; c &lt;= <span class="string">&#x27;z&#x27;</span>; c++) &#123;</span><br><span class="line">        *s++ = c;</span><br><span class="line">    &#125;</span><br><span class="line">    *s = <span class="string">&#x27;\0&#x27;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从共享内存段读取数据并输出</span></span><br><span class="line">    <span class="keyword">for</span> (s = shm; *s != <span class="string">&#x27;\0&#x27;</span>; s++) &#123;</span><br><span class="line">        <span class="built_in">putchar</span>(*s);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">putchar</span>(<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将共享内存段从当前进程的地址空间分离</span></span><br><span class="line">    <span class="keyword">if</span> (shmdt(shm) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;shmdt&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 删除共享内存段</span></span><br><span class="line">    <span class="keyword">if</span> (shmctl(shmid, IPC_RMID, <span class="literal">NULL</span>) == <span class="number">-1</span>) &#123;</span><br><span class="line">        perror(<span class="string">&quot;shmctl&quot;</span>);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//代码中首先使用 ftok 函数生成一个唯一的 key，然后使用 shmget 函数创建一个大小为 SHM_SIZE 的共享内存段，并将其连接到当前进程的地址空间中。接着，向共享内存段写入数据，从共享内存段读取数据并输出。最后，将共享内存段从当前进程的地址空间分离，并使用 shmctl 函数删除共享内存段。</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-4"><a href="#2-3-4" class="headerlink" title="2.3.4"></a>2.3.4</h4>]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>进程线程</tag>
       </tags>
   </entry>
 </search>
