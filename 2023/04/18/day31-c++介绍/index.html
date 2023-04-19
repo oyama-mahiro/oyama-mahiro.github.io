@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.8k</span>
+            <span class="post-count">3.1k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">10 min</span>
+            <span class="post-count">11 min</span>
         </span>
     </span>
 </div>
@@ -217,7 +217,10 @@
 <li>尽量避免使用多层引用，以防止产生混乱和错误。</li>
 <li>尽量避免使用引用的引用，以防止出现未定义的行为。</li>
 </ul>
- 
+<h3 id="3-5-内联函数"><a href="#3-5-内联函数" class="headerlink" title="3.5 内联函数"></a>3.5 内联函数</h3><p>c++中可以用宏函数提高效率，但安全性降低</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//宏函数只会进行引用，不是真正的函数</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> max(a,b) ((a)&gt;(b)?(a):(b))</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> max1;</span><br><span class="line">  <span class="keyword">int</span> a = <span class="number">7</span>;</span><br><span class="line">  <span class="keyword">int</span> b = <span class="number">4</span>;</span><br><span class="line">  max1 = max(a++,b); <span class="comment">//实际上是((a++)&gt;(b)?(a++):(b));</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;max1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;a&lt;&lt;<span class="built_in">endl</span>;  <span class="comment">//结果是max=8，a=9</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>c++中引入了inlien关键字（内联函数），用来实现类似于宏函数的效果<br>但内联函数通过空间换取的时间，相当于直接把内联函数的代码嵌如到主函数中。空间开销大，一般内联函数不能太复杂</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">max</span><span class="params">(<span class="keyword">int</span> a,<span class="keyword">int</span> b)</span></span>&#123;</span><br><span class="line">  <span class="keyword">return</span> a&gt;b?a:b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> max1;</span><br><span class="line">  <span class="keyword">int</span> a=<span class="number">7</span>,b=<span class="number">4</span>;</span><br><span class="line">  max1 = max(a++,b);</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;max1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;a&lt;&lt;<span class="built_in">endl</span>;  <span class="comment">//结果是max=7，a=8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
       <!-- reward -->
       
       <div id="reword-out">
@@ -299,6 +302,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2023/04/19/day32-c-%E7%BB%93%E6%9E%84%E4%BD%93%EF%BC%8C%E7%B1%BB/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            day32-c++结构体，类
+          
+        </div>
+      </a>
     
     
       <a href="/2023/04/11/day30-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E8%BF%9E%E6%8E%A5/" class="article-nav-link">
