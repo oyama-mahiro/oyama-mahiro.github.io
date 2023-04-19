@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">11.3k</span>
+            <span class="post-count">11.4k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">47 min</span>
+            <span class="post-count">48 min</span>
         </span>
     </span>
 </div>
@@ -134,6 +134,7 @@
 
 <h3 id="2-6发送接收数据-–-send、recv"><a href="#2-6发送接收数据-–-send、recv" class="headerlink" title="2.6发送接收数据 – send、recv"></a>2.6发送接收数据 – send、recv</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">ssize_t send(int sockfd, const void *buf, size_t len, int flags);</span><br><span class="line">ssize_t recv(int sockfd, void *buf, size_t len, int flags);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">功能：用于向已连接的套接字发送/接收数据。</span><br><span class="line"></span><br><span class="line">头文件：</span><br><span class="line">#include &lt;sys/types.h&gt;</span><br><span class="line">#include &lt;sys/socket.h&gt;</span><br><span class="line"></span><br><span class="line">返回值：</span><br><span class="line">成功将返回实际发送/接收的字节数。</span><br><span class="line">失败将返回-1，并设置errno变量表示错误类型。</span><br><span class="line"></span><br><span class="line">参数：</span><br><span class="line">    sockfd：需要发送/接收数据的套接字的文件描述符。</span><br><span class="line">    buf：指向待发送/接收数据的缓冲区的指针。</span><br><span class="line">    len：待发送/接收数据的字节数。</span><br><span class="line">    flags：用于控制数据发送/接收的方式的标志位，一般设置为0即可。</span><br><span class="line"></span><br><span class="line">注意：</span><br><span class="line">1.在发送数据时，可以通过设置flags参数的值来控制数据发送的方式，例如设置为MSG_DONTWAIT将数据设置为非阻塞模式。一般情况下，flags的取值应该为0。</span><br><span class="line">2. 在发送数据时，应该确保buf指向的缓冲区中的数据已经准备好。如果缓冲区中的数据还没有完全准备好，可以使用select或poll等函数进行等待，以避免因缓冲区未就绪而导致的发送失败。</span><br></pre></td></tr></table></figure>
 
+<p><strong><font color="red">在进行TCP协议传输的时候，要注意数据流传输的特点，recv和send不一定是一一对应的（一般情况下是一一对应），也就是说并不是send一次，就一定recv一次就接收完，有可能send一次，recv多次才接收完，也可能send多次，一次recv就接收完了。这和网络束调有关。</font></strong></p>
 <p>示例代码：</p>
 <p>客户端向服务端发送图片：</p>
 <ul>
@@ -558,6 +559,15 @@ IP_MULTICAST_IF      允许开启组播报文的接口       struct ip_mreq    <
 
    
   <nav class="article-nav">
+    
+      <a href="/2023/04/18/day31-c++%E4%BB%8B%E7%BB%8D/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            day31-c++介绍
+          
+        </div>
+      </a>
     
     
       <a href="/2023/04/10/day29-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%AE%80%E4%BB%8B/" class="article-nav-link">
