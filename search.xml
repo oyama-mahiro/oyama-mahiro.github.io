@@ -228,6 +228,77 @@
       </tags>
   </entry>
   <entry>
+    <title>day11-c数组与指针</title>
+    <url>/2023/03/08/day11-c%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<h1 id="day11-c数组与指针"><a href="#day11-c数组与指针" class="headerlink" title="day11-c数组与指针"></a><font color="green">day11-c数组与指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h3><p>​    字符数组和字符串</p>
+<p>​        字符数组：存放的数据是字符数据</p>
+<p>​        字符串：由一个或者多个字符组成，在字符串的末尾有一个隐藏的空字符 – ‘\0’</p>
+<p>​        char a[50] = “hello”;    </p>
+<a id="more"></a>
+
+<h3 id="2-字符串函数："><a href="#2-字符串函数：" class="headerlink" title="2.字符串函数："></a>2.字符串函数：</h3><blockquote>
+<p>字符串长度函数 – strlen()<br>字符串连接函数– strcat()<br>字符串拷贝函数 – strcpy()<br>字符串比较函数– strcmp()</p>
+</blockquote>
+<p><strong>注：<code>int a[10]=&#123;0&#125;</code>相当于把数组a中的所有元素给赋值成’\0’，但是<font color="red">int a[arr]={0}</font>则错误，因为在数组长度为变量时不能同时进行赋值</strong><br><strong>同时也不能把字符串常量赋值给一个字符数组，因为字符数组本身也是个常量 <font color="red">char s[10];s=”abcdefg”</font>是错误的。</strong></p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针相关运算符"><a href="#1、指针相关运算符" class="headerlink" title="1、指针相关运算符"></a>1、指针相关运算符</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&amp;:获取内容的地址</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	&amp;a --&gt; 获取到a的地址</span><br><span class="line">    </span><br><span class="line">*：获取地址中的内容</span><br><span class="line">    *(&amp;a) == a == <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、指针变量"><a href="#2、指针变量" class="headerlink" title="2、指针变量"></a>2、指针变量</h3><p>​    指针变量就是用于存放地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *指针变量名;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">//将a的地址存放在了一个名为p的指针变量中</span></span><br><span class="line">p == &amp;a;</span><br><span class="line">*p = *(&amp;a) == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、指针变量的赋值"><a href="#3、指针变量的赋值" class="headerlink" title="3、指针变量的赋值"></a>3、指针变量的赋值</h3><p>赋值运算符的左值和右值类型一定要相同</p>
+<p>(1)将一个变量的地址赋值给一个具有相同数据类型的指针变量</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br></pre></td></tr></table></figure>
+
+<p>(2)将一个已有的指针赋值给一个 具有相同数据类型的指针变量</p>
+ <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"><span class="keyword">int</span> *q = p;</span><br><span class="line"></span><br><span class="line">q == p == &amp;a;</span><br></pre></td></tr></table></figure>
+
+<p>(3)将0值赋值给一个指针变量 – 空指针</p>
+<p>野指针：定义一个指针，没有明确指向，不能访问野指针</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
+
+<p>(4)将一个数组的数组名赋值给一个具有相同数据类型的指针变量</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a; <span class="comment">// a == &amp;a[0]</span></span><br></pre></td></tr></table></figure>
+
+<p>(5)把一个复合形式的表达式的值赋给一个具有相同数据类型的指针变量</p>
+<h3 id="4、指针的运算"><a href="#4、指针的运算" class="headerlink" title="4、指针的运算"></a>4、指针的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// &amp;a == 0x2000</span></span><br><span class="line">p+n --&gt; p向高地址位偏移n个元素大小的字节数  <span class="comment">//元素指，该指针指向的内容</span></span><br><span class="line">p-n --&gt; p向低地址位偏移n个元素大小的字节数</span><br><span class="line"></span><br><span class="line">p+n == p+n*<span class="keyword">sizeof</span>(元素类型)  <span class="comment">//在该例中元素类型为int</span></span><br><span class="line">    </span><br><span class="line">注意：指针运算中没有 指针 + 指针、指针 * 指针、 指针 / 指针，因为没有任何实际意义 </span><br><span class="line">    但是有指针 - 指针</span><br><span class="line">    </span><br><span class="line">    指针-指针表示相同类型的两个指针之间相差多少个元素,结果的正负，仅代表地址高低</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> *q = &amp;b;</span><br><span class="line">	q - p ==  (q-p)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h3 id="5、指针和一维数组"><a href="#5、指针和一维数组" class="headerlink" title="5、指针和一维数组"></a>5、指针和一维数组</h3><p>将一个一维数组的数组名赋值给一个具有相同数据类型的指针变量, 我们就可以通过该指针访问数组中所有元素</p>
+<blockquote>
+<p><strong>注：数组名不能递增递减</strong></p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">4</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>];</span><br><span class="line">*(p+<span class="number">1</span>) == a[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">p++; <span class="comment">// p = p+1; right</span></span><br><span class="line">a++; <span class="comment">// a = a+1; error  数组名不能递增递减</span></span><br><span class="line"></span><br><span class="line">数组a中的第三个元素的表达方式:</span><br><span class="line">	a[<span class="number">2</span>]、 *(p+<span class="number">2</span>)、 *(&amp;a[<span class="number">2</span>])、p[<span class="number">2</span>]、 *(a+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6、指针和二维数组-–-行指针（数组指针）"><a href="#6、指针和二维数组-–-行指针（数组指针）" class="headerlink" title="6、指针和二维数组 – 行指针（数组指针）"></a>6、指针和二维数组 – 行指针（数组指针）</h3><p>​    本质：数组指针是一个指针，存放的内容是地址，指针指向的内容是一个一维数组</p>
+<p>​    二维数组的数组名是一个行指针，指向二维数组的首地址，行指针+n相当于地址偏移n行元素</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//行指针的定义一般形式</span></span><br><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; (*指针变量名)[列数];</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"></span><br><span class="line">*(*(p+<span class="number">1</span>)+<span class="number">2</span>) == 第二行第三个元素</span><br><span class="line">*(*(p+<span class="number">0</span>)+<span class="number">1</span>) == 第一行第二个元素</span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h2 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x=<span class="number">258</span>;                                                      </span><br><span class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)&amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*(++p));</span><br><span class="line">  &#125;</span><br><span class="line">  ````</span><br><span class="line">程序运行结果是  &lt;u&gt;2,1&lt;/u&gt;  </span><br><span class="line"></span><br><span class="line">解：<span class="number">258</span>的<span class="number">16</span>进制为<span class="number">102</span>，按照<span class="keyword">int</span>的存储方式为 <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">02</span>，p指针先到<span class="number">02</span>，因为转移到<span class="keyword">char</span>后+<span class="number">1</span>为前进一个字符，则p指针跳到了<span class="number">01.</span>  </span><br><span class="line"></span><br><span class="line">### <span class="number">2.</span> </span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *arr[<span class="number">3</span>]=&#123;a[<span class="number">0</span>],a[<span class="number">1</span>],a[<span class="number">2</span>]&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%ld&quot;</span>,<span class="keyword">sizeof</span>(arr[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+<p>程序运行结果是  <u>8</u></p>
+<p>解：arr数组里的都是指针，sizeof指向第一个元素即指针，所以大小为8，不是a[0][3]中的12.</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h3><p>&emsp;若有以下说明和语句，int c[4][5],(*p)[5];p=c;能正确引用c数组元素的是<u> D</u>.<br>(A) p+1      (B) *(p+3)     　(C) *(p+1)+3   (D) *(p[0]+2) </p>
+<p>解：b错误原因是p+3仅代表地址，加个*只能表示p[3].</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>指针</tag>
+        <tag>数组</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Markdown笔记-基础</title>
     <url>/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="Markdown-概述"><a href="#Markdown-概述" class="headerlink" title="Markdown 概述"></a>Markdown 概述</h1><p>Markdown 是一种轻量级标记语言，与 2004 年创建。<br>后缀为<code>.md</code>或<code>.maekdown</code>，可导出 HTML，Word，pdf 等多种格式文档</p>
@@ -470,77 +541,6 @@
       <tags>
         <tag>Markdown</tag>
         <tag>Markdown基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day11-c数组与指针</title>
-    <url>/2023/03/08/day11-c%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<h1 id="day11-c数组与指针"><a href="#day11-c数组与指针" class="headerlink" title="day11-c数组与指针"></a><font color="green">day11-c数组与指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h3><p>​    字符数组和字符串</p>
-<p>​        字符数组：存放的数据是字符数据</p>
-<p>​        字符串：由一个或者多个字符组成，在字符串的末尾有一个隐藏的空字符 – ‘\0’</p>
-<p>​        char a[50] = “hello”;    </p>
-<a id="more"></a>
-
-<h3 id="2-字符串函数："><a href="#2-字符串函数：" class="headerlink" title="2.字符串函数："></a>2.字符串函数：</h3><blockquote>
-<p>字符串长度函数 – strlen()<br>字符串连接函数– strcat()<br>字符串拷贝函数 – strcpy()<br>字符串比较函数– strcmp()</p>
-</blockquote>
-<p><strong>注：<code>int a[10]=&#123;0&#125;</code>相当于把数组a中的所有元素给赋值成’\0’，但是<font color="red">int a[arr]={0}</font>则错误，因为在数组长度为变量时不能同时进行赋值</strong><br><strong>同时也不能把字符串常量赋值给一个字符数组，因为字符数组本身也是个常量 <font color="red">char s[10];s=”abcdefg”</font>是错误的。</strong></p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针相关运算符"><a href="#1、指针相关运算符" class="headerlink" title="1、指针相关运算符"></a>1、指针相关运算符</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&amp;:获取内容的地址</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	&amp;a --&gt; 获取到a的地址</span><br><span class="line">    </span><br><span class="line">*：获取地址中的内容</span><br><span class="line">    *(&amp;a) == a == <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、指针变量"><a href="#2、指针变量" class="headerlink" title="2、指针变量"></a>2、指针变量</h3><p>​    指针变量就是用于存放地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *指针变量名;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">//将a的地址存放在了一个名为p的指针变量中</span></span><br><span class="line">p == &amp;a;</span><br><span class="line">*p = *(&amp;a) == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、指针变量的赋值"><a href="#3、指针变量的赋值" class="headerlink" title="3、指针变量的赋值"></a>3、指针变量的赋值</h3><p>赋值运算符的左值和右值类型一定要相同</p>
-<p>(1)将一个变量的地址赋值给一个具有相同数据类型的指针变量</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br></pre></td></tr></table></figure>
-
-<p>(2)将一个已有的指针赋值给一个 具有相同数据类型的指针变量</p>
- <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"><span class="keyword">int</span> *q = p;</span><br><span class="line"></span><br><span class="line">q == p == &amp;a;</span><br></pre></td></tr></table></figure>
-
-<p>(3)将0值赋值给一个指针变量 – 空指针</p>
-<p>野指针：定义一个指针，没有明确指向，不能访问野指针</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
-
-<p>(4)将一个数组的数组名赋值给一个具有相同数据类型的指针变量</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a; <span class="comment">// a == &amp;a[0]</span></span><br></pre></td></tr></table></figure>
-
-<p>(5)把一个复合形式的表达式的值赋给一个具有相同数据类型的指针变量</p>
-<h3 id="4、指针的运算"><a href="#4、指针的运算" class="headerlink" title="4、指针的运算"></a>4、指针的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// &amp;a == 0x2000</span></span><br><span class="line">p+n --&gt; p向高地址位偏移n个元素大小的字节数  <span class="comment">//元素指，该指针指向的内容</span></span><br><span class="line">p-n --&gt; p向低地址位偏移n个元素大小的字节数</span><br><span class="line"></span><br><span class="line">p+n == p+n*<span class="keyword">sizeof</span>(元素类型)  <span class="comment">//在该例中元素类型为int</span></span><br><span class="line">    </span><br><span class="line">注意：指针运算中没有 指针 + 指针、指针 * 指针、 指针 / 指针，因为没有任何实际意义 </span><br><span class="line">    但是有指针 - 指针</span><br><span class="line">    </span><br><span class="line">    指针-指针表示相同类型的两个指针之间相差多少个元素,结果的正负，仅代表地址高低</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> *q = &amp;b;</span><br><span class="line">	q - p ==  (q-p)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h3 id="5、指针和一维数组"><a href="#5、指针和一维数组" class="headerlink" title="5、指针和一维数组"></a>5、指针和一维数组</h3><p>将一个一维数组的数组名赋值给一个具有相同数据类型的指针变量, 我们就可以通过该指针访问数组中所有元素</p>
-<blockquote>
-<p><strong>注：数组名不能递增递减</strong></p>
-</blockquote>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">4</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>];</span><br><span class="line">*(p+<span class="number">1</span>) == a[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">p++; <span class="comment">// p = p+1; right</span></span><br><span class="line">a++; <span class="comment">// a = a+1; error  数组名不能递增递减</span></span><br><span class="line"></span><br><span class="line">数组a中的第三个元素的表达方式:</span><br><span class="line">	a[<span class="number">2</span>]、 *(p+<span class="number">2</span>)、 *(&amp;a[<span class="number">2</span>])、p[<span class="number">2</span>]、 *(a+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6、指针和二维数组-–-行指针（数组指针）"><a href="#6、指针和二维数组-–-行指针（数组指针）" class="headerlink" title="6、指针和二维数组 – 行指针（数组指针）"></a>6、指针和二维数组 – 行指针（数组指针）</h3><p>​    本质：数组指针是一个指针，存放的内容是地址，指针指向的内容是一个一维数组</p>
-<p>​    二维数组的数组名是一个行指针，指向二维数组的首地址，行指针+n相当于地址偏移n行元素</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//行指针的定义一般形式</span></span><br><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; (*指针变量名)[列数];</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"></span><br><span class="line">*(*(p+<span class="number">1</span>)+<span class="number">2</span>) == 第二行第三个元素</span><br><span class="line">*(*(p+<span class="number">0</span>)+<span class="number">1</span>) == 第一行第二个元素</span><br></pre></td></tr></table></figure>
-
-<br>
-<br>
-
-<hr>
-<h2 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x=<span class="number">258</span>;                                                      </span><br><span class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)&amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*(++p));</span><br><span class="line">  &#125;</span><br><span class="line">  ````</span><br><span class="line">程序运行结果是  &lt;u&gt;2,1&lt;/u&gt;  </span><br><span class="line"></span><br><span class="line">解：<span class="number">258</span>的<span class="number">16</span>进制为<span class="number">102</span>，按照<span class="keyword">int</span>的存储方式为 <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">02</span>，p指针先到<span class="number">02</span>，因为转移到<span class="keyword">char</span>后+<span class="number">1</span>为前进一个字符，则p指针跳到了<span class="number">01.</span>  </span><br><span class="line"></span><br><span class="line">### <span class="number">2.</span> </span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *arr[<span class="number">3</span>]=&#123;a[<span class="number">0</span>],a[<span class="number">1</span>],a[<span class="number">2</span>]&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%ld&quot;</span>,<span class="keyword">sizeof</span>(arr[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
-<p>程序运行结果是  <u>8</u></p>
-<p>解：arr数组里的都是指针，sizeof指向第一个元素即指针，所以大小为8，不是a[0][3]中的12.</p>
-<h3 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h3><p>&emsp;若有以下说明和语句，int c[4][5],(*p)[5];p=c;能正确引用c数组元素的是<u> D</u>.<br>(A) p+1      (B) *(p+3)     　(C) *(p+1)+3   (D) *(p[0]+2) </p>
-<p>解：b错误原因是p+3仅代表地址，加个*只能表示p[3].</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>指针</tag>
-        <tag>数组</tag>
       </tags>
   </entry>
   <entry>
@@ -1480,6 +1480,15 @@
 <blockquote>
 <p>例：<br>struct temp{char a；short b;char c;int d}<br>结构体大小为12字节。因为以里面最大的int开辟空间为4字节<br>第一个4字节有<code>a,b</code>,因为偶数原则，a占1，b占3，4<br>第二个4字节有<code>c</code>，占1<br>第三个4字节有<code>d</code>占1，2，3，4</p>
 </blockquote>
+<blockquote>
+<p>static 修饰的不占空间</p>
+</blockquote>
+<ul>
+<li>空类 占1个字节 （占位符）</li>
+<li>成员函数、静态成员、友元函数 占 0字节 </li>
+<li>虚函数占 4字节 （虚函数表占4字节）</li>
+<li>非静态成员 满足字节序对齐 </li>
+</ul>
 ]]></content>
       <categories>
         <category>c语言</category>
@@ -2254,6 +2263,384 @@
       </tags>
   </entry>
   <entry>
+    <title>day35-c++类继承</title>
+    <url>/2023/04/25/day35-c-%E7%B1%BB%E7%BB%A7%E6%89%BF/</url>
+    <content><![CDATA[<h1 id="day35-c-类继承"><a href="#day35-c-类继承" class="headerlink" title="day35-c++类继承"></a><font color="green">day35-c++类继承</font></h1><!--mroe-->
+
+<h2 id="一、c-继承概念"><a href="#一、c-继承概念" class="headerlink" title="一、c++继承概念"></a>一、c++继承概念</h2><p>C++继承是面向对象程序设计中的一个重要概念，它允许我们根据一个已有的类来创建一个新的类，从而实现代码的重用和扩展。C++支持三种继承方式：公有继承、保护继承和私有继承，它们影响了基类和派生类之间成员的访问权限。C++还支持多继承，即一个派生类可以有多个基类，继承了它们的特性。在多继承中，有时会出现菱形继承的情况，即多个基类继承自同一个祖先类，导致派生类拥有重复的祖先类成员。为了解决这个问题，C++引入了虚继承和虚基类的概念，使得派生类只保留一份祖先类成员。</p>
+<p>友员函数可以继承。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、c-继承基础语法"><a href="#二、c-继承基础语法" class="headerlink" title="二、c++继承基础语法"></a>二、c++继承基础语法</h2><p>C++继承语法的一般形式是：</p>
+<blockquote>
+<p>class 派生类名 : 继承方式 基类名 {<br>&emsp;&emsp;派生类的成员<br>}</p>
+</blockquote>
+<p>&emsp;&emsp;其中，继承方式可以是public（公有）、protected（保护）或private（私有）三种之一，用来指定基类的成员在派生类中的访问权限。<br>&emsp;&emsp;如果不指定继承方式，默认为private。</p>
+<blockquote>
+<p>&emsp;&emsp;public是将基类的公有成员和保护成员继承给子类，且权限不变<br>&emsp;&emsp;protected是将基类的公有成员和保护成员继承给子类，并且权限变为protected，不能在外部访问。Protected继承也保持了父类和子类之间的is-a(继承，子类是父类的一种特殊情况)关系，但是这种关系对外部不可见。<br>&emsp;&emsp;private是将基类的共有成员和保护成员继承给子类，并且权限变为private。Private继承破坏了父类和子类之间的is-a关系，即子类不是一种特殊的父类。Private继承相当于把父类作为一个组件嵌入到子类中，实现了has-a(组合，一个类包含另一个类的对象)关系。</p>
+</blockquote>
+<p>&emsp;&emsp;例如，下面的代码定义了一个基类Animal和一个派生类Dog，Dog继承了Animal的所有成员，并增加了自己的成员函数bark()。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Animal is eating.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sleep</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Animal is sleeping.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> :</span> <span class="keyword">public</span> Animal &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bark</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Dog is barking.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 这样，我们就可以通过Dog类的对象来调用Animal类的成员函数，以及Dog类自己的成员函数，如下：</span></span><br><span class="line">Dog d;</span><br><span class="line">d.eat(); <span class="comment">// 调用基类的成员函数</span></span><br><span class="line">d.sleep(); <span class="comment">// 调用基类的成员函数</span></span><br><span class="line">d.bark(); <span class="comment">// 调用派生类的成员函数</span></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="三、c-继承的构造和析构顺序"><a href="#三、c-继承的构造和析构顺序" class="headerlink" title="三、c++继承的构造和析构顺序"></a>三、c++继承的构造和析构顺序</h2><p>当创建一个派生类的对象时，会先调用基类的构造函数，然后再调用派生类的构造函数。如果基类有多个，那么会按照声明的顺序从左到右依次调用基类的构造函数。如果基类或派生类有成员对象，那么会在调用自身的构造函数之前先调用成员对象的构造函数。如果基类的构造函数有参数，那么需要在派生类的初始化列表中显式地传递参数给基类的构造函数。</p>
+<p>其次，我们来看看析构函数的调用顺序。当销毁一个派生类的对象时，会先调用派生类的析构函数，然后再调用基类的析构函数。如果基类有多个，那么会按照声明的顺序从右到左依次调用基类的析构函数。如果基类或派生类有成员对象，那么会在调用自身的析构函数之后再调用成员对象的析构函数。</p>
+<p><img src="/2023/04/25/day35-c-%E7%B1%BB%E7%BB%A7%E6%89%BF/gouzhao.png" alt="gouzhao"></p>
+<br>
+<br>
+
+<hr>
+<h2 id="四、c-继承的赋值"><a href="#四、c-继承的赋值" class="headerlink" title="四、c++继承的赋值"></a>四、c++继承的赋值</h2><ul>
+<li>派生类的对象可以赋值给基类的对象，但是会发生对象切割，即派生类特有的成员会被忽略。</li>
+<li>基类的对象不能赋值给派生类的对象，因为基类的对象可能缺少派生类需要的成员。</li>
+<li>派生类的指针或引用可以赋值给基类的指针或引用，这样可以实现多态，即通过基类的指针或引用调用派生类的虚函数。</li>
+<li>基类的指针或引用不能赋值给派生类的指针或引用，除非使用强制类型转换，但是这样做可能会导致运行时错误。</li>
+</ul>
+<br>
+<br>
+
+<hr>
+<h2 id="五、c-继承的重名问题"><a href="#五、c-继承的重名问题" class="headerlink" title="五、c++继承的重名问题"></a>五、c++继承的重名问题</h2><p>在c++中，继承是一种实现代码复用和多态的重要机制。继承允许一个类（子类）从另一个类（父类）继承成员变量和成员函数，从而实现对父类的扩展和修改。但是，如果子类和父类中有同名的成员，那么就会出现重名问题，也就是说，子类中的同名成员会隐藏父类中的同名成员，导致访问冲突和歧义。</p>
+<p>为了解决这个问题，c++提供了以下几种方法：</p>
+<ul>
+<li>使用作用域限定符（::）来指定访问哪个类中的同名成员。例如，如果子类A继承了父类B，并且都有一个同名的函数f()，那么可以通过A::f()来调用子类中的f()，或者通过B::f()来调用父类中的f()。</li>
+<li>使用虚函数（virtual）来实现多态。虚函数是一种特殊的成员函数，它可以被子类重写（override），从而实现不同的行为。如果子类和父类中都有一个同名的虚函数f()，那么当通过父类指针或引用来调用f()时，会根据对象的实际类型来动态绑定（dynamic binding），调用相应的子类或父类中的f()。这样就可以避免歧义，并且提高了代码的灵活性和可维护性。</li>
+<li>使用using声明（using declaration）来引入父类中的同名成员到子类的作用域中。这样可以使得子类和父类中的同名成员都可以被访问，而不需要使用作用域限定符。例如，如果子类A继承了父类B，并且都有一个同名的变量x，那么可以在子类A中使用using B::x;来引入父类中的x到子类的作用域中。这样就可以通过x来访问子类或父类中的x。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>c++</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>继承</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day36-c++多态</title>
+    <url>/2023/04/26/day36-c-%E5%A4%9A%E6%80%81/</url>
+    <content><![CDATA[<h1 id="day36-c-多态"><a href="#day36-c-多态" class="headerlink" title="day36-c++多态"></a><font color="green">day36-c++多态</font></h1><!--mroe-->
+
+<h2 id="一、多态概念"><a href="#一、多态概念" class="headerlink" title="一、多态概念"></a>一、多态概念</h2><p>&emsp;&emsp;C++多态是一种程序设计思想，它允许使用一个统一的接口来操作不同的对象。多态的好处是可以提高代码的可扩展性和复用性，减少重复的代码和冗余的判断。C++中实现多态的方式有两种：静态多态和动态多态。</p>
+<p>&emsp;&emsp;静态多态是在编译时就确定了函数的调用，它主要依靠函数重载和运算符重载来实现。函数重载是指在同一作用域中，可以有多个同名但参数不同的函数，编译器根据函数的参数类型和个数来选择合适的函数。运算符重载是指可以为自定义的类型重新定义运算符的含义，使得运算符可以用于不同的对象。</p>
+<p>&emsp;&emsp;动态多态是在运行时才确定了函数的调用，它主要依靠虚函数和继承来实现。虚函数是在基类中使用关键字virtual声明的函数，在派生类中可以重新定义该函数的行为。继承是指一个类可以从另一个类继承其成员变量和成员函数，形成类之间的层次关系。当基类的指针或引用指向派生类的对象时，通过该指针或引用调用虚函数，会根据对象的实际类型来执行相应的函数，这就是动态多态。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、虚继承"><a href="#二、虚继承" class="headerlink" title="二、虚继承"></a>二、虚继承</h2><p>&emsp;&emsp;C++虚继承是一种特殊的继承方式，它可以解决多重继承中的菱形继承问题。菱形继承是指一个类继承了两个或多个具有相同基类的类，导致最终的派生类拥有多份基类的数据成员和成员函数。这样会造成数据冗余和二义性，影响程序的正确性和效率。</p>
+<p>&emsp;&emsp;为了避免菱形继承的问题，C++引入了虚继承的概念。虚继承是指在继承关系中，使用virtual关键字修饰某个或某些基类，使得这些基类在派生类中只存在一份拷贝。这样，最终的派生类就不会出现重复的基类成员，也不会有二义性的调用。</p>
+<p>&emsp;&emsp;虚继承的实现原理是通过虚基表和虚基指针来实现的。虚基表是一个存储了虚基类地址的表，每个虚基类都有一个虚基表。虚基指针是一个指向虚基表的指针，每个含有虚基类的派生类都有一个或多个虚基指针。当派生类对象访问虚基类成员时，就会通过虚基指针和虚基表找到对应的虚基类地址，然后再访问其成员。</p>
+<p>下面是一个简单的例子，演示了类的虚继承的用法和效果：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 基类A</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="keyword">int</span> a;</span><br><span class="line">A(<span class="keyword">int</span> x) : a(x) &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;a = &quot;</span> &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 派生类B，虚继承A</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> A &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="keyword">int</span> b;</span><br><span class="line">B(<span class="keyword">int</span> x, <span class="keyword">int</span> y) : A(x), b(y) &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;b = &quot;</span> &lt;&lt; b &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 派生类C，虚继承A</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span> :</span> <span class="keyword">virtual</span> <span class="keyword">public</span> A &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="keyword">int</span> c;</span><br><span class="line">C(<span class="keyword">int</span> x, <span class="keyword">int</span> y) : A(x), c(y) &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;c = &quot;</span> &lt;&lt; c &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 派生类D，继承B和C</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">D</span> :</span> <span class="keyword">public</span> B, <span class="keyword">public</span> C &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="keyword">int</span> d;</span><br><span class="line">D(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> z, <span class="keyword">int</span> w) : A(x), B(x, y), C(x, z), d(w) &#123;&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;d = &quot;</span> &lt;&lt; d &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="function">D <span class="title">obj</span><span class="params">(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span></span>; <span class="comment">// 创建D对象</span></span><br><span class="line">obj.show(); <span class="comment">// 调用D的show函数</span></span><br><span class="line">obj.B::show(); <span class="comment">// 调用B的show函数</span></span><br><span class="line">obj.C::show(); <span class="comment">// 调用C的show函数</span></span><br><span class="line">obj.A::show(); <span class="comment">// 调用A的show函数</span></span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">d = 4</span><br><span class="line">b = 2</span><br><span class="line">c = 3</span><br><span class="line">a = 1</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，D对象只有一份A对象的拷贝，而不是两份。这就是虚继承的作用。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、虚函数"><a href="#三、虚函数" class="headerlink" title="三、虚函数"></a>三、虚函数</h2><p>&emsp;&emsp;c++中，多态是通过虚函数来实现的。虚函数是在基类中用virtual关键字声明的成员函数，它可以在派生类中被重写（override）或重载（overload）。</p>
+<p>&emsp;&emsp;当我们用一个基类指针或引用指向一个派生类对象时(向上隐式转换，即派生类转换为父类，舍弃虚函数以外的派生类独有成员)，如果调用的是虚函数，那么会根据指针或引用所指向的对象的实际类型来决定调用哪个版本的虚函数，这就是多态的表现形式。**<font color="blue">也就是说，接口只是一个形式，只有在运行时当把调用了接口的派生类给基类指针或者引用时，接口才有具体的形式。</font>**</p>
+<p>例如，假设有一个基类Animal和两个派生类Cat和Dog，它们都有一个虚函数speak()，分别输出“喵喵”和“汪汪”。如果我们定义了一个Animal指针p，并让它分别指向一个Cat对象和一个Dog对象，那么当我们调用p-&gt;speak()时，就会根据p所指向的对象的类型来输出不同的声音：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 基类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">speak</span><span class="params">()</span> </span>&#123; <span class="comment">// 虚函数</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Animal speaks&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 派生类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> :</span> <span class="keyword">public</span> Animal &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">speak</span><span class="params">()</span> </span>&#123; <span class="comment">// 重写虚函数</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Meow&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 派生类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> :</span> <span class="keyword">public</span> Animal &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">speak</span><span class="params">()</span> </span>&#123; <span class="comment">// 重写虚函数</span></span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Woof&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Animal* p = <span class="literal">nullptr</span>; <span class="comment">// 基类指针</span></span><br><span class="line">    Cat c; <span class="comment">// Cat对象</span></span><br><span class="line">    Dog d; <span class="comment">// Dog对象</span></span><br><span class="line">    p = &amp;c; <span class="comment">// 指向Cat对象</span></span><br><span class="line">    p-&gt;speak(); <span class="comment">// 调用Cat的speak()，输出Meow</span></span><br><span class="line">    p = &amp;d; <span class="comment">// 指向Dog对象</span></span><br><span class="line">    p-&gt;speak(); <span class="comment">// 调用Dog的speak()，输出Woof</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>虚函数的限制：</p>
+<ul>
+<li>非类的成员函数不能定义为虚函数</li>
+<li>虚函数不能是静态函数。静态函数属于类，而不属于对象，它不受对象类型的影响，因此不能被重写。</li>
+<li>虚函数不能是构造函数。构造函数用于初始化对象，它在创建对象时就确定了对象的类型，因此不能被重写。但析构函数可以定义为虚函数。</li>
+<li>虚函数不能是内联函数。内联函数在编译时就被替换为函数体，它不会产生函数调用的开销，但也失去了多态的特性，因此不能被重写。</li>
+<li>虚函数不能是友元函数。友元函数不属于类的成员，它可以访问类的私有和保护成员，但它不受对象类型的影响，因此不能被重写。</li>
+</ul>
+</blockquote>
+<p>析构函数一般要写成虚函数，不写的话当基类指针或引用指向派生类，在销毁时只会销毁基类而不会销毁派生类。当析构函数加上虚函数后销毁时就会都被销毁。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="四、覆盖、重载和隐藏"><a href="#四、覆盖、重载和隐藏" class="headerlink" title="四、覆盖、重载和隐藏"></a>四、覆盖、重载和隐藏</h2><ol>
+<li>覆盖</li>
+</ol>
+<p>覆盖（override）：指子类重新实现了父类中的虚函数，函数名、参数列表、返回类型必须与父类中的虚函数完全相同，覆盖后，在使用基类指针或引用调用虚函数时，将调用子类的实现。</p>
+<p>覆盖是为了实现多态，让派生类可以根据自己的特性来修改基类中的虚函数行为，提高代码的灵活性和扩展性。</p>
+<p>覆盖（override）的特征：</p>
+<ul>
+<li>只能用于虚函数</li>
+<li>函数名、参数列表、返回类型必须与父类中的虚函数完全相同</li>
+<li>在使用基类指针或引用调用虚函数时，将调用子类的实现</li>
+<li>用于实现运行时多态性</li>
+</ul>
+<ol start="2">
+<li>重载</li>
+</ol>
+<p>重载（overload）：指在同一个作用域内，函数名相同，但是参数列表不同的函数。在使用函数时，根据参数的类型、数量或顺序来选择正确的函数。重载不要求函数是虚函数。</p>
+<p>重载是为了让同一个函数名可以根据不同的参数类型或个数来执行不同的操作，提高代码的简洁性和可读性。</p>
+<p>重载（overload）的特征：</p>
+<ul>
+<li>函数名相同，但是参数列表不同的函数</li>
+<li>在同一个作用域内定义</li>
+<li>参数的类型、数量或顺序不同</li>
+<li>返回类型可以相同也可以不同</li>
+<li>不要求函数是虚函数</li>
+<li>根据参数的类型、数量或顺序来选择正确的函数</li>
+<li>编译器在编译时根据函数的参数类型来确定函数调用</li>
+</ul>
+<ol start="3">
+<li>隐藏</li>
+</ol>
+<p>隐藏（hide）：指子类中的成员函数和父类中的成员函数同名，但参数列表不同，或者不是虚函数。在使用子类对象调用该函数时，将调用子类中的函数而不是父类中的函数。父类的同名函数被隐藏了，但不是被覆盖。</p>
+<p>隐藏是为了避免派生类和基类中的同名函数发生混淆或冲突，提高代码的安全性和稳定性。</p>
+<p>隐藏（hide）的特征：</p>
+<ul>
+<li>子类中的成员函数和父类中的成员函数同名，但参数列表不同，或者不是虚函数</li>
+<li>在使用子类对象调用该函数时，将调用子类中的函数而不是父类中的函数</li>
+<li>父类的同名函数被隐藏了，但不是被覆盖</li>
+<li>在编译时根据调用的对象类型来确定函数调用</li>
+</ul>
+<ol start="4">
+<li>之间的区别</li>
+</ol>
+<blockquote>
+<ul>
+<li>定义方式不同：覆盖是在子类中重新实现父类的虚函数，重载是在同一个作用域中定义多个同名函数，但是参数列表不同，隐藏是在子类中定义与父类同名但参数列表不同的非虚函数。</li>
+<li>参数列表不同：覆盖要求完全相同，重载要求函数名相同且参数列表不同，而隐藏则要求函数名相同但参数列表不同。</li>
+<li>是否是虚函数：覆盖只能用于虚函数，重载不要求函数是虚函数，而隐藏是在子类中定义非虚函数。</li>
+<li>实现机制不同：覆盖是在编译时动态绑定的，而重载和隐藏是在编译时静态绑定的。</li>
+<li>调用方式不同：覆盖是在使用基类指针或引用调用虚函数时，将调用子类的实现，而重载和隐藏是在编译时根据调用的对象类型来确定函数调用。</li>
+</ul>
+</blockquote>
+<p>当然，这三种特性也有一些注意事项和限制：</p>
+<ul>
+<li>重载时要避免歧义和二义性，即不能让编译器无法判断应该调用哪个重载函数。</li>
+<li>覆盖时要遵循里氏替换原则，即不能让派生类中的覆盖函数违反基类中虚函数的契约或预期。</li>
+<li>隐藏时要注意作用域和指针类型，即不能让基类指针或引用调用到派生类中隐藏的函数或反之。</li>
+</ul>
+<br>
+<br>
+
+<hr>
+<h2 id="五、抽象类"><a href="#五、抽象类" class="headerlink" title="五、抽象类"></a>五、抽象类</h2><p>C++ 抽象类是一种不能实例化的类，它包含了一个或多个纯虚函数，用来表示一种通用的概念或接口。纯虚函数是没有实现的虚函数，它们必须在派生类中被重写，否则派生类也不能实例化。抽象类的作用是为其他类提供一个可以继承的基类，从而实现多态性和代码复用。不能创建抽象类的对象。</p>
+<p>纯虚函数的定义如下：</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">virtual &lt;返回值&gt; &lt;函数名&gt;() = 0;//有纯虚数的类就是抽象类</span><br></pre></td></tr></table></figure>
+<p>下面是一个抽象类的例子：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 定义一个抽象类 Shape</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Shape</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">// 纯虚函数，用 = 0 表示</span></span><br><span class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line"><span class="comment">// 普通成员函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setWidth</span><span class="params">(<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">width = w;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setHeight</span><span class="params">(<span class="keyword">int</span> h)</span> </span>&#123;</span><br><span class="line">height = h;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line"><span class="keyword">int</span> width;</span><br><span class="line"><span class="keyword">int</span> height;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个派生类 Rectangle，继承自 Shape</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rectangle</span>:</span> <span class="keyword">public</span> Shape &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">// 重写纯虚函数</span></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="keyword">return</span> width * height;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个派生类 Triangle，继承自 Shape</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Triangle</span>:</span> <span class="keyword">public</span> Shape &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="comment">// 重写纯虚函数</span></span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">getArea</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="keyword">return</span> width * height / <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在主函数中使用抽象类和派生类</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="comment">// 不能创建抽象类的对象</span></span><br><span class="line"><span class="comment">// Shape s; // 编译错误</span></span><br><span class="line"><span class="comment">// 可以创建指向抽象类的指针或引用</span></span><br><span class="line">Shape* p;</span><br><span class="line"><span class="comment">// 可以创建派生类的对象</span></span><br><span class="line">Rectangle r;</span><br><span class="line">Triangle t;</span><br><span class="line"><span class="comment">// 可以通过指针或引用调用纯虚函数</span></span><br><span class="line">p = &amp;r; <span class="comment">// 指向 Rectangle 对象</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Rectangle area: &quot;</span> &lt;&lt; p-&gt;getArea() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 多态调用</span></span><br><span class="line">p = &amp;t; <span class="comment">// 指向 Triangle 对象</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Triangle area: &quot;</span> &lt;&lt; p-&gt;getArea() &lt;&lt; <span class="built_in">endl</span>; <span class="comment">// 多态调用</span></span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<br>
+<br>
+
+<hr>
+<h2 id="六、限制构造"><a href="#六、限制构造" class="headerlink" title="六、限制构造"></a>六、限制构造</h2><p>c++限制构造是一种编程技术，用于防止类的对象被随意创建或复制。c++限制构造的目的是保证类的封装性和一致性，以及避免资源的浪费和泄露。c++限制构造的方法有以下几种：</p>
+<ul>
+<li>将构造函数或拷贝构造函数声明为私有或受保护的，这样只有类的成员函数或友元函数才能访问它们。</li>
+<li>将构造函数或拷贝构造函数声明为删除的，这样编译器会报错，如果试图调用它们。</li>
+<li>将构造函数或拷贝构造函数声明为纯虚的，这样类就变成了抽象类，不能创建对象。</li>
+<li>将构造函数或拷贝构造函数定义为内联的，并在类内部抛出异常，这样运行时会发生错误，如果试图调用它们。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>c++</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>继承</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>嵌入式学习-Linux基础</title>
+    <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
+    <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
+<a id="more"></a>
+
+<h2 id="2、linux操作系统的基本使用"><a href="#2、linux操作系统的基本使用" class="headerlink" title="2、linux操作系统的基本使用"></a>2、linux操作系统的基本使用</h2><h3 id="0-、linux的文件的系统结构"><a href="#0-、linux的文件的系统结构" class="headerlink" title="(0)、linux的文件的系统结构"></a>(0)、linux的文件的系统结构</h3><blockquote>
+<ul>
+<li>windows：所有文件有分盘(C,D,E,F….)，每个盘中都有子文件或者子目录，对文件存放没有要求，可以放在任意位置</li>
+<li>linux：没有分盘，只有一个大的目录–根目录（’/‘），根目录下的文件夹每一个都有其固定作用</li>
+<li>bin：存放二进制文件或者可执行程序</li>
+<li>dev：存放设备文件</li>
+<li>etc：系统相关的配置文件</li>
+<li>home：用户目录，用户所有操作都在该目录下进行     /home/hqyj 可以用符号(~)表示</li>
+</ul>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h3 id="1-、基本的shell命令"><a href="#1-、基本的shell命令" class="headerlink" title="(1)、基本的shell命令"></a>(1)、基本的shell命令</h3><p>​        shell本质：命令行解释器，将用户输入的特定指令转换为系统能够识别的语言</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    绝对路径：从根目录出发所表示的一个路径</span><br><span class="line">    相对路径：相对于用户当前位置所表示的一个路径</span><br><span class="line"></span><br><span class="line">pwd:显示当前用户在文件系统中的绝对路径</span><br><span class="line">    用法：</span><br><span class="line">    	pwd + 回车</span><br><span class="line">ls:显示当前用户所在路径下的所有文件(不包含隐藏文件)</span><br><span class="line">    用法：</span><br><span class="line">    	ls + 回车</span><br><span class="line">ls -a：显示当前用户所在路径下的所有文件(包含隐藏文件)</span><br><span class="line">    <span class="string">&#x27;.&#x27;</span> == 用户当前目录</span><br><span class="line">    &#x27;..&#x27; == 当前目录的上一级目录</span><br><span class="line">    </span><br><span class="line">ls -l:显示当前用户所在路径下的所有文件的详细信息</span><br><span class="line">    - rw- rw- r--</span><br><span class="line">    第一位代表文件类型：</span><br><span class="line">    	<span class="string">&#x27;-&#x27;</span> :普通文件</span><br><span class="line">    	<span class="string">&#x27;d&#x27;</span> :目录文件</span><br><span class="line">    	<span class="string">&#x27;c&#x27;</span> :字符设备文件</span><br><span class="line">    	<span class="string">&#x27;b&#x27;</span> :块设备文件</span><br><span class="line">    	<span class="string">&#x27;p&#x27;</span> :管道文件</span><br><span class="line">    	<span class="string">&#x27;l&#x27;</span> :符号链接文件</span><br><span class="line">    	<span class="string">&#x27;s&#x27;</span> :套接字文件</span><br><span class="line">            不同操作系统下支持使用的文件类型不同</span><br><span class="line">    	</span><br><span class="line">    后<span class="number">9</span>位代表文件存取权限</span><br><span class="line">         rw-rw-r--  == <span class="number">110</span> <span class="number">110</span> <span class="number">100</span> == <span class="number">0664</span></span><br><span class="line">         权限的前<span class="number">3</span>位表示用户自己的使用权限，如果当前位上没有对应权限用<span class="string">&#x27;-&#x27;</span>表示                      </span><br><span class="line">		 权限的中间<span class="number">3</span>位代表用户组的使用权限        </span><br><span class="line">         权限的最后<span class="number">3</span>位代表其他用户的使用权限</span><br><span class="line">         r -- 具有读权限  w -- 具有写权限  x -- 具有可执行权限</span><br><span class="line">    改变文件权限的命令入下:</span><br><span class="line">         chmod [-R]  xyz  文件或目录</span><br><span class="line">         -R ： 以递归方式进行修改，比如修改某个目录下所有文件的属性。</span><br><span class="line"></span><br><span class="line">cd: 目录跳转	</span><br><span class="line">    用法：</span><br><span class="line">    	cd + 指定路径    </span><br><span class="line"></span><br><span class="line">touch:以不打开的方式创建一个文件，如果文件存在，则修改时间戳</span><br><span class="line">    用法：</span><br><span class="line">    	touch + 文件名</span><br><span class="line">    </span><br><span class="line">rm:删除指定文件</span><br><span class="line">    用法：</span><br><span class="line">    	rm + 文件名</span><br><span class="line">    </span><br><span class="line">cat：显示文件内容</span><br><span class="line">    用法：</span><br><span class="line">    	cat + 文件名</span><br><span class="line">    </span><br><span class="line">cp: 复制文件</span><br><span class="line">    用法：</span><br><span class="line">    	cp + 源文件名 + 路径名</span><br><span class="line">    	cp + 源文件名 + 目标文件名</span><br><span class="line">mv：移动文件</span><br><span class="line">    用法：</span><br><span class="line">    	mv + 源文件名 + 路径名</span><br><span class="line">    	mv + 源文件名 + 目标文件名    </span><br><span class="line"></span><br><span class="line">mkdir: 创建目录</span><br><span class="line">    用法：</span><br><span class="line">    	mkdir + 目录名</span><br><span class="line">    </span><br><span class="line">rmdir: 删除指定目录(空目录)   </span><br><span class="line">    用法：</span><br><span class="line">    	rmdir + 目录名</span><br><span class="line">    </span><br><span class="line">  	删除非空目录：rm -r 目录名</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">clear:清屏    ctrl + l快捷方式也可以清屏</span><br><span class="line">Tab: 命令补全</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h3 id="2-、vim编辑器"><a href="#2-、vim编辑器" class="headerlink" title="(2)、vim编辑器"></a>(2)、vim编辑器</h3><p>shell命令：vi 或者 vim + 文件名  </p>
+<p>如果文件不存在，则会先创建再进行编辑</p>
+<h4 id="vim编辑器中的三种工作模式："><a href="#vim编辑器中的三种工作模式：" class="headerlink" title="vim编辑器中的三种工作模式："></a>vim编辑器中的三种工作模式：</h4><p>​命令行模式：用户在进入编辑器后默认处于的工作模式</p>
+<p>​        在命令行模式下不能直接输入数据，但是可以对文本进行复制、粘贴、剪切、撤销等操作：</p>
+<p>​            在命令行模式下输入：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">ngg: 光标跳到某一行首</span><br><span class="line"></span><br><span class="line">nyy：将光标以及光标以下的n行数据进行复制</span><br><span class="line"></span><br><span class="line">ndd：将光标以及光标以下的n行数据进行剪切或删除</span><br><span class="line"></span><br><span class="line">p：将复制或者剪切的内容粘贴到光标的下一行</span><br><span class="line"></span><br><span class="line">u：撤回到上一步操作</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>：当前行首</span><br><span class="line"></span><br><span class="line">$：当前行尾</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>​    编辑模式：可以对文本进行编辑操作</p>
+<p>​        在命令行模式下输入：a, i, o都可以进入编辑模式</p>
+<p>​        按Esc退回到命令行模式</p>
+<p>​    </p>
+<p>​    底行模式：对文本进行保存、退出等操作</p>
+<p>​        在命令行模式下输入冒号进入底行模式</p>
+<p>​            在底行模式下输入：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">w：保存文件</span><br><span class="line">q：退出文件</span><br><span class="line">wq：保存并且退出</span><br><span class="line">q！：强制不保存退出</span><br><span class="line">x：保存并且退出</span><br></pre></td></tr></table></figure>
+
+<br>
+
+<h4 id="vim文本查找和替换"><a href="#vim文本查找和替换" class="headerlink" title="vim文本查找和替换"></a>vim文本查找和替换</h4><p>在一般模式下，可以执行以下命令。</p>
+<ol>
+<li>查找<br>pattern  从光标开始处向文件尾搜索pattern，后按下n或N</li>
+</ol>
+<p>注意：</p>
+<blockquote>
+<p>n    在同一个方向重复上一次搜索命令<br>N    在反方向重复上一次搜索命令</p>
+</blockquote>
+<p>注意：<br>在/pattern之前先跳到第一行则进行全文件搜索。</p>
+<ol start="2">
+<li>替换<blockquote>
+<p>:%s/p1/p2/g   //将文件中所有的p1均用p2替换<br>:%s/p1/p2/gc  //替换时需要确认<br>“s“ 全称：substitute替换；<br>“g“ 全称：global全局；<br>“c“ 全称：confirm，确认</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="3-、gcc编译工具"><a href="#3-、gcc编译工具" class="headerlink" title="(3)、gcc编译工具"></a>(3)、gcc编译工具</h3><p>​    shell指令：</p>
+<p>​        gcc + c文件名</p>
+<p>​        编译成功之后会在当前目录下产生一个名为a.out的二进制可执行程序</p>
+<p>​            </p>
+<p>​       gcc c文件名 -o 新的二进制可执行文件名</p>
+<p>​    </p>
+<h3 id="4-、执行程序"><a href="#4-、执行程序" class="headerlink" title="(4)、执行程序"></a>(4)、执行程序</h3><p>​    shell命令：</p>
+<p>​        ./可执行的二进制文件名</p>
+<p>​        </p>
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>Linux</tag>
+        <tag>嵌入式</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法分析</title>
+    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
+<ol>
+<li>确定输入模型，定义问题规模（n）</li>
+<li>识别循环与递归</li>
+<li>根据内循环或每部递归的操作确定成本模型</li>
+<li>对于给定的输入，判断这些操作的执行频率</li>
+</ol>
+<hr>
+<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
+<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
+</blockquote>
+<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
+<blockquote>
+<p>渐进分析：</p>
+<ol>
+<li>忽略依赖于机器性能的常量</li>
+<li>只关注运行时间的增长</li>
+</ol>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
+<blockquote>
+<p>例：$2n^2 = O(n^3)$</p>
+</blockquote>
+<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
+<blockquote>
+<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
+</blockquote>
+<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
+<blockquote>
+<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
+</blockquote>
+<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
+<p>理解：左右两边增长速率一样</p>
+<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
+<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
+<ul>
+<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
+<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
+</ul>
+<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
+<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
+<ol>
+<li>证明 n=1 时成立</li>
+<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
+<li>则命题成立</li>
+</ol>
+<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
+<li>先猜答案得到最高阶</li>
+<li>验证这个递归式是否按照数学归纳法满足条件</li>
+</ol>
+<blockquote>
+<p>例：T(n)=4T(n/2)+n</p>
+<ol>
+<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
+<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
+<p>$O(n^2)$=$c(n)^2$</p>
+</blockquote>
+</li>
+<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
+</ol>
+</blockquote>
+<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
+<blockquote>
+<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
+</blockquote>
+<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
+<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
+<li>根据每层的和的规律，求出总子叶节点<ul>
+<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
+<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
+</blockquote>
+</li>
+<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
+</ul>
+</li>
+<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
+</ol>
+<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
+<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
+<p>1.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
+<p>2.</p>
+<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
+<p>3.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>概念</tag>
+        <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>day27-文件与系统IO</title>
     <url>/2023/04/01/day27-%E6%96%87%E4%BB%B6%E4%B8%8E%E7%B3%BB%E7%BB%9FIO/</url>
     <content><![CDATA[<h1 id="day27-文件与系统IO"><a href="#day27-文件与系统IO" class="headerlink" title="day27-文件与系统IO"></a><font color="green">day27-文件与系统IO</font></h1><h2 id="一、IO概念"><a href="#一、IO概念" class="headerlink" title="一、IO概念"></a>一、IO概念</h2><h3 id="1-标准IO和文件IO的区别："><a href="#1-标准IO和文件IO的区别：" class="headerlink" title="1. 标准IO和文件IO的区别："></a>1. 标准IO和文件IO的区别：</h3><blockquote>
@@ -2982,192 +3369,6 @@
       </categories>
       <tags>
         <tag>算法，排序算法，基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>嵌入式学习-Linux基础</title>
-    <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
-    <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
-<a id="more"></a>
-
-<h2 id="2、linux操作系统的基本使用"><a href="#2、linux操作系统的基本使用" class="headerlink" title="2、linux操作系统的基本使用"></a>2、linux操作系统的基本使用</h2><h3 id="0-、linux的文件的系统结构"><a href="#0-、linux的文件的系统结构" class="headerlink" title="(0)、linux的文件的系统结构"></a>(0)、linux的文件的系统结构</h3><blockquote>
-<ul>
-<li>windows：所有文件有分盘(C,D,E,F….)，每个盘中都有子文件或者子目录，对文件存放没有要求，可以放在任意位置</li>
-<li>linux：没有分盘，只有一个大的目录–根目录（’/‘），根目录下的文件夹每一个都有其固定作用</li>
-<li>bin：存放二进制文件或者可执行程序</li>
-<li>dev：存放设备文件</li>
-<li>etc：系统相关的配置文件</li>
-<li>home：用户目录，用户所有操作都在该目录下进行     /home/hqyj 可以用符号(~)表示</li>
-</ul>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h3 id="1-、基本的shell命令"><a href="#1-、基本的shell命令" class="headerlink" title="(1)、基本的shell命令"></a>(1)、基本的shell命令</h3><p>​        shell本质：命令行解释器，将用户输入的特定指令转换为系统能够识别的语言</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">    绝对路径：从根目录出发所表示的一个路径</span><br><span class="line">    相对路径：相对于用户当前位置所表示的一个路径</span><br><span class="line"></span><br><span class="line">pwd:显示当前用户在文件系统中的绝对路径</span><br><span class="line">    用法：</span><br><span class="line">    	pwd + 回车</span><br><span class="line">ls:显示当前用户所在路径下的所有文件(不包含隐藏文件)</span><br><span class="line">    用法：</span><br><span class="line">    	ls + 回车</span><br><span class="line">ls -a：显示当前用户所在路径下的所有文件(包含隐藏文件)</span><br><span class="line">    <span class="string">&#x27;.&#x27;</span> == 用户当前目录</span><br><span class="line">    &#x27;..&#x27; == 当前目录的上一级目录</span><br><span class="line">    </span><br><span class="line">ls -l:显示当前用户所在路径下的所有文件的详细信息</span><br><span class="line">    - rw- rw- r--</span><br><span class="line">    第一位代表文件类型：</span><br><span class="line">    	<span class="string">&#x27;-&#x27;</span> :普通文件</span><br><span class="line">    	<span class="string">&#x27;d&#x27;</span> :目录文件</span><br><span class="line">    	<span class="string">&#x27;c&#x27;</span> :字符设备文件</span><br><span class="line">    	<span class="string">&#x27;b&#x27;</span> :块设备文件</span><br><span class="line">    	<span class="string">&#x27;p&#x27;</span> :管道文件</span><br><span class="line">    	<span class="string">&#x27;l&#x27;</span> :符号链接文件</span><br><span class="line">    	<span class="string">&#x27;s&#x27;</span> :套接字文件</span><br><span class="line">            不同操作系统下支持使用的文件类型不同</span><br><span class="line">    	</span><br><span class="line">    后<span class="number">9</span>位代表文件存取权限</span><br><span class="line">         rw-rw-r--  == <span class="number">110</span> <span class="number">110</span> <span class="number">100</span> == <span class="number">0664</span></span><br><span class="line">         权限的前<span class="number">3</span>位表示用户自己的使用权限，如果当前位上没有对应权限用<span class="string">&#x27;-&#x27;</span>表示                      </span><br><span class="line">		 权限的中间<span class="number">3</span>位代表用户组的使用权限        </span><br><span class="line">         权限的最后<span class="number">3</span>位代表其他用户的使用权限</span><br><span class="line">         r -- 具有读权限  w -- 具有写权限  x -- 具有可执行权限</span><br><span class="line">    改变文件权限的命令入下:</span><br><span class="line">         chmod [-R]  xyz  文件或目录</span><br><span class="line">         -R ： 以递归方式进行修改，比如修改某个目录下所有文件的属性。</span><br><span class="line"></span><br><span class="line">cd: 目录跳转	</span><br><span class="line">    用法：</span><br><span class="line">    	cd + 指定路径    </span><br><span class="line"></span><br><span class="line">touch:以不打开的方式创建一个文件，如果文件存在，则修改时间戳</span><br><span class="line">    用法：</span><br><span class="line">    	touch + 文件名</span><br><span class="line">    </span><br><span class="line">rm:删除指定文件</span><br><span class="line">    用法：</span><br><span class="line">    	rm + 文件名</span><br><span class="line">    </span><br><span class="line">cat：显示文件内容</span><br><span class="line">    用法：</span><br><span class="line">    	cat + 文件名</span><br><span class="line">    </span><br><span class="line">cp: 复制文件</span><br><span class="line">    用法：</span><br><span class="line">    	cp + 源文件名 + 路径名</span><br><span class="line">    	cp + 源文件名 + 目标文件名</span><br><span class="line">mv：移动文件</span><br><span class="line">    用法：</span><br><span class="line">    	mv + 源文件名 + 路径名</span><br><span class="line">    	mv + 源文件名 + 目标文件名    </span><br><span class="line"></span><br><span class="line">mkdir: 创建目录</span><br><span class="line">    用法：</span><br><span class="line">    	mkdir + 目录名</span><br><span class="line">    </span><br><span class="line">rmdir: 删除指定目录(空目录)   </span><br><span class="line">    用法：</span><br><span class="line">    	rmdir + 目录名</span><br><span class="line">    </span><br><span class="line">  	删除非空目录：rm -r 目录名</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">clear:清屏    ctrl + l快捷方式也可以清屏</span><br><span class="line">Tab: 命令补全</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<h3 id="2-、vim编辑器"><a href="#2-、vim编辑器" class="headerlink" title="(2)、vim编辑器"></a>(2)、vim编辑器</h3><p>shell命令：vi 或者 vim + 文件名  </p>
-<p>如果文件不存在，则会先创建再进行编辑</p>
-<h4 id="vim编辑器中的三种工作模式："><a href="#vim编辑器中的三种工作模式：" class="headerlink" title="vim编辑器中的三种工作模式："></a>vim编辑器中的三种工作模式：</h4><p>​命令行模式：用户在进入编辑器后默认处于的工作模式</p>
-<p>​        在命令行模式下不能直接输入数据，但是可以对文本进行复制、粘贴、剪切、撤销等操作：</p>
-<p>​            在命令行模式下输入：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">ngg: 光标跳到某一行首</span><br><span class="line"></span><br><span class="line">nyy：将光标以及光标以下的n行数据进行复制</span><br><span class="line"></span><br><span class="line">ndd：将光标以及光标以下的n行数据进行剪切或删除</span><br><span class="line"></span><br><span class="line">p：将复制或者剪切的内容粘贴到光标的下一行</span><br><span class="line"></span><br><span class="line">u：撤回到上一步操作</span><br><span class="line"></span><br><span class="line"><span class="number">0</span>：当前行首</span><br><span class="line"></span><br><span class="line">$：当前行尾</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>​    编辑模式：可以对文本进行编辑操作</p>
-<p>​        在命令行模式下输入：a, i, o都可以进入编辑模式</p>
-<p>​        按Esc退回到命令行模式</p>
-<p>​    </p>
-<p>​    底行模式：对文本进行保存、退出等操作</p>
-<p>​        在命令行模式下输入冒号进入底行模式</p>
-<p>​            在底行模式下输入：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">w：保存文件</span><br><span class="line">q：退出文件</span><br><span class="line">wq：保存并且退出</span><br><span class="line">q！：强制不保存退出</span><br><span class="line">x：保存并且退出</span><br></pre></td></tr></table></figure>
-
-<br>
-
-<h4 id="vim文本查找和替换"><a href="#vim文本查找和替换" class="headerlink" title="vim文本查找和替换"></a>vim文本查找和替换</h4><p>在一般模式下，可以执行以下命令。</p>
-<ol>
-<li>查找<br>pattern  从光标开始处向文件尾搜索pattern，后按下n或N</li>
-</ol>
-<p>注意：</p>
-<blockquote>
-<p>n    在同一个方向重复上一次搜索命令<br>N    在反方向重复上一次搜索命令</p>
-</blockquote>
-<p>注意：<br>在/pattern之前先跳到第一行则进行全文件搜索。</p>
-<ol start="2">
-<li>替换<blockquote>
-<p>:%s/p1/p2/g   //将文件中所有的p1均用p2替换<br>:%s/p1/p2/gc  //替换时需要确认<br>“s“ 全称：substitute替换；<br>“g“ 全称：global全局；<br>“c“ 全称：confirm，确认</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="3-、gcc编译工具"><a href="#3-、gcc编译工具" class="headerlink" title="(3)、gcc编译工具"></a>(3)、gcc编译工具</h3><p>​    shell指令：</p>
-<p>​        gcc + c文件名</p>
-<p>​        编译成功之后会在当前目录下产生一个名为a.out的二进制可执行程序</p>
-<p>​            </p>
-<p>​       gcc c文件名 -o 新的二进制可执行文件名</p>
-<p>​    </p>
-<h3 id="4-、执行程序"><a href="#4-、执行程序" class="headerlink" title="(4)、执行程序"></a>(4)、执行程序</h3><p>​    shell命令：</p>
-<p>​        ./可执行的二进制文件名</p>
-<p>​        </p>
-]]></content>
-      <categories>
-        <category>Linux</category>
-      </categories>
-      <tags>
-        <tag>Linux</tag>
-        <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法分析</title>
-    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
-<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
-<ol>
-<li>确定输入模型，定义问题规模（n）</li>
-<li>识别循环与递归</li>
-<li>根据内循环或每部递归的操作确定成本模型</li>
-<li>对于给定的输入，判断这些操作的执行频率</li>
-</ol>
-<hr>
-<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
-<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
-</blockquote>
-<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
-<blockquote>
-<p>渐进分析：</p>
-<ol>
-<li>忽略依赖于机器性能的常量</li>
-<li>只关注运行时间的增长</li>
-</ol>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
-<blockquote>
-<p>例：$2n^2 = O(n^3)$</p>
-</blockquote>
-<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
-<blockquote>
-<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
-</blockquote>
-<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
-<blockquote>
-<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
-</blockquote>
-<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
-<p>理解：左右两边增长速率一样</p>
-<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
-<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
-<ul>
-<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
-<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
-</ul>
-<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
-<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
-<ol>
-<li>证明 n=1 时成立</li>
-<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
-<li>则命题成立</li>
-</ol>
-<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
-<li>先猜答案得到最高阶</li>
-<li>验证这个递归式是否按照数学归纳法满足条件</li>
-</ol>
-<blockquote>
-<p>例：T(n)=4T(n/2)+n</p>
-<ol>
-<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
-<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
-<p>$O(n^2)$=$c(n)^2$</p>
-</blockquote>
-</li>
-<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
-</ol>
-</blockquote>
-<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
-<blockquote>
-<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
-</blockquote>
-<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
-<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
-<li>根据每层的和的规律，求出总子叶节点<ul>
-<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
-<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
-</blockquote>
-</li>
-<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
-</ul>
-</li>
-<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
-</ol>
-<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
-<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
-<p>1.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
-<p>2.</p>
-<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
-<p>3.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>算法</tag>
-        <tag>概念</tag>
-        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>

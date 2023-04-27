@@ -222,6 +222,15 @@
 <blockquote>
 <p>例：<br>struct temp{char a；short b;char c;int d}<br>结构体大小为12字节。因为以里面最大的int开辟空间为4字节<br>第一个4字节有<code>a,b</code>,因为偶数原则，a占1，b占3，4<br>第二个4字节有<code>c</code>，占1<br>第三个4字节有<code>d</code>占1，2，3，4</p>
 </blockquote>
+<blockquote>
+<p>static 修饰的不占空间</p>
+</blockquote>
+<ul>
+<li>空类 占1个字节 （占位符）</li>
+<li>成员函数、静态成员、友元函数 占 0字节 </li>
+<li>虚函数占 4字节 （虚函数表占4字节）</li>
+<li>非静态成员 满足字节序对齐 </li>
+</ul>
  
       <!-- reward -->
       
