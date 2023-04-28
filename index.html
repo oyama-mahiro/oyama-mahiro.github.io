@@ -97,6 +97,223 @@
     
     
     <article
+  id="post-day37-c-类库"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/04/28/day37-c-%E7%B1%BB%E5%BA%93/"
+    >day37-c++类库</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/04/28/day37-c-%E7%B1%BB%E5%BA%93/" class="article-date">
+  <time datetime="2023-04-28T01:02:41.000Z" itemprop="datePublished">2023-04-28</time>
+</a>    
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+   
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
+  id="post-day37-c-异常，智能指针"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/04/27/day37-c-%E5%BC%82%E5%B8%B8%EF%BC%8C%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/"
+    >day37-c++异常，智能指针</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/04/27/day37-c-%E5%BC%82%E5%B8%B8%EF%BC%8C%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" class="article-date">
+  <time datetime="2023-04-27T01:09:07.000Z" itemprop="datePublished">2023-04-27</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/c/">c++</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day37-c-异常，智能指针"><a href="#day37-c-异常，智能指针" class="headerlink" title="day37-c++异常，智能指针"></a><font color="green">day37-c++异常，智能指针</font></h1><!--mroe-->
+
+<h2 id="一、c-异常"><a href="#一、c-异常" class="headerlink" title="一、c++异常"></a>一、c++异常</h2><h3 id="1-异常简介"><a href="#1-异常简介" class="headerlink" title="1. 异常简介"></a>1. 异常简介</h3><p>C++异常是一种在程序运行过程中发生的意外或错误情况，例如除以零、数组越界、内存不足等。当异常发生时，程序的正常执行流程会被中断，转而执行一段专门用于处理异常的代码，称为异常处理器。异常处理器可以恢复程序的状态，继续执行后续的代码，或者终止程序并报告错误信息。</p>
+<p>C++提供了一套异常处理机制，包括以下几个关键字：</p>
+<ul>
+<li>throw：用于抛出一个异常，可以是任意类型的表达式，例如<code>throw 0</code>; <code>throw &quot;error&quot;</code>; <code>throw std::runtime_error(&quot;invalid input&quot;)</code>;</li>
+<li>try：用于定义一个可能抛出异常的代码块，例如<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">10</span> / <span class="number">0</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">catch</span> (...) &#123; </span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;division by zero\n&quot;</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>catch：用于捕获一个特定类型或所有类型的异常，并执行相应的处理代码，您可以指定想要捕捉的异常类型，这是由 catch 关键字后的括号内的异常声明决定的,一般来说，throw什么类型的异常则要用同类型的catch参数来捕捉。例如<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">division</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>( b == <span class="number">0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="string">&quot;Division by zero condition!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (a/b);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">50</span>;</span><br><span class="line">    <span class="keyword">int</span> y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">double</span> z = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        z = division(x, y);</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; z &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;<span class="keyword">catch</span> (<span class="keyword">const</span> <span class="keyword">char</span>* msg) &#123;</span><br><span class="line">        <span class="built_in">cerr</span> &lt;&lt; msg &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//由于我们抛出了一个类型为 const char* 的异常，因此，当捕获该异常时，我们必须在 catch 块中使用 const char*。</span></span><br></pre></td></tr></table></figure>
+可以一个try用多个catch来捕捉，只不过前面的捕捉范围要比后面的小。</li>
+<li>noexcept：用于指定一个函数是否保证不抛出异常，例如void foo() noexcept; void bar() noexcept(false);</li>
+</ul>
+<h3 id="2-异常规则"><a href="#2-异常规则" class="headerlink" title="2.异常规则"></a>2.异常规则</h3><ul>
+<li><p>throw抛出的异常类型与catch抓取的异常类型要一致；</p>
+</li>
+<li><p>throw抛出的异常类型可以是子类对象，catch可以是父类对象；</p>
+</li>
+<li><p>catch块的参数推荐采用地址传递而不是值传递，不仅可以提高效率，还可以利用对象的多态性。另外，派生类的异常捕获要放到父类异常扑获的前面，否则，派生类的异常无法被扑获；</p>
+</li>
+<li><p>如果使用catch参数中，使用基类捕获派生类对象，一定要使用传递引用的方式，例如catch (exception &amp;e)；</p>
+</li>
+<li><p>异常是通过抛出对象而引发的，该对象的类型决定了应该激活哪个处理代码；</p>
+</li>
+<li><p>被选中的处理代码是调用链中与该对象类型匹配且离抛出异常位置最近的那一个；</p>
+</li>
+<li><p>在try的语句块内声明的变量在外部是不可以访问的，即使是在catch子句内也不可以访问；</p>
+</li>
+<li><p>栈展开会沿着嵌套函数的调用链不断查找，直到找到了已抛出的异常匹配的catch子句。如果抛出的异常一直没有函数捕获(catch)，则会一直上传到c++运行系统那里，导致整个程序的终止。</p>
+</li>
+</ul>
+<h3 id="3-c-类"><a href="#3-c-类" class="headerlink" title="3. c++类"></a>3. c++类</h3><p>下面是c++类中常见的异常：</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Exception</code></td>
+<td>基本异常类，用作其他异常类的基类。</td>
+</tr>
+<tr>
+<td><code>LogicError</code></td>
+<td>逻辑错误的异常，由程序逻辑引起。</td>
+</tr>
+<tr>
+<td><code>RuntimeError</code></td>
+<td>运行时错误的异常，通常由运行时环境引起。</td>
+</tr>
+<tr>
+<td><code>OutOfBoundsException</code></td>
+<td>超出边界的异常，用于数组或容器访问超出范围。</td>
+</tr>
+<tr>
+<td><code>NullPointerException</code></td>
+<td>空指针异常，当使用空指针时抛出。</td>
+</tr>
+<tr>
+<td><code>InvalidArgumentException</code></td>
+<td>无效参数异常，当传递无效参数给函数或方法时抛出。</td>
+</tr>
+<tr>
+<td><code>FileException</code></td>
+<td>文件异常，当文件操作失败时抛出。</td>
+</tr>
+<tr>
+<td><code>NetworkException</code></td>
+<td>网络异常，当网络操作失败时抛出。</td>
+</tr>
+</tbody></table>
+<h3 id="4-自定义异常"><a href="#4-自定义异常" class="headerlink" title="4. 自定义异常"></a>4. 自定义异常</h3><p>您可以通过继承和重载 exception 类来定义新的异常。下面的实例演示了如何使用 std::exception 类来实现自己的异常：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyException</span> :</span> <span class="keyword">public</span> exception</span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> <span class="keyword">char</span> * <span class="title">what</span> <span class="params">()</span> <span class="keyword">const</span> <span class="title">throw</span> <span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;C++ Exception&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">try</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">throw</span> MyException();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">catch</span>(MyException&amp; e)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;MyException caught&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">catch</span>(<span class="built_in">std</span>::exception&amp; e)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//其他的错误</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//MyException caught</span></span><br><span class="line"><span class="comment">//C++ Exception</span></span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h2 id="二、转换函数"><a href="#二、转换函数" class="headerlink" title="二、转换函数"></a>二、转换函数</h2><p>c++转换函数是一种特殊的成员函数，它可以将一个类的对象转换为另一种类型的值。转换函数的一般形式如下：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">operator 类型名()</span><br><span class="line">&#123;</span><br><span class="line">    // 转换操作</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中，operator是关键字，类型名是要转换的目标类型，没有参数和返回类型。转换函数必须定义在类的内部，不能是静态的或常量的。转换函数可以被显式或隐式地调用，例如：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">subclass</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Base(<span class="keyword">int</span> x)&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;x = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">subclass</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">subclass</span>:</span><span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    subclass(<span class="keyword">int</span> x):x(x),Base(x)&#123;&#125;</span><br><span class="line">    <span class="keyword">friend</span> ostream &amp;<span class="keyword">operator</span> &lt;&lt;(ostream &amp;out, <span class="keyword">const</span> subclass &amp;obj)&#123;</span><br><span class="line">        out &lt;&lt; obj.x;</span><br><span class="line">        <span class="keyword">return</span> out;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Base::<span class="keyword">operator</span> <span class="title">subclass</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">subclass <span class="title">a</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">    <span class="function">Base <span class="title">b</span><span class="params">(<span class="number">6</span>)</span></span>;</span><br><span class="line">    a = b;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码有两个注意点。一个是b=a是调用了Base的转换函数，实际b是个Base的int成员。</p>
+<p>另一个是a=6过程中，a是一个subclass的对象，而不是一个基本类型的变量。当你给a赋值为6时，实际上是调用了subclass的构造函数，创建了一个新的subclass对象，并用它替换了原来的a。</p>
+<p>C++标准库中提供了一些用于类型转换的标准转换函数。这些函数可以方便地进行常见的类型转换操作。以下是几个常用的标准转换函数：</p>
+<ul>
+<li><p><code>static_cast</code>: 用于执行静态类型转换，将一个表达式转换为指定类型。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">double</span> result = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(num);  <span class="comment">// 将整数 num 转换为双精度浮点数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span>* ptr = <span class="keyword">static_cast</span>&lt;<span class="keyword">void</span>*&gt;(&amp;num);  <span class="comment">// 将指向整数 num 的指针转换为 void* 类型</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>dynamic_cast</code>: 用于执行动态类型转换，在类层次结构中进行多态类型的转换。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line">Base* basePtr = <span class="keyword">new</span> Derived();</span><br><span class="line">Derived* derivedPtr = <span class="keyword">dynamic_cast</span>&lt;Derived*&gt;(basePtr);  <span class="comment">// 将基类指针转换为派生类指针</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>const_cast</code>: 用于移除变量的 <code>const</code> 修饰符或 <code>volatile</code> 修饰符。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span>* ptr = <span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>*&gt;(&amp;num);  <span class="comment">// 移除 num 的 const 修饰符，ptr 可以修改 num 的值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>&amp; ref = num;</span><br><span class="line"><span class="keyword">int</span>&amp; ref2 = <span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>&amp;&gt;(ref);  <span class="comment">// 移除 ref 的 const 修饰符，ref2 可以修改 num 的值</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>reinterpret_cast</code>: 用于执行底层的重新解释转换。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">char</span>* charPtr = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">char</span>*&gt;(&amp;num);  <span class="comment">// 将整数 num 的地址转换为字符指针</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>* intPtr = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">int</span>*&gt;(charPtr);  <span class="comment">// 将字符指针转换为整数指针</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<br>
+<br>
+
+<hr>
+<h2 id="三、智能指针"><a href="#三、智能指针" class="headerlink" title="三、智能指针"></a>三、智能指针</h2><p>C++ 智能指针是一种能够自动管理动态分配内存的对象，它可以避免手动调用 new 和 delete 导致的内存泄漏或异常安全问题。C++ 标准库提供了四种智能指针：auto_ptr、unique_ptr、shared_ptr 和 weak_ptr。</p>
+<blockquote>
+<ul>
+<li>auto_ptr 已经被废弃，不建议使用。</li>
+<li>unique_ptr是一种独占式的智能指针，它保证同一时间只有一个unique_ptr对象可以指向某个内存资源。当unique_ptr对象被销毁时，它会自动释放所指向的内存资源。unique_ptr不能被复制或赋值，只能通过移动语义来转移所有权。unique_ptr可以指向单个对象或者数组，也可以自定义删除器来处理特殊的资源释放方式。</li>
+<li>shared_ptr是一种共享式的智能指针，它允许多个shared_ptr对象指向同一个内存资源。每个shared_ptr对象都有一个引用计数，表示有多少个shared_ptr对象共享该资源。当某个shared_ptr对象被销毁时，它会减少引用计数，当引用计数变为0时，才会释放所指向的内存资源。shared_ptr也可以指向单个对象或者数组，也可以自定义删除器。shared_ptr还可以和weak_ptr配合使用，避免循环引用导致的内存泄漏。</li>
+<li>weak_ptr 是一种不影响引用计数的智能指针，它可以从一个 shared_ptr 或另一个 weak_ptr 构造，它用于观察对象是否还存在，而不延长其生命周期。</li>
+</ul>
+</blockquote>
+<p>智能指针的使用可以简化 C++ 的内存管理，提高代码的可读性和安全性。</p>
+<p><code>unique_ptr</code> 语法格式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;T&gt; ptr;  <span class="comment">// 创建一个名为 ptr 的 unique_ptr，指向类型为 T 的对象，初始为空指针</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;T&gt; <span class="title">ptr</span><span class="params">(<span class="keyword">new</span> T(args...))</span></span>;  <span class="comment">// 创建一个 unique_ptr，同时进行对象的动态内存分配和初始化</span></span><br><span class="line"></span><br><span class="line">ptr.reset();  <span class="comment">// 释放 ptr 指向的对象，并将 ptr 重置为空指针</span></span><br><span class="line"></span><br><span class="line">T* rawPtr = ptr.get();  <span class="comment">// 获取 ptr 内部存储的原始指针</span></span><br><span class="line"></span><br><span class="line">ptr.release();  <span class="comment">// 释放 ptr 的所有权，返回内部存储的原始指针，并将 ptr 重置为空指针</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>shared_ptr</code> 语法格式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; ptr;  <span class="comment">// 创建一个名为 ptr 的 shared_ptr，指向类型为 T 的对象，初始为空指针</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; <span class="title">ptr</span><span class="params">(<span class="keyword">new</span> T(args...))</span></span>;  <span class="comment">// 创建一个 shared_ptr，同时进行对象的动态内存分配和初始化</span></span><br><span class="line"></span><br><span class="line">ptr.reset();  <span class="comment">// 释放 ptr 指向的对象，并将 ptr 重置为空指针</span></span><br><span class="line"></span><br><span class="line">T* rawPtr = ptr.get();  <span class="comment">// 获取 ptr 内部存储的原始指针</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; ptr2 = ptr;  <span class="comment">// 使用复制构造函数创建一个新的 shared_ptr，与 ptr 共享对象所有权，引用计数增加</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; ptr3 = <span class="built_in">std</span>::make_shared&lt;T&gt;(args...);  <span class="comment">// 使用 make_shared 创建 shared_ptr，更高效的分配内存</span></span><br><span class="line"></span><br><span class="line">ptr.use_count();  <span class="comment">// 返回与 ptr 共享对象所有权的 shared_ptr 的数量</span></span><br><span class="line"></span><br><span class="line">ptr.reset();  <span class="comment">// 释放 ptr 指向的对象，并将 ptr 重置为空指针，引用计数减少，当引用计数为零时，对象被销毁</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>下面是shared_ptr的示例代码</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    MyClass() &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Constructor called!&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ~MyClass() &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Destructor called!&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SomeFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Some function called!&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyClass&gt; <span class="title">sharedPtr1</span><span class="params">(<span class="keyword">new</span> MyClass())</span></span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyClass&gt; sharedPtr2 = sharedPtr1;  <span class="comment">// 复制构造函数增加引用计数</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyClass&gt; sharedPtr3 = sharedPtr1;  <span class="comment">// 引用计数增加到3</span></span><br><span class="line"></span><br><span class="line">    sharedPtr1-&gt;SomeFunction();</span><br><span class="line">    sharedPtr2-&gt;SomeFunction();</span><br><span class="line">    sharedPtr3-&gt;SomeFunction();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 所有 shared_ptr 离开作用域后，拥有的对象会自动被销毁</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BC%82%E5%B8%B8/" rel="tag">异常</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" rel="tag">智能指针</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-day36-c-多态"
   class="article article-type-post"
   itemscope
@@ -845,127 +1062,6 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" rel="tag">网络编程</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-day27-5-静态库，动态库"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/"
-    >day27.5-静态库，动态库</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/" class="article-date">
-  <time datetime="2023-04-05T02:32:28.000Z" itemprop="datePublished">2023-04-05</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="day27-5-静态库，动态库"><a href="#day27-5-静态库，动态库" class="headerlink" title="day27.5-静态库，动态库"></a><font color="green">day27.5-静态库，动态库</font></h1><hr>
-<h2 id="一、前言"><a href="#一、前言" class="headerlink" title="一、前言"></a>一、前言</h2><p>c语言程序编译的步骤（源文件到可执行文件的编译）：</p>
-<blockquote>
-<p>预处理 -&gt; 编译 -&gt; 汇编 -&gt; 链接</p>
-</blockquote> 
-      <a class="article-more-link" href="/2023/04/05/day27-5-%E9%9D%99%E6%80%81%E5%BA%93%EF%BC%8C%E5%8A%A8%E6%80%81%E5%BA%93/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c%EF%BC%8C%E5%B0%81%E8%A3%85/" rel="tag">c，封装</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-day28-进程线程"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/"
-    >day28-进程线程</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" class="article-date">
-  <time datetime="2023-04-01T01:08:23.000Z" itemprop="datePublished">2023-04-01</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><p>下面当我问你LINUX下的c语言中的函数是，你要从函数原型，功能，头文件，返回值，参数这几个方面讲解，并给出示例代码和使用函数的注意事项，明白了吗</p>
-<h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-进程和线程"><a href="#1-进程和线程" class="headerlink" title="1. 进程和线程"></a>1. 进程和线程</h3><ul>
-<li>程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”</li>
-<li>进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</li>
-<li>页表：<br>&emsp;&emsp;在 Linux 中，每个进程都有自己的页表，用于映射虚拟地址到物理地址。页表是由一系列页表项（PTE）组成的数据结构，每个页表项对应着虚拟地址空间中的一个页面（通常是4KB），并描述了该页面的物理地址、访问权限等信息。<br>&emsp;&emsp;Linux 中的页表采用了多级页表的结构，即每个页表项可以指向下一级的页表，最终指向物理页面。<br>&emsp;&emsp;Linux 中的页表是按需分配的，即当进程需要访问某个虚拟地址时，如果该地址对应的页表项不存在，则会触发缺页异常，内核会根据需要分配新的物理页面，并更新页表项，使得虚拟地址能够正确映射到物理地址。</li>
-<li>线程：线程是进程中的执行单元，它与进程共享同一个地址空间，因此线程之间可以直接共享数据。线程相对于进程来说更加轻量级。多个线程可以共享一个进程的以下资源(可执行的指令,静态数据,进程中打开的文件描述符,信号处理函数,当前工作目录用户ID,用户组ID)</li></ul> 
-      <a class="article-more-link" href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" rel="tag">进程线程</a></li></ul>
 
     </footer>
   </div>

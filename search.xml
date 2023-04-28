@@ -124,181 +124,6 @@
       </tags>
   </entry>
   <entry>
-    <title>C语言基础-递归</title>
-    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
-    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
-<a id="more"></a>
-
-<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
-<p>栈：一种数据结构，其特点为先进后出</p>
-<blockquote>
-<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
-</blockquote>
-</blockquote>
-<p>如图( 计算 3! )：</p>
-<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
-<p>解释：</p>
-<ol>
-<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
-<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
-<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
-<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
-<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
-</ol>
-<p>由此可以看成递归的形成至少需要两个条件：</p>
-<ol>
-<li>变化的参数</li>
-<li>递归终止条件</li>
-</ol>
-<blockquote>
-<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
-<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
-<br>
-
-<blockquote>
-<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
-<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
-<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
-<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
-<ol>
-<li>我们要把上面的 63 个移动到 B</li>
-<li>把第 64 个移动到 C</li>
-<li>把 B 上的 63 个移动到 C</li>
-</ol>
-<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
-<ol>
-<li>我们要把上面的 62 个移动到 B</li>
-<li>把第 63 个移动到 C</li>
-<li>把 B 上的 62 个移动到 C</li>
-</ol>
-<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
-<p>所以整个过程是</p>
-<ol>
-<li>我们要把上面的<code>n-1</code>个移动到 B</li>
-<li>把第<code>n</code>个移动到 C</li>
-<li>把 B 上的<code>n-1</code>个移动到 C</li>
-</ol>
-<blockquote>
-<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
-</blockquote>
-<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<hr>
-<br>
-<br>
-
-<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
-<ol>
-<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
-<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
-</ol>
-<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
-<hr>
-<br>
-<br>
-
-<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>递归</tag>
-        <tag>C语言基础</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day11-c数组与指针</title>
-    <url>/2023/03/08/day11-c%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<h1 id="day11-c数组与指针"><a href="#day11-c数组与指针" class="headerlink" title="day11-c数组与指针"></a><font color="green">day11-c数组与指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h3><p>​    字符数组和字符串</p>
-<p>​        字符数组：存放的数据是字符数据</p>
-<p>​        字符串：由一个或者多个字符组成，在字符串的末尾有一个隐藏的空字符 – ‘\0’</p>
-<p>​        char a[50] = “hello”;    </p>
-<a id="more"></a>
-
-<h3 id="2-字符串函数："><a href="#2-字符串函数：" class="headerlink" title="2.字符串函数："></a>2.字符串函数：</h3><blockquote>
-<p>字符串长度函数 – strlen()<br>字符串连接函数– strcat()<br>字符串拷贝函数 – strcpy()<br>字符串比较函数– strcmp()</p>
-</blockquote>
-<p><strong>注：<code>int a[10]=&#123;0&#125;</code>相当于把数组a中的所有元素给赋值成’\0’，但是<font color="red">int a[arr]={0}</font>则错误，因为在数组长度为变量时不能同时进行赋值</strong><br><strong>同时也不能把字符串常量赋值给一个字符数组，因为字符数组本身也是个常量 <font color="red">char s[10];s=”abcdefg”</font>是错误的。</strong></p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针相关运算符"><a href="#1、指针相关运算符" class="headerlink" title="1、指针相关运算符"></a>1、指针相关运算符</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&amp;:获取内容的地址</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	&amp;a --&gt; 获取到a的地址</span><br><span class="line">    </span><br><span class="line">*：获取地址中的内容</span><br><span class="line">    *(&amp;a) == a == <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2、指针变量"><a href="#2、指针变量" class="headerlink" title="2、指针变量"></a>2、指针变量</h3><p>​    指针变量就是用于存放地址</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *指针变量名;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">//将a的地址存放在了一个名为p的指针变量中</span></span><br><span class="line">p == &amp;a;</span><br><span class="line">*p = *(&amp;a) == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="3、指针变量的赋值"><a href="#3、指针变量的赋值" class="headerlink" title="3、指针变量的赋值"></a>3、指针变量的赋值</h3><p>赋值运算符的左值和右值类型一定要相同</p>
-<p>(1)将一个变量的地址赋值给一个具有相同数据类型的指针变量</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br></pre></td></tr></table></figure>
-
-<p>(2)将一个已有的指针赋值给一个 具有相同数据类型的指针变量</p>
- <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"><span class="keyword">int</span> *q = p;</span><br><span class="line"></span><br><span class="line">q == p == &amp;a;</span><br></pre></td></tr></table></figure>
-
-<p>(3)将0值赋值给一个指针变量 – 空指针</p>
-<p>野指针：定义一个指针，没有明确指向，不能访问野指针</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
-
-<p>(4)将一个数组的数组名赋值给一个具有相同数据类型的指针变量</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a; <span class="comment">// a == &amp;a[0]</span></span><br></pre></td></tr></table></figure>
-
-<p>(5)把一个复合形式的表达式的值赋给一个具有相同数据类型的指针变量</p>
-<h3 id="4、指针的运算"><a href="#4、指针的运算" class="headerlink" title="4、指针的运算"></a>4、指针的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// &amp;a == 0x2000</span></span><br><span class="line">p+n --&gt; p向高地址位偏移n个元素大小的字节数  <span class="comment">//元素指，该指针指向的内容</span></span><br><span class="line">p-n --&gt; p向低地址位偏移n个元素大小的字节数</span><br><span class="line"></span><br><span class="line">p+n == p+n*<span class="keyword">sizeof</span>(元素类型)  <span class="comment">//在该例中元素类型为int</span></span><br><span class="line">    </span><br><span class="line">注意：指针运算中没有 指针 + 指针、指针 * 指针、 指针 / 指针，因为没有任何实际意义 </span><br><span class="line">    但是有指针 - 指针</span><br><span class="line">    </span><br><span class="line">    指针-指针表示相同类型的两个指针之间相差多少个元素,结果的正负，仅代表地址高低</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> *q = &amp;b;</span><br><span class="line">	q - p ==  (q-p)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
-
-<h3 id="5、指针和一维数组"><a href="#5、指针和一维数组" class="headerlink" title="5、指针和一维数组"></a>5、指针和一维数组</h3><p>将一个一维数组的数组名赋值给一个具有相同数据类型的指针变量, 我们就可以通过该指针访问数组中所有元素</p>
-<blockquote>
-<p><strong>注：数组名不能递增递减</strong></p>
-</blockquote>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">4</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>];</span><br><span class="line">*(p+<span class="number">1</span>) == a[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">p++; <span class="comment">// p = p+1; right</span></span><br><span class="line">a++; <span class="comment">// a = a+1; error  数组名不能递增递减</span></span><br><span class="line"></span><br><span class="line">数组a中的第三个元素的表达方式:</span><br><span class="line">	a[<span class="number">2</span>]、 *(p+<span class="number">2</span>)、 *(&amp;a[<span class="number">2</span>])、p[<span class="number">2</span>]、 *(a+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
-
-
-
-<h3 id="6、指针和二维数组-–-行指针（数组指针）"><a href="#6、指针和二维数组-–-行指针（数组指针）" class="headerlink" title="6、指针和二维数组 – 行指针（数组指针）"></a>6、指针和二维数组 – 行指针（数组指针）</h3><p>​    本质：数组指针是一个指针，存放的内容是地址，指针指向的内容是一个一维数组</p>
-<p>​    二维数组的数组名是一个行指针，指向二维数组的首地址，行指针+n相当于地址偏移n行元素</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//行指针的定义一般形式</span></span><br><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; (*指针变量名)[列数];</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"></span><br><span class="line">*(*(p+<span class="number">1</span>)+<span class="number">2</span>) == 第二行第三个元素</span><br><span class="line">*(*(p+<span class="number">0</span>)+<span class="number">1</span>) == 第一行第二个元素</span><br></pre></td></tr></table></figure>
-
-<br>
-<br>
-
-<hr>
-<h2 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x=<span class="number">258</span>;                                                      </span><br><span class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)&amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*(++p));</span><br><span class="line">  &#125;</span><br><span class="line">  ````</span><br><span class="line">程序运行结果是  &lt;u&gt;2,1&lt;/u&gt;  </span><br><span class="line"></span><br><span class="line">解：<span class="number">258</span>的<span class="number">16</span>进制为<span class="number">102</span>，按照<span class="keyword">int</span>的存储方式为 <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">02</span>，p指针先到<span class="number">02</span>，因为转移到<span class="keyword">char</span>后+<span class="number">1</span>为前进一个字符，则p指针跳到了<span class="number">01.</span>  </span><br><span class="line"></span><br><span class="line">### <span class="number">2.</span> </span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *arr[<span class="number">3</span>]=&#123;a[<span class="number">0</span>],a[<span class="number">1</span>],a[<span class="number">2</span>]&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%ld&quot;</span>,<span class="keyword">sizeof</span>(arr[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
-<p>程序运行结果是  <u>8</u></p>
-<p>解：arr数组里的都是指针，sizeof指向第一个元素即指针，所以大小为8，不是a[0][3]中的12.</p>
-<h3 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h3><p>&emsp;若有以下说明和语句，int c[4][5],(*p)[5];p=c;能正确引用c数组元素的是<u> D</u>.<br>(A) p+1      (B) *(p+3)     　(C) *(p+1)+3   (D) *(p[0]+2) </p>
-<p>解：b错误原因是p+3仅代表地址，加个*只能表示p[3].</p>
-]]></content>
-      <categories>
-        <category>c语言</category>
-      </categories>
-      <tags>
-        <tag>C语言</tag>
-        <tag>c</tag>
-        <tag>指针</tag>
-        <tag>数组</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Markdown笔记-基础</title>
     <url>/2020/04/26/Markdown%E7%AC%94%E8%AE%B0-%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="Markdown-概述"><a href="#Markdown-概述" class="headerlink" title="Markdown 概述"></a>Markdown 概述</h1><p>Markdown 是一种轻量级标记语言，与 2004 年创建。<br>后缀为<code>.md</code>或<code>.maekdown</code>，可导出 HTML，Word，pdf 等多种格式文档</p>
@@ -541,6 +366,181 @@
       <tags>
         <tag>Markdown</tag>
         <tag>Markdown基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day11-c数组与指针</title>
+    <url>/2023/03/08/day11-c%E6%95%B0%E7%BB%84%E4%B8%8E%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<h1 id="day11-c数组与指针"><a href="#day11-c数组与指针" class="headerlink" title="day11-c数组与指针"></a><font color="green">day11-c数组与指针</font></h1><h2 id="一、复习"><a href="#一、复习" class="headerlink" title="一、复习"></a>一、复习</h2><h3 id="1、数组"><a href="#1、数组" class="headerlink" title="1、数组"></a>1、数组</h3><p>​    字符数组和字符串</p>
+<p>​        字符数组：存放的数据是字符数据</p>
+<p>​        字符串：由一个或者多个字符组成，在字符串的末尾有一个隐藏的空字符 – ‘\0’</p>
+<p>​        char a[50] = “hello”;    </p>
+<a id="more"></a>
+
+<h3 id="2-字符串函数："><a href="#2-字符串函数：" class="headerlink" title="2.字符串函数："></a>2.字符串函数：</h3><blockquote>
+<p>字符串长度函数 – strlen()<br>字符串连接函数– strcat()<br>字符串拷贝函数 – strcpy()<br>字符串比较函数– strcmp()</p>
+</blockquote>
+<p><strong>注：<code>int a[10]=&#123;0&#125;</code>相当于把数组a中的所有元素给赋值成’\0’，但是<font color="red">int a[arr]={0}</font>则错误，因为在数组长度为变量时不能同时进行赋值</strong><br><strong>同时也不能把字符串常量赋值给一个字符数组，因为字符数组本身也是个常量 <font color="red">char s[10];s=”abcdefg”</font>是错误的。</strong></p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、指针"><a href="#二、指针" class="headerlink" title="二、指针"></a>二、指针</h2><h3 id="1、指针相关运算符"><a href="#1、指针相关运算符" class="headerlink" title="1、指针相关运算符"></a>1、指针相关运算符</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&amp;:获取内容的地址</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line">	&amp;a --&gt; 获取到a的地址</span><br><span class="line">    </span><br><span class="line">*：获取地址中的内容</span><br><span class="line">    *(&amp;a) == a == <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、指针变量"><a href="#2、指针变量" class="headerlink" title="2、指针变量"></a>2、指针变量</h3><p>​    指针变量就是用于存放地址</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; *指针变量名;</span><br><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">//将a的地址存放在了一个名为p的指针变量中</span></span><br><span class="line">p == &amp;a;</span><br><span class="line">*p = *(&amp;a) == a == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3、指针变量的赋值"><a href="#3、指针变量的赋值" class="headerlink" title="3、指针变量的赋值"></a>3、指针变量的赋值</h3><p>赋值运算符的左值和右值类型一定要相同</p>
+<p>(1)将一个变量的地址赋值给一个具有相同数据类型的指针变量</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br></pre></td></tr></table></figure>
+
+<p>(2)将一个已有的指针赋值给一个 具有相同数据类型的指针变量</p>
+ <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;</span><br><span class="line"><span class="keyword">int</span> *q = p;</span><br><span class="line"></span><br><span class="line">q == p == &amp;a;</span><br></pre></td></tr></table></figure>
+
+<p>(3)将0值赋值给一个指针变量 – 空指针</p>
+<p>野指针：定义一个指针，没有明确指向，不能访问野指针</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">char</span> *p = <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
+
+<p>(4)将一个数组的数组名赋值给一个具有相同数据类型的指针变量</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a; <span class="comment">// a == &amp;a[0]</span></span><br></pre></td></tr></table></figure>
+
+<p>(5)把一个复合形式的表达式的值赋给一个具有相同数据类型的指针变量</p>
+<h3 id="4、指针的运算"><a href="#4、指针的运算" class="headerlink" title="4、指针的运算"></a>4、指针的运算</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">int</span> *p = &amp;a;  <span class="comment">// &amp;a == 0x2000</span></span><br><span class="line">p+n --&gt; p向高地址位偏移n个元素大小的字节数  <span class="comment">//元素指，该指针指向的内容</span></span><br><span class="line">p-n --&gt; p向低地址位偏移n个元素大小的字节数</span><br><span class="line"></span><br><span class="line">p+n == p+n*<span class="keyword">sizeof</span>(元素类型)  <span class="comment">//在该例中元素类型为int</span></span><br><span class="line">    </span><br><span class="line">注意：指针运算中没有 指针 + 指针、指针 * 指针、 指针 / 指针，因为没有任何实际意义 </span><br><span class="line">    但是有指针 - 指针</span><br><span class="line">    </span><br><span class="line">    指针-指针表示相同类型的两个指针之间相差多少个元素,结果的正负，仅代表地址高低</span><br><span class="line">    <span class="keyword">int</span> a, b;</span><br><span class="line">	<span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">	<span class="keyword">int</span> *q = &amp;b;</span><br><span class="line">	q - p ==  (q-p)/<span class="keyword">sizeof</span>(<span class="keyword">int</span>);</span><br><span class="line">    </span><br></pre></td></tr></table></figure>
+
+<h3 id="5、指针和一维数组"><a href="#5、指针和一维数组" class="headerlink" title="5、指针和一维数组"></a>5、指针和一维数组</h3><p>将一个一维数组的数组名赋值给一个具有相同数据类型的指针变量, 我们就可以通过该指针访问数组中所有元素</p>
+<blockquote>
+<p><strong>注：数组名不能递增递减</strong></p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> a[<span class="number">4</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *p = a;</span><br><span class="line">*p == a[<span class="number">0</span>];</span><br><span class="line">*(p+<span class="number">1</span>) == a[<span class="number">1</span>];</span><br><span class="line"></span><br><span class="line">p++; <span class="comment">// p = p+1; right</span></span><br><span class="line">a++; <span class="comment">// a = a+1; error  数组名不能递增递减</span></span><br><span class="line"></span><br><span class="line">数组a中的第三个元素的表达方式:</span><br><span class="line">	a[<span class="number">2</span>]、 *(p+<span class="number">2</span>)、 *(&amp;a[<span class="number">2</span>])、p[<span class="number">2</span>]、 *(a+<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="6、指针和二维数组-–-行指针（数组指针）"><a href="#6、指针和二维数组-–-行指针（数组指针）" class="headerlink" title="6、指针和二维数组 – 行指针（数组指针）"></a>6、指针和二维数组 – 行指针（数组指针）</h3><p>​    本质：数组指针是一个指针，存放的内容是地址，指针指向的内容是一个一维数组</p>
+<p>​    二维数组的数组名是一个行指针，指向二维数组的首地址，行指针+n相当于地址偏移n行元素</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="comment">//行指针的定义一般形式</span></span><br><span class="line">&lt;存储类型&gt; &lt;数据类型&gt; (*指针变量名)[列数];</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">2</span>][<span class="number">3</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = a;</span><br><span class="line"></span><br><span class="line">*(*(p+<span class="number">1</span>)+<span class="number">2</span>) == 第二行第三个元素</span><br><span class="line">*(*(p+<span class="number">0</span>)+<span class="number">1</span>) == 第一行第二个元素</span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h2 id="三、例子"><a href="#三、例子" class="headerlink" title="三、例子"></a>三、例子</h2><h3 id="1"><a href="#1" class="headerlink" title="1."></a>1.</h3><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x=<span class="number">258</span>;                                                      </span><br><span class="line">    <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)&amp;x;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>,*(++p));</span><br><span class="line">  &#125;</span><br><span class="line">  ````</span><br><span class="line">程序运行结果是  &lt;u&gt;2,1&lt;/u&gt;  </span><br><span class="line"></span><br><span class="line">解：<span class="number">258</span>的<span class="number">16</span>进制为<span class="number">102</span>，按照<span class="keyword">int</span>的存储方式为 <span class="number">00</span> <span class="number">00</span> <span class="number">01</span> <span class="number">02</span>，p指针先到<span class="number">02</span>，因为转移到<span class="keyword">char</span>后+<span class="number">1</span>为前进一个字符，则p指针跳到了<span class="number">01.</span>  </span><br><span class="line"></span><br><span class="line">### <span class="number">2.</span> </span><br><span class="line"></span><br><span class="line">```c</span><br><span class="line"><span class="keyword">int</span> a[<span class="number">3</span>][<span class="number">3</span>]=&#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>,<span class="number">9</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> *arr[<span class="number">3</span>]=&#123;a[<span class="number">0</span>],a[<span class="number">1</span>],a[<span class="number">2</span>]&#125;;</span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;%ld&quot;</span>,<span class="keyword">sizeof</span>(arr[<span class="number">0</span>]))</span><br></pre></td></tr></table></figure>
+<p>程序运行结果是  <u>8</u></p>
+<p>解：arr数组里的都是指针，sizeof指向第一个元素即指针，所以大小为8，不是a[0][3]中的12.</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3."></a>3.</h3><p>&emsp;若有以下说明和语句，int c[4][5],(*p)[5];p=c;能正确引用c数组元素的是<u> D</u>.<br>(A) p+1      (B) *(p+3)     　(C) *(p+1)+3   (D) *(p[0]+2) </p>
+<p>解：b错误原因是p+3仅代表地址，加个*只能表示p[3].</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>指针</tag>
+        <tag>数组</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C语言基础-递归</title>
+    <url>/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a><font color="#7CFC00">基本概念</font></h1><p>C 语言允许函数调用它自己，这种调用的过程称为递归</p>
+<a id="more"></a>
+
+<h2 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h2><blockquote>
+<p>栈：一种数据结构，其特点为先进后出</p>
+<blockquote>
+<p>C 语言在执行代码时会从 main()开始依次将调用的函数放入栈中<br>放完后便将栈中的方法，从栈顶一个个取出并执行</p>
+</blockquote>
+</blockquote>
+<p>如图( 计算 3! )：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/oyama-mahiro/ImageHosting/img/diguis.jpg" alt="递归原理图"></p>
+<p>解释：</p>
+<ol>
+<li>开始执行，先将<code>main( )</code>函数放入栈底并执行</li>
+<li>遇到了<code>fun(3)</code>后把 <code>mian( )</code>函数暂时放在栈中，去调用<code>fun(3)</code>函数</li>
+<li>执行<code>fun(3)</code>时又发现调用了<code>fun(2)</code>，又把<code>fun(2)</code>放入栈中去掉<code>fun(1)</code></li>
+<li><code>fun(1)</code>时发现没有调用了( 此时<code>fun(1)</code>在栈顶 )，便开始返回，把返回值给了<code>fun(2)</code>，<code>fun(2)</code>也继续下面的语句，返回给了<code>fun(3)</code></li>
+<li>最后<code>fun(3)</code>返回给<code>main( )</code>，<code>main( )</code>继续执行下面的语句</li>
+</ol>
+<p>由此可以看成递归的形成至少需要两个条件：</p>
+<ol>
+<li>变化的参数</li>
+<li>递归终止条件</li>
+</ol>
+<blockquote>
+<p>栈溢出：内存空间是有限的，分配给 C 程序的栈空间也是有限的，如果递归没有结束条件的话就会导致无限的调用，形成栈溢出</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="尾递归"><a href="#尾递归" class="headerlink" title="尾递归"></a><font color="#7CFC00">尾递归</font></h1><p>最简单的递归形式就是把递归调用置于函数的末尾，即正好在 <code>return</code> 语句之前。这种形式的递归被称为 <u>尾递归</u> (如上图所示)，它相当于循环。</p>
+<p><strong>如果效果和循环差不多时最好使用循环</strong></p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归的优缺点"><a href="#递归的优缺点" class="headerlink" title="递归的优缺点"></a><font color="#7CFC00">递归的优缺点</font></h1><p>递归的语法易被人理解，但空间成本消耗太大。所以在使用递归时要特别注意，尤其是<font color="red">效率优先</font>的程序</p>
+<br>
+
+<blockquote>
+<p>注：main( )函数可以调用自己，且两函数间不可以相互调用</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="递归算法实战-汉诺塔问题"><a href="#递归算法实战-汉诺塔问题" class="headerlink" title="递归算法实战-汉诺塔问题"></a><font color="#7CFC00">递归算法实战-汉诺塔问题</font></h1><h2 id="问题叙述"><a href="#问题叙述" class="headerlink" title="问题叙述"></a>问题叙述</h2><p>在经典汉诺塔问题中，有 3 根柱子及 N 个不同大小的穿孔圆盘，盘子可以滑入任意一根柱子。一开始，所有盘子自上而下按升序依次套在第一根柱子上(即每一个盘子只能放在更大的盘子上面)。移动圆盘时受到以下限制:<br>(1) 每次只能移动一个盘子;<br>(2) 盘子只能从柱子顶端滑出移到下一根柱子;<br>(3) 盘子只能叠在比它大的盘子上。</p>
+<p>请编写程序，用栈将所有盘子从第一根柱子移到最后一根柱子。</p>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1159565693,4014945639&fm=26&gp=0.jpg" alt="汉诺塔"></p>
+<h2 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h2><p>我们倒着的开始，假如要移动 64 个</p>
+<ol>
+<li>我们要把上面的 63 个移动到 B</li>
+<li>把第 64 个移动到 C</li>
+<li>把 B 上的 63 个移动到 C</li>
+</ol>
+<p>那么就会产生问题了：怎么移动那 63 个呢<br>和上面的思路一样</p>
+<ol>
+<li>我们要把上面的 62 个移动到 B</li>
+<li>把第 63 个移动到 C</li>
+<li>把 B 上的 62 个移动到 C</li>
+</ol>
+<p>直到问题变为：怎么移动上面的那 1 个呢，这时我们就会了，移动了 1 个后，我们就会移动 2 个，移动 2 个后，我们就会第 3 个，依次下去，就能把 64 个都移动完了</p>
+<p>所以整个过程是</p>
+<ol>
+<li>我们要把上面的<code>n-1</code>个移动到 B</li>
+<li>把第<code>n</code>个移动到 C</li>
+<li>把 B 上的<code>n-1</code>个移动到 C</li>
+</ol>
+<blockquote>
+<p>其中移动 n-1 个盘子的操作是递归操作<br>1，3 步分别用了递归</p>
+</blockquote>
+<p>下面是 java 语言代码实现部分( <del>用 C 表达出来的效果不好啊，还是 java 的看着舒服</del> ，其实基本都是一样的):</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hanota</span><span class="params">(List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span> </span>&#123;</span><br><span class="line">        move(A.size(),A,B,C);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//从这开始看</span></span><br><span class="line">    <span class="comment">//盘子用数字代替，n代表需要移动的盘子数，List是盘子的集合</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">move</span><span class="params">(<span class="keyword">int</span> n,List&lt;Integer&gt; A, List&lt;Integer&gt; B, List&lt;Integer&gt; C)</span></span>&#123;</span><br><span class="line">        <span class="comment">//当需要移动的盘子数只有1个时，此时这个盘子就是最下面的，其它的都移动到B上(第一步)或者A(第三步)上了了</span></span><br><span class="line">        <span class="comment">// 把A的盘子直接移动到C就行了</span></span><br><span class="line">        <span class="keyword">if</span>(n == <span class="number">1</span>)&#123;</span><br><span class="line">            C.add(A.remove(A.size()-<span class="number">1</span>)); <span class="comment">//注意这里是最下面的盘子数最大</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//没到最上面时，则一直重复123步骤</span></span><br><span class="line">        move(n-<span class="number">1</span>,A,C,B); <span class="comment">//对应第一步</span></span><br><span class="line">        C.add(A.remove(A.size()-<span class="number">1</span>));  <span class="comment">//对应第二步</span></span><br><span class="line">        move(n-<span class="number">1</span>,B,A,C);  <span class="comment">//对应第三步</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="递归总结"><a href="#递归总结" class="headerlink" title="递归总结"></a><font color="#7CFC00">递归总结</font></h1><p>要运用递归的地方都有以下的共同点</p>
+<ol>
+<li>拥有大量重复的步骤，或者说可将复杂的步骤转换为计算大但容易理解的重复步骤</li>
+<li>拥有当达到某种条件时，可返回一个确定值，即遇见某种情况时可向前推导</li>
+</ol>
+<p>这样便可以将代表条件的变量设为函数参数，把步骤设为函数具体代码</p>
+<hr>
+<br>
+<br>
+
+<h1 id="推荐阅读"><a href="#推荐阅读" class="headerlink" title="推荐阅读"></a><font color="#7CFC00">推荐阅读</font></h1><p>知乎-<a href="https://www.zhihu.com/question/24385418">如何理解汉诺塔的递推</a><br><a href="https://leetcode-cn.com/explore/featured/card/recursion-i/">leetcode-递推</a>(有点难度)</p>
+]]></content>
+      <categories>
+        <category>c语言</category>
+      </categories>
+      <tags>
+        <tag>C语言</tag>
+        <tag>c</tag>
+        <tag>递归</tag>
+        <tag>C语言基础</tag>
       </tags>
   </entry>
   <entry>
@@ -1775,54 +1775,6 @@
       </tags>
   </entry>
   <entry>
-    <title>day23-链表</title>
-    <url>/2023/03/23/day23-%E9%93%BE%E8%A1%A8/</url>
-    <content><![CDATA[<h1 id="day23-链表"><a href="#day23-链表" class="headerlink" title="day23-链表"></a><font color="green">day23-链表</font></h1><h2 id="一、基本结构"><a href="#一、基本结构" class="headerlink" title="一、基本结构"></a>一、基本结构</h2><p>链表是一种常见的数据结构，由一系列节点组成，每个节点包含数据和指向下一个节点的指针。</p>
-<p>链表可以分为单向链表和双向链表两种类型。在单向链表中，每个节点只包含一个指向下一个节点的指针，而在双向链表中，每个节点同时包含指向上一个节点和下一个节点的指针。</p>
-<p>相比于数组，链表的一个重要优势是可以动态地增加和删除节点，而不需要移动整个数据结构中的其他元素。但是，链表的访问效率较低，因为需要遍历整个链表才能找到所需节点。</p>
-<a id="more"></a>
-<br>
-<br>
-
-<hr>
-<h2 id="二、链表图解"><a href="#二、链表图解" class="headerlink" title="二、链表图解"></a>二、链表图解</h2><h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/lianbiao.jpg" alt="链表"></p>
-<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/charu.jpg" alt="链表"></p>
-<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/shanchu.jpg" alt="链表"></p>
-<br>
-<br>
-
-<hr>
-<h2 id="三、链表的代码实现"><a href="#三、链表的代码实现" class="headerlink" title="三、链表的代码实现"></a>三、链表的代码实现</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;linklist.h&quot;</span></span></span><br><span class="line"><span class="comment">//创建链表的结构体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">data_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">node_t</span>&#123;</span></span><br><span class="line">    <span class="keyword">data_t</span> data;  <span class="comment">//数据域</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node_t</span> *<span class="title">next</span>;</span> <span class="comment">//next 域</span></span><br><span class="line">&#125;linklist; </span><br><span class="line"></span><br><span class="line"><span class="comment">//创建链表头节点</span></span><br><span class="line"><span class="function">linklist* <span class="title">create_linklist</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    linklist* head = (linklist*) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist));</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    head-&gt;data = <span class="number">-1</span>;</span><br><span class="line">    head-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">linklist_is_empty</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> ((head-&gt;next == <span class="literal">NULL</span>) ?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//求有效节点个数(求长度)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_num_linklist</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist *p = head-&gt;next; <span class="comment">//定义p指针指向第一个有效节点</span></span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)  <span class="comment">//循环遍历</span></span><br><span class="line">    &#123;</span><br><span class="line">        num++;              <span class="comment">//统计节点数</span></span><br><span class="line">        p = p-&gt;next;        <span class="comment">//p指针向后偏移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//头插法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_head_linklist</span><span class="params">(linklist* head, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点</span></span><br><span class="line">    linklist *<span class="keyword">new</span>  = (linklist *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val; <span class="comment">//</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//头插法 插入</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = head-&gt;next; </span><br><span class="line">    head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按位置插入</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_by_pos_linklist</span><span class="params">(linklist *head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点 和p 指针 </span></span><br><span class="line">    linklist* p = head; </span><br><span class="line">    linklist* <span class="keyword">new</span> = (linklist*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val;</span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//将p 找到pos-1的位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//将新节点插入pos 位置</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = p-&gt;next;</span><br><span class="line">    p-&gt;next   = <span class="keyword">new</span>; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按位置修改</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">change_by_pos_linklist</span><span class="params">(linklist*head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> new_val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(linklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist* p = head-&gt;next; </span><br><span class="line">    <span class="comment">//找到pos 位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)  </span><br><span class="line">        p   = p-&gt;next;</span><br><span class="line">    p-&gt;data = new_val;  <span class="comment">//修改</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//按位置查询</span></span><br><span class="line"><span class="function"><span class="keyword">data_t</span> <span class="title">find_by_pos_linklist</span><span class="params">(linklist*head, <span class="keyword">int</span> pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(linklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist* p = head-&gt;next; </span><br><span class="line">    <span class="comment">//找到pos 位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)  </span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="keyword">return</span> p-&gt;data; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//按位置删除</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">delete_by_pos_linklist</span><span class="params">(linklist* head, <span class="keyword">int</span> pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(linklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备p 指向pos-1， q 指向要删除的pos 节点</span></span><br><span class="line">    linklist* p = head;</span><br><span class="line">    linklist* q = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//找到pos -1位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--) </span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    q = p-&gt;next;</span><br><span class="line">    <span class="comment">//连接</span></span><br><span class="line">    p-&gt;next = q-&gt;next; </span><br><span class="line">    <span class="comment">//删除节点</span></span><br><span class="line">    <span class="built_in">free</span>(q); </span><br><span class="line">    q = <span class="literal">NULL</span>; <span class="comment">//</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//打印有效节点的值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span>;</span><br><span class="line">    linklist *p = head-&gt;next;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%-4d&quot;</span>,p-&gt;data);</span><br><span class="line">        p = p-&gt;next; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//清空链表</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">clear_linklist</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist *p = head-&gt;next;</span><br><span class="line">    head-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    linklist* q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        q = p-&gt;next; <span class="comment">//q 偏移</span></span><br><span class="line">        <span class="built_in">free</span>(p);</span><br><span class="line">        p = q;  <span class="comment">//p 向后偏移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//销毁链表</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">destory_linklist</span><span class="params">(linklist** head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">free</span>(*head);</span><br><span class="line">    head = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 命令行模式下：gg=GG 自动缩进</span></span><br></pre></td></tr></table></figure>
-
-<br>
-<br>
-
-<hr>
-<h2 id="四、单向循环链表"><a href="#四、单向循环链表" class="headerlink" title="四、单向循环链表"></a>四、单向循环链表</h2><p>即把链表代码中表示的最后一位的NULL都改为head就行。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="五、双向链表"><a href="#五、双向链表" class="headerlink" title="五、双向链表"></a>五、双向链表</h2><p>双向链表的主要不同点便是</p>
-<ol>
-<li>头插法插入时要判断后面是否是NULL，按位置插入和删除时要判断是否是尾部</li>
-<li>插入的顺序主要分四部：(先右后左，先赋值给new再把原数据指向new)<blockquote>
-<p>new-&gt;next=p-&gt;next;<br>p-&gt;next-&gt;piror=new;<br>new-&gt;prior=p;<br>p-&gt;next=new;</p>
-</blockquote>
-</li>
-</ol>
-<p>下面是双向链表的c的实现</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;dlinklist.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建链表头节点</span></span><br><span class="line"><span class="function">dlinklist* <span class="title">create_dlinklist</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dlinklist* head = (dlinklist*) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    head-&gt;data = <span class="number">-1</span>;</span><br><span class="line">    head-&gt;prior = head-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//head-&gt;prior = NULL; </span></span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dlinklist_is_empty</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> ((head-&gt;next == head-&gt;prior) ?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//求有效节点个数(求长度)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_num_dlinklist</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    dlinklist *p = head-&gt;next; <span class="comment">//定义p指针指向第一个有效节点</span></span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)  <span class="comment">//循环遍历</span></span><br><span class="line">    &#123;</span><br><span class="line">        num++;              <span class="comment">//统计节点数</span></span><br><span class="line">        p = p-&gt;next;        <span class="comment">//p指针向后偏移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//头插法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_head_dlinklist</span><span class="params">(dlinklist* head, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点</span></span><br><span class="line">    dlinklist *<span class="keyword">new</span>  = (dlinklist *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val; <span class="comment">//</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">new</span>-&gt;prior = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//头插法 插入</span></span><br><span class="line">    <span class="keyword">if</span>(head-&gt;next   == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = head-&gt;next;</span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = head;</span><br><span class="line">        head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = head-&gt;next;</span><br><span class="line">        head-&gt;next-&gt;prior = <span class="keyword">new</span>; </span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = head;</span><br><span class="line">        head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//打印有效节点的值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span>;</span><br><span class="line">    dlinklist *p = head-&gt;next;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%-4d&quot;</span>,p-&gt;data);</span><br><span class="line">        p = p-&gt;next; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按位置插入</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_by_pos_dlinklist</span><span class="params">(dlinklist *head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_dlinklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点 和p 指针 </span></span><br><span class="line">    dlinklist* p = head; </span><br><span class="line">    dlinklist* <span class="keyword">new</span> = (dlinklist*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val;</span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">new</span>-&gt;prior = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//将p 找到pos-1的位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//将新节点插入pos 位置</span></span><br><span class="line">    <span class="keyword">if</span>(p-&gt;next == <span class="literal">NULL</span>) <span class="comment">//尾插</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = p;</span><br><span class="line">        p-&gt;next = <span class="keyword">new</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = p-&gt;next;</span><br><span class="line">        p-&gt;next-&gt;prior = <span class="keyword">new</span>;</span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = p;</span><br><span class="line">        p-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//按位置删除</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">delete_by_pos_dlinklist</span><span class="params">(dlinklist* head, <span class="keyword">int</span> pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(dlinklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_dlinklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备p 指向pos-1， q 指向要删除的pos 节点</span></span><br><span class="line">    dlinklist* p = head;</span><br><span class="line">    dlinklist* q = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//找到pos -1位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--) <span class="comment">// pos -1</span></span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//连接</span></span><br><span class="line">    <span class="comment">//q = p-&gt;next ; </span></span><br><span class="line">    <span class="comment">//if(q-&gt;next == NULL) //尾删</span></span><br><span class="line">    <span class="keyword">if</span>(p-&gt;next-&gt;next == <span class="literal">NULL</span>) <span class="comment">//尾删</span></span><br><span class="line">    &#123;</span><br><span class="line">        q = p-&gt;next;</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">free</span>(q);</span><br><span class="line">        q = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        q = p-&gt;next;</span><br><span class="line">        p-&gt;next = q-&gt;next;</span><br><span class="line">        q-&gt;next-&gt;prior = p; </span><br><span class="line">        <span class="built_in">free</span>(q);</span><br><span class="line">        q = <span class="literal">NULL</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-        <tag>算法</tag>
-        <tag>顺序表</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>day24-栈与队列</title>
     <url>/2023/03/27/day24-%E6%A0%88%E4%B8%8E%E9%98%9F%E5%88%97/</url>
     <content><![CDATA[<h1 id="day24-栈与队列"><a href="#day24-栈与队列" class="headerlink" title="day24-栈与队列"></a><font color="green">day24-栈与队列</font></h1><h2 id="一、基本结构"><a href="#一、基本结构" class="headerlink" title="一、基本结构"></a>一、基本结构</h2><h3 id="1-概念"><a href="#1-概念" class="headerlink" title="1. 概念"></a>1. 概念</h3><p>&emsp;&emsp;栈和队列是两种常见的数据结构。它们都是线性结构，但它们的操作方式不同。栈是一种后进先出（LIFO）的数据结构，即最后进入的元素最先被访问。而队列是一种先进先出（FIFO）的数据结构，即最先进入的元素最先被访问。</p>
@@ -1901,6 +1853,67 @@
       </tags>
   </entry>
   <entry>
+    <title>day23-链表</title>
+    <url>/2023/03/23/day23-%E9%93%BE%E8%A1%A8/</url>
+    <content><![CDATA[<h1 id="day23-链表"><a href="#day23-链表" class="headerlink" title="day23-链表"></a><font color="green">day23-链表</font></h1><h2 id="一、基本结构"><a href="#一、基本结构" class="headerlink" title="一、基本结构"></a>一、基本结构</h2><p>链表是一种常见的数据结构，由一系列节点组成，每个节点包含数据和指向下一个节点的指针。</p>
+<p>链表可以分为单向链表和双向链表两种类型。在单向链表中，每个节点只包含一个指向下一个节点的指针，而在双向链表中，每个节点同时包含指向上一个节点和下一个节点的指针。</p>
+<p>相比于数组，链表的一个重要优势是可以动态地增加和删除节点，而不需要移动整个数据结构中的其他元素。但是，链表的访问效率较低，因为需要遍历整个链表才能找到所需节点。</p>
+<a id="more"></a>
+<br>
+<br>
+
+<hr>
+<h2 id="二、链表图解"><a href="#二、链表图解" class="headerlink" title="二、链表图解"></a>二、链表图解</h2><h3 id="整体"><a href="#整体" class="headerlink" title="整体"></a>整体</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/lianbiao.jpg" alt="链表"></p>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/charu.jpg" alt="链表"></p>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><p><img src="/2023/03/23/day23-%E9%93%BE%E8%A1%A8/shanchu.jpg" alt="链表"></p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、链表的代码实现"><a href="#三、链表的代码实现" class="headerlink" title="三、链表的代码实现"></a>三、链表的代码实现</h2><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;linklist.h&quot;</span></span></span><br><span class="line"><span class="comment">//创建链表的结构体</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> <span class="keyword">data_t</span>;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">node_t</span>&#123;</span></span><br><span class="line">    <span class="keyword">data_t</span> data;  <span class="comment">//数据域</span></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node_t</span> *<span class="title">next</span>;</span> <span class="comment">//next 域</span></span><br><span class="line">&#125;linklist; </span><br><span class="line"></span><br><span class="line"><span class="comment">//创建链表头节点</span></span><br><span class="line"><span class="function">linklist* <span class="title">create_linklist</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    linklist* head = (linklist*) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist));</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    head-&gt;data = <span class="number">-1</span>;</span><br><span class="line">    head-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">linklist_is_empty</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> ((head-&gt;next == <span class="literal">NULL</span>) ?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//求有效节点个数(求长度)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_num_linklist</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist *p = head-&gt;next; <span class="comment">//定义p指针指向第一个有效节点</span></span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)  <span class="comment">//循环遍历</span></span><br><span class="line">    &#123;</span><br><span class="line">        num++;              <span class="comment">//统计节点数</span></span><br><span class="line">        p = p-&gt;next;        <span class="comment">//p指针向后偏移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//头插法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_head_linklist</span><span class="params">(linklist* head, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点</span></span><br><span class="line">    linklist *<span class="keyword">new</span>  = (linklist *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val; <span class="comment">//</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//头插法 插入</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = head-&gt;next; </span><br><span class="line">    head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按位置插入</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_by_pos_linklist</span><span class="params">(linklist *head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点 和p 指针 </span></span><br><span class="line">    linklist* p = head; </span><br><span class="line">    linklist* <span class="keyword">new</span> = (linklist*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(linklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val;</span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//将p 找到pos-1的位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//将新节点插入pos 位置</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = p-&gt;next;</span><br><span class="line">    p-&gt;next   = <span class="keyword">new</span>; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按位置修改</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">change_by_pos_linklist</span><span class="params">(linklist*head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> new_val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(linklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist* p = head-&gt;next; </span><br><span class="line">    <span class="comment">//找到pos 位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)  </span><br><span class="line">        p   = p-&gt;next;</span><br><span class="line">    p-&gt;data = new_val;  <span class="comment">//修改</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//按位置查询</span></span><br><span class="line"><span class="function"><span class="keyword">data_t</span> <span class="title">find_by_pos_linklist</span><span class="params">(linklist*head, <span class="keyword">int</span> pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(linklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist* p = head-&gt;next; </span><br><span class="line">    <span class="comment">//找到pos 位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)  </span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="keyword">return</span> p-&gt;data; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//按位置删除</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">delete_by_pos_linklist</span><span class="params">(linklist* head, <span class="keyword">int</span> pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(linklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_linklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备p 指向pos-1， q 指向要删除的pos 节点</span></span><br><span class="line">    linklist* p = head;</span><br><span class="line">    linklist* q = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//找到pos -1位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--) </span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    q = p-&gt;next;</span><br><span class="line">    <span class="comment">//连接</span></span><br><span class="line">    p-&gt;next = q-&gt;next; </span><br><span class="line">    <span class="comment">//删除节点</span></span><br><span class="line">    <span class="built_in">free</span>(q); </span><br><span class="line">    q = <span class="literal">NULL</span>; <span class="comment">//</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//打印有效节点的值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span>;</span><br><span class="line">    linklist *p = head-&gt;next;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%-4d&quot;</span>,p-&gt;data);</span><br><span class="line">        p = p-&gt;next; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//清空链表</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">clear_linklist</span><span class="params">(linklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    linklist *p = head-&gt;next;</span><br><span class="line">    head-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    linklist* q = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        q = p-&gt;next; <span class="comment">//q 偏移</span></span><br><span class="line">        <span class="built_in">free</span>(p);</span><br><span class="line">        p = q;  <span class="comment">//p 向后偏移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//销毁链表</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">destory_linklist</span><span class="params">(linklist** head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">free</span>(*head);</span><br><span class="line">    head = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 命令行模式下：gg=GG 自动缩进</span></span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h2 id="四、单向循环链表"><a href="#四、单向循环链表" class="headerlink" title="四、单向循环链表"></a>四、单向循环链表</h2><p>即把链表代码中表示的最后一位的NULL都改为head就行。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="五、双向链表"><a href="#五、双向链表" class="headerlink" title="五、双向链表"></a>五、双向链表</h2><p>双向链表的主要不同点便是</p>
+<ol>
+<li>头插法插入时要判断后面是否是NULL，按位置插入和删除时要判断是否是尾部</li>
+<li>插入的顺序主要分四部：(先右后左，先赋值给new再把原数据指向new)<blockquote>
+<p>new-&gt;next=p-&gt;next;<br>p-&gt;next-&gt;piror=new;<br>new-&gt;prior=p;<br>p-&gt;next=new;</p>
+</blockquote>
+</li>
+</ol>
+<p>下面是双向链表的c的实现</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;dlinklist.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//创建链表头节点</span></span><br><span class="line"><span class="function">dlinklist* <span class="title">create_dlinklist</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    dlinklist* head = (dlinklist*) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">    head-&gt;data = <span class="number">-1</span>;</span><br><span class="line">    head-&gt;prior = head-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//head-&gt;prior = NULL; </span></span><br><span class="line">    <span class="keyword">return</span> head;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//判空</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">dlinklist_is_empty</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">return</span> ((head-&gt;next == head-&gt;prior) ?<span class="number">1</span>:<span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//求有效节点个数(求长度)</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">get_num_dlinklist</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    dlinklist *p = head-&gt;next; <span class="comment">//定义p指针指向第一个有效节点</span></span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)  <span class="comment">//循环遍历</span></span><br><span class="line">    &#123;</span><br><span class="line">        num++;              <span class="comment">//统计节点数</span></span><br><span class="line">        p = p-&gt;next;        <span class="comment">//p指针向后偏移</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> num; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//头插法</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_head_dlinklist</span><span class="params">(dlinklist* head, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点</span></span><br><span class="line">    dlinklist *<span class="keyword">new</span>  = (dlinklist *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val; <span class="comment">//</span></span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">new</span>-&gt;prior = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//头插法 插入</span></span><br><span class="line">    <span class="keyword">if</span>(head-&gt;next   == <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = head-&gt;next;</span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = head;</span><br><span class="line">        head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = head-&gt;next;</span><br><span class="line">        head-&gt;next-&gt;prior = <span class="keyword">new</span>; </span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = head;</span><br><span class="line">        head-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//打印有效节点的值</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">show</span><span class="params">(dlinklist* head)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span>;</span><br><span class="line">    dlinklist *p = head-&gt;next;</span><br><span class="line">    <span class="keyword">while</span>(p != <span class="literal">NULL</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%-4d&quot;</span>,p-&gt;data);</span><br><span class="line">        p = p-&gt;next; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span>; </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//按位置插入</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">insert_by_pos_dlinklist</span><span class="params">(dlinklist *head, <span class="keyword">int</span> pos, <span class="keyword">data_t</span> val)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_dlinklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备new 节点 和p 指针 </span></span><br><span class="line">    dlinklist* p = head; </span><br><span class="line">    dlinklist* <span class="keyword">new</span> = (dlinklist*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(dlinklist));</span><br><span class="line">    <span class="keyword">new</span>-&gt;data = val;</span><br><span class="line">    <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="keyword">new</span>-&gt;prior = <span class="literal">NULL</span>;</span><br><span class="line">    <span class="comment">//将p 找到pos-1的位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--)</span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//将新节点插入pos 位置</span></span><br><span class="line">    <span class="keyword">if</span>(p-&gt;next == <span class="literal">NULL</span>) <span class="comment">//尾插</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = <span class="literal">NULL</span>; </span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = p;</span><br><span class="line">        p-&gt;next = <span class="keyword">new</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="keyword">new</span>-&gt;next = p-&gt;next;</span><br><span class="line">        p-&gt;next-&gt;prior = <span class="keyword">new</span>;</span><br><span class="line">        <span class="keyword">new</span>-&gt;prior = p;</span><br><span class="line">        p-&gt;next = <span class="keyword">new</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//按位置删除</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">delete_by_pos_dlinklist</span><span class="params">(dlinklist* head, <span class="keyword">int</span> pos)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="literal">NULL</span> == head) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">if</span>(dlinklist_is_empty(head)== <span class="number">1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//判断位置合法性</span></span><br><span class="line">    <span class="keyword">int</span> len = get_num_dlinklist(head); </span><br><span class="line">    <span class="keyword">if</span>(pos &lt; <span class="number">0</span> || pos &gt; len<span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">    <span class="comment">//准备p 指向pos-1， q 指向要删除的pos 节点</span></span><br><span class="line">    dlinklist* p = head;</span><br><span class="line">    dlinklist* q = <span class="literal">NULL</span>; </span><br><span class="line">    <span class="comment">//找到pos -1位置</span></span><br><span class="line">    <span class="keyword">while</span>(pos--) <span class="comment">// pos -1</span></span><br><span class="line">        p = p-&gt;next;</span><br><span class="line">    <span class="comment">//连接</span></span><br><span class="line">    <span class="comment">//q = p-&gt;next ; </span></span><br><span class="line">    <span class="comment">//if(q-&gt;next == NULL) //尾删</span></span><br><span class="line">    <span class="keyword">if</span>(p-&gt;next-&gt;next == <span class="literal">NULL</span>) <span class="comment">//尾删</span></span><br><span class="line">    &#123;</span><br><span class="line">        q = p-&gt;next;</span><br><span class="line">        p-&gt;next = <span class="literal">NULL</span>;</span><br><span class="line">        <span class="built_in">free</span>(q);</span><br><span class="line">        q = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        q = p-&gt;next;</span><br><span class="line">        p-&gt;next = q-&gt;next;</span><br><span class="line">        q-&gt;next-&gt;prior = p; </span><br><span class="line">        <span class="built_in">free</span>(q);</span><br><span class="line">        q = <span class="literal">NULL</span>; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>算法</tag>
+        <tag>顺序表</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day26-图</title>
+    <url>/2023/04/01/day26-%E5%9B%BE/</url>
+    <content><![CDATA[<h1 id="day26-图"><a href="#day26-图" class="headerlink" title="day26-图"></a><font color="green">day26-图</font></h1>]]></content>
+      <categories>
+        <category>数据结构</category>
+      </categories>
+      <tags>
+        <tag>数据结构</tag>
+        <tag>算法</tag>
+        <tag>图</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>day25-二叉树</title>
     <url>/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/</url>
     <content><![CDATA[<h1 id="day25-树"><a href="#day25-树" class="headerlink" title="day25-树"></a><font color="green">day25-树</font></h1><h2 id="一、树的概念"><a href="#一、树的概念" class="headerlink" title="一、树的概念"></a>一、树的概念</h2><h3 id="1-树形结构的形式化"><a href="#1-树形结构的形式化" class="headerlink" title="1. 树形结构的形式化"></a>1. 树形结构的形式化</h3><h4 id="1-1-序偶"><a href="#1-1-序偶" class="headerlink" title="1.1 序偶"></a>1.1 序偶</h4><p>定义：设有两个元素x和y，由x和y构成的序偶记为&lt;x,y&gt;。  </p>
@@ -1967,19 +1980,6 @@
         <tag>数据结构</tag>
         <tag>算法</tag>
         <tag>二叉树</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>day26-图</title>
-    <url>/2023/04/01/day26-%E5%9B%BE/</url>
-    <content><![CDATA[<h1 id="day26-图"><a href="#day26-图" class="headerlink" title="day26-图"></a><font color="green">day26-图</font></h1>]]></content>
-      <categories>
-        <category>数据结构</category>
-      </categories>
-      <tags>
-        <tag>数据结构</tag>
-        <tag>算法</tag>
-        <tag>图</tag>
       </tags>
   </entry>
   <entry>
@@ -2263,64 +2263,6 @@
       </tags>
   </entry>
   <entry>
-    <title>day35-c++类继承</title>
-    <url>/2023/04/25/day35-c-%E7%B1%BB%E7%BB%A7%E6%89%BF/</url>
-    <content><![CDATA[<h1 id="day35-c-类继承"><a href="#day35-c-类继承" class="headerlink" title="day35-c++类继承"></a><font color="green">day35-c++类继承</font></h1><!--mroe-->
-
-<h2 id="一、c-继承概念"><a href="#一、c-继承概念" class="headerlink" title="一、c++继承概念"></a>一、c++继承概念</h2><p>C++继承是面向对象程序设计中的一个重要概念，它允许我们根据一个已有的类来创建一个新的类，从而实现代码的重用和扩展。C++支持三种继承方式：公有继承、保护继承和私有继承，它们影响了基类和派生类之间成员的访问权限。C++还支持多继承，即一个派生类可以有多个基类，继承了它们的特性。在多继承中，有时会出现菱形继承的情况，即多个基类继承自同一个祖先类，导致派生类拥有重复的祖先类成员。为了解决这个问题，C++引入了虚继承和虚基类的概念，使得派生类只保留一份祖先类成员。</p>
-<p>友员函数可以继承。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、c-继承基础语法"><a href="#二、c-继承基础语法" class="headerlink" title="二、c++继承基础语法"></a>二、c++继承基础语法</h2><p>C++继承语法的一般形式是：</p>
-<blockquote>
-<p>class 派生类名 : 继承方式 基类名 {<br>&emsp;&emsp;派生类的成员<br>}</p>
-</blockquote>
-<p>&emsp;&emsp;其中，继承方式可以是public（公有）、protected（保护）或private（私有）三种之一，用来指定基类的成员在派生类中的访问权限。<br>&emsp;&emsp;如果不指定继承方式，默认为private。</p>
-<blockquote>
-<p>&emsp;&emsp;public是将基类的公有成员和保护成员继承给子类，且权限不变<br>&emsp;&emsp;protected是将基类的公有成员和保护成员继承给子类，并且权限变为protected，不能在外部访问。Protected继承也保持了父类和子类之间的is-a(继承，子类是父类的一种特殊情况)关系，但是这种关系对外部不可见。<br>&emsp;&emsp;private是将基类的共有成员和保护成员继承给子类，并且权限变为private。Private继承破坏了父类和子类之间的is-a关系，即子类不是一种特殊的父类。Private继承相当于把父类作为一个组件嵌入到子类中，实现了has-a(组合，一个类包含另一个类的对象)关系。</p>
-</blockquote>
-<p>&emsp;&emsp;例如，下面的代码定义了一个基类Animal和一个派生类Dog，Dog继承了Animal的所有成员，并增加了自己的成员函数bark()。</p>
-<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Animal is eating.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sleep</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Animal is sleeping.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> :</span> <span class="keyword">public</span> Animal &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bark</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Dog is barking.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 这样，我们就可以通过Dog类的对象来调用Animal类的成员函数，以及Dog类自己的成员函数，如下：</span></span><br><span class="line">Dog d;</span><br><span class="line">d.eat(); <span class="comment">// 调用基类的成员函数</span></span><br><span class="line">d.sleep(); <span class="comment">// 调用基类的成员函数</span></span><br><span class="line">d.bark(); <span class="comment">// 调用派生类的成员函数</span></span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<h2 id="三、c-继承的构造和析构顺序"><a href="#三、c-继承的构造和析构顺序" class="headerlink" title="三、c++继承的构造和析构顺序"></a>三、c++继承的构造和析构顺序</h2><p>当创建一个派生类的对象时，会先调用基类的构造函数，然后再调用派生类的构造函数。如果基类有多个，那么会按照声明的顺序从左到右依次调用基类的构造函数。如果基类或派生类有成员对象，那么会在调用自身的构造函数之前先调用成员对象的构造函数。如果基类的构造函数有参数，那么需要在派生类的初始化列表中显式地传递参数给基类的构造函数。</p>
-<p>其次，我们来看看析构函数的调用顺序。当销毁一个派生类的对象时，会先调用派生类的析构函数，然后再调用基类的析构函数。如果基类有多个，那么会按照声明的顺序从右到左依次调用基类的析构函数。如果基类或派生类有成员对象，那么会在调用自身的析构函数之后再调用成员对象的析构函数。</p>
-<p><img src="/2023/04/25/day35-c-%E7%B1%BB%E7%BB%A7%E6%89%BF/gouzhao.png" alt="gouzhao"></p>
-<br>
-<br>
-
-<hr>
-<h2 id="四、c-继承的赋值"><a href="#四、c-继承的赋值" class="headerlink" title="四、c++继承的赋值"></a>四、c++继承的赋值</h2><ul>
-<li>派生类的对象可以赋值给基类的对象，但是会发生对象切割，即派生类特有的成员会被忽略。</li>
-<li>基类的对象不能赋值给派生类的对象，因为基类的对象可能缺少派生类需要的成员。</li>
-<li>派生类的指针或引用可以赋值给基类的指针或引用，这样可以实现多态，即通过基类的指针或引用调用派生类的虚函数。</li>
-<li>基类的指针或引用不能赋值给派生类的指针或引用，除非使用强制类型转换，但是这样做可能会导致运行时错误。</li>
-</ul>
-<br>
-<br>
-
-<hr>
-<h2 id="五、c-继承的重名问题"><a href="#五、c-继承的重名问题" class="headerlink" title="五、c++继承的重名问题"></a>五、c++继承的重名问题</h2><p>在c++中，继承是一种实现代码复用和多态的重要机制。继承允许一个类（子类）从另一个类（父类）继承成员变量和成员函数，从而实现对父类的扩展和修改。但是，如果子类和父类中有同名的成员，那么就会出现重名问题，也就是说，子类中的同名成员会隐藏父类中的同名成员，导致访问冲突和歧义。</p>
-<p>为了解决这个问题，c++提供了以下几种方法：</p>
-<ul>
-<li>使用作用域限定符（::）来指定访问哪个类中的同名成员。例如，如果子类A继承了父类B，并且都有一个同名的函数f()，那么可以通过A::f()来调用子类中的f()，或者通过B::f()来调用父类中的f()。</li>
-<li>使用虚函数（virtual）来实现多态。虚函数是一种特殊的成员函数，它可以被子类重写（override），从而实现不同的行为。如果子类和父类中都有一个同名的虚函数f()，那么当通过父类指针或引用来调用f()时，会根据对象的实际类型来动态绑定（dynamic binding），调用相应的子类或父类中的f()。这样就可以避免歧义，并且提高了代码的灵活性和可维护性。</li>
-<li>使用using声明（using declaration）来引入父类中的同名成员到子类的作用域中。这样可以使得子类和父类中的同名成员都可以被访问，而不需要使用作用域限定符。例如，如果子类A继承了父类B，并且都有一个同名的变量x，那么可以在子类A中使用using B::x;来引入父类中的x到子类的作用域中。这样就可以通过x来访问子类或父类中的x。</li>
-</ul>
-]]></content>
-      <categories>
-        <category>c++</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-        <tag>继承</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>day36-c++多态</title>
     <url>/2023/04/26/day36-c-%E5%A4%9A%E6%80%81/</url>
     <content><![CDATA[<h1 id="day36-c-多态"><a href="#day36-c-多态" class="headerlink" title="day36-c++多态"></a><font color="green">day36-c++多态</font></h1><!--mroe-->
@@ -2455,6 +2397,201 @@
       </tags>
   </entry>
   <entry>
+    <title>day35-c++类继承</title>
+    <url>/2023/04/25/day35-c-%E7%B1%BB%E7%BB%A7%E6%89%BF/</url>
+    <content><![CDATA[<h1 id="day35-c-类继承"><a href="#day35-c-类继承" class="headerlink" title="day35-c++类继承"></a><font color="green">day35-c++类继承</font></h1><!--mroe-->
+
+<h2 id="一、c-继承概念"><a href="#一、c-继承概念" class="headerlink" title="一、c++继承概念"></a>一、c++继承概念</h2><p>C++继承是面向对象程序设计中的一个重要概念，它允许我们根据一个已有的类来创建一个新的类，从而实现代码的重用和扩展。C++支持三种继承方式：公有继承、保护继承和私有继承，它们影响了基类和派生类之间成员的访问权限。C++还支持多继承，即一个派生类可以有多个基类，继承了它们的特性。在多继承中，有时会出现菱形继承的情况，即多个基类继承自同一个祖先类，导致派生类拥有重复的祖先类成员。为了解决这个问题，C++引入了虚继承和虚基类的概念，使得派生类只保留一份祖先类成员。</p>
+<p>友员函数可以继承。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、c-继承基础语法"><a href="#二、c-继承基础语法" class="headerlink" title="二、c++继承基础语法"></a>二、c++继承基础语法</h2><p>C++继承语法的一般形式是：</p>
+<blockquote>
+<p>class 派生类名 : 继承方式 基类名 {<br>&emsp;&emsp;派生类的成员<br>}</p>
+</blockquote>
+<p>&emsp;&emsp;其中，继承方式可以是public（公有）、protected（保护）或private（私有）三种之一，用来指定基类的成员在派生类中的访问权限。<br>&emsp;&emsp;如果不指定继承方式，默认为private。</p>
+<blockquote>
+<p>&emsp;&emsp;public是将基类的公有成员和保护成员继承给子类，且权限不变<br>&emsp;&emsp;protected是将基类的公有成员和保护成员继承给子类，并且权限变为protected，不能在外部访问。Protected继承也保持了父类和子类之间的is-a(继承，子类是父类的一种特殊情况)关系，但是这种关系对外部不可见。<br>&emsp;&emsp;private是将基类的共有成员和保护成员继承给子类，并且权限变为private。Private继承破坏了父类和子类之间的is-a关系，即子类不是一种特殊的父类。Private继承相当于把父类作为一个组件嵌入到子类中，实现了has-a(组合，一个类包含另一个类的对象)关系。</p>
+</blockquote>
+<p>&emsp;&emsp;例如，下面的代码定义了一个基类Animal和一个派生类Dog，Dog继承了Animal的所有成员，并增加了自己的成员函数bark()。</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Animal</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Animal is eating.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">sleep</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Animal is sleeping.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> :</span> <span class="keyword">public</span> Animal &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bark</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Dog is barking.&quot;</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 这样，我们就可以通过Dog类的对象来调用Animal类的成员函数，以及Dog类自己的成员函数，如下：</span></span><br><span class="line">Dog d;</span><br><span class="line">d.eat(); <span class="comment">// 调用基类的成员函数</span></span><br><span class="line">d.sleep(); <span class="comment">// 调用基类的成员函数</span></span><br><span class="line">d.bark(); <span class="comment">// 调用派生类的成员函数</span></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="三、c-继承的构造和析构顺序"><a href="#三、c-继承的构造和析构顺序" class="headerlink" title="三、c++继承的构造和析构顺序"></a>三、c++继承的构造和析构顺序</h2><p>当创建一个派生类的对象时，会先调用基类的构造函数，然后再调用派生类的构造函数。如果基类有多个，那么会按照声明的顺序从左到右依次调用基类的构造函数。如果基类或派生类有成员对象，那么会在调用自身的构造函数之前先调用成员对象的构造函数。如果基类的构造函数有参数，那么需要在派生类的初始化列表中显式地传递参数给基类的构造函数。</p>
+<p>其次，我们来看看析构函数的调用顺序。当销毁一个派生类的对象时，会先调用派生类的析构函数，然后再调用基类的析构函数。如果基类有多个，那么会按照声明的顺序从右到左依次调用基类的析构函数。如果基类或派生类有成员对象，那么会在调用自身的析构函数之后再调用成员对象的析构函数。</p>
+<p><img src="/2023/04/25/day35-c-%E7%B1%BB%E7%BB%A7%E6%89%BF/gouzhao.png" alt="gouzhao"></p>
+<br>
+<br>
+
+<hr>
+<h2 id="四、c-继承的赋值"><a href="#四、c-继承的赋值" class="headerlink" title="四、c++继承的赋值"></a>四、c++继承的赋值</h2><ul>
+<li>派生类的对象可以赋值给基类的对象，但是会发生对象切割，即派生类特有的成员会被忽略。</li>
+<li>基类的对象不能赋值给派生类的对象，因为基类的对象可能缺少派生类需要的成员。</li>
+<li>派生类的指针或引用可以赋值给基类的指针或引用，这样可以实现多态，即通过基类的指针或引用调用派生类的虚函数。</li>
+<li>基类的指针或引用不能赋值给派生类的指针或引用，除非使用强制类型转换，但是这样做可能会导致运行时错误。</li>
+</ul>
+<br>
+<br>
+
+<hr>
+<h2 id="五、c-继承的重名问题"><a href="#五、c-继承的重名问题" class="headerlink" title="五、c++继承的重名问题"></a>五、c++继承的重名问题</h2><p>在c++中，继承是一种实现代码复用和多态的重要机制。继承允许一个类（子类）从另一个类（父类）继承成员变量和成员函数，从而实现对父类的扩展和修改。但是，如果子类和父类中有同名的成员，那么就会出现重名问题，也就是说，子类中的同名成员会隐藏父类中的同名成员，导致访问冲突和歧义。</p>
+<p>为了解决这个问题，c++提供了以下几种方法：</p>
+<ul>
+<li>使用作用域限定符（::）来指定访问哪个类中的同名成员。例如，如果子类A继承了父类B，并且都有一个同名的函数f()，那么可以通过A::f()来调用子类中的f()，或者通过B::f()来调用父类中的f()。</li>
+<li>使用虚函数（virtual）来实现多态。虚函数是一种特殊的成员函数，它可以被子类重写（override），从而实现不同的行为。如果子类和父类中都有一个同名的虚函数f()，那么当通过父类指针或引用来调用f()时，会根据对象的实际类型来动态绑定（dynamic binding），调用相应的子类或父类中的f()。这样就可以避免歧义，并且提高了代码的灵活性和可维护性。</li>
+<li>使用using声明（using declaration）来引入父类中的同名成员到子类的作用域中。这样可以使得子类和父类中的同名成员都可以被访问，而不需要使用作用域限定符。例如，如果子类A继承了父类B，并且都有一个同名的变量x，那么可以在子类A中使用using B::x;来引入父类中的x到子类的作用域中。这样就可以通过x来访问子类或父类中的x。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>c++</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>继承</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day37-c++异常，智能指针</title>
+    <url>/2023/04/27/day37-c-%E5%BC%82%E5%B8%B8%EF%BC%8C%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<h1 id="day37-c-异常，智能指针"><a href="#day37-c-异常，智能指针" class="headerlink" title="day37-c++异常，智能指针"></a><font color="green">day37-c++异常，智能指针</font></h1><!--mroe-->
+
+<h2 id="一、c-异常"><a href="#一、c-异常" class="headerlink" title="一、c++异常"></a>一、c++异常</h2><h3 id="1-异常简介"><a href="#1-异常简介" class="headerlink" title="1. 异常简介"></a>1. 异常简介</h3><p>C++异常是一种在程序运行过程中发生的意外或错误情况，例如除以零、数组越界、内存不足等。当异常发生时，程序的正常执行流程会被中断，转而执行一段专门用于处理异常的代码，称为异常处理器。异常处理器可以恢复程序的状态，继续执行后续的代码，或者终止程序并报告错误信息。</p>
+<p>C++提供了一套异常处理机制，包括以下几个关键字：</p>
+<ul>
+<li>throw：用于抛出一个异常，可以是任意类型的表达式，例如<code>throw 0</code>; <code>throw &quot;error&quot;</code>; <code>throw std::runtime_error(&quot;invalid input&quot;)</code>;</li>
+<li>try：用于定义一个可能抛出异常的代码块，例如<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123; </span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">10</span> / <span class="number">0</span>; </span><br><span class="line">&#125; </span><br><span class="line"><span class="keyword">catch</span> (...) &#123; </span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;division by zero\n&quot;</span>; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+<li>catch：用于捕获一个特定类型或所有类型的异常，并执行相应的处理代码，您可以指定想要捕捉的异常类型，这是由 catch 关键字后的括号内的异常声明决定的,一般来说，throw什么类型的异常则要用同类型的catch参数来捕捉。例如<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function"><span class="keyword">double</span> <span class="title">division</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>( b == <span class="number">0</span> )</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="string">&quot;Division by zero condition!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (a/b);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = <span class="number">50</span>;</span><br><span class="line">    <span class="keyword">int</span> y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">double</span> z = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        z = division(x, y);</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; z &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;<span class="keyword">catch</span> (<span class="keyword">const</span> <span class="keyword">char</span>* msg) &#123;</span><br><span class="line">        <span class="built_in">cerr</span> &lt;&lt; msg &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//由于我们抛出了一个类型为 const char* 的异常，因此，当捕获该异常时，我们必须在 catch 块中使用 const char*。</span></span><br></pre></td></tr></table></figure>
+可以一个try用多个catch来捕捉，只不过前面的捕捉范围要比后面的小。</li>
+<li>noexcept：用于指定一个函数是否保证不抛出异常，例如void foo() noexcept; void bar() noexcept(false);</li>
+</ul>
+<h3 id="2-异常规则"><a href="#2-异常规则" class="headerlink" title="2.异常规则"></a>2.异常规则</h3><ul>
+<li><p>throw抛出的异常类型与catch抓取的异常类型要一致；</p>
+</li>
+<li><p>throw抛出的异常类型可以是子类对象，catch可以是父类对象；</p>
+</li>
+<li><p>catch块的参数推荐采用地址传递而不是值传递，不仅可以提高效率，还可以利用对象的多态性。另外，派生类的异常捕获要放到父类异常扑获的前面，否则，派生类的异常无法被扑获；</p>
+</li>
+<li><p>如果使用catch参数中，使用基类捕获派生类对象，一定要使用传递引用的方式，例如catch (exception &amp;e)；</p>
+</li>
+<li><p>异常是通过抛出对象而引发的，该对象的类型决定了应该激活哪个处理代码；</p>
+</li>
+<li><p>被选中的处理代码是调用链中与该对象类型匹配且离抛出异常位置最近的那一个；</p>
+</li>
+<li><p>在try的语句块内声明的变量在外部是不可以访问的，即使是在catch子句内也不可以访问；</p>
+</li>
+<li><p>栈展开会沿着嵌套函数的调用链不断查找，直到找到了已抛出的异常匹配的catch子句。如果抛出的异常一直没有函数捕获(catch)，则会一直上传到c++运行系统那里，导致整个程序的终止。</p>
+</li>
+</ul>
+<h3 id="3-c-类"><a href="#3-c-类" class="headerlink" title="3. c++类"></a>3. c++类</h3><p>下面是c++类中常见的异常：</p>
+<table>
+<thead>
+<tr>
+<th>类名</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Exception</code></td>
+<td>基本异常类，用作其他异常类的基类。</td>
+</tr>
+<tr>
+<td><code>LogicError</code></td>
+<td>逻辑错误的异常，由程序逻辑引起。</td>
+</tr>
+<tr>
+<td><code>RuntimeError</code></td>
+<td>运行时错误的异常，通常由运行时环境引起。</td>
+</tr>
+<tr>
+<td><code>OutOfBoundsException</code></td>
+<td>超出边界的异常，用于数组或容器访问超出范围。</td>
+</tr>
+<tr>
+<td><code>NullPointerException</code></td>
+<td>空指针异常，当使用空指针时抛出。</td>
+</tr>
+<tr>
+<td><code>InvalidArgumentException</code></td>
+<td>无效参数异常，当传递无效参数给函数或方法时抛出。</td>
+</tr>
+<tr>
+<td><code>FileException</code></td>
+<td>文件异常，当文件操作失败时抛出。</td>
+</tr>
+<tr>
+<td><code>NetworkException</code></td>
+<td>网络异常，当网络操作失败时抛出。</td>
+</tr>
+</tbody></table>
+<h3 id="4-自定义异常"><a href="#4-自定义异常" class="headerlink" title="4. 自定义异常"></a>4. 自定义异常</h3><p>您可以通过继承和重载 exception 类来定义新的异常。下面的实例演示了如何使用 std::exception 类来实现自己的异常：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;exception&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">MyException</span> :</span> <span class="keyword">public</span> exception</span><br><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">const</span> <span class="keyword">char</span> * <span class="title">what</span> <span class="params">()</span> <span class="keyword">const</span> <span class="title">throw</span> <span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;C++ Exception&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">try</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">throw</span> MyException();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">catch</span>(MyException&amp; e)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;MyException caught&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; e.what() &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">catch</span>(<span class="built_in">std</span>::exception&amp; e)</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//其他的错误</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//MyException caught</span></span><br><span class="line"><span class="comment">//C++ Exception</span></span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h2 id="二、转换函数"><a href="#二、转换函数" class="headerlink" title="二、转换函数"></a>二、转换函数</h2><p>c++转换函数是一种特殊的成员函数，它可以将一个类的对象转换为另一种类型的值。转换函数的一般形式如下：</p>
+<figure class="highlight tex"><table><tr><td class="code"><pre><span class="line">operator 类型名()</span><br><span class="line">&#123;</span><br><span class="line">    // 转换操作</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>其中，operator是关键字，类型名是要转换的目标类型，没有参数和返回类型。转换函数必须定义在类的内部，不能是静态的或常量的。转换函数可以被显式或隐式地调用，例如：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">subclass</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span>&#123;</span></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    Base(<span class="keyword">int</span> x)&#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;x = x;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">operator</span> <span class="title">subclass</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">subclass</span>:</span><span class="keyword">public</span> Base&#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    subclass(<span class="keyword">int</span> x):x(x),Base(x)&#123;&#125;</span><br><span class="line">    <span class="keyword">friend</span> ostream &amp;<span class="keyword">operator</span> &lt;&lt;(ostream &amp;out, <span class="keyword">const</span> subclass &amp;obj)&#123;</span><br><span class="line">        out &lt;&lt; obj.x;</span><br><span class="line">        <span class="keyword">return</span> out;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function">Base::<span class="keyword">operator</span> <span class="title">subclass</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="function">subclass <span class="title">a</span><span class="params">(<span class="number">10</span>)</span></span>;</span><br><span class="line">    <span class="function">Base <span class="title">b</span><span class="params">(<span class="number">6</span>)</span></span>;</span><br><span class="line">    a = b;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; a &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码有两个注意点。一个是b=a是调用了Base的转换函数，实际b是个Base的int成员。</p>
+<p>另一个是a=6过程中，a是一个subclass的对象，而不是一个基本类型的变量。当你给a赋值为6时，实际上是调用了subclass的构造函数，创建了一个新的subclass对象，并用它替换了原来的a。</p>
+<p>C++标准库中提供了一些用于类型转换的标准转换函数。这些函数可以方便地进行常见的类型转换操作。以下是几个常用的标准转换函数：</p>
+<ul>
+<li><p><code>static_cast</code>: 用于执行静态类型转换，将一个表达式转换为指定类型。</p>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">double</span> result = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(num);  <span class="comment">// 将整数 num 转换为双精度浮点数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span>* ptr = <span class="keyword">static_cast</span>&lt;<span class="keyword">void</span>*&gt;(&amp;num);  <span class="comment">// 将指向整数 num 的指针转换为 void* 类型</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>dynamic_cast</code>: 用于执行动态类型转换，在类层次结构中进行多态类型的转换。</p>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base &#123;&#125;;</span><br><span class="line"></span><br><span class="line">Base* basePtr = <span class="keyword">new</span> Derived();</span><br><span class="line">Derived* derivedPtr = <span class="keyword">dynamic_cast</span>&lt;Derived*&gt;(basePtr);  <span class="comment">// 将基类指针转换为派生类指针</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>const_cast</code>: 用于移除变量的 <code>const</code> 修饰符或 <code>volatile</code> 修饰符。</p>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">int</span>* ptr = <span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>*&gt;(&amp;num);  <span class="comment">// 移除 num 的 const 修饰符，ptr 可以修改 num 的值</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span>&amp; ref = num;</span><br><span class="line"><span class="keyword">int</span>&amp; ref2 = <span class="keyword">const_cast</span>&lt;<span class="keyword">int</span>&amp;&gt;(ref);  <span class="comment">// 移除 ref 的 const 修饰符，ref2 可以修改 num 的值</span></span><br></pre></td></tr></table></figure></li>
+<li><p><code>reinterpret_cast</code>: 用于执行底层的重新解释转换。</p>
+  <figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> num = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">char</span>* charPtr = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">char</span>*&gt;(&amp;num);  <span class="comment">// 将整数 num 的地址转换为字符指针</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span>* intPtr = <span class="keyword">reinterpret_cast</span>&lt;<span class="keyword">int</span>*&gt;(charPtr);  <span class="comment">// 将字符指针转换为整数指针</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<br>
+<br>
+
+<hr>
+<h2 id="三、智能指针"><a href="#三、智能指针" class="headerlink" title="三、智能指针"></a>三、智能指针</h2><p>C++ 智能指针是一种能够自动管理动态分配内存的对象，它可以避免手动调用 new 和 delete 导致的内存泄漏或异常安全问题。C++ 标准库提供了四种智能指针：auto_ptr、unique_ptr、shared_ptr 和 weak_ptr。</p>
+<blockquote>
+<ul>
+<li>auto_ptr 已经被废弃，不建议使用。</li>
+<li>unique_ptr是一种独占式的智能指针，它保证同一时间只有一个unique_ptr对象可以指向某个内存资源。当unique_ptr对象被销毁时，它会自动释放所指向的内存资源。unique_ptr不能被复制或赋值，只能通过移动语义来转移所有权。unique_ptr可以指向单个对象或者数组，也可以自定义删除器来处理特殊的资源释放方式。</li>
+<li>shared_ptr是一种共享式的智能指针，它允许多个shared_ptr对象指向同一个内存资源。每个shared_ptr对象都有一个引用计数，表示有多少个shared_ptr对象共享该资源。当某个shared_ptr对象被销毁时，它会减少引用计数，当引用计数变为0时，才会释放所指向的内存资源。shared_ptr也可以指向单个对象或者数组，也可以自定义删除器。shared_ptr还可以和weak_ptr配合使用，避免循环引用导致的内存泄漏。</li>
+<li>weak_ptr 是一种不影响引用计数的智能指针，它可以从一个 shared_ptr 或另一个 weak_ptr 构造，它用于观察对象是否还存在，而不延长其生命周期。</li>
+</ul>
+</blockquote>
+<p>智能指针的使用可以简化 C++ 的内存管理，提高代码的可读性和安全性。</p>
+<p><code>unique_ptr</code> 语法格式：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;T&gt; ptr;  <span class="comment">// 创建一个名为 ptr 的 unique_ptr，指向类型为 T 的对象，初始为空指针</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">unique_ptr</span>&lt;T&gt; <span class="title">ptr</span><span class="params">(<span class="keyword">new</span> T(args...))</span></span>;  <span class="comment">// 创建一个 unique_ptr，同时进行对象的动态内存分配和初始化</span></span><br><span class="line"></span><br><span class="line">ptr.reset();  <span class="comment">// 释放 ptr 指向的对象，并将 ptr 重置为空指针</span></span><br><span class="line"></span><br><span class="line">T* rawPtr = ptr.get();  <span class="comment">// 获取 ptr 内部存储的原始指针</span></span><br><span class="line"></span><br><span class="line">ptr.release();  <span class="comment">// 释放 ptr 的所有权，返回内部存储的原始指针，并将 ptr 重置为空指针</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>shared_ptr</code> 语法格式：</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; ptr;  <span class="comment">// 创建一个名为 ptr 的 shared_ptr，指向类型为 T 的对象，初始为空指针</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; <span class="title">ptr</span><span class="params">(<span class="keyword">new</span> T(args...))</span></span>;  <span class="comment">// 创建一个 shared_ptr，同时进行对象的动态内存分配和初始化</span></span><br><span class="line"></span><br><span class="line">ptr.reset();  <span class="comment">// 释放 ptr 指向的对象，并将 ptr 重置为空指针</span></span><br><span class="line"></span><br><span class="line">T* rawPtr = ptr.get();  <span class="comment">// 获取 ptr 内部存储的原始指针</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; ptr2 = ptr;  <span class="comment">// 使用复制构造函数创建一个新的 shared_ptr，与 ptr 共享对象所有权，引用计数增加</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;T&gt; ptr3 = <span class="built_in">std</span>::make_shared&lt;T&gt;(args...);  <span class="comment">// 使用 make_shared 创建 shared_ptr，更高效的分配内存</span></span><br><span class="line"></span><br><span class="line">ptr.use_count();  <span class="comment">// 返回与 ptr 共享对象所有权的 shared_ptr 的数量</span></span><br><span class="line"></span><br><span class="line">ptr.reset();  <span class="comment">// 释放 ptr 指向的对象，并将 ptr 重置为空指针，引用计数减少，当引用计数为零时，对象被销毁</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>下面是shared_ptr的示例代码</p>
+<figure class="highlight c++"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyClass</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    MyClass() &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Constructor called!&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    ~MyClass() &#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Destructor called!&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">SomeFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">&quot;Some function called!&quot;</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyClass&gt; <span class="title">sharedPtr1</span><span class="params">(<span class="keyword">new</span> MyClass())</span></span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyClass&gt; sharedPtr2 = sharedPtr1;  <span class="comment">// 复制构造函数增加引用计数</span></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">shared_ptr</span>&lt;MyClass&gt; sharedPtr3 = sharedPtr1;  <span class="comment">// 引用计数增加到3</span></span><br><span class="line"></span><br><span class="line">    sharedPtr1-&gt;SomeFunction();</span><br><span class="line">    sharedPtr2-&gt;SomeFunction();</span><br><span class="line">    sharedPtr3-&gt;SomeFunction();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 所有 shared_ptr 离开作用域后，拥有的对象会自动被销毁</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>c++</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>异常</tag>
+        <tag>智能指针</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>day37-c++类库</title>
+    <url>/2023/04/28/day37-c-%E7%B1%BB%E5%BA%93/</url>
+    <content><![CDATA[]]></content>
+  </entry>
+  <entry>
     <title>嵌入式学习-Linux基础</title>
     <url>/2023/02/28/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%AD%A6%E4%B9%A0/</url>
     <content><![CDATA[<h1 id="一、linux系统基础"><a href="#一、linux系统基础" class="headerlink" title="一、linux系统基础"></a><font color="green">一、linux系统基础</font></h1><h2 id="1、linux和windows"><a href="#1、linux和windows" class="headerlink" title="1、linux和windows"></a>1、linux和windows</h2><p>​    linux：开源、免费、安全性高、稳定性强、可移植性高</p>
@@ -2529,115 +2666,6 @@
       <tags>
         <tag>Linux</tag>
         <tag>嵌入式</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>算法分析</title>
-    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
-<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
-<ol>
-<li>确定输入模型，定义问题规模（n）</li>
-<li>识别循环与递归</li>
-<li>根据内循环或每部递归的操作确定成本模型</li>
-<li>对于给定的输入，判断这些操作的执行频率</li>
-</ol>
-<hr>
-<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
-<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
-</blockquote>
-<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
-<blockquote>
-<p>渐进分析：</p>
-<ol>
-<li>忽略依赖于机器性能的常量</li>
-<li>只关注运行时间的增长</li>
-</ol>
-</blockquote>
-<hr>
-<br>
-<br>
-
-<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
-<blockquote>
-<p>例：$2n^2 = O(n^3)$</p>
-</blockquote>
-<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
-<blockquote>
-<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
-</blockquote>
-<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
-<blockquote>
-<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
-</blockquote>
-<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
-<p>理解：左右两边增长速率一样</p>
-<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
-<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
-<ul>
-<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
-<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
-</ul>
-<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
-<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
-<hr>
-<br>
-<br>
-
-<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
-<ol>
-<li>证明 n=1 时成立</li>
-<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
-<li>则命题成立</li>
-</ol>
-<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
-<li>先猜答案得到最高阶</li>
-<li>验证这个递归式是否按照数学归纳法满足条件</li>
-</ol>
-<blockquote>
-<p>例：T(n)=4T(n/2)+n</p>
-<ol>
-<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
-<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
-<p>$O(n^2)$=$c(n)^2$</p>
-</blockquote>
-</li>
-<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
-</ol>
-</blockquote>
-<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
-<blockquote>
-<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
-</blockquote>
-<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
-<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
-<li>根据每层的和的规律，求出总子叶节点<ul>
-<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
-<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
-</blockquote>
-</li>
-<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
-</ul>
-</li>
-<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
-</ol>
-<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
-<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
-<p>1.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
-<p>2.</p>
-<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
-<p>3.</p>
-<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
-]]></content>
-      <categories>
-        <category>算法</category>
-      </categories>
-      <tags>
-        <tag>基础</tag>
-        <tag>算法</tag>
-        <tag>概念</tag>
-        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
@@ -3369,6 +3397,115 @@
       </categories>
       <tags>
         <tag>算法，排序算法，基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>算法分析</title>
+    <url>/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a><font color="green">概述</font></h1><p>算法分析是关于计算机程序和资源利用的研究</p>
+<h2 id><a href="#" class="headerlink" title></a><a id="more"></a></h2><h1 id="数学模型"><a href="#数学模型" class="headerlink" title="数学模型"></a><font color="green">数学模型</font></h1><p>大多数程序得到数学模型所需步骤：</p>
+<ol>
+<li>确定输入模型，定义问题规模（n）</li>
+<li>识别循环与递归</li>
+<li>根据内循环或每部递归的操作确定成本模型</li>
+<li>对于给定的输入，判断这些操作的执行频率</li>
+</ol>
+<hr>
+<h1 id="两种常见讨论情况"><a href="#两种常见讨论情况" class="headerlink" title="两种常见讨论情况"></a><font color="green">两种常见讨论情况</font></h1><blockquote>
+<p>最坏情况：T(n)定义为输入规模为 n 时的最长运行时间<br>平均情况：T(n)定义为输入规模为 n 时所有可能输入的期望值(通常是均匀分布时的情况)</p>
+</blockquote>
+<p>为了不被硬件因素所影响，对算法的分析采用了 <font color="red">渐进分析</font></p>
+<blockquote>
+<p>渐进分析：</p>
+<ol>
+<li>忽略依赖于机器性能的常量</li>
+<li>只关注运行时间的增长</li>
+</ol>
+</blockquote>
+<hr>
+<br>
+<br>
+
+<h1 id="渐进符号"><a href="#渐进符号" class="headerlink" title="渐进符号"></a><font color="green">渐进符号</font></h1><h2 id="大-O-记号法：-上界"><a href="#大-O-记号法：-上界" class="headerlink" title="大$O$记号法：(上界)"></a>大$O$记号法：(上界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= f(n) &lt;= c*g(n) 其中 n &gt;= $n_0$<br><strong>注：这里的=不是等于的意思，更多是指 f(n) 属于 $O$(g(n)) 集合。 即$O$(g(n))是一个函数集，集合内有 f(n)</strong></p>
+<blockquote>
+<p>例：$2n^2 = O(n^3)$</p>
+</blockquote>
+<p>宏展开：<br>&nbsp;&nbsp;&nbsp; 当等式左右两边都存在$O$( )时，这时=相当于$\epsilon$</p>
+<blockquote>
+<p>例：$n^2+O(n) = O(n^2)$ &gt; &nbsp;&nbsp;&nbsp;对于任意 f(n)$\epsilon O(n)$，都有对应的 h(n)$\epsilon O(n)$<br>注：不能反推</p>
+</blockquote>
+<h2 id="大-Omega-记号法：-下界"><a href="#大-Omega-记号法：-下界" class="headerlink" title="大 $\Omega$记号法：(下界)"></a>大 $\Omega$记号法：(下界)</h2><p>f(n) = $O$(g(n)) 表示存在适当常数 (c&gt;0 $n_0$&gt;0) 使得 0 &lt;= c*g(n) &lt;= f(n) 其中 n &gt;= $n_0$</p>
+<blockquote>
+<p>例：$\sqrt{n}=\Omega(\lg n)$</p>
+</blockquote>
+<h2 id="大-Theta-记号法："><a href="#大-Theta-记号法：" class="headerlink" title="大 $\Theta$记号法："></a>大 $\Theta$记号法：</h2><p>$\Theta(g(n)) = O(g(n)) \bigcap \Omega(g(n))$</p>
+<p>理解：左右两边增长速率一样</p>
+<p>用法：写个公式，去掉它的低阶项，并忽略前面的常数因子(系数)</p>
+<h2 id="严格符号："><a href="#严格符号：" class="headerlink" title="严格符号："></a>严格符号：</h2><p>与渐进符号的区别在于：</p>
+<ul>
+<li>渐进符号表示渐进符号内的函数在经过某一点后便大于或小于原函数</li>
+<li>严格符号表示严格符号内的函数是完全大于或小于原函数</li>
+</ul>
+<h3 id="o-记号"><a href="#o-记号" class="headerlink" title="o 记号"></a>o 记号</h3><p>f(n)完全小于 o(g(n)),与$O$对应</p>
+<h3 id="omega-记号"><a href="#omega-记号" class="headerlink" title="$\omega$记号"></a>$\omega$记号</h3><p>f(n)完全大于$\omega$(g(n))，与$O$对应</p>
+<hr>
+<br>
+<br>
+
+<h1 id="递归式的三种解法"><a href="#递归式的三种解法" class="headerlink" title="递归式的三种解法"></a><font color="green">递归式的三种解法</font></h1><h2 id="补充知识：数学归纳法"><a href="#补充知识：数学归纳法" class="headerlink" title="补充知识：数学归纳法"></a>补充知识：数学归纳法</h2><p>用来证明一个命题在问题规模为 n 时成立</p>
+<ol>
+<li>证明 n=1 时成立</li>
+<li>假设 n=n-1 时成立，如求出(n-1)+1 时成立</li>
+<li>则命题成立</li>
+</ol>
+<h2 id="1-代换法"><a href="#1-代换法" class="headerlink" title="1. 代换法"></a>1. 代换法</h2><ol>
+<li>先猜答案得到最高阶</li>
+<li>验证这个递归式是否按照数学归纳法满足条件</li>
+</ol>
+<blockquote>
+<p>例：T(n)=4T(n/2)+n</p>
+<ol>
+<li>(猜)忽略常数 n，由 T(n)=4T(n/2) 可看出当 n 减 2 倍，系数增加 4 倍。$n^2$符合这一标准,假定 T(n)=$O(n^2)$</li>
+<li>(证)将递归式展开得 T(n)=$4T(n/2)+n$ &lt;= $cn^2$+n = $cn^2$-(-n)<blockquote>
+<p>$O(n^2)$=$c(n)^2$</p>
+</blockquote>
+</li>
+<li>因为要证明的是 T(n)=$O(n^2)$ 所以 T(n) &lt;= $cn^2$-(-n) 中(-n)大于等于 0</li>
+</ol>
+</blockquote>
+<p>但这里发现了因为 n&gt;=1 所以上式不成立。是我们做错了吗，让我们想想有什么办法可以改变这个常数。<br>当我们对 $O(n^2)$ 进行展开时，我们是忽略了常数项的，因为它对 n 为无穷大时作用很小，但作用小就表明还是有一定的作用，我们试着把常数项带进来，即改进 T(n)=$O(n^2)$ 时的条件</p>
+<blockquote>
+<p>改进：<br>T(n) =$O(n^2)$ &lt;=$c_1n^2-c_2n$ (多了常数项)<br>T(n)=$4T(n/2)+n$ &lt;= $4(c_1(n/2)^2-c_2(n/2))+n=c_1n^2-c_2n-(c_2-1)n$<br>要使 T(n)=$O(n^2)$则要满足$(c_2-1)n$ &gt;= 0 (当$c_2$ &gt;= 1 时成立)<br>并且 T(1) &lt;=$c_1-c_2$ 成立<br>可以得出 T(n+1) &lt;= $c_1(n+1)^2-c_2(n+1)$ (当$c_1&gt;&gt;c_2$时成立)(算一下就出来了)<br>这时条件 T(1)，T(n)和 T(1)推出 T(n+1)都有了<br>最后得出 T(n) = $O(n^2)$</p>
+</blockquote>
+<h2 id="2-递归树法"><a href="#2-递归树法" class="headerlink" title="2. 递归树法"></a>2. 递归树法</h2><ol>
+<li>将递归式按树的形式展开(不用全画出来)(并且每次递归时 n 的和都要减少而不是增大)</li>
+<li>根据每层的和的规律，求出总子叶节点<ul>
+<li>如果每层和一样，用每层的和乘以树的高度就行<blockquote>
+<p>树要对称，高用每次递归式减少的数(每层为等差)或除以的数(每层为等比)来求<br>等差的话 h=n-k+1 (k 为每层 n 减少的数)<br>等比的话 h=$log_kn$ (k 为每层 n 除的数)</p>
+</blockquote>
+</li>
+<li>如果树不对称或者每层和成等比排列，不用求具体值，都是有规律相加的，求其上界就行</li>
+</ul>
+</li>
+<li>判断总子叶节点小于等于某个相近的值，便可求出其最高阶</li>
+</ol>
+<p>例：<br><img src="/2020/04/27/%E7%AE%97%E6%B3%95%E5%88%86%E6%9E%90/diGuiShuFa.jpg" alt="递归树"></p>
+<h2 id="3-主方法"><a href="#3-主方法" class="headerlink" title="3.主方法"></a>3.主方法</h2><p>相当于套公式，且适用情况少<br>原理是递归树，可以自己去推导下,这三个主要区别是总子叶节点数的判断不同。（1 是因为每层和在增加，最后一层和占主导。2 是因为每层和一样，和乘以高。3 是因为每层和在减少，第一层和占主导）<br>限制：递归式要满足于 $T(n)=aT(n/b)+f(n)$ &nbsp;&nbsp;&nbsp;a&gt;=1,b&gt;1,f(n)渐进趋正<br>主思路：比较 f(n)和$n^{\log_ba}$</p>
+<p>1.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n)= \omicron (n^{\log_b{a-\varepsilon} })$<br>那么<br>$T(n)= \theta (n^{log_ba})$</p>
+<p>2.</p>
+<p>若<br>$f(n)=\theta(n^{log_ba})f(n)$<br>则<br>$T(n)=\theta(n^{log_ba}\lg n)T(n)$</p>
+<p>3.</p>
+<p>若对某个常数 $\varepsilon&gt;0有$<br>$f(n) = \Omega(n^{\log_b{a+\varepsilon} })f(n)$<br>且对于某个常数 c&lt;1 和所有足够大的 n 有<br>$af(\frac nb)\le cf(n)$<br>则<br>$T(n)=\theta(f(n))T(n)$</p>
+]]></content>
+      <categories>
+        <category>算法</category>
+      </categories>
+      <tags>
+        <tag>基础</tag>
+        <tag>算法</tag>
+        <tag>概念</tag>
+        <tag>数据结构与算法</tag>
       </tags>
   </entry>
   <entry>
