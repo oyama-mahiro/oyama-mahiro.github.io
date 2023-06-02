@@ -127,56 +127,11 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day48-设备驱动"><a href="#day48-设备驱动" class="headerlink" title="day48-设备驱动"></a><font color="green">day48-设备驱动</font></h1><!--mroe-->
-
-<h2 id="一、设备驱动简介"><a href="#一、设备驱动简介" class="headerlink" title="一、设备驱动简介"></a>一、设备驱动简介</h2><p>&emsp;&emsp;Linux的设备驱动是一种软件层，它可以让应用程序和硬件设备之间进行通信，同时隐藏设备的工作细节。Linux的设备驱动可以分为三种基本类型：<code>字符设备驱动</code>，<code>块设备驱动</code>和<code>网络设备驱动</code>。</p>
-<blockquote>
-<ul>
-<li>字符设备驱动是一种可以按字节以串行顺序依次访问的设备，如键盘，鼠标等。</li>
-<li>块设备驱动是一种可以用任意顺序进行访问，以块为单位进行操作的设备，如硬盘，软驱等。</li>
-<li>网络设备驱动是一种负责发送和接收数据报文的设备，如网卡等。</li>
-</ul>
-</blockquote>
-<p>除了这三种基本类型，Linux还定义了一些独特的驱动体系结构，如TTY驱动，IIC驱动，USB驱动，PCI驱动，LCD驱动等。</p>
-<p>&emsp;&emsp;Linux的设备驱动可以以两种方式存在：编译进内核或者作为模块加载进内核。编译进内核的设备驱动会在启动内核时就被激活，而模块方式的设备驱动会在需要时才被加载进内核空间。Linux的设备驱动都按照操作系统给出的独立于设备的接口而设计，应用程序可以使用统一的系统调用接口来访问各个设备。</p>
-<p>&emsp;&emsp;Linux的设备驱动模型包含设备 (device)、总线 (bus)、类 (class)和驱动 (driver)，它们之间相互关联。其中设备 (device)和驱动 (driver)通过总线 (bus)绑定在一起。Linux内核中，分别用 bus_type 、 device_driver 和 device 结构来描述总线、驱动和设备。每个设备都有一个对应的<code>设备文件</code>（又名：设备节点），用户程序通过这个文件来使用驱动程序操作设备。每个设备文件都有一个<code>主从设备号</code>来标识其类型和编号，并且有一个 inode 结构来管理其属性和操作函数指针。除了读写设备文件外，用户程序还可以通过 ioctl 接口来配置和修改特定的设备属性。</p>
-<p><img src="/2023/06/02/day48-%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/%E9%A9%B1%E5%8A%A8%E7%BB%93%E6%9E%84.png" alt="驱动"></p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、字符设备编程"><a href="#二、字符设备编程" class="headerlink" title="二、字符设备编程"></a>二、字符设备编程</h2><h3 id="2-1-设备号表示方式"><a href="#2-1-设备号表示方式" class="headerlink" title="2.1 设备号表示方式"></a>2.1 设备号表示方式</h3><p>设备号的类型为dev_t,该类型在<code>&lt;linux/types.h&gt;</code>中定义。</p>
-<p>在内核版本2.6.0中，dev_t是32位，其中高12位用于表示主设备号，其余20位用于表示次设备号。</p>
-<p><img src="/2023/06/02/day48-%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/%E8%AE%BE%E5%A4%87%E5%8F%B7.png" alt="驱动"></p>
-<p>对于主次设备号，可以使用<code>&lt;linux/kdev_t.h&gt;</code>的宏来获取dev_t类型的主次设备号，也可以用其中的宏来生产一个dev_t</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MAJOR(<span class="keyword">dev_t</span> dev); <span class="comment">//用于获取设备的主设备号</span></span><br><span class="line">MINOR(<span class="keyword">dev_t</span> dev); <span class="comment">//用于获取设备的次设备号</span></span><br><span class="line">MKDEV(<span class="keyword">int</span> major, <span class="keyword">int</span> minor); <span class="comment">//根据所给的主次设备号生成dev_t</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-2-字符设备主次设备号分配和释放"><a href="#2-2-字符设备主次设备号分配和释放" class="headerlink" title="2.2 字符设备主次设备号分配和释放"></a>2.2 字符设备主次设备号分配和释放</h3><p>内核中要创建一个设备，首先需要分配设备号，分配的设备号可以手动分配，也可以自动分配。<br>用于分配设备号的函数在<code>&lt;linux/fs.h&gt;</code>中。</p>
-<ul>
-<li>静态分配<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">register_chrdev_region</span><span class="params">(<span class="keyword">dev_t</span> first, <span class="keyword">unsigned</span> <span class="keyword">int</span> count, <span class="keyword">char</span>* name)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//first：</span></span><br><span class="line"><span class="comment">//要分配的设备编号的范围起始值。</span></span><br><span class="line"><span class="comment">//count：</span></span><br><span class="line"><span class="comment">//是要分配的设备号数量。</span></span><br><span class="line"><span class="comment">//name：</span></span><br><span class="line"><span class="comment">//和该设备关联的名字。</span></span><br><span class="line"><span class="comment">//返回值：</span></span><br><span class="line"><span class="comment">//设备分配成功时，该函数返回0，失败时返回负的错误码。</span></span><br></pre></td></tr></table></figure></li>
-<li>动态分配</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">alloc_chrdev_region</span><span class="params">(<span class="keyword">dev_t</span>* dev, <span class="keyword">unsigned</span> <span class="keyword">int</span> firstminor, <span class="keyword">unsigned</span> <span class="keyword">int</span> count, <span class="keyword">char</span>* name)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// dev:</span></span><br><span class="line"><span class="comment">// dev用于保存输出的设备号。</span></span><br><span class="line"><span class="comment">// firstminor:</span></span><br><span class="line"><span class="comment">// 该参数是次设备号的分配范围起始值。</span></span><br><span class="line"><span class="comment">// count:</span></span><br><span class="line"><span class="comment">// 该参数是要分配次设备号数量。</span></span><br><span class="line"><span class="comment">// name:</span></span><br><span class="line"><span class="comment">// 和该设备关联的名字。</span></span><br><span class="line"><span class="comment">// 返回值:</span></span><br><span class="line"><span class="comment">// 设备分配成功时，该函数返回0，失败时返回负的错误码。</span></span><br></pre></td></tr></table></figure>
-
-<p>分配成功后，可以通过指令<code>cat /proc/devices | grep &lt;设备名字&gt;</code>来查看。</p>
-<ul>
-<li>释放设备号<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">unregister_chrdev_region</span><span class="params">(<span class="keyword">dev_t</span> dev, <span class="keyword">unsigned</span> <span class="keyword">int</span> count)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// dev</span></span><br><span class="line"><span class="comment">// 该参数为需要释放的设备号</span></span><br><span class="line"><span class="comment">// count</span></span><br><span class="line"><span class="comment">// 该参数为需要释放的设备数量</span></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<h3 id="2-3-和字符设备相关的重要数据结构以及函数"><a href="#2-3-和字符设备相关的重要数据结构以及函数" class="headerlink" title="2.3 和字符设备相关的重要数据结构以及函数"></a>2.3 和字符设备相关的重要数据结构以及函数</h3><ul>
-<li>cdev<br>cdev表示了一个字符设备，其中最重要的是成员是ops，我们字符设备所能实现的功能都需要依靠这个这个。用户在调用相关函数时最终会通过这个ops指向我们所实现的各种函数中。其中的owner表示了模块的所属，一般都初始化为宏<code>THIS_MODULE</code>。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//内核版本：5.4.0-1071-raspi</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cdev</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">kobject</span> <span class="title">kobj</span>;</span> </span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">module</span> *<span class="title">owner</span>;</span><span class="comment">//所属模块</span></span><br><span class="line">	<span class="keyword">const</span> <span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> *<span class="title">ops</span>;</span><span class="comment">//文件操作</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> <span class="title">list</span>;</span></span><br><span class="line">	<span class="keyword">dev_t</span> dev;<span class="comment">//设备号</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> count;</span><br><span class="line">&#125; __randomize_layout;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<p>初始化一个字符设备和注销字符设备时会用到如下几种函数：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化一个cdev结构体，并和file_operations绑定</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_init</span><span class="params">(struct cdev *, <span class="keyword">const</span> struct file_operations *)</span></span>;</span><br><span class="line"><span class="comment">//分配一个cdev结构体</span></span><br><span class="line"><span class="function">struct cdev *<span class="title">cdev_alloc</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"><span class="comment">//添加一个字符设备到内核，在添加之前，第二个参数设备号需要已经被注册过，第三个参数是分配的范围，以所给的设备号，初始几个设备。</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cdev_add</span><span class="params">(struct cdev *, <span class="keyword">dev_t</span>, <span class="keyword">unsigned</span>)</span></span>;</span><br><span class="line"><span class="comment">//cdev_del必须和cdev_add配合使用，cdev_del用于删除一个字符设备。在卸载驱动时要删除已经添加了的字符设备。</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cdev_del</span><span class="params">(struct cdev *)</span></span>;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>struct file_operations</li>
-</ul>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//内核版本：5.4.0-1071-raspi</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">file_operations</span> &#123;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">module</span> *<span class="title">owner</span>;</span></span><br><span class="line">	<span class="keyword">loff_t</span> (*llseek) (struct file *, <span class="keyword">loff_t</span>, <span class="keyword">int</span>);</span><br><span class="line">	<span class="keyword">ssize_t</span> (*read) (struct file *, <span class="keyword">char</span> __user *, <span class="keyword">size_t</span>, <span class="keyword">loff_t</span> *);</span><br><span class="line">	<span class="keyword">ssize_t</span> (*write) (struct file *, <span class="keyword">const</span> <span class="keyword">char</span> __user *, <span class="keyword">size_t</span>, <span class="keyword">loff_t</span> *);</span><br><span class="line">	<span class="keyword">ssize_t</span> (*read_iter) (struct kiocb *, struct iov_iter *);</span><br><span class="line">	<span class="keyword">ssize_t</span> (*write_iter) (struct kiocb *, struct iov_iter *);</span><br><span class="line">	<span class="keyword">int</span> (*iopoll)(struct kiocb *kiocb, <span class="keyword">bool</span> spin);</span><br><span class="line">	<span class="keyword">int</span> (*iterate) (struct file *, struct dir_context *);</span><br><span class="line">	<span class="keyword">int</span> (*iterate_shared) (struct file *, struct dir_context *);</span><br><span class="line">	<span class="keyword">__poll_t</span> (*poll) (struct file *, struct poll_table_struct *);</span><br><span class="line">	<span class="keyword">long</span> (*unlocked_ioctl) (struct file *, <span class="keyword">unsigned</span> <span class="keyword">int</span>, <span class="keyword">unsigned</span> <span class="keyword">long</span>);</span><br><span class="line">	<span class="keyword">long</span> (*compat_ioctl) (struct file *, <span class="keyword">unsigned</span> <span class="keyword">int</span>, <span class="keyword">unsigned</span> <span class="keyword">long</span>);</span><br><span class="line">	<span class="keyword">int</span> (*mmap) (struct file *, struct vm_area_struct *);</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> mmap_supported_flags;</span><br><span class="line">	<span class="keyword">int</span> (*open) (struct inode *, struct file *);</span><br><span class="line">	<span class="keyword">int</span> (*flush) (struct file *, <span class="keyword">fl_owner_t</span> id);</span><br><span class="line">	<span class="keyword">int</span> (*release) (struct inode *, struct file *);</span><br><span class="line">	<span class="comment">//。。。省略</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>该结构用来表明设备的文件操作，用户应用的文件操作(open,write,read,close等操作)最终会通过调用该结构中的函数指针来调用我们自己定义相关操作函数。设备不支持的调用可以设置为NULL；<br>该结构中的struct module *owner;是指向拥有该结构体模块的指针，一般该成员会被初始化为<code>&lt;linux/module.h&gt;</code>中的宏<code>THIS_MODULE</code>。<br>其中常用的操作有open，write，read，llseek,unlocked_ioctl等。</p>
- 
+  <h1 id="day48-设备驱动"><a href="#day48-设备驱动" class="headerlink" title="day48-设备驱动"></a><font color="green">day48-设备驱动</font></h1> 
+      <a class="article-more-link" href="/2023/06/02/day48-%E8%AE%BE%E5%A4%87%E9%A9%B1%E5%8A%A8/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -228,55 +183,11 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day47-驱动简介"><a href="#day47-驱动简介" class="headerlink" title="day47-驱动简介"></a><font color="green">day47-驱动简介</font></h1><!--mroe-->
-
-<h2 id="一、驱动简介"><a href="#一、驱动简介" class="headerlink" title="一、驱动简介"></a>一、驱动简介</h2><p>&emsp;&emsp;在Linux中，驱动是一种特殊的程序，它允许操作系统与硬件设备进行交互。驱动程序通常在内核空间运行，这是因为它们需要执行一些只能在内核空间进行的操作，如直接访问硬件或使用特权指令。</p>
-<p>&emsp;&emsp;在Linux中，驱动程序通常被实现为内核模块。内核模块是一种可在运行时加载或卸载的代码，它们不是内核的固定部分，这提供了更大的灵活性。例如，如果你添加了一个新的硬件设备，只需要加载相应的驱动模块就可以使用它，而不需要重新编译整个内核。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、驱动模块"><a href="#二、驱动模块" class="headerlink" title="二、驱动模块"></a>二、驱动模块</h2><p>&emsp;&emsp;在Linux系统中，驱动程序通常被设计成<code>内核模块</code>的形式。一个内核模块是内核的一部分，它在系统启动时并不立即加载。只有在需要时，模块才会被动态加载到内核中；不再需要时，它们可以被卸载。这种机制提供了很大的灵活性和效率。</p>
-<p>&emsp;&emsp;驱动模块，就是作为内核模块的设备驱动。它们是用来管理和控制硬件设备的程序。例如，你的系统可能有一个用于管理你的网络接口卡的驱动模块，当你的系统启动时，这个模块会被加载到内核中，以便系统可以使用网络接口卡。</p>
-<p>模块和应用程序的区别：<br>|            | 应用程序           | 内核模块                     |<br>| ———- | —————— | —————————- |<br>| 运行空间   | 用户空间           | 内核空间                     |<br>| 访问权限   | 有限               | 完全                         |<br>| 功能       | 执行特定任务       | 扩展内核功能                 |<br>| 依赖       | 操作系统API        | 内核API                      |<br>| 加载和卸载 | 通过用户启动和结束 | 可在系统运行时动态加载和卸载 |<br>| 错误处理   | 可以捕获并处理错误 | 错误可能导致整个系统崩溃     |</p>
-<h3 id="2-1-驱动模块编程"><a href="#2-1-驱动模块编程" class="headerlink" title="2.1 驱动模块编程"></a>2.1 驱动模块编程</h3><h4 id="模块形式"><a href="#模块形式" class="headerlink" title="模块形式"></a>模块形式</h4><p>驱动模块编程需要两个东西：.c和makefile<br> .c:</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//1. 头文件</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/init.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;linux/module.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> *name = <span class="string">&quot;ZhangSan&quot;</span>;</span><br><span class="line"><span class="keyword">int</span> age = <span class="number">20</span>;</span><br><span class="line">module_param(name, charp, <span class="number">0</span>);</span><br><span class="line">module_param(age, <span class="keyword">int</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//2. 加载函数与卸载函数的定义</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">mymod_init</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	printk(<span class="string">&quot;Mymod init ok!\n&quot;</span>);</span><br><span class="line">	printk(<span class="string">&quot;name = %s, age = %d\n&quot;</span>, name, age);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mymod_exit</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	printk(<span class="string">&quot;Mymod exit ok!\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//3. 声明加载与卸载函数</span></span><br><span class="line">module_init(mymod_init);</span><br><span class="line">module_exit(mymod_exit);</span><br><span class="line"></span><br><span class="line"><span class="comment">//4. 模块信息</span></span><br><span class="line">MODULE_LICENSE(<span class="string">&quot;GPL&quot;</span>);      <span class="comment">//许可证</span></span><br><span class="line">MODULE_AUTHOR(<span class="string">&quot;LiuJ&quot;</span>);      <span class="comment">//作者</span></span><br><span class="line">MODULE_DESCRIPTION(<span class="string">&quot;A sample test module!&quot;</span>);  <span class="comment">//描述</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<p>makefile:</p>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">KERNEL_DIR = /home/hqyj/Liuj/230301/linux-3.14   <span class="comment">#内核源码路径</span></span><br><span class="line">CUR_DIR = <span class="variable">$(<span class="built_in">shell</span> pwd)</span>   <span class="comment">#当前路径</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">ifeq</span> (<span class="variable">$(KERNELRELEASE)</span>, )</span><br><span class="line"></span><br><span class="line"><span class="section">all:</span></span><br><span class="line">	make -C <span class="variable">$(KERNEL_DIR)</span> M=<span class="variable">$(CUR_DIR)</span> modules 用内核源码的makefile进行编译</span><br><span class="line"></span><br><span class="line"><span class="section">clean:</span></span><br><span class="line">	make -C <span class="variable">$(KERNEL_DIR)</span> M=<span class="variable">$(CUR_DIR)</span> clean</span><br><span class="line"></span><br><span class="line"><span class="section">install: </span></span><br><span class="line">	cp *.ko /source/nfs/rootfs    <span class="comment">#将编译生成的.ko模块文件复制到指定的目录。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line"></span><br><span class="line">obj-m = module.o</span><br><span class="line"></span><br><span class="line"><span class="keyword">endif</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>获得的.ko通过nfs挂载到板子上，通过指令进行加载和卸载：</p>
-<blockquote>
-<p>lsmod：显示已加载模块<br>insmod *.ko：加载模块<br>rmmod *：卸载模块</p>
-</blockquote>
-<h4 id="模块参数"><a href="#模块参数" class="headerlink" title="模块参数"></a>模块参数</h4><p>头文件下面使用下面的函数：</p>
-<blockquote>
-<p>module_param(参数名,类型,权限);</p>
-</blockquote>
-<p>在板子上加载时要输入对应参数：</p>
-<blockquote>
-<p>insmod 模块 参数1=val1 参数2=val2</p>
-</blockquote>
-<h4 id="模块符号"><a href="#模块符号" class="headerlink" title="模块符号"></a>模块符号</h4><p>EXPORT_SYMBOL(符号)</p>
-<p>在Linux内核编程中，通常情况下一个内核模块不能直接访问另一个内核模块中定义的函数或者变量。但有时候，一个内核模块需要使用另一个内核模块提供的功能。为了实现这个目的，内核提供了EXPORT_SYMBOL和EXPORT_SYMBOL_GPL两个宏来导出函数或变量。</p>
-<p>当一个内核模块使用EXPORT_SYMBOL或EXPORT_SYMBOL_GPL宏导出一个函数或变量时，其他的内核模块就可以使用extern关键字来声明并使用这个函数或变量。例如：</p>
-<pre><code class="c">// 在module1中
-void module1_func(void) &#123;
-    // ...
-&#125;
-
-EXPORT_SYMBOL(module1_func);
-
-
-
-// 在module2中
-extern void module1_func(void);
-
-void module2_func(void) &#123;
-    module1_func();
-&#125;
-
-</code></pre>
- 
+  <h1 id="day47-驱动简介"><a href="#day47-驱动简介" class="headerlink" title="day47-驱动简介"></a><font color="green">day47-驱动简介</font></h1> 
+      <a class="article-more-link" href="/2023/06/01/day47-%E9%A9%B1%E5%8A%A8%E7%AE%80%E4%BB%8B/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -328,7 +239,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day46-系统移植根文件"><a href="#day46-系统移植根文件" class="headerlink" title="day46-系统移植根文件"></a><font color="green">day46-系统移植根文件</font></h1><!--mroe--> 
+  <h1 id="day46-系统移植根文件"><a href="#day46-系统移植根文件" class="headerlink" title="day46-系统移植根文件"></a><font color="green">day46-系统移植根文件</font></h1> 
+      <a class="article-more-link" href="/2023/06/01/day46-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E6%A0%B9%E6%96%87%E4%BB%B6/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -380,134 +295,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day45-系统移植内核"><a href="#day45-系统移植内核" class="headerlink" title="day45-系统移植内核"></a><font color="green">day45-系统移植内核</font></h1><!--mroe-->
-
-<h2 id="一、内核简介"><a href="#一、内核简介" class="headerlink" title="一、内核简介"></a>一、内核简介</h2><p>Linux内核是Linux操作系统的核心部分，负责处理系统的主要操作，如硬件抽象、进程调度、内存管理，以及提供一个稳定、安全的环境来运行应用程序。从技术上来看，内核其实是硬件和软件之间的连接层，我们也可以称之为中间层。</p>
-<h3 id="1-1-内核实现策略"><a href="#1-1-内核实现策略" class="headerlink" title="1.1 内核实现策略"></a>1.1 内核实现策略</h3><ul>
-<li><p>宏内核<br>内核的所有代码，包括子系统（如内存管理、文件管理、设备驱动程序）都打包到一个文件中。内核中的每一个函数都可以访问到内核中所有其他部分。目前支持模块的动态装卸(裁剪)。Linux内核就是基于这个策略实现的</p>
-</li>
-<li><p>微内核<br>最基本的功能由中央内核（微内核）实现。所有其他的功能都委托给一些独立进程，这些进程通过明确定义的通信接口与中心内核通信。</p>
-</li>
-</ul>
-<h3 id="1-2-内核的核心模块"><a href="#1-2-内核的核心模块" class="headerlink" title="1.2 内核的核心模块"></a>1.2 内核的核心模块</h3><h4 id="1-2-1-进程的管理"><a href="#1-2-1-进程的管理" class="headerlink" title="1.2.1 进程的管理"></a>1.2.1 进程的管理</h4><p>Linux操作系统中的进程管理是内核的核心功能之一。以下是一些关键的概念和特性：</p>
-<h5 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h5><ul>
-<li><strong>进程</strong>：被视为执行环境的实例，包括程序代码、相关的数据、寄存器的状态、程序计数器、堆和栈等。</li>
-<li><strong>线程</strong>：进程中的一个执行单元，共享进程的资源，有自己独立的执行序列。Linux内核通过轻量级进程（LWP）实现线程。</li>
-</ul>
-<h5 id="进程状态"><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h5><p>进程可能处于以下状态之一：</p>
-<ul>
-<li>运行（正在CPU上执行或准备好运行但在等待CPU变得可用）</li>
-<li>等待/睡眠（等待某些条件成立或等待资源可用）</li>
-<li>停止（例如，当收到SIGSTOP信号或者正在被调试）</li>
-<li>僵尸（进程已经终止，但父进程还没有收集到它的终止状态）</li>
-</ul>
-<h5 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h5><p>内核的调度器负责决定哪个进程应该获得CPU的使用权。Linux使用优先级和调度策略来决定进程的执行顺序。</p>
-<p>以下是Linux进程调度的一些重要概念：</p>
-<blockquote>
-<p>(1)调度器和调度策略：</p>
-<p>Linux内核中有一个调度器组件，负责管理和调度所有的进程。调度器根据一定的策略来决定下一个要运行的进程。</p>
-<p>Linux支持多种调度策略，包括：</p>
-<p>SCHED_FIFO：实时调度策略，先进先出。对于具有相同优先级的进程，最早到达的进程首先获得处理器，一直运行直到自愿放弃或者更高优先级的进程就绪。</p>
-<p>SCHED_RR：实时调度策略，循环执行。这是一种为具有相同优先级的进程设计的公平策略，当一个进程耗尽了它的时间片，调度器将选择下一个进程执行。</p>
-<p>SCHED_OTHER：普通的非实时调度策略，这是默认的调度策略，采用的是CFS（Completely Fair Scheduler）调度算法。</p>
-<p>(2)优先级：</p>
-<p>Linux的每个进程都有一个相关联的优先级，决定了它在和其他进程竞争CPU时的地位。实时进程有静态优先级范围，普通进程有动态优先级范围。实时进程的优先级总是高于普通进程。</p>
-<p>(3)时间片：</p>
-<p>在Linux系统中，每个进程被赋予一个时间片，即进程可以运行的时间长度。时间片用完后，进程将被调度出CPU，然后调度器选择另一个进程运行。</p>
-<p>(4)上下文切换：</p>
-<p>当调度器决定替换当前正在运行的进程时，它执行一个被称为”上下文切换”的操作。这包括保存当前进程的状态，然后加载新进程的状态。这是一个开销相对较大的操作，因为它涉及到CPU寄存器和内存映射等状态信息的保存和加载。</p>
-</blockquote>
-<h5 id="进程创建与结束"><a href="#进程创建与结束" class="headerlink" title="进程创建与结束"></a>进程创建与结束</h5><p>进程通过系统调用<code>fork()</code>创建。进程结束通常是因为它完成了其工作或者因为收到一个终止信号。</p>
-<h5 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h5><p>Linux提供了多种进程间通信（IPC）机制，包括管道、信号、消息队列、共享内存、信号量等。</p>
-<h5 id="用户和权限"><a href="#用户和权限" class="headerlink" title="用户和权限"></a>用户和权限</h5><p>每个进程都有一个相关联的用户ID，用于确定它的权限。</p>
-<br>
-
-<h4 id="1-2-2-内存管理"><a href="#1-2-2-内存管理" class="headerlink" title="1.2.2 内存管理"></a>1.2.2 内存管理</h4><p>Linux内存管理是一个非常重要的部分，涉及到多个关键的概念和组件。</p>
-<h5 id="物理与虚拟内存"><a href="#物理与虚拟内存" class="headerlink" title="物理与虚拟内存"></a>物理与虚拟内存</h5><ul>
-<li><strong>物理内存</strong>：指的是实际的RAM。</li>
-<li><strong>虚拟内存</strong>：它允许计算机看似拥有比实际更多的RAM，通过使用硬盘空间作为额外的内存。</li>
-</ul>
-<h5 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h5><ul>
-<li><strong>分页</strong>：操作系统将虚拟内存划分为大小固定的块，称为页面。物理内存也被划分为大小固定的块，称为页帧。</li>
-<li><strong>分段</strong>：是将内存划分为大小可变的块。</li>
-</ul>
-<h5 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h5><ul>
-<li>当所有的物理内存都被使用时，操作系统需要决定哪些页面应被移出内存，为新的页面腾出空间。这个决定是由页面置换算法（page replacement algorithm）来做的。</li>
-</ul>
-<h5 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h5><ul>
-<li><strong>静态内存分配</strong>：在程序编译时由编译器自动完成。</li>
-<li><strong>自动内存分配（栈内存分配）</strong>：在程序运行时由编译器自动完成。</li>
-<li><strong>动态内存分配（堆内存分配）</strong>：由程序员显式调用malloc，calloc等函数完成。</li>
-</ul>
-<h5 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h5><ul>
-<li><strong>内存映射</strong>（Memory Mapping）是一种能让程序直接访问物理内存的方法。</li>
-</ul>
-<h5 id="Swap空间"><a href="#Swap空间" class="headerlink" title="Swap空间"></a>Swap空间</h5><ul>
-<li><strong>Swap空间</strong>是硬盘上的一块区域，被操作系统用作虚拟内存。当物理内存不足时，操作系统可以将一部分数据（页面）移出物理内存，存放到Swap空间，从而释放出物理内存供其他用途使用。</li>
-</ul>
-<br>
-
-<h4 id="1-2-3-文件系统"><a href="#1-2-3-文件系统" class="headerlink" title="1.2.3 文件系统"></a>1.2.3 文件系统</h4><h5 id="文件系统类型"><a href="#文件系统类型" class="headerlink" title="文件系统类型"></a>文件系统类型</h5><p>Linux支持多种文件系统类型，包括但不限于以下几种：</p>
-<ul>
-<li><strong>ext2/ext3/ext4</strong>：Linux的传统文件系统，ext4是最新版本，提供了许多改进和新功能。</li>
-<li><strong>XFS</strong>：一种高性能的日志文件系统，适合处理大文件和大存储设备。</li>
-<li><strong>Btrfs</strong>：一个现代的、具有许多高级功能的文件系统，如检查点、快照和动态空间分配。</li>
-<li><strong>FAT32/NTFS</strong>：由Microsoft开发，主要在Windows系统中使用，但Linux也提供了对它们的支持。</li>
-</ul>
-<h5 id="文件系统层次结构"><a href="#文件系统层次结构" class="headerlink" title="文件系统层次结构"></a>文件系统层次结构</h5><p>Linux文件系统遵循一种统一的目录结构，所有内容都从根目录<code>/</code>开始。以下是一些重要的目录：</p>
-<ul>
-<li>**/**：根目录，所有的文件和目录都从这里开始。</li>
-<li><strong>/home</strong>：用户的主目录，每个用户在这里都有一个自己的目录。</li>
-<li><strong>/etc</strong>：系统配置文件的存储位置。</li>
-<li><strong>/var</strong>：经常变化的文件，如日志文件和邮件队列等。</li>
-<li><strong>/bin</strong> 和 <strong>/sbin</strong>：二进制可执行文件的存储位置，如常用的命令和系统程序。</li>
-<li><strong>/lib</strong>：库文件的存储位置。</li>
-</ul>
-<h5 id="inode"><a href="#inode" class="headerlink" title="inode"></a>inode</h5><p>每个文件都有一个相关的inode，它存储了文件的元数据，如文件大小、创建时间、修改时间、所有者和权限等。inode号是文件在文件系统中的唯一标识。</p>
-<h5 id="硬链接和软链接"><a href="#硬链接和软链接" class="headerlink" title="硬链接和软链接"></a>硬链接和软链接</h5><p>Linux支持两种类型的文件链接：</p>
-<ul>
-<li><strong>硬链接</strong>：指向文件的inode的直接引用。所有的硬链接都指向同一个inode，因此看起来就像是同一个文件。</li>
-<li><strong>软链接（符号链接）</strong>：指向文件路径的引用，类似于Windows中的快捷方式。</li>
-</ul>
-<h5 id="挂载和卸载"><a href="#挂载和卸载" class="headerlink" title="挂载和卸载"></a>挂载和卸载</h5><p>在Linux中，设备（如硬盘分区或USB驱动器）必须先挂载到文件系统的某个点（称为挂载点），然后才能访问其中的文件。同样，设备可以从文件系统卸载，此后就无法访问其内容。</p>
-<br>
-
-<h4 id="1-2-4-设备驱动"><a href="#1-2-4-设备驱动" class="headerlink" title="1.2.4 设备驱动"></a>1.2.4 设备驱动</h4><p>设备驱动是一段可以让操作系统和硬件设备进行交互的程序。下面是一些关于Linux设备驱动的主要概念：</p>
-<h5 id="设备驱动的类型"><a href="#设备驱动的类型" class="headerlink" title="设备驱动的类型"></a>设备驱动的类型</h5><p>Linux中的设备驱动主要可以分为以下三种类型：</p>
-<ul>
-<li><strong>字符设备驱动</strong>：用于控制字符设备，这些设备以字符为单位进行数据传输，例如键盘和鼠标。</li>
-<li><strong>块设备驱动</strong>：用于控制块设备，这些设备以数据块为单位进行数据传输，例如硬盘和光驱。</li>
-<li><strong>网络设备驱动</strong>：用于控制网络设备，例如网络适配器和路由器。</li>
-</ul>
-<h5 id="加载和卸载设备驱动"><a href="#加载和卸载设备驱动" class="headerlink" title="加载和卸载设备驱动"></a>加载和卸载设备驱动</h5><p>在Linux中，设备驱动可以动态地加载和卸载。可以使用<code>insmod</code>命令来加载设备驱动，使用<code>rmmod</code>命令来卸载设备驱动。</p>
-<h5 id="设备文件"><a href="#设备文件" class="headerlink" title="设备文件"></a>设备文件</h5><p>Linux将所有的设备视为文件，设备文件通常位于<code>/dev</code>目录中。设备文件可以是字符设备文件或块设备文件，可以通过读写这些设备文件来控制硬件设备。</p>
-<h5 id="udev"><a href="#udev" class="headerlink" title="udev"></a>udev</h5><p><code>udev</code>是Linux 2.6内核和更高版本的一个设备管理工具，它可以动态地创建和管理设备节点，使设备管理更加灵活。</p>
-<h5 id="驱动模块"><a href="#驱动模块" class="headerlink" title="驱动模块"></a>驱动模块</h5><p>驱动模块是包含设备驱动函数的程序，它们可以在运行时动态地加载和卸载。这使得Linux内核可以保持小型和高效，同时也能支持大量不同类型的硬件设备。</p>
-<h5 id="编写设备驱动"><a href="#编写设备驱动" class="headerlink" title="编写设备驱动"></a>编写设备驱动</h5><p>编写设备驱动是一个复杂的任务，需要深入理解硬件设备的工作原理以及Linux内核的工作机制。驱动程序需要在内核空间运行，因此它们必须遵循特定的编程规则和约定。</p>
-<br>
-
-<h4 id="1-2-5-网络栈"><a href="#1-2-5-网络栈" class="headerlink" title="1.2.5 网络栈"></a>1.2.5 网络栈</h4><p>Linux网络栈是一个实现了TCP/IP网络协议的软件栈。以下是一些重要的概念：</p>
-<h5 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h5><p>TCP/IP模型由四层构成：应用层、传输层、网络层和链路层。每一层都负责处理特定的任务，并为上一层提供服务。</p>
-<h5 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h5><p>网络栈包括一组协议，这些协议定义了数据在网络中的传输方式。其中最重要的两个协议是TCP（传输控制协议）和IP（互联网协议）。</p>
-<h5 id="Socket编程"><a href="#Socket编程" class="headerlink" title="Socket编程"></a>Socket编程</h5><p>Socket API用于创建和管理网络连接。通过socket，应用程序可以发送和接收数据。</p>
-<h5 id="网络设备"><a href="#网络设备" class="headerlink" title="网络设备"></a>网络设备</h5><p>网络设备是用于发送和接收数据包的硬件设备。在Linux中，每个网络设备都由一个设备驱动程序来管理。</p>
-<h5 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h5><p>路由是决定数据包从源地址到目的地址所走的路径的过程。路由表是用于存储路由信息的数据结构。</p>
-<h5 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h5><p>网络安全包括一系列用于保护网络连接和数据的技术。其中包括防火墙（用于阻止未授权的网络访问）和IPSec（一种用于加密IP数据包的协议）。</p>
-<h5 id="网络调试工具"><a href="#网络调试工具" class="headerlink" title="网络调试工具"></a>网络调试工具</h5><p>Linux提供了多种用于调试网络问题的工具，如ping（用于测试网络连通性），traceroute（用于跟踪数据包的路由路径），netstat（用于显示网络状态）等等。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、内核移植"><a href="#二、内核移植" class="headerlink" title="二、内核移植"></a>二、内核移植</h2><ol>
-<li>准备内核源代码</li>
-<li>makefile编辑交叉编译环境</li>
-<li>make exynos_defconfig默认配置，配置文件放在 arch/arm/configs下</li>
-<li>make menuconfig图形界面配置内核</li>
-<li>make uImage编译内核</li>
-<li>make dtbs编译设备树</li>
-<li>按照需求在设备树中添加设备和配置内核，再重新编译</li>
-</ol>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line">内核移植：</span><br><span class="line"></span><br><span class="line">一、 内核准备：</span><br><span class="line"></span><br><span class="line">1. 内核源代码准备</span><br><span class="line">	1）官网下载Linux内核源代码</span><br><span class="line">	2）找供应商要（得到Linux内核源代码：linux-3.14.tar.xz）</span><br><span class="line"></span><br><span class="line">2. 拷贝源代码到工作目录：</span><br><span class="line">	cp linux-3.14.tar.xz </span><br><span class="line">3. 进入Linux内核源代码所在目录，解压Linux内核源代码</span><br><span class="line">	cd </span><br><span class="line">	tar xf linux-3.14.tar.xz</span><br><span class="line">4. 进入到源代码目录中</span><br><span class="line">	cd linux-3.14</span><br><span class="line">	</span><br><span class="line">二、 内核编译：	</span><br><span class="line">5. 修改编译平台和交叉编译环境</span><br><span class="line">	进入Makefile文件，修改参数：</span><br><span class="line">	修改：</span><br><span class="line"> 199 ARCH		?= <span class="formula">$(SUBARCH)</span></span><br><span class="line"><span class="formula"> 200 CROSS_COMPILE	?= $</span>(CONFIG_CROSS_COMPILE:&quot;<span class="comment">%&quot;=%)</span></span><br><span class="line">	为：</span><br><span class="line"> 199 ARCH            ?= arm</span><br><span class="line"> 200 CROSS_COMPILE   ?= arm-none-linux-gnueabi-</span><br><span class="line"></span><br><span class="line">6. 导入默认配置，配置文件放在 arch/arm/configs下</span><br><span class="line">	make exynos_defconfig</span><br><span class="line">7. 配置内核</span><br><span class="line">	make menuconfig</span><br><span class="line">	正常执行，会弹出一个菜单选项，我们可以去选择需要配置的内核；</span><br><span class="line">	注意：</span><br><span class="line">	(如果在编译的时候出现了下面的错误，则说明图形界面库没有安装，需要安装库</span><br><span class="line">		sudo apt-get install exuberant-ctags</span><br><span class="line">		sudo apt-get install libncurses5-dev</span><br><span class="line">	)</span><br><span class="line"> *** Unable to find the ncurses libraries or the</span><br><span class="line"> *** required header files.</span><br><span class="line"> *** &#x27;make menuconfig&#x27; requires the ncurses libraries.</span><br><span class="line"> *** </span><br><span class="line"> *** Install ncurses (ncurses-devel) and try again.</span><br><span class="line"> *** </span><br><span class="line">make[1]: *** [scripts/kconfig/dochecklxdialog] Error 1</span><br><span class="line">make: *** [menuconfig] Error 2</span><br><span class="line">第二种：</span><br><span class="line">farsight@ubuntu:~/fs4412/1905/linux-3.14<span class="formula">$ make menuconfig</span></span><br><span class="line"><span class="formula">scripts/kconfig/mconf Kconfig</span></span><br><span class="line"><span class="formula">Your display is too small to run Menuconfig!</span></span><br><span class="line"><span class="formula">It must be at least 19 lines by 80 columns.</span></span><br><span class="line"><span class="formula">make[1]: *** [menuconfig] Error 1</span></span><br><span class="line"><span class="formula">make: *** [menuconfig] Error 2</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">表示终端太小，全屏显示就可以解决</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">	正常执行菜单选项，选择串口信息：</span></span><br><span class="line"><span class="formula">	/* 将串口选择为 2  */</span></span><br><span class="line"><span class="formula">	System Type  ---&gt;</span></span><br><span class="line"><span class="formula">		(2) S3C UART to use for low-level messages</span></span><br><span class="line"><span class="formula">	</span></span><br><span class="line"><span class="formula">8. 编译内核</span></span><br><span class="line"><span class="formula">	make uImage</span></span><br><span class="line"><span class="formula">	编译成功会生成一个经过压缩后的镜像文件uImage，其生成的文件路径为：arch/arm/boot/uImage</span></span><br><span class="line"><span class="formula">	注意：(如果在编译的时候出现了下面的错误，则说明缺少mkimage工具，</span></span><br><span class="line"><span class="formula">	需将第一天工具中的mkimage拷贝到ubuntu的/usr/bin目录下)</span></span><br><span class="line"><span class="formula">&quot;mkimage&quot; command not found - U-Boot images will not be built</span></span><br><span class="line"><span class="formula">make[1]: *** [arch/arm/boot/uImage] Error 1</span></span><br><span class="line"><span class="formula">make: *** [uImage] Error 2</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">三、设备树编译：</span></span><br><span class="line"><span class="formula">9. 修改设备树文件</span></span><br><span class="line"><span class="formula">	参考板origen的设备数文件为参考：</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/dts/exynos4412-origen.dts arch/arm/boot/dts/exynos4412-fs4412.dts</span></span><br><span class="line"><span class="formula">10. 修改Makefile，添加编译项：</span></span><br><span class="line"><span class="formula">	vim arch/arm/boot/dts/Makefile</span></span><br><span class="line"><span class="formula">	在</span></span><br><span class="line"><span class="formula">		exynos4412-origen.dtb <span class="tag">\</span></span></span><br><span class="line"><span class="formula">	下添加如下内容</span></span><br><span class="line"><span class="formula">		exynos4412-fs4412.dtb <span class="tag">\</span></span></span><br><span class="line"><span class="formula">11. 编译设备树文件：</span></span><br><span class="line"><span class="formula">	make dtbs</span></span><br><span class="line"><span class="formula">	</span></span><br><span class="line"><span class="formula">12. 拷贝编译的内核和设备树到tftp共享文件中</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/uImage /tftpboot</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/dts/exynos4412-fs4412.dtb /tftpboot</span></span><br><span class="line"><span class="formula">	</span></span><br><span class="line"><span class="formula">四、调试内核和设备树；</span></span><br><span class="line"><span class="formula">采用tftp下载内核和设备树，nfs挂载根文件系统</span></span><br><span class="line"><span class="formula">	set tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> bootm 41000000 - 42000000</span></span><br><span class="line"><span class="formula">	set bootargs root=/dev/nfs nfsroot=192.168.9.120:/source/nfs/rootfs rw clk_ignore_unused console=ttySAC2,115200 init=/linuxrc ip=192.168.9.233</span></span><br><span class="line"><span class="formula">	saveenv</span></span><br><span class="line"><span class="formula">掉电重启板子  //会看到内核信息输出。 但后面有报错，正常 （因为网卡等还没移植，nfs挂载肯定失败）</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">【网卡驱动的移植】 </span></span><br><span class="line"><span class="formula">1. 修改设备树文件</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">添加：linux-3.14/arch/arm/boot/dts/exynos4412-fs4412.dts</span></span><br><span class="line"><span class="formula">srom-cs1@5000000 &#123;</span></span><br><span class="line"><span class="formula">		compatible = &quot;simple-bus&quot;;</span></span><br><span class="line"><span class="formula">		#address-cells = &lt;1&gt;;</span></span><br><span class="line"><span class="formula">		#size-cells = &lt;1&gt;;</span></span><br><span class="line"><span class="formula">		reg = &lt;0x5000000 0x1000000&gt;;</span></span><br><span class="line"><span class="formula">		ranges;</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">		ethernet@5000000 &#123;</span></span><br><span class="line"><span class="formula">			compatible = &quot;davicom,dm9000&quot;;</span></span><br><span class="line"><span class="formula">			reg = &lt;0x5000000 0x2 0x5000004 0x2&gt;;</span></span><br><span class="line"><span class="formula">			interrupt-parent = &lt;&amp;gpx0&gt;;</span></span><br><span class="line"><span class="formula">			interrupts = &lt;6 4&gt;;</span></span><br><span class="line"><span class="formula">			davicom,no-eeprom;</span></span><br><span class="line"><span class="formula">			mac-address = [00 0a 2d a6 55 a2];</span></span><br><span class="line"><span class="formula">		&#125;;</span></span><br><span class="line"><span class="formula">	&#125;;</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">添加设备编译参数</span></span><br><span class="line"><span class="formula">make menuconfig</span></span><br><span class="line"><span class="formula">[*] Networking support  ---&gt;    //配置支持TCP/IP</span></span><br><span class="line"><span class="formula">	Networking options  ---&gt;</span></span><br><span class="line"><span class="formula">		&lt;*&gt; Packet socket</span></span><br><span class="line"><span class="formula">		&lt;*&gt;Unix domain sockets </span></span><br><span class="line"><span class="formula">		[*] TCP/IP networking</span></span><br><span class="line"><span class="formula">		[*]   IP: kernel level autoconfiguration</span></span><br><span class="line"><span class="formula">Device Drivers  ---&gt;   //配置支持DM9000网卡驱动</span></span><br><span class="line"><span class="formula">	[*] Network device support  ---&gt;</span></span><br><span class="line"><span class="formula">		[*]   Ethernet driver support (NEW)  ---&gt;</span></span><br><span class="line"><span class="formula">			&lt;*&gt;   DM9000 support</span></span><br><span class="line"><span class="formula">File systems  ---&gt;  //配置支持网络文件系统NFS</span></span><br><span class="line"><span class="formula">	[*] Network File Systems (NEW)  ---&gt;</span></span><br><span class="line"><span class="formula">		&lt;*&gt;   NFS client support</span></span><br><span class="line"><span class="formula">		[*]     NFS client support for NFS version 2</span></span><br><span class="line"><span class="formula">		[*]     NFS client support for NFS version 3</span></span><br><span class="line"><span class="formula">		[*]       NFS client support for the NFSv3 ACL protocol extension</span></span><br><span class="line"><span class="formula">		[*]   Root file system on NFS</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">		</span></span><br><span class="line"><span class="formula">重新编译内核和设备树</span></span><br><span class="line"><span class="formula">	make uImage</span></span><br><span class="line"><span class="formula">	make dtbs</span></span><br><span class="line"><span class="formula">将编译好的内核和设备树拷贝到tftp共享目录中</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/uImage /tftpboot</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/dts/exynos4412-fs4412.dtb /tftpboot</span></span><br><span class="line"><span class="formula">采用tftp下载内核和设备树，nfs挂载根文件系统</span></span><br><span class="line"><span class="formula">	set tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> bootm 41000000 - 42000000</span></span><br><span class="line"><span class="formula">	set bootargs root=/dev/nfs nfsroot=192.168.1.190:/source/nfs/rootfs rw clk_ignore_unused console=ttySAC2,115200 init=/linuxrc ip=192.168.1.191</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">如果挂载失败：修改文件drivers/clk/clk.c  </span></span><br><span class="line"><span class="formula">	修改static bool clk_ignore_unused; 为：static bool clk_ignore_unused = true;    //忽略时钟</span></span><br></pre></td></tr></table></figure> 
+  <h1 id="day45-系统移植内核"><a href="#day45-系统移植内核" class="headerlink" title="day45-系统移植内核"></a><font color="green">day45-系统移植内核</font></h1> 
+      <a class="article-more-link" href="/2023/06/01/day45-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E5%86%85%E6%A0%B8/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -559,123 +351,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day44-系统移植bootloader"><a href="#day44-系统移植bootloader" class="headerlink" title="day44-系统移植bootloader"></a><font color="green">day44-系统移植bootloader</font></h1><!--mroe-->
-
-<h2 id="一、bootloader简介"><a href="#一、bootloader简介" class="headerlink" title="一、bootloader简介"></a>一、bootloader简介</h2><p>&emsp;&emsp;就是在操作系统内核运行之前运行的一段小程序。通过这段小程序，我们可以初始化硬件设备、建立内存空间的映射图，从而将系统的软硬件环境带到一个合适的状态，以便为最终调用操作系统内核准备好正确的环境，他就是所谓的引导加载程序（Boot Loader）。</p>
-<p>&emsp;&emsp;BootLoader的任务是引导操作系统，所谓引导操作系统，就是启动内核，让内核运行就是把内核加载到内存RAM中去运行，那先问两个问题：第一个问题，是谁把内核搬到内存中去运行？第二个问题：我们说的内存是SDRAM，大家都知道，这种内存和SRAM不同，最大的不同就是SRAM只要系统上电就可以运行，而SDRAM需要软件进行初始化才能运行，那么在把内核搬运到内存运行之前必须要先初始化内存吧，那么内存是由谁来初始化的呢？其实这两件事情都是由bootloader来干的，目的是为内核的运行准备好软硬件环境，没有bootloadr我们的系统当然不能跑起来。</p>
-<p>&emsp;&emsp;BootLoader种类众多，其中u-boot使用较为广泛</p>
-<blockquote>
-<p>① 开放源码；<br>② 支持多种嵌入式操作系统内核，如Linux、NetBSD， VxWorks， QNX， RTEMS， ARTOS， LynxOS；<br>③ 支持多个处理器系列，如PowerPC、ARM、x86、MIPS、XScale；<br>④ 较高的可靠性和稳定性；<br>⑤ 高度灵活的功能设置，适合U-Boot调试、操作系统不同引导要求、产品发布等；<br>⑥ 丰富的设备驱动源码，如串口、以太网、SDRAM、FLASH、LCD、NVRAM、EEPROM、RTC、键盘等；<br>⑦ 较为丰富的开发调试文档与强大的网络技术支持；</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="二、-u-boot"><a href="#二、-u-boot" class="headerlink" title="二、 u-boot"></a>二、 u-boot</h2><h3 id="2-1-u-boot结构"><a href="#2-1-u-boot结构" class="headerlink" title="2.1 u-boot结构"></a>2.1 u-boot结构</h3><table>
-<thead>
-<tr>
-<th>Directory</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>API</code></td>
-<td>存储U-Boot提供的接口函数</td>
-</tr>
-<tr>
-<td><code>arch</code></td>
-<td>与体系结构相关的代码，是核心文件夹</td>
-</tr>
-<tr>
-<td><code>board</code></td>
-<td>基于不同具体开发板的自定义代码</td>
-</tr>
-<tr>
-<td><code>common</code></td>
-<td>通用代码，涵盖所有方面，以处理命令行为主</td>
-</tr>
-<tr>
-<td><code>disk</code></td>
-<td>与分区相关的代码</td>
-</tr>
-<tr>
-<td><code>doc</code></td>
-<td>常见特性和问题描述的文档</td>
-</tr>
-<tr>
-<td><code>drivers</code></td>
-<td>常用设备驱动程序，每种类型的设备驱动程序都占用一个子目录</td>
-</tr>
-<tr>
-<td><code>fs</code></td>
-<td>文件系统，支持嵌入式开发常用的文件系统（CRAMFS，EXT2，EXT3，JFFS2等）</td>
-</tr>
-<tr>
-<td><code>include</code></td>
-<td>定义了全局需要的头文件</td>
-</tr>
-<tr>
-<td><code>lib</code></td>
-<td>通用库文件</td>
-</tr>
-<tr>
-<td><code>net</code></td>
-<td>网络相关代码，小型协议栈</td>
-</tr>
-<tr>
-<td><code>post</code></td>
-<td>上电自检</td>
-</tr>
-<tr>
-<td><code>tools</code></td>
-<td>辅助工具，用于编译和检查uboot目标文件</td>
-</tr>
-</tbody></table>
-<h3 id="2-2-u-boot命令"><a href="#2-2-u-boot命令" class="headerlink" title="2.2 u-boot命令"></a>2.2 u-boot命令</h3><p><code>pri</code>:显示<br><code>set</code>:设置<br><code>save</code>:保存<br><code>tftp</code>:下载<br><code>loadb</code>:kermit协议下载二进制<br><code>movi</code>:emmc写入/读取<br><code>boot</code>：启动</p>
-<p><code>bootcmd</code>：启动命令<br><code>bootargs</code>:启动参数</p>
-<h3 id="2-3-u-boot工作模式"><a href="#2-3-u-boot工作模式" class="headerlink" title="2.3 u-boot工作模式"></a>2.3 u-boot工作模式</h3><p>&emsp;&emsp;U-Boot的工作模式有启动加载模式和下载模式。启动加载模式是Bootloader的正常工作模式，嵌入式产品发布时，Bootloader必须工作在这种模式下，Bootloader将嵌入式操作系统从FLASH中加载到SDRAM中运行，整个过程是自动的。下载模式就是Bootloader通过某些通信手段将内核映像或根文件系统映像等从PC机中下载到目标板的SDRAM中运行，用户可以利用Bootloader提供的一些令接口来完成自己想要的操作，这种模式主要用于测试和开发。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="三、-启动流程"><a href="#三、-启动流程" class="headerlink" title="三、 启动流程"></a>三、 启动流程</h2><p>启动模式包含：自启动和交互模式，正常使用是自启动模式。</p>
-<p>&emsp;&emsp;大多数BootLoader都分为stage1和stage2两大部分，U-boot也不例外。依赖于cpu体系结构的代码（如设备初始化代码等）通常都放在stage1且可以用汇编语言来实现，而stage2则通常用C语言来实现，这样可以实现复杂的功能，而且有更好的可读性和移植性。</p>
-<ol>
-<li>stage1（start.s代码结构）</li>
-</ol>
-<p>U-boot的stage1代码通常放在start.s文件中，它用汇编语言写成，其主要代码部分如下：</p>
-<ul>
-<li>定义入口。由于一个可执行的image必须有一个入口点，并且只能有一个全局入口，通常这个入口放在rom（Flash）的0x0地址，因此，必须通知编译器以使其知道这个入口，该工作可通过修改连接器脚本来完成。</li>
-<li>设置异常向量，设置SVC模式，关闭MMU Cache</li>
-<li>设置CPU的速度、时钟频率及中断控制寄存器。</li>
-<li>初始化内存控制器 。</li>
-<li>将rom中的程序复制到ram中。</li>
-<li>初始化堆栈 。</li>
-<li>转到ram中执行，该工作可使用指令ldrpc来完成。</li>
-</ul>
-<ol start="2">
-<li>stage2（C语言代码部分）</li>
-</ol>
-<p>lib_arm/board.c中的start armboot是C语言开始的函数，也是整个启动代码中C语言的主函数，同时还是整个u-boot（armboot）的主函数，该函数主要完成如下操作：</p>
-<ul>
-<li>调用一系列的初始化函数。</li>
-<li>初始化flash设备。</li>
-<li>初始化系统内存分配函数。</li>
-<li>如果目标系统拥有nand设备，则初始化nand设备。</li>
-<li>如果目标系统有显示设备，则初始化该类设备。</li>
-<li>初始化相关网络设备，填写ip，c地址等。</li>
-<li>进入命令循环（即整个boot的工作循环），接受用户从串口输入的命令，然后进行相应的工作。</li>
-</ul>
-<br>
-<br>
-
-<hr>
-<h2 id="四、u-boot移植"><a href="#四、u-boot移植" class="headerlink" title="四、u-boot移植"></a>四、u-boot移植</h2><h3 id="已配置好的："><a href="#已配置好的：" class="headerlink" title="已配置好的："></a>已配置好的：</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">0、注释配置文件中的中文设置, 在下面三行加#</span><br><span class="line">	# sudo vim ~/.bashrc</span><br><span class="line">	#export LANG=LANG=&quot;zh_CN.utf-8&quot;</span><br><span class="line">	#export LANGUAGE=&quot;zh_CN:zh:en_US:en&quot;</span><br><span class="line">	#export LC_ALL=&quot;zh_CN.utf-8&quot;</span><br><span class="line"></span><br><span class="line">1、解压day2中的u-boot-2013.01-fs4412.tar.bz2</span><br><span class="line">	tar -xvf u-boot-2013.01-fs4412.tar.xz</span><br><span class="line"></span><br><span class="line">2、拷贝day2下的build.sh到解压的目录下，替换原有的目录</span><br><span class="line"></span><br><span class="line">3、进入u-boot-2013.01-fs4412，执行build.sh</span><br><span class="line">	./build.sh</span><br><span class="line">注： 如果Flash不是三星的，则需要根据FS4412兼容高版本eMMC.pdf更改emmc配置</span><br><span class="line"></span><br><span class="line">4、验证u-boot.bin</span><br><span class="line">	1) 将生成的u-boot-fs4412.bin文件拷贝到tftp共享目录中；</span><br><span class="line">			cp u-boot-fs4412.bin /tftpboot</span><br><span class="line">	2) 通过sd方式将生产uboot烧写到mmc中；</span><br><span class="line">			将拨码开关拨到sd启动方式，启动开发板进入到交互模式：</span><br><span class="line">			tftp 41000000 u-boot-fs4412.bin</span><br><span class="line">			movi write u-boot 41000000</span><br><span class="line">			将拨码开关拨到emmc启动方式，观察现象,启动成功</span><br></pre></td></tr></table></figure>
-
-<h3 id="未配置好的"><a href="#未配置好的" class="headerlink" title="未配置好的"></a>未配置好的</h3><ol>
-<li>boot中的<code>makefile</code>中搜索<code>CROSS_COMPILE</code>指定架构(如arm)和交叉编译工具链（如arm-none-linux-gnueabi）</li>
-</ol>
- 
+  <h1 id="day44-系统移植bootloader"><a href="#day44-系统移植bootloader" class="headerlink" title="day44-系统移植bootloader"></a><font color="green">day44-系统移植bootloader</font></h1> 
+      <a class="article-more-link" href="/2023/05/30/day44-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8Dbootloader/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -727,63 +407,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day43-系统移植简介"><a href="#day43-系统移植简介" class="headerlink" title="day43-系统移植简介"></a><font color="green">day43-系统移植简介</font></h1><!--mroe-->
-<h2 id="一、系统移植简介"><a href="#一、系统移植简介" class="headerlink" title="一、系统移植简介"></a>一、系统移植简介</h2><p>&emsp;&emsp;系统移植是将一个程序或操作系统从一个硬件平台转移到另一个硬件平台的过程。这个过程可能涉及到修改源代码，以使其能够在新的硬件平台上运行，或者使用交叉编译的技术，将源代码编译成在新硬件平台上运行的可执行文件。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、嵌入式linux系统"><a href="#二、嵌入式linux系统" class="headerlink" title="二、嵌入式linux系统"></a>二、嵌入式linux系统</h2><p>&emsp;&emsp;Linux系统由多个主要部分组成，包括：</p>
-<ol>
-<li><p>引导程序（BootLoader）：BootLoader是用于初始化硬件设备、建立内存空间的映射图，然后将系统的控制权交给操作系统内核的一段小程序。它负责在启动时加载内核到内存中，并传递给它控制权。常见的引导程序包括GRUB、LILO等。</p>
-</li>
-<li><p>内核（Kernel）：内核是操作系统的核心部分，它负责管理系统的硬件资源，并提供上层应用程序调用的接口服务程序。Linux内核包括了设备驱动、进程和内存管理、文件系统等。</p>
-</li>
-<li><p>设备树（Device Tree, DTB）：在嵌入式Linux系统中，设备树是一个数据结构，用于描述硬件设备的信息，例如设备的物理地址、设备的类型、设备的配置等。设备树可以让内核知道系统中存在哪些设备，这些设备如何配置，以及它们如何相互连接。</p>
-</li>
-<li><p>根文件系统（rootfs）：根文件系统是Linux系统启动后，用户可以直接操作的部分。它包含操作系统需要的各种文件和目录，例如/bin、/etc、/lib、/usr等。根文件系统可以是只读的（如在嵌入式系统或LiveCD中），也可以是可写的。</p>
-</li>
-</ol>
-<p>&emsp;&emsp;在Linux系统启动过程中，BootLoader首先被执行，它初始化硬件，并加载内核和设备树到内存中，然后将控制权交给内核。内核开始运行，并使用设备树信息来理解硬件配置。然后，内核挂载根文件系统，系统进入用户空间，开始执行init进程，最后用户可以开始使用系统。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="三、交叉编译"><a href="#三、交叉编译" class="headerlink" title="三、交叉编译"></a>三、交叉编译</h2><p>&emsp;&emsp;交叉编译是在一种系统平台（称为主机）上生成另一种系统平台（称为目标）上运行的可执行代码的过程。例如，你可能在一台运行Linux的x86架构的电脑（主机）上编译一份用于在ARM架构的设备（目标）上运行的程序。</p>
-<p>&emsp;&emsp;交叉编译器（Cross Compiler）是实现交叉编译的关键工具，它能够产生能在不同硬件或操作系统平台上运行的二进制文件。常见的交叉编译工具有GCC、Clang等。</p>
-<p>&emsp;&emsp;这里用的是arm-linuxg-gcc编译器</p>
-<br>
-<br>
-
-<hr>
-<h2 id="四、环境搭建（连接）"><a href="#四、环境搭建（连接）" class="headerlink" title="四、环境搭建（连接）"></a>四、环境搭建（连接）</h2><p>交叉开发环境的硬件组成主要由以下几大部分：</p>
-<blockquote>
-<ol>
-<li>开发主机</li>
-<li>目标机（开发板）</li>
-<li>二者的链接介质，常用的主要有3中方式：（1）串口线 （2）USB线 （3）网线</li>
-</ol>
-</blockquote>
-<p>对应的硬件介质，还必须要有相应的软件“介质”支持：</p>
-<blockquote>
-<ol>
-<li>对于串口，通常用的有串口调试助手，putty工具等，工具很多，功能都差不多，会用一两款就可以；</li>
-<li>对于USB线，当然必须要有USB的驱动才可以，一般芯片公司会提供，比如对于三星的芯片，USB下载主要由DNW软件来完成；</li>
-<li>对于网线，则必须要有网络协议支持才可以，常用的服务主要<code>tftp</code>和<code>nfs</code></li>
-</ol>
-</blockquote>
-<p>利用网线将windows，虚拟机，板子连接起来：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(1) 设置虚拟机ip：</span><br><span class="line">    1. 编辑 -&gt; 虚拟网络编辑器（桥接模式） -&gt; VMnet0 桥接到（选连板子的网卡，就是连接到网口的那个网卡）</span><br><span class="line">    2. 虚拟机 -&gt; 设置 -&gt; 网卡适配器  -&gt; 自定义 (选 VMnet0)</span><br><span class="line">    3. 点ubuntu右上角网络图标 -&gt; 右键选编辑连接 -&gt; 全删掉 -&gt; 添加（改新连接名称为board）-&gt; IPV4 设置 -&gt; 方法（选手动） -&gt; 点添加 设置为 192.168.9.120 255.255.255.0 192.168.9.1 并保存退出</span><br><span class="line">    4. 断开网络再连接，ifconfig测试，ping主机</span><br><span class="line"></span><br><span class="line">(2) 设置windows的ip：</span><br><span class="line">    打开windows网络与共享中心--&gt;本地连接--&gt;属性--&gt;IPV4地址配置--&gt;配置IP；192.168.9.100</span><br><span class="line"></span><br><span class="line">(3) 设置板子ip：</span><br><span class="line">      set ipaddr 192.168.9.233		  //设置【目标机】开发板的ip地址；</span><br><span class="line">			set serverip 192.168.9.120		//设置【开发主机】ubuntu的ip地址；</span><br><span class="line">			set gatewayip 192.168.9.1		  //设置网关</span><br><span class="line">			set netmask 255.255.255.0		  //设置子网掩码</span><br><span class="line">			saveenv							          //保存环境变量到emmc中；</span><br><span class="line">板子命令：</span><br><span class="line">printenv（pri）： 输出当前环境信息；</span><br><span class="line">setenv（set）：设置环境变量；</span><br><span class="line">saveenv（save）：保存环境变量； </span><br><span class="line">ping ：是否能ping通虚拟机     </span><br></pre></td></tr></table></figure>
-<p><strong>上面是板子直连的情况，如果是在同一个局域网下的，就按局域网的ip进行连接，即更改板子的设置，注意板子的ip绝不能被占用</strong></p>
-<h3 id="4-1-tftp服务"><a href="#4-1-tftp服务" class="headerlink" title="4.1 tftp服务"></a>4.1 tftp服务</h3><p>&emsp;&emsp;主要用于实现文件的下载，比如开发调试的过程中，主要用<code>tftp</code>把要测试的bootloader、kernel和文件系统直接下载到内存中运行，而不需要预先烧录到Flash芯片中，一方面，在测试的过程中，往往需要频繁的下载，如果每次把这些要测试的文件都烧录到Flash中然后再运行也可以，但是缺点是：过程比较麻烦，而且Flash的擦写次数是由限的；另外一方面：测试的目的就是把这些目标文件加载到内存中直接运行就可以了，而<code>tftp</code>就刚好能够实现这样的功能，因此，更没有必要把这些文件都烧录到Flash中去。</p>
-<p>tftp建立：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">(1) 虚拟机建立tftp：</span><br><span class="line">    0.检查是否安装过tftp</span><br><span class="line">			sudo apt-cache policy tftpd-hpa</span><br><span class="line">			</span><br><span class="line">		1. 安装tftp服务器：</span><br><span class="line">			sudo apt-get install tftpd-hpa tftp-hpa</span><br><span class="line">			注意：虚拟机需要连外网，也就是能够ping www.baidu.com </span><br><span class="line">		2. 配置tftp服务器：</span><br><span class="line">			sudo vim /etc/default/tftpd-hpa</span><br><span class="line">			TFTP_USERNAME=&quot;tftp&quot;				    #用户的使用命令；</span><br><span class="line">			TFTP_DIRECTORY=&quot;/tftpboot&quot;			#共享文件的路径；</span><br><span class="line">			TFTP_ADDRESS=&quot;0.0.0.0:69&quot;			  #服务器的ip地址和端口号；</span><br><span class="line">			TFTP_OPTIONS=&quot;-l -c -s&quot;</span><br><span class="line">			根文件系统下面创建目录tftpboot,修改共享文件的权限（文件夹和文件的权限都要修改）</span><br><span class="line">				sudo chmod 0777 /tftpboot</span><br><span class="line">		3. 启动tftp服务器</span><br><span class="line">				sudo service tftpd-hpa restart	//重启</span><br><span class="line">		4. 将需要传输的文件存储在共享目录中(/tftpboot)</span><br><span class="line">				</span><br><span class="line">		5. 测试是否成功安装</span><br><span class="line">				tftp 127.0.0.1    </span><br><span class="line">				tftp&gt;get &lt;filename&gt;    </span><br><span class="line">				tftp&gt;q</span><br><span class="line">(2) 板子建立tftp</span><br><span class="line">    1. 把day1的镜像目录下的uImage，exynos4412-fs4412.dtb，ramdisk.img拷贝到/tftpboot目录下</span><br><span class="line">			tftp 41000000 uImage				//下载内核</span><br><span class="line">			tftp 42000000 exynos4412-fs4412.dtb	//下载设备树</span><br><span class="line">			tftp 43000000 ramdisk.img			//下载根文件系统</span><br><span class="line">			bootm 41000000 	43000000 		 42000000</span><br><span class="line">			      内核地址	 根文件系统地址	设备树地址</span><br><span class="line">			注意：地址顺序不能出错；	  </span><br><span class="line">				  </span><br><span class="line">			一次性配置：</span><br><span class="line">			set bootcmd tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> tftp 43000000 ramdisk.img<span class="tag">\<span class="name">;</span></span> bootm 41000000 43000000 42000000 </span><br><span class="line"></span><br><span class="line">      save</span><br><span class="line">(3) 交叉编译器安装：</span><br><span class="line">    1. 将gcc-4.6.4.tar.xz 拷贝到虚拟机的某一个目录中</span><br><span class="line">			cp gcc-4.6.4.tar.xz ~/workspace/fs4412	</span><br><span class="line">		2. 进入到所对应的目录中，解压gcc-4.6.4.tar.xz</span><br><span class="line">			cd ~/workspace/fs4412 </span><br><span class="line">			tar -xvf gcc-4.6.4.tar.xz</span><br><span class="line">		3. 进入到gcc-4.6.4目录中，通过pwd查看绝对路径；</span><br><span class="line">			cd gcc-4.6.4/bin</span><br><span class="line">			pwd   === &gt; /home/farsight/workspace/fs4412/gcc-4.6.4/bin</span><br><span class="line">		4. 修改PATH的值；</span><br><span class="line">			进入到/etc/bash.bashrc,在文件的最前面添加</span><br><span class="line">			sudo vim /etc/bash.bashrc</span><br><span class="line">			export PATH=<span class="formula">$PATH:/home/farsight/workspace/fs4412/gcc-4.6.4/bin</span></span><br><span class="line"><span class="formula">		5. 重启；</span></span><br><span class="line"><span class="formula">			source /etc/bash.bashrc</span></span><br><span class="line"><span class="formula">		</span></span><br><span class="line"><span class="formula">		6. 测试：</span></span><br><span class="line"><span class="formula">			a.生成可执行文件：arm-none-linux-guneabi-gcc 1.c</span></span><br><span class="line"><span class="formula">			b.拷贝执行文件到下载目录: cp a.out /tftpboot</span></span><br><span class="line"><span class="formula">			c.在板子上使用tftp下载a.out到板子上： tftp -g -r a.out 192.168.9.120 （注：板子和Ubuntu必须在同一网段）</span></span><br><span class="line"><span class="formula">				注：使用tftp上传文件到服务器 tftp -p -r a.out 192.168.9.120</span></span><br><span class="line"><span class="formula">			d.修改a.out权限：chmod 777 a.out</span></span><br><span class="line"><span class="formula">			e.执行a.out: ./a.out</span></span><br></pre></td></tr></table></figure>
-
-<h3 id="4-2-nfs服务"><a href="#4-2-nfs服务" class="headerlink" title="4.2 nfs服务"></a>4.2 nfs服务</h3><p>&emsp;&emsp;主要用于实现网络文件的挂载，实际上是实现网络文件的共享，在开发的过程中，通常在系统移植的最后一步会制作文件系统，那么这是可以把制作好的文件系统放置在我们开发主机PC的相应位置，开发板通过nfs服务进行挂载，从而测试我们制作的文件系统是否正确，在整个过程中并不需要把文件系统烧录到Flash中去，而且挂载是自动进行挂载的，bootload启动后，kernel运行起来后会根据我们设置的启动参数进行自动挂载，因此，对于开发测试来讲，这种方式非常的方便，能够提高开发效率。(和共享文件差不多)</p>
-<p>nfs建立：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">(1)虚拟机</span><br><span class="line">	  0. 查看是否安装过nfs服务器：</span><br><span class="line">			sudo apt-cache policy nfs-kernel-server</span><br><span class="line">		1. 安装nfs服务器</span><br><span class="line">			sudo apt-get install nfs-kernel-server</span><br><span class="line">		2. 配置nfs服务器</span><br><span class="line">			1) 拷贝day1镜像目录下的根文件系统rootfs.tar.xz到开发主机中的一个目录（例如/source/nfs）</span><br><span class="line">				cp rootfs.tar.xz /source/nfs</span><br><span class="line">			2) 进入到rootfs.tar.xz所对应的目录中</span><br><span class="line">				cd /source/nfs</span><br><span class="line">			3) 解压根文件系统</span><br><span class="line">				tar -xvf rootfs.tar.xz</span><br><span class="line">			4) 进入到rootfs目录，使用pwd确定所对应的绝对路径</span><br><span class="line">				cd rootfs</span><br><span class="line">				pwd  ----&gt; /source/nfs/rootfs   就是用来挂载的共享路径；</span><br><span class="line">				</span><br><span class="line">			5) 修改nfs配置文件 sudo vim  /etc/exports </span><br><span class="line">				在文件的尾部添加代码：</span><br><span class="line">				/source/nfs/rootfs  *(rw,sync,no_root_squash,no_subtree_check)</span><br><span class="line">				注意：路径需要和根文件系统的实际路径一致；</span><br><span class="line"></span><br><span class="line">		3. 启动nfs服务器：</span><br><span class="line">			sudo service nfs-kernel-server restart</span><br><span class="line">				</span><br><span class="line">		4. 测试是否配置成功 </span><br><span class="line">			sudo mount -t nfs localhost:/source/nfs/rootfs/  /mnt/  //测试nfs服务是否安装成功。</span><br><span class="line"></span><br><span class="line">			ls /mnt/  （如果其中的内容和/nfs/rootfs中一致。 表示有挂载成功）</span><br><span class="line"></span><br><span class="line">			sudo umount /mnt   //解除挂载</span><br><span class="line">	</span><br><span class="line">(2) 设置板子nfs:</span><br><span class="line">			1. 设置启动参数：</span><br><span class="line">				set bootcmd tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> bootm 41000000 - 42000000</span><br><span class="line">				set bootargs root=/dev/nfs nfsroot=192.168.12.123:/source/nfs/rootfs rw console=ttySAC2,115200 init=/linuxrc ip=192.168.12.31 clk_ignore_unused=true</span><br><span class="line">				set bootargs root=/dev/nfs nfsroot=192.168.12.123:/source/nfs/rootfs rw console=ttySAC2,115200 init=/linuxrc ip=192.168.12.31 clk_ignore_unused=true</span><br><span class="line">									ubuntuIP              			                                 开发板IP</span><br><span class="line">				saveenv</span><br><span class="line">				</span><br><span class="line">			2、开发板重新启动: 开发板自动进入 下面界面</span><br><span class="line">				[root@farsight ]#   --- 成功</span><br><span class="line">				</span><br><span class="line">				把文件放入虚拟机中Linux的共享目录/source/nfs/rootfs中，开发板中自然会出现这个文件</span><br><span class="line">				在虚拟机中 cp  a.out  /source/nfs/rootfs</span><br><span class="line">				开发板中出现下面界面：</span><br><span class="line">				[root@farsight ]# ls</span><br><span class="line">				1.c      bin      etc      linuxrc  proc     sbin     tmp      var</span><br><span class="line">				a.out    dev      lib      mnt      root     sys      usr</span><br><span class="line">				</span><br><span class="line">		【问题解决】</span><br><span class="line">			5、nfs本机测试没问题，但是挂载到开发板失败</span><br><span class="line">			</span><br><span class="line">				方法一：如果ubuntu是18.04</span><br><span class="line">					/*Ubuntu 18.04 nfs 默认为协议3和协议4，但是 我的uboot 默认启动的是协议2的形式</span><br><span class="line">					如:  /srv/homes    hostname1(rw,sync,no_subtree_check)</span><br><span class="line">					若想要求 nfs 支持协议2，就在/etc/default/nfs-kernel-server末尾加一句：</span><br><span class="line">					RPCNFSDOPTS=&quot;--nfs-version 2,3,4 --debug --syslog&quot;</span><br><span class="line">					*/</span><br><span class="line">				方法二：如果ubuntu是20.04</span><br><span class="line">					1）把nfs配置文件备份</span><br><span class="line">						sudo mv /etc/default/nfs-kernel-server  /etc/default/nfs-kernel-server.back</span><br><span class="line">					2) 替换nfs配置文件</span><br><span class="line">						把day1镜像目录下的nfs-kernel-server拷贝到/etc/default目录下</span><br><span class="line">							sudo cp nfs-kernel-server  /etc/default</span><br><span class="line">					3) 重启nfs服务</span><br><span class="line">						sudo service nfs-kernel-server restart</span><br><span class="line">					4) 重新挂载到开发板</span><br></pre></td></tr></table></figure>
-
-<h3 id="4-3-将系统存储到emmc中"><a href="#4-3-将系统存储到emmc中" class="headerlink" title="4.3 将系统存储到emmc中"></a>4.3 将系统存储到emmc中</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">在sd卡中烧录对应u-boot</span><br><span class="line">		a)	拷贝第一天/镜像文件/ramdisk.img拷贝到虚拟机/tftpboot目录下</span><br><span class="line">		b)	烧写内核镜像到EMMC上</span><br><span class="line">		# tftp 41000000 uImage</span><br><span class="line">		# movi  write  kernel  41000000</span><br><span class="line"></span><br><span class="line">		c)	烧写设备树文件到EMMC上</span><br><span class="line">		# tftp  41000000 exynos4412-fs4412.dtb</span><br><span class="line">		# movi  write  dtb  41000000</span><br><span class="line"></span><br><span class="line">		d)	烧写文件系统镜像到EMMC上</span><br><span class="line">		# tftp  41000000  ramdisk.img</span><br><span class="line">		#movi  write  rootfs  41000000  3000000</span><br><span class="line"></span><br><span class="line">		e)	设置启动参数</span><br><span class="line">		# set bootcmd movi read kernel 41000000<span class="tag">\<span class="name">;</span></span>movi read dtb 42000000<span class="tag">\<span class="name">;</span></span>movi read rootfs 43000000 3000000<span class="tag">\<span class="name">;</span></span>bootm 41000000 43000000 42000000</span><br><span class="line">		# set bootargs</span><br><span class="line">		# saveenv</span><br><span class="line"></span><br><span class="line">		f)	重新启动开发板，u-boot自动加载、执行内核</span><br></pre></td></tr></table></figure> 
+  <h1 id="day43-系统移植简介"><a href="#day43-系统移植简介" class="headerlink" title="day43-系统移植简介"></a><font color="green">day43-系统移植简介</font></h1> 
+      <a class="article-more-link" href="/2023/05/25/day43-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E7%AE%80%E4%BB%8B/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -835,10 +463,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day42-ARM引脚、串口"><a href="#day42-ARM引脚、串口" class="headerlink" title="day42-ARM引脚、串口"></a><font color="green">day42-ARM引脚、串口</font></h1><!--mroe-->
-
-<h2 id="一、ARM引脚控制"><a href="#一、ARM引脚控制" class="headerlink" title="一、ARM引脚控制"></a>一、ARM引脚控制</h2><p>在裸机编程中，想要控制引脚就需要配置该引脚相应的寄存器</p>
- 
+  <h1 id="day42-ARM引脚、串口"><a href="#day42-ARM引脚、串口" class="headerlink" title="day42-ARM引脚、串口"></a><font color="green">day42-ARM引脚、串口</font></h1> 
+      <a class="article-more-link" href="/2023/05/22/day42-ARM%E5%BC%95%E8%84%9A%E3%80%81%E4%B8%B2%E5%8F%A3/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -890,183 +519,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day41-ARM指令"><a href="#day41-ARM指令" class="headerlink" title="day41-ARM指令"></a><font color="green">day41-ARM指令</font></h1><!--mroe-->
-
-<h2 id="一、基本指令"><a href="#一、基本指令" class="headerlink" title="一、基本指令"></a>一、基本指令</h2><ol>
-<li><p>搬移指令：这类指令主要用于在寄存器之间复制数据，或者把立即数值复制到寄存器。</p>
-<ul>
-<li><p><code>MOV</code>: 这个指令将第二个操作数的值复制到第一个操作数（一个寄存器）。例如，<code>MOV r0, r1</code>将把r1寄存器的值复制到r0寄存器。</p>
-</li>
-<li><p><code>MVN</code>: 这个指令将第二个操作数的值取反然后复制到第一个操作数（一个寄存器）。例如，<code>MVN r0, r1</code>将把r1寄存器的值取反，然后将结果复制到r0寄存器。</p>
-</li>
-</ul>
-</li>
-<li><p>逻辑指令：这类指令用于执行逻辑运算，如AND、OR、NOT和XOR。</p>
-<ul>
-<li><code>CMP</code> (Compare): 这个指令用于比较两个操作数的值。它将第一个操作数和第二个操作数相减，然后设置条件代码标志，但不保存结果。例如，<code>CMP r0, r1</code>会比较r0和r1的值。如果r0大于r1，那么会设置大于标志；如果r0等于r1，那么会设置等于标志；如果r0小于r1，那么会设置小于标志。</li>
-</ul>
-</li>
-</ol>
-<blockquote>
-<p><code>CMP</code>主要用于改变程序的状态寄存器（CPSR），包括以下几个标志：</p>
-<p>（1）<strong>Z（零标志）</strong>：如果两个操作数相等，即它们相减的结果为0，那么零标志就会被设置。</p>
-<p>（2）<strong>N（负标志）</strong>：如果第一个操作数小于第二个操作数，那么结果会是负数，此时负标志会被设置。</p>
-<p>（3）<strong>C（进位标志）</strong>：如果在无符号比较中，第一个操作数小于第二个操作数，进位标志会被设置。</p>
-<p>（4）<strong>V（溢出标志）</strong>：如果在有符号比较中发生溢出，溢出标志会被设置。</p>
-<p>在<code>CMP</code>指令后通常会跟随一个条件跳转指令，如<code>BNE</code>（如果上一个比较操作的结果不为零，则跳转），<code>BLT</code>（如果上一个比较操作的结果为负，则跳转）等，这些指令根据CPSR中的标志来决定是否跳转。</p>
-</blockquote>
-<ul>
-<li><p><code>AND</code>: 这个指令将第一个和第二个操作数进行位与运算，然后将结果存入第一个操作数。例如，<code>AND r0, r1</code>将r0和r1的每一位进行与运算，然后将结果存入r0。</p>
-</li>
-<li><p><code>ORR</code>: 这个指令将第一个和第二个操作数进行位或运算，然后将结果存入第一个操作数。例如，<code>ORR r0, r1</code>将r0和r1的每一位进行或运算，然后将结果存入r0。</p>
-</li>
-<li><p><code>EOR</code>: 这个指令将第一个和第二个操作数进行异或运算，然后将结果存入第一个操作数。例如，<code>EOR r0, r1</code>将r0和r1的每一位进行异或运算，然后将结果存入r0。</p>
-</li>
-<li><p><code>BIC</code>: 这个指令将第一个操作数和第二个操作数的反码进行位与运算，然后将结果存入第一个操作数。例如，<code>BIC r0, r1</code>将r0和r1的反码进行与运算，然后将结果存入r0。</p>
-</li>
-<li><p><code>TST</code>: 这个指令用于测试两个操作数的位模式。它将第一个操作数和第二个操作数进行位与运算，然后设置条件代码标志，但不保存结果。例如，TST r0, r1会将r0和r1进行位与运算。如果结果为0，那么会设置零标志；否则，不设置零标志。</p>
-</li>
-</ul>
-<ol start="3">
-<li><p>位移指令：这类指令主要用于在位级别上移动寄存器的值。</p>
-<ul>
-<li><p><code>LSL</code>: 逻辑左移。这个指令将第一个操作数的值左移第二个操作数指定的位数，空出的位用0填充。例如，<code>LSL r0, r1, #2</code>将把r1寄存器的值左移2位，然后将结果存入r0寄存器。</p>
-</li>
-<li><p><code>LSR</code>: 逻辑右移。这个指令将第一个操作数的值右移第二个操作数指定的位数，空出的位用0填充。例如，<code>LSR r0, r1, #2</code>将把r1寄存器的值右移2位，然后将结果存入r0寄存器。</p>
-</li>
-<li><p><code>ROR</code>: 循环右移。这个指令将第一个操作数的值右移第二个操作数指定的位数，从尾部移出的位被插入到头部。例如，ROR r0, r1, #2将把r1寄存器的值右移2位，然后将结果存入r0寄存器。</p>
-</li>
-<li><p><code>RRX</code>: 带扩展的循环右移。这个指令将第一个操作数的值右移一位，将进位标志放入最高有效位，并将最低有效位放入进位标志。例如，RRX r0, r1将把r1寄存器的值右移一位，然后将结果存入r0寄存器。</p>
-</li>
-</ul>
-</li>
-<li><p>加载/存储指令：这些指令用于在存储器和寄存器之间传输数据。最常见的有<code>LDR</code>（Load Register）和<code>STR</code>（Store Register）。</p>
-<blockquote>
-<p>ldr r1,=srcBuf @将标准srcBuf的地址加载到寄存器r1。</p>
-</blockquote>
-<ul>
-<li><code>LDR</code>：从内存中加载数据到寄存器。例如，<code>LDR r0, [r1]</code>将从r1寄存器指向的内存地址加载数据到r0寄存器。也就是r0 = *r1</li>
-<li><code>STR</code>：将寄存器中的数据存储到内存。例如，<code>STR r0, [r1]</code>将把r0寄存器中的数据存储到r1寄存器指向的内存地址。 *r1 = r0</li>
-<li></li>
-</ul>
-</li>
-<li><p>批量操作指令：这些指令允许你一次对多个寄存器进行操作。常见的有<code>LDM</code>（Load Multiple）和<code>STM</code>（Store Multiple）。</p>
-<ul>
-<li><code>LDM</code>：从内存中加载多个寄存器。例如，<code>LDMIA r0!, &#123;r1-r3&#125;</code>会从r0寄存器指向的地址开始连续加载r1, r2, r3这三个寄存器，并且在加载后自动增加r0的值。</li>
-<li><code>STM</code>：将多个寄存器的值存储到内存中。例如，<code>STMIA r0!, &#123;r1-r3&#125;</code>会将r1, r2, r3这三个寄存器的值连续存储到r0寄存器指向的地址开始的内存位置，并且在存储后自动增加r0的值。</li>
-</ul>
-</li>
-<li><p>堆栈指令：堆栈是一种特殊的数据结构，后入先出（LIFO）。ARM汇编中，通常使用<code>PUSH</code>和<code>POP</code>指令操作堆栈。</p>
-<ul>
-<li><code>PUSH</code>：将一个或多个寄存器的值压入堆栈。例如，<code>PUSH &#123;r0, lr&#125;</code>会将r0寄存器和链接寄存器lr的值压入堆栈。</li>
-<li><code>POP</code>：从堆栈中弹出一个或多个值到寄存器。例如，<code>POP &#123;r0, lr&#125;</code>会将堆栈的顶部两个值弹出，分别存入r0寄存器和链接寄存器lr。</li>
-<li><code>STMFD</code>用于函数调用的过程中保存和恢复寄存器的状态。<code>STMFD sp!, &#123;r0-r3, lr&#125;</code>将把r0至r3和lr这些寄存器的值连续存储到栈（由栈指针sp指向的内存）中，并且在存储后自动减小sp的值（因为在ARM中，栈是向下增长的）；</li>
-<li><code>LDMFD</code>用于函数调用的过程中保存和恢复寄存器的状态。<code>LDMFD sp!, &#123;r0-r3, pc&#125;</code>则从栈中加载r0至r3和程序计数器pc的值，并且在加载后自动增加sp的值。</li>
-</ul>
-</li>
-<li><p>软中断指令：<code>SWI</code>（Software Interrupt）指令用于触发软件中断。这通常用于调用操作系统的服务。</p>
-<ul>
-<li><code>SWI</code>：后面跟一个立即数，表示中断号。例如，<code>SWI 0x123456</code>会触发中断号为0x123456的软件中断。</li>
-</ul>
-</li>
-</ol>
-<ol start="8">
-<li>LDMFD/STMFD：这是<code>LDM</code>和<code>STM</code>的特殊形式，通常用于函数调用的过程中保存和恢复寄存器的状态。例如，<code>STMFD sp!, &#123;r0-r3, lr&#125;</code>将把r0至r3和lr这些寄存器的值连续存储到栈（由栈指针sp指向的内存）中，并且在存储后自动减小sp的值（因为在ARM中，栈是向下增长的）；<code>LDMFD sp!, &#123;r0-r3, pc&#125;</code>则从栈中加载r0至r3和程序计数器pc的值，并且在加载后自动增加sp的值。</li>
-</ol>
-<br>
-<br>
-
-<hr>
-<h2 id="二、异常"><a href="#二、异常" class="headerlink" title="二、异常"></a>二、异常</h2><h3 id="2-1-异常简介"><a href="#2-1-异常简介" class="headerlink" title="2.1 异常简介"></a>2.1 异常简介</h3><p>ARM的异常是指任何改变程序正常执行流程的条件或系统事件。</p>
-<p>ARM架构将异常分为两大类：同步异常和异步异常。</p>
-<ul>
-<li>同步异常是由当前执行的指令引起的，例如未定义指令，数据终止，或者系统调用等。</li>
-<li>异步异常是由外部事件引起的，例如中断或者调试请求等。</li>
-</ul>
-<p>当发生异常时，处理器会停止当前执行的代码，跳转到一个专门处理该异常的代码段，称为<strong>异常处理程序</strong>。每种异常类型都有自己的<strong>异常向量表</strong>。</p>
-<p>ARM架构还引入了不同的<strong>特权级别</strong>和<strong>异常级别</strong>来控制软件对系统和处理器资源的访问权限。</p>
-<ul>
-<li>特权级别决定了软件实体可以看到和控制哪些处理器资源。</li>
-<li>异常级别表示当前处理器处于哪种特权级别。只有在发生异常或者从异常返回时，当前的特权级别才会改变。<h3 id="2-2-异常向量表"><a href="#2-2-异常向量表" class="headerlink" title="2.2 异常向量表"></a>2.2 异常向量表</h3><ul>
-<li>ARM的异常向量表是一个存储<strong>异常处理程序地址</strong>的内存区域。</li>
-</ul>
-</li>
-<li>每个<strong>异常级别</strong>（EL3，EL2，EL1）都有自己的向量表。</li>
-<li>向量表中的每个条目包含一个要执行的指令，通常是一个跳转到完整异常处理程序的分支指令。</li>
-<li>向量表中的每个条目占16个指令（在ARMv7-A和AArch32中，每个条目只占4个字节）。<ul>
-<li>向量表的基地址由<strong>向量基址寄存器</strong>（VBAR_EL3，VBAR_EL2和VBAR_EL1）给出。</li>
-</ul>
-</li>
-<li>每个条目相对于基地址有一个固定的偏移量。</li>
-<li>向量表有16个条目，每个条目占128字节（32个指令）。<ul>
-<li>使用哪个条目取决于以下几个因素：</li>
-</ul>
-</li>
-<li>异常类型（SError，FIQ，IRQ或同步）</li>
-<li>如果在同一异常级别发生异常，要使用的栈指针（SP0或SPn）</li>
-<li>如果在较低异常级别发生异常，下一较低级别的执行状态（AArch64或AArch32）</li>
-</ul>
-<p><img src="/2023/05/17/day41-ARM%E6%8C%87%E4%BB%A4/error.png" alt="异常向量表"></p>
-<blockquote>
-<p>异常指定了优先级和固定的服务顺序:</p>
-<ul>
-<li>Reset（复位）</li>
-<li>Data Abort（数据中止）</li>
-<li>FIQ（快中断）</li>
-<li>IRQ（中断）</li>
-<li>Prefetch About（预取中止）</li>
-<li>SWI（软中断）</li>
-<li>Undefined instruction（未定义指令）</li>
-</ul>
-</blockquote>
-<h3 id="2-3-异常过程"><a href="#2-3-异常过程" class="headerlink" title="2.3 异常过程"></a>2.3 异常过程</h3><ul>
-<li>ARM的异常处理过程是通过一个称为<strong>向量表</strong>的内存区域来控制的。<ul>
-<li>向量表通常位于内存映射的底部，从0x0到0x1c。</li>
-<li>每种异常类型在向量表中分配一个字，该字包含一个分支指令或者一个异常处理程序的地址。</li>
-</ul>
-</li>
-</ul>
-<p>用一个”Undefined Instruction”异常作为示例：</p>
-<ol>
-<li><p>当执行到无效的指令时，会引发一个”Undefined Instruction”异常。</p>
-</li>
-<li><p>ARM核心首先会停止当前指令的执行，并将异常指令的地址+4（如果在ARM状态下）或者+2（如果在Thumb状态下）保存到LR中。</p>
-</li>
-<li><p>接着，ARM核心会将CPSR的值保存到SPSR中，切换到Undefined模式，并更新CPSR的值以反映新的状态。这包括将模式位设置为Undefined模式，禁用一些或所有中断，并设置适当的指令集。</p>
-</li>
-<li><p>然后，ARM核心会将PC寄存器设置为”Undefined Instruction”异常向量的地址（通常是0x00000004），并开始执行位于该地址的异常处理程序。</p>
-</li>
-<li><p>在开始执行异常处理程序前，会使用STMFD SP!, {R0-R12, LR}指令将当前的寄存器状态保存到堆栈中。</p>
-</li>
-<li><p>异常处理程序执行完毕后，会使用LDMFD SP!, {R0-R12, PC}^指令从堆栈中恢复之前保存的寄存器状态。</p>
-</li>
-<li><p>最后，异常处理程序通过将SPSR的值复制回CPSR，并将LR的值复制回PC，从而恢复到异常发生前的状态，并继续执行下一个指令。</p>
-</li>
-</ol>
-<p>下面是ASM的异常标准格式：<br>.word 是汇编语言中的一个伪指令，它用于在内存中存储一个固定大小的数据。在大多数汇编语言中，.word 通常用于存储一个整数或者一个地址。(一般是存储过大的立即数)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">    .global  delay1s </span><br><span class="line">    .text     </span><br><span class="line">    .global _start</span><br><span class="line">_start:</span><br><span class="line">		b		reset                        @0x00</span><br><span class="line">		ldr		pc,_undefined_instruction  @0x04</span><br><span class="line">		ldr		pc,_software_interrupt     </span><br><span class="line">		ldr		pc,_prefetch_abort</span><br><span class="line">		ldr		pc,_data_abort</span><br><span class="line">		ldr		pc,_not_used</span><br><span class="line">		ldr		pc,_irq</span><br><span class="line">		ldr		pc,_fiq</span><br><span class="line"></span><br><span class="line">_undefined_instruction: .word  _undefined_instruction</span><br><span class="line">_software_interrupt:	.word  _software_interrupt</span><br><span class="line">_prefetch_abort:		.word  _prefetch_abort</span><br><span class="line">_data_abort:			.word  _data_abort</span><br><span class="line">_not_used:				.word  _not_used</span><br><span class="line">_irq:					.word  _irq </span><br><span class="line">_fiq:					.word  _fiq</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">reset: </span><br><span class="line">	ldr	r0,&#x3D;0x40008000      @设置异常向量表的起始地址为0x40008000，也就是开始位置</span><br><span class="line">	mcr	p15,0,r0,c12,c0,0		@ Vector Base Address Register  修改异常向量表的起始地址</span><br><span class="line"></span><br><span class="line">init_stack:</span><br><span class="line">	ldr		r0,stacktop         &#x2F;*这样做的目的是使得每个模式都有自己的独立堆栈空间，这样当处理器在不同模式之间切换时，每个模式的堆栈上下文都能被保留，从而避免了上下文切换时的混乱。*&#x2F;</span><br><span class="line"></span><br><span class="line">	&#x2F;********svc mode stack********&#x2F;</span><br><span class="line">		mov		sp,r0</span><br><span class="line">		sub		r0,#128*4          &#x2F;*512 byte  for irq mode of stack*&#x2F;</span><br><span class="line">	&#x2F;****irq mode stack**&#x2F;</span><br><span class="line">		msr		cpsr,#0xd2</span><br><span class="line">		mov		sp,r0</span><br><span class="line">		sub		r0,#128*4          &#x2F;*512 byte  for irq mode of stack*&#x2F;</span><br><span class="line">	&#x2F;***fiq mode stack***&#x2F;</span><br><span class="line">		msr 	cpsr,#0xd1</span><br><span class="line">		mov		sp,r0</span><br><span class="line">		sub		r0,#0</span><br><span class="line">	&#x2F;***abort mode stack***&#x2F;</span><br><span class="line">		msr		cpsr,#0xd7</span><br><span class="line">		mov		sp,r0</span><br><span class="line">		sub		r0,#0</span><br><span class="line">	&#x2F;***undefine mode stack***&#x2F;</span><br><span class="line">		msr		cpsr,#0xdb</span><br><span class="line">		mov		sp,r0</span><br><span class="line">		sub		r0,#0</span><br><span class="line">   &#x2F;*** sys mode and usr mode stack ***&#x2F;</span><br><span class="line">		msr		cpsr,#0x10</span><br><span class="line">		mov		sp,r0             &#x2F;*1024 byte  for user mode of stack*&#x2F;</span><br><span class="line"></span><br><span class="line">		b		main    &#x2F;*跳转到c的main函数*&#x2F;</span><br><span class="line"></span><br><span class="line">delay1s:</span><br><span class="line">     ldr      r4,&#x3D;0x1ffffff   </span><br><span class="line">delay1s_loop:</span><br><span class="line">     sub    r4,r4,#1</span><br><span class="line">     cmp   r4,#0         </span><br><span class="line">     bne    delay1s_loop</span><br><span class="line">     mov   pc,lr	</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	.align	4</span><br><span class="line"></span><br><span class="line">	&#x2F;****  swi_interrupt handler  ****&#x2F;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">stacktop:    .word 		stack+4*512</span><br><span class="line"></span><br><span class="line">.data</span><br><span class="line"></span><br><span class="line">stack:	</span><br><span class="line">  .space  4*512</span><br><span class="line">.end</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<h2 id="三、汇编和c的混合编写"><a href="#三、汇编和c的混合编写" class="headerlink" title="三、汇编和c的混合编写"></a>三、汇编和c的混合编写</h2><h3 id="3-1-内联汇编"><a href="#3-1-内联汇编" class="headerlink" title="3.1 内联汇编"></a>3.1 内联汇编</h3><p>在C语言中，可以使用<code>asm</code>关键字将汇编代码嵌入到C代码中。这种方式被称为内联汇编。一个简单的例子如下(汇编用的ARM)：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result;</span><br><span class="line">    __asm__(<span class="string">&quot;add %0, %1, %2&quot;</span></span><br><span class="line">            : <span class="string">&quot;=r&quot;</span> (result)</span><br><span class="line">            : <span class="string">&quot;r&quot;</span> (a), <span class="string">&quot;r&quot;</span> (b)</span><br><span class="line">            );</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = add(<span class="number">5</span>, <span class="number">10</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;The result is %d\n&quot;</span>, result);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//在这个例子中，__asm__关键字后面的字符串是我们插入的汇编代码。&quot;add %0, %1, %2&quot;是一条ARM加法指令，它将%1和%2的值相加，然后将结果存储在%0中。%0、%1和%2是我们用来引用C变量的占位符，它们在后面的冒号后的列表中定义。=r、r和r是约束，它们告诉编译器result、a和b都应该在通用寄存器中。</span></span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-2-联合编译"><a href="#3-2-联合编译" class="headerlink" title="3.2 联合编译"></a>3.2 联合编译</h3><p>在汇编代码中跳转到C的main函数，这种情况通常发生在引导加载器或者内核代码中。</p>
-<p>这种需要用到相关makefile和lds脚本。</p>
-<p>这里提供点亮led灯的两个makefile和lds(linux下)：</p>
-<p>makefile：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">all:</span><br><span class="line">	arm-none-linux-gnueabi-gcc -fno-builtin -nostdinc -c -o start.o start.s</span><br><span class="line">	arm-none-linux-gnueabi-gcc -fno-builtin -nostdinc -c -o main.o main.c</span><br><span class="line">	arm-none-linux-gnueabi-ld start.o main.o -Tmap.lds -o led.elf</span><br><span class="line">	arm-none-linux-gnueabi-objcopy -O binary led.elf led.bin</span><br><span class="line">	arm-none-linux-gnueabi-objdump -D led.elf &gt; led.dis</span><br><span class="line">clean:</span><br><span class="line">	rm -rf *.bak *.o *.elf *.dis *.bin</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>lds:</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">/*linux下的连接脚本模板*/</span><br><span class="line">OUTPUT_FORMAT(&quot;elf32-littlearm&quot;, &quot;elf32-littlearm&quot;, &quot;elf32-littlearm&quot;) /*指定输出可执行文件是elf格式，32位ARM指令，小端*/</span><br><span class="line">OUTPUT_ARCH(arm)  /*指定输出可执行文件的平台(arm平台)*/</span><br><span class="line">ENTRY(_start)     /*指定连接之后第一条指令的地址为_start*/</span><br><span class="line">SECTIONS  /*指定连接之后的代码段(.text) 数据段(.data) .bss段如何摆放*/</span><br><span class="line">&#123;</span><br><span class="line">	. = 0x40008000; /*指定链接的起始地址 从0x40008000地址开始摆放*/</span><br><span class="line">	. = ALIGN(4);   /*指令对齐(4字节对齐)*/</span><br><span class="line">	.text      :    /*代码段开始*/</span><br><span class="line">	&#123;</span><br><span class="line">		start.o(.text)  /*0x40008000地址放start.o对应的start.s的第一条指令*/</span><br><span class="line">		*(.text)        /* *：其他的*.o文件系统自动安排位置*/</span><br><span class="line">	&#125;</span><br><span class="line">	. = ALIGN(4);</span><br><span class="line">    .data :         /*数据段开始*/</span><br><span class="line">	&#123; *(.data) &#125;    /*数据段也让系统自动分配*/</span><br><span class="line">    . = ALIGN(4);</span><br><span class="line">    .bss :</span><br><span class="line">     &#123; *(.bss) &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-3-外部函数声明"><a href="#3-3-外部函数声明" class="headerlink" title="3.3 外部函数声明"></a>3.3 外部函数声明</h3><p>假设你有一个名为<code>add.s</code>的汇编文件，其中定义了一个加法函数：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.global add</span><br><span class="line">add:</span><br><span class="line">    add r0, r1, r2</span><br><span class="line">    bx lr</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<p>然后，你可以在你的C代码中使用外部函数声明来调用这个汇编函数：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">extern</span> <span class="keyword">int</span> <span class="title">add</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> result = add(<span class="number">5</span>, <span class="number">10</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;The result is %d\n&quot;</span>, result);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure> 
+  <h1 id="day41-ARM指令"><a href="#day41-ARM指令" class="headerlink" title="day41-ARM指令"></a><font color="green">day41-ARM指令</font></h1> 
+      <a class="article-more-link" href="/2023/05/17/day41-ARM%E6%8C%87%E4%BB%A4/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -1118,252 +575,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day40-ARM简介"><a href="#day40-ARM简介" class="headerlink" title="day40-ARM简介"></a><font color="green">day40-ARM简介</font></h1><!--mroe-->
-
-<h2 id="一、ARM基础知识"><a href="#一、ARM基础知识" class="headerlink" title="一、ARM基础知识"></a>一、ARM基础知识</h2><h3 id="1-1变量"><a href="#1-1变量" class="headerlink" title="1.1变量"></a>1.1变量</h3><p>ARM处理器采用32位架构，这意味着它可以一次处理32位（4字节）的数据，**<font color="red">ARM的地址0X00000000是以字节为单位的，即PC每次移动4字节</font>**。ARM处理器也支持8位（1字节）和16位（2字节）的数据类型，分别称为字节（byte）和半字（halfword）。在ARM中，一个字（word）是32位（4字节）的数据类型。</p>
-<p>在C语言中，我们可以使用不同的数据类型来定义变量，例如char，short，int，long等。这些数据类型在不同的编译器和平台下可能有不同的大小。例如，在一个32位的ARM平台上，一个char类型的变量占用1个字节，一个short类型的变量占用2个字节，一个int类型的变量占用4个字节，一个long类型的变量也占用4个字节。但是，在一个64位的ARM平台上，一个long类型的变量可能占用8个字节。</p>
-<p>为了避免这种不确定性，我们可以使用C99标准提供的固定宽度整数类型，例如int8_t，int16_t，int32_t等。这些类型可以保证在不同的平台下具有相同的大小和符号性。例如，在任何平台上，一个int8_t类型的变量都占用1个字节，并且是有符号的。</p>
-<h3 id="1-2指令集"><a href="#1-2指令集" class="headerlink" title="1.2指令集"></a>1.2指令集</h3><p>指令集是一组定义了处理器能够执行的操作的指令。不同的处理器可能有不同的指令集。ARM处理器提供了三种指令集：ARM指令集，Thumb指令集和Thumb-2指令集。</p>
-<ul>
-<li>ARM指令集：这是最早和最基本的指令集，它包含了一些32位宽度的指令。这些指令可以实现复杂和强大的功能，但是也占用较多的内存空间。</li>
-<li>Thumb指令集：这是为了优化内存使用而设计的指令集，它包含了一些16位宽度的指令。这些指令可以实现简单和常用的功能，但是也牺牲了一些灵活性和性能。</li>
-<li>Thumb-2指令集：这是为了兼顾内存使用和性能而设计的指令集，它包含了一些16位和32位混合宽度的指令。这些指令可以实现大部分ARM指令集和Thumb指令集的功能，并且提供了更多的优化选项。</li>
-</ul>
-<h3 id="1-3工作模式"><a href="#1-3工作模式" class="headerlink" title="1.3工作模式"></a>1.3工作模式</h3><table>
-<thead>
-<tr>
-<th align="center">工作模式</th>
-<th align="center">特权级别</th>
-<th align="center">寄存器集合</th>
-<th align="center">异常处理</th>
-<th align="center">作用</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">用户模式</td>
-<td align="center">非特权</td>
-<td align="center">R0-R15</td>
-<td align="center">无</td>
-<td align="center">正常执行程序，不能直接访问硬件资源或切换模式</td>
-</tr>
-<tr>
-<td align="center">系统模式</td>
-<td align="center">特权</td>
-<td align="center">R0-R15</td>
-<td align="center">无</td>
-<td align="center">运行具有特权的操作系统任务，可以访问所有系统资源</td>
-</tr>
-<tr>
-<td align="center">快速中断模式</td>
-<td align="center">特权</td>
-<td align="center">R0-R7, R8_fiq-R14_fiq, SPSR_fiq, R15</td>
-<td align="center">处理高速数据传输或通道处理</td>
-<td align="center">处理高优先级的中断请求，拥有独立的寄存器集合</td>
-</tr>
-<tr>
-<td align="center">外部中断模式</td>
-<td align="center">特权</td>
-<td align="center">R0-R12, R13_irq, R14_irq, SPSR_irq, R15</td>
-<td align="center">处理一般情况下的中断</td>
-<td align="center">处理低优先级的中断请求，共享寄存器集合</td>
-</tr>
-<tr>
-<td align="center">管理模式</td>
-<td align="center">特权</td>
-<td align="center">R0-R12, R13_svc, R14_svc, SPSR_svc, R15</td>
-<td align="center">处理软件中断或系统初始化</td>
-<td align="center">操作系统使用的保护模式，处理软件中断或系统调用</td>
-</tr>
-<tr>
-<td align="center">数据访问终止模式</td>
-<td align="center">特权</td>
-<td align="center">R0-R12, R13_abt, R14_abt, SPSR_abt, R15</td>
-<td align="center">处理存储器故障或实现虚拟存储器和存储器保护</td>
-<td align="center">当数据或指令预取终止时进入该模式，可用于虚拟存储或存储保护</td>
-</tr>
-<tr>
-<td align="center">未定义指令中止模式</td>
-<td align="center">特权</td>
-<td align="center">R0-R12, R13_und, R14_und, SPSR_und, R15</td>
-<td align="center">处理未定义的指令或支持硬件协处理器的软件仿真</td>
-<td align="center">当执行未定义指令时进入该模式，可用于支持硬件协处理器的软件仿真</td>
-</tr>
-</tbody></table>
-<h3 id="1-4寄存器"><a href="#1-4寄存器" class="headerlink" title="1.4寄存器"></a>1.4寄存器</h3><p>寄存器是处理器内部的一种高速存储单元，它可以用来存放数据、指令、地址或状态信息。寄存器的访问速度比内存快得多，因此处理器通常会把频繁使用的数据或指令放在寄存器中，以提高执行效率。</p>
-<h4 id="ARM有哪些寄存器？"><a href="#ARM有哪些寄存器？" class="headerlink" title="ARM有哪些寄存器？"></a>ARM有哪些寄存器？</h4><p>ARM处理器一般共有37个寄存器，其中包括：</p>
-<ul>
-<li>31个通用寄存器，包括程序计数器（PC）在内，都是32位的寄存器。</li>
-<li>6个状态寄存器，都是32位的寄存器，但只使用了其中的12位。</li>
-</ul>
-<p>ARM处理器共有7种不同的处理器模式，在每一种处理器模式中有一组相应的寄存器。在任意一种处理器模式下，可见的寄存器包括15个通用寄存器（R0~R14）、一个或者二个状态寄存器以及程序计数器（PC）。在所有的寄存器中，有些是各模式共用同一个物理寄存器，有些寄存器是各个模式自己拥有独立的物理寄存器。</p>
-<h4 id="ARM通用寄存器有什么作用？"><a href="#ARM通用寄存器有什么作用？" class="headerlink" title="ARM通用寄存器有什么作用？"></a>ARM通用寄存器有什么作用？</h4><p>ARM通用寄存器（R0-R15）可分为三类：不分组寄存器R0~R7；分组寄存器R8~R14；程序计数器PC。</p>
-<ul>
-<li>不分组寄存器R0~R7</li>
-</ul>
-<p>不分组寄存器R0~R7在所有处理器模式下，它们每一个都访问一样的32位寄存器。它们是真正的通用寄存器，没有体系结构所隐含的特殊用途。根据“ARM-thumb过程调用标准”，R0-R3用作传入函数参数，传出函数返回值。在子程序调用之间，可以将R0-R3用于任何用途。被调用函数在返回之前不必恢复R0-R3。如果调用函数需要再次使用R0-R3的内容，则它必须保留这些内容。</p>
-<ul>
-<li>分组寄存器R8~R14</li>
-</ul>
-<p>分组寄存器R8～R14对应的物理寄存器取决于当前的处理器模式。要访问特定的物理寄存器而不依赖当前的处理器模式，则要使用规定的名字。寄存器R8~R12各有两组物理寄存器：一组为FIQ模式，另一组为除了FIQ以外的所有模式。根据“ARM-thumb过程调用标准”，R4-R11被用来存放函数的局部变量。如果被调用函数使用了这些寄存器，它在返回之前必须恢复这些寄存器的值。在Thumb程序中，通常只能使用R4-R7来保存局部变量。寄存器R12用作子程序间暂时寄存器IP。它在过程链接胶合代码（例如，交互操作胶合代码）中用于此角色。在过程调用之间，可以将它用于任何用途。被调用函数在返回之前不必恢复R12。</p>
-<ul>
-<li>程序计数器PC</li>
-</ul>
-<p>程序计数器PC是通用寄存器中最特殊的一个，它总是指向当前正在执行指令后面两条指令处（因为ARM采用了流水线机制）。PC不能直接参与算术运算或逻辑运算，在某些情况下可以将PC当作一个普通地址来读取或写入数据。</p>
-<h2 id="什么是状态寄存器？"><a href="#什么是状态寄存器？" class="headerlink" title="什么是状态寄存器？"></a>什么是状态寄存器？</h2><p>状态寄存器是ARM处理器中用来保存当前程序运行时的状态信息的寄存器。状态寄存器有两种类型：当前程序状态寄存器（CPSR）和保存程序状态寄存器（SPSR）。CPSR是所有处理器模式下都可访问的，而SPSR只有在异常模式下才有，并且每种异常模式都有一个对应的SPSR。当异常发生时，SPSR用于保存CPSR的内容，以便在异常返回后恢复原来的状态。</p>
-<h4 id="CPSR有哪些字段？"><a href="#CPSR有哪些字段？" class="headerlink" title="CPSR有哪些字段？"></a>CPSR有哪些字段？</h4><p>CPSR是一个32位的寄存器，它可以分为四个8位的区域：标志域（F）、状态域（S）、扩展域（X）和控制域（C）。每个区域都有一些特定的位，用来表示不同的信息。下面是CPSR的结构图：</p>
-<p><img src="/2023/05/16/day40-ARM%E7%AE%80%E4%BB%8B/cpsr.png" alt="CPSR结构图"></p>
-<ul>
-<li>标志域（F）</li>
-</ul>
-<p>标志域包含四个条件码标志位：N、Z、C、V。这些标志位用来表示算术或逻辑运算的结果的特征，例如是否为负数、是否为零、是否有进位或借位、是否有溢出等。这些标志位可以用来控制指令的条件执行，例如BEQ表示如果Z为1则跳转，BGT表示如果N和V相同且Z为0则跳转等。</p>
-<ul>
-<li>状态域（S）</li>
-</ul>
-<p>状态域包含一些与处理器模式相关的位，例如Q、J、T、GE[3:0]等。这些位用来表示处理器的一些特殊状态，例如是否发生饱和运算、是否处于Jazelle模式、是否处于Thumb模式、是否有SIMD运算大于等于等。</p>
-<ul>
-<li>扩展域（X）</li>
-</ul>
-<p>扩展域包含一些与处理器扩展相关的位，例如IT[7:0]、E等。这些位用来表示处理器的一些扩展功能，例如是否处于Thumb-2 if-then块中、是否使用大端字节序等。</p>
-<ul>
-<li>控制域（C）</li>
-</ul>
-<p>控制域包含一些与处理器控制相关的位，例如I、F、M[4:0]等。这些位用来表示处理器的一些控制选项，例如是否屏蔽中断、是否屏蔽快速中断、当前处于哪种处理器模式等。</p>
-<h4 id="SPSR有哪些作用？"><a href="#SPSR有哪些作用？" class="headerlink" title="SPSR有哪些作用？"></a>SPSR有哪些作用？</h4><p>SPSR是保存程序状态寄存器，它只有在异常模式下才存在，并且每种异常模式都有一个对应的SPSR。当异常发生时，SPSR会自动保存CPSR的内容，以便在异常返回后恢复原来的状态。SPSR和CPSR具有相同的结构和字段，只是不能直接访问或修改。要访问或修改SPSR，必须使用专门的指令MRS或MSR，并指定要操作的字段。</p>
-<h4 id="NZCV"><a href="#NZCV" class="headerlink" title="NZCV"></a>NZCV</h4><p>NZCV是CPSR寄存器中的标志域（F）的四个条件码标志位，它们分别表示：</p>
-<ul>
-<li>N：负数标志位（Negative）。当算术或逻辑运算的结果为负数时，N=1；当结果为非负数时，N=0。例如，如果执行<code>SUBS R0, R1, R2</code>指令后，R0的值为0xFFFFFFFF，则N=1；如果R0的值为0x00000001，则N=0。</li>
-<li>Z：零标志位（Zero）。当算术或逻辑运算的结果为零时，Z=1；当结果为非零时，Z=0。例如，如果执行<code>SUBS R0, R1, R2</code>指令后，R0的值为0x00000000，则Z=1；如果R0的值为0x00000001，则Z=0。</li>
-<li>C：进位标志位（Carry）。当算术或逻辑运算产生进位或借位时，C=1；当没有进位或借位时，C=0。例如，如果执行<code>ADDS R0, R1, R2</code>指令后，R1和R2的最高位相加产生进位，则C=1；如果没有进位，则C=0。如果执行SUBS R0, R1, R2指令后，R1小于R2产生借位，则C=0；如果没有借位，则C=1。</li>
-<li>V：溢出标志位（Overflow）。当算术或逻辑运算产生有符号数溢出时，V=1；当没有溢出时，V=0。例如，如果执行<code>ADDS R0, R1, R2</code>指令后，R1和R2的符号相同，但是R0的符号与它们不同，则V=1；如果没有这种情况，则V=0。如果执行SUBS R0, R1, R2指令后，R1和R2的符号不同，但是R0的符号与R2相同，则V=1；如果没有这种情况，则V=0。<br>这四个标志位可以用来控制指令的条件执行，例如：</li>
-</ul>
-<blockquote>
-<p>BEQ：如果Z=1，则跳转到指定地址。<br>BNE：如果Z=0，则跳转到指定地址。<br>BCS：如果C=1，则跳转到指定地址。<br>BCC：如果C=0，则跳转到指定地址。<br>BMI：如果N=1，则跳转到指定地址。<br>BPL：如果N=0，则跳转到指定地址。<br>BVS：如果V=1，则跳转到指定地址。<br>BVC：如果V=0，则跳转到指定地址。</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="二、ARM指令系统语法格式"><a href="#二、ARM指令系统语法格式" class="headerlink" title="二、ARM指令系统语法格式"></a>二、ARM指令系统语法格式</h2><h3 id="2-1-语法格式"><a href="#2-1-语法格式" class="headerlink" title="2.1 语法格式"></a>2.1 语法格式</h3><p>一条ARM指令语法格式分为如下几个部分：</p>
-<blockquote>
-<p>&lt;opcode&gt; {&lt;cond&gt;} {S} &lt;Rd&gt;,&lt;Rn&gt; {,<shifter_operand>}</shifter_operand></p>
-</blockquote>
-<p>其中，&lt;&gt;内的项是必须的， {}内的项是可选的，如&lt;opcode&gt;是指令助记符，是必须的，而 {&lt;cond&gt;}为指令执行条件，是可选的，如果不写则使用默认条件AL (无条件执行)。</p>
-<p>编码后的机器码格式如下所示：<br><img src="/2023/05/16/day40-ARM%E7%AE%80%E4%BB%8B/%E6%8C%87%E4%BB%A4%E6%A0%BC%E5%BC%8F.png" alt="指令格式"></p>
-<p>（1）Opcode 指令助记符，如LDR，STR 等</p>
-<p>（2）Cond 执行条件，如EQ，NE 等</p>
-<p>（3）S 是否影响CPSR 寄存器的值，书写时影响CPSR，否则不影响</p>
-<p>（4）Rd 目标寄存器</p>
-<p>（5）Rn 第一个操作数的寄存器</p>
-<p>（6）shifter_operand 第二个操作数</p>
-<p>仔细看表格中的shifter_operand所占的位数：12位。</p>
-<p>要用一个12位的编码来表示任意的32位数是绝对不可能的 （12位数有2^12^种可能，而32位数有 2^32^ 种）。 但是又要用12位的编码来表示32位数，怎么办？ 只有在表示数的数量上做限制。 通过编码来实现用12位的编码来表示32位数。</p>
-<h3 id="2-2-编码显示"><a href="#2-2-编码显示" class="headerlink" title="2.2 编码显示"></a>2.2 编码显示</h3><h4 id="合法立即数"><a href="#合法立即数" class="headerlink" title="合法立即数"></a>合法立即数</h4><p>ARM中采用了一种叫做modified immediate constants的方法，来扩展立即数的范围。这种方法是把12位分成两部分，8位用来表示一个常数（immed_8），4位用来表示一个循环右移的次数（rotate_imm）。</p>
-<p>循环右移就是把一个二进制数的最右边的一位移到最左边，然后重复这个操作若干次。比如00010011循环右移一次就变成10001001，再循环右移一次就变成01000100。</p>
-<p>通过这种方法，可以用8位常数循环右移偶数次（0到30次），来生成一些32位的数值。比如00000000000000000000000011111111（255）可以循环右移16次，得到11111111000000000000000000000000（4278190080）。</p>
-<p>这样就可以用12位来编码一些32位的立即数了。但是并不是所有的32位数都可以用这种方法表示，只有符合一定规律的才可以。比如必须是8个连续的1或0，然后循环移动偶数次。</p>
-<p>所以在ARM中，有些立即数是合法的，有些是非法的。合法的立即数就是能用modified immediate constants方法表示的，非法的就是不能用这种方法表示的。判断一个立即数是否合法，可以先看它是否在0到255之间，如果是，就直接用8位表示，不需要移动。如果不是，就看它是否能由一个8位常数循环右移偶数次得到，并且移动次数最小。如果能，就用8位常数和移动次数表示。如果不能，就说明它是非法的立即数。</p>
-<h4 id="非法立即数"><a href="#非法立即数" class="headerlink" title="非法立即数"></a>非法立即数</h4><p>为了处理非法立即数，有以下几种常用的方法：</p>
-<ul>
-<li>使用LDR伪指令，把非法立即数放在代码段或数据段中，然后用LDR指令从内存中加载到寄存器中。比如LDR R1, =0x12345678。</li>
-<li>使用多条指令，把非法立即数分成几个合法的立即数，然后用移位和逻辑运算组合起来。比如MOV R1, #0x12000000; ORR R1, R1, #0x3456; LSL R1, R1, #8; ORR R1, R1, #0x78。</li>
-<li>使用协处理器指令MCR或MRC，把非法立即数写入或读出协处理器的寄存器中。比如MCR P15, 0, R1, C2, C0, 0; LDR R1, =0x12345678; MCR P15, 0, R1, C2, C0, 0。</li>
-</ul>
-<br>
-<br>
-
-<hr>
-<h2 id="三、-ARM条件指令"><a href="#三、-ARM条件指令" class="headerlink" title="三、 ARM条件指令"></a>三、 ARM条件指令</h2><h3 id="3-1-条件执行指令码"><a href="#3-1-条件执行指令码" class="headerlink" title="3.1 条件执行指令码"></a>3.1 条件执行指令码</h3><h4 id="什么是条件执行指令码？"><a href="#什么是条件执行指令码？" class="headerlink" title="什么是条件执行指令码？"></a>什么是条件执行指令码？</h4><p>条件执行指令码是指在ARM指令中附加的一个两位或三位的后缀，用来表示该指令是否根据某些条件来执行。条件执行指令码可以用来实现条件判断语句，避免不必要的跳转，提高代码的效率和可读性。</p>
-<h4 id="条件执行指令码有哪些？"><a href="#条件执行指令码有哪些？" class="headerlink" title="条件执行指令码有哪些？"></a>条件执行指令码有哪些？</h4><p>条件执行指令码有以下几种：</p>
-<table>
-<thead>
-<tr>
-<th align="center">后缀</th>
-<th align="center">标志寄存器</th>
-<th align="center">含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">EQ</td>
-<td align="center">Z == 1</td>
-<td align="center">等于</td>
-</tr>
-<tr>
-<td align="center">NE</td>
-<td align="center">Z == 0</td>
-<td align="center">不等于</td>
-</tr>
-<tr>
-<td align="center">CS/HS</td>
-<td align="center">C == 1</td>
-<td align="center">无符号大于或等于</td>
-</tr>
-<tr>
-<td align="center">CC/LO</td>
-<td align="center">C == 0</td>
-<td align="center">无符号小于</td>
-</tr>
-<tr>
-<td align="center">MI</td>
-<td align="center">N == 1</td>
-<td align="center">负数</td>
-</tr>
-<tr>
-<td align="center">PL</td>
-<td align="center">N == 0</td>
-<td align="center">正数或零</td>
-</tr>
-<tr>
-<td align="center">VS</td>
-<td align="center">V == 1</td>
-<td align="center">溢出</td>
-</tr>
-<tr>
-<td align="center">VC</td>
-<td align="center">V == 0</td>
-<td align="center">无溢出</td>
-</tr>
-<tr>
-<td align="center">HI</td>
-<td align="center">C == 1 &amp;&amp; Z == 0</td>
-<td align="center">无符号大于</td>
-</tr>
-<tr>
-<td align="center">LS</td>
-<td align="center">C == 0</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">GE</td>
-<td align="center">N == V</td>
-<td align="center">有符号大于或等于</td>
-</tr>
-<tr>
-<td align="center">LT</td>
-<td align="center">N != V</td>
-<td align="center">有符号小于</td>
-</tr>
-<tr>
-<td align="center">GT</td>
-<td align="center">Z == 0 &amp;&amp; N == V</td>
-<td align="center">有符号大于</td>
-</tr>
-<tr>
-<td align="center">LE</td>
-<td align="center">Z == 1</td>
-<td align="center"></td>
-</tr>
-<tr>
-<td align="center">AL</td>
-<td align="center">任何情况</td>
-<td align="center">始终</td>
-</tr>
-</tbody></table>
-<h4 id="如何使用条件执行指令码？"><a href="#如何使用条件执行指令码？" class="headerlink" title="如何使用条件执行指令码？"></a>如何使用条件执行指令码？</h4><p>条件执行指令码可以附加在任何ARM指令的操作码后面，表示该指令只有在满足相应的条件时才执行，否则不执行。例如，以下代码表示如果R0和R1相等，则将R2和R3相加，并将结果保存在R4中：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CMP R0, R1</span><br><span class="line">ADDEQ R4, R2, R3</span><br></pre></td></tr></table></figure>
-<p>如果不使用条件执行指令码，上面的代码可以用以下方式实现：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CMP R0, R1</span><br><span class="line">BNE skip</span><br><span class="line">ADD R4, R2, R3</span><br><span class="line">skip:</span><br></pre></td></tr></table></figure>
-<p>可以看出，使用条件执行指令码可以减少一条跳转指令，简化代码的结构。</p>
- 
+  <h1 id="day40-ARM简介"><a href="#day40-ARM简介" class="headerlink" title="day40-ARM简介"></a><font color="green">day40-ARM简介</font></h1> 
+      <a class="article-more-link" href="/2023/05/16/day40-ARM%E7%AE%80%E4%BB%8B/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>
@@ -1397,7 +613,7 @@ void module2_func(void) &#123;
        
 <h2 itemprop="name">
   <a class="article-title" href="/2023/05/04/day39-QT%E7%AE%80%E4%BB%8B/"
-    >day39-QT简介</a> 
+    >day39-QT</a> 
 </h2>
  
 
@@ -1415,89 +631,11 @@ void module2_func(void) &#123;
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day39-QT简介"><a href="#day39-QT简介" class="headerlink" title="day39-QT简介"></a><font color="green">day39-QT简介</font></h1><!--mroe-->
-
-<h2 id="一、QT简介"><a href="#一、QT简介" class="headerlink" title="一、QT简介"></a>一、QT简介</h2><p>&emsp;&emsp;QT是一个跨平台的应用程序开发框架，它可以用来创建图形用户界面（GUI）和非GUI应用程序。QT的特点是使用C++作为编程语言，提供了一套丰富的类库和工具，以及一种元对象系统（MOC），可以实现信号和槽机制，以及动态类型转换等功能。</p>
-<p>&emsp;&emsp;QT的优势在于它提供了一致的编程接口和体验，无论是在不同的操作系统或者不同的设备上，都可以使用相同的代码和工具来创建应用程序。QT还提供了许多高级的功能和组件，例如网络、数据库、多媒体、XML、OpenGL等。此外，QT还支持多种编程语言，除了C++之外，还有Python、Ruby、Java等。QT还有一个活跃的社区和开源许可，使得开发者可以方便地获取技术支持和资源。</p>
-<br>
-<br>
-
-<hr>
-<h2 id="二、QT项目结构"><a href="#二、QT项目结构" class="headerlink" title="二、QT项目结构"></a>二、QT项目结构</h2><p>一般来说，一个QT项目由以下几个部分组成：</p>
-<ul>
-<li>.pro文件：这是一个项目配置文件，它定义了项目的基本信息，如项目名称、版本、目标平台、源文件列表、头文件列表、资源文件列表、依赖库等。.pro文件是由qmake工具解析的，qmake可以根据.pro文件生成相应平台的构建文件，如Makefile或Visual Studio工程文件。</li>
-<li>源文件：这是项目的核心部分，它包含了项目的业务逻辑和算法实现，通常以.cpp为扩展名。源文件中可以包含QT的宏和关键字，如Q_OBJECT、signals、slots等，这些宏和关键字可以被moc工具识别和处理，moc可以根据源文件生成元对象代码，这些代码实现了QT的对象模型和信号槽机制。</li>
-<li>头文件：这是项目的接口部分，它声明了项目中使用的类、函数、变量等，通常以.h为扩展名。头文件中也可以包含QT的宏和关键字，如Q_OBJECT、signals、slots等，这些宏和关键字同样可以被moc工具识别和处理，moc可以根据头文件生成元对象代码。</li>
-<li>资源文件：这是项目的外观部分，它包含了项目中使用的图标、图片、音频、视频等非代码资源，通常以.qrc为扩展名。资源文件是由rcc工具解析的，rcc可以根据资源文件生成二进制资源代码，这些代码可以被嵌入到可执行文件中，或者作为外部文件分发。</li>
-<li>界面文件：这是项目的视觉部分，它定义了项目中使用的窗口、控件、布局等图形用户界面元素，通常以.ui为扩展名。界面文件是由uic工具解析的，uic可以根据界面文件生成界面代码，这些代码可以被包含到源文件中，或者作为单独的头文件使用。</li>
-</ul>
-<p>通常创建的qt项目工程里有如下文件：</p>
-<blockquote>
-<p>pro：指导生成makefile<br>widget.h：窗体类的定义<br>widget.cpp：类中成员函数<br>main.cpp:主函数  功能: 定义窗体对象 显示窗体 进入事件循环<br>widget.ui(xml): ui文件 uic工具将ui文件转换成c++代码 -&gt; ui_widget.h</p>
-</blockquote>
-<br>
-<br>
-
-<hr>
-<h2 id="三、QT函数结构"><a href="#三、QT函数结构" class="headerlink" title="三、QT函数结构"></a>三、QT函数结构</h2><h3 id="3-1-main-cpp"><a href="#3-1-main-cpp" class="headerlink" title="3.1 main.cpp"></a>3.1 main.cpp</h3><p>main.cpp 是主函数文件，内部主要包含应用程序的入口函数，也就是 main() 函数。Qt 界面程序中的 main() 函数也有固定的格式：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">a</span><span class="params">(argc, argv)</span></span>;<span class="comment">//事件循环对象</span></span><br><span class="line">    <span class="comment">//函数主体</span></span><br><span class="line">    widget w;<span class="comment">//窗体对象，调用构造函数</span></span><br><span class="line">    w.show();<span class="comment">//显示界面</span></span><br><span class="line">    <span class="comment">//~函数主体</span></span><br><span class="line">    <span class="keyword">return</span> a.exec();<span class="comment">//事件循环</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>其中a.exec的功能如下：</p>
-<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">while(1)&#123;</span><br><span class="line">    1.阻塞休眠等待事件发生</span><br><span class="line">    2.当事件发生后通过事件处理器处理事件（虚函数）</span><br><span class="line">        a.标准事件：事件处理器直接处理</span><br><span class="line">        b.非标准事件：事件处理器不知道怎么处理-&gt;emit信号 用户:关联信号与槽函数</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<h3 id="3-2-widget-h"><a href="#3-2-widget-h" class="headerlink" title="3.2 widget.h"></a>3.2 widget.h</h3><p>widget.h是界面的头文件，里面主要包含了widget的命名空间，基类QWidget和widget结构体。<br>下面是一般的widget格式：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> WIDGET_H</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> WIDGET_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QWidget&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//名字空间</span></span><br><span class="line"><span class="keyword">namespace</span> Ui &#123;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span>;</span><span class="comment">//声明</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span> :</span> <span class="keyword">public</span> QWidget <span class="comment">//界面类</span></span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT <span class="comment">//支持元对象编译器moc,即支持信号与槽</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">explicit</span> <span class="title">Widget</span><span class="params">(QWidget *parent = <span class="number">0</span>)</span></span>;<span class="comment">//构造函数</span></span><br><span class="line">    ~Widget();<span class="comment">//析构函数</span></span><br><span class="line"></span><br><span class="line">signals:<span class="comment">//自定义信号</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">MySignal</span><span class="params">(QString)</span></span>;</span><br><span class="line"><span class="keyword">private</span> slots:<span class="comment">//槽函数</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">on_btnClose_clicked</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">on_btnInsert_clicked</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">setTitle</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">on_btnWin_clicked</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">MySlot</span><span class="params">(QString)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    Ui::Widget *ui;<span class="comment">//对象指针</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">// WIDGET_H</span></span></span><br></pre></td></tr></table></figure>
-<br>
-<br>
-
-<hr>
-<blockquote>
-<p>注：如果要用到ui编辑则需要把widget声明在ui里，并且在ui里面的拖动的对象都要通过 <code>ui-&gt;对象名</code> 来调用</p>
-</blockquote>
-<h3 id="3-3-widget-cpp"><a href="#3-3-widget-cpp" class="headerlink" title="3.3 widget.cpp"></a>3.3 widget.cpp</h3><p>widget.cpp里面是界面的主要内容，包括构造析构函数，成员和槽函数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;widget.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;ui_widget.h&quot;</span> <span class="comment">//uic工具在编译时将widget.ui转换成c++代码</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QDebug&gt;</span></span></span><br><span class="line"></span><br><span class="line">Widget::Widget(QWidget *parent) : <span class="comment">//构造函数的定义</span></span><br><span class="line">    QWidget(parent),<span class="comment">//给基类的构造函数传递实参:parent</span></span><br><span class="line">    ui(<span class="keyword">new</span> Ui::Widget) <span class="comment">//ui = new Ui::Widget</span></span><br><span class="line">&#123;</span><br><span class="line">    ui-&gt;setupUi(<span class="keyword">this</span>);<span class="comment">//界面布局</span></span><br><span class="line"></span><br><span class="line">    connect(ui-&gt;btnTitle,SIGNAL(clicked(<span class="keyword">bool</span>)),<span class="keyword">this</span>,SLOT(setTitle()));<span class="comment">//关联信号与槽  btnTitle -&gt; clicked() -&gt; Widget -&gt;setTitle()</span></span><br><span class="line">    connect(<span class="keyword">this</span>,SIGNAL(MySignal(QString)),<span class="keyword">this</span>,SLOT(MySlot(QString)));<span class="comment">//关联自定义信号和自定义槽函数</span></span><br><span class="line"></span><br><span class="line">    ui-&gt;lineEdit-&gt;setText(<span class="string">&quot;aaaaaaaaaa&quot;</span>);<span class="comment">//设置文本</span></span><br><span class="line">    qDebug() &lt;&lt; ui-&gt;lineEdit-&gt;text();<span class="comment">//获取文本</span></span><br><span class="line"></span><br><span class="line">    qDebug() &lt;&lt; <span class="string">&quot;Widget&quot;</span>;<span class="comment">//跟踪打印</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Widget::~Widget()<span class="comment">//析构函数的定义</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">delete</span> ui;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//1.信号与槽关联： 右键组件 -&gt; 转到槽 -&gt; 信号</span></span><br><span class="line">                <span class="comment">//适合: 标准信号</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Widget::on_btnClose_clicked</span><span class="params">()</span><span class="comment">//btnClose -&gt; clicked 信号 -&gt; widget -&gt; on_btnClose_clicked()函数</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    qDebug() &lt;&lt; <span class="string">&quot;on_btnClose_clicked。。。。。&quot;</span>;<span class="comment">//跟踪打印</span></span><br><span class="line">    <span class="keyword">this</span>-&gt;close();<span class="comment">//关窗口</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//2.信号与槽关联： 通过命名规则关联，其实和第一种本质一样</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Widget::on_btnInsert_clicked</span><span class="params">()</span><span class="comment">//命名规则：on_对象指针名_信号名</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    QString str;</span><br><span class="line">    str.<span class="built_in">sprintf</span>(<span class="string">&quot;i=%d&quot;</span>,++i);</span><br><span class="line"></span><br><span class="line">    ui-&gt;btnInsert-&gt;setText(str);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//3.信号与槽关联： 通过 +/-关联</span></span><br><span class="line">    <span class="comment">//适合：信号和槽都是标准的</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//4.通用的信号与槽函数的关联方式：</span></span><br><span class="line">    <span class="comment">//connect</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Widget::setTitle</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>-&gt;setWindowTitle(<span class="string">&quot;MyWin&quot;</span>);<span class="comment">//修改窗体标题</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Widget::on_btnWin_clicked</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    QString str;</span><br><span class="line">    str.<span class="built_in">sprintf</span>(<span class="string">&quot;i=%d&quot;</span>,++i);</span><br><span class="line"></span><br><span class="line">    ui-&gt;btnWin-&gt;setText(str);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//emit 自定义信号(str) -&gt; 自定义槽函数 -&gt; 显示为窗口标题</span></span><br><span class="line">    <span class="function">emit <span class="title">MySignal</span><span class="params">(str)</span></span>;<span class="comment">//触发自定义信号</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">Widget::MySlot</span><span class="params">(QString msg)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>-&gt;setWindowTitle(msg);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-<blockquote>
-<p>自己设置的信号要用emit触发。</p>
-</blockquote>
-<h2 id="四、QT内存管理"><a href="#四、QT内存管理" class="headerlink" title="四、QT内存管理"></a>四、QT内存管理</h2><ul>
-<li><p>自动存储管理：Qt中的大多数对象是使用自动存储管理的，这意味着它们的内存管理是由C++的自动变量和栈来处理的。当对象超出其作用域时，它们的内存会自动释放。</p>
-</li>
-<li><p>动态存储管理：有时候需要在堆上分配对象，并手动管理它们的内存。Qt提供了两个主要的机制来进行动态内存管理：new 和 delete 运算符。可以使用 new 在堆上分配一个对象，并使用 delete 来释放它。注意，在使用 new 创建对象后，必须手动调用 delete 来释放它，以避免内存泄漏。另外，Qt还提供了 deleteLater() 函数，可以在稍后的时间点安全地删除对象。</p>
-</li>
-<li><p>父子关系：Qt中的对象可以通过指定父对象来建立层次关系。当父对象被销毁时，它会自动销毁其所有的子对象。这种机制简化了内存管理，因为你只需要删除父对象，而不需要手动删除所有的子对象。</p>
-</li>
-<li><p>智能指针：Qt还提供了一些智能指针类，如 QSharedPointer 和 QScopedPointer，用于帮助管理对象的生命周期。这些智能指针类能够自动跟踪对象的引用计数，并在不再需要时自动释放对象。</p>
-</li>
-</ul>
-<br>
-<br>
-
-<hr>
-<h2 id="五、QT信号与槽简介"><a href="#五、QT信号与槽简介" class="headerlink" title="五、QT信号与槽简介"></a>五、QT信号与槽简介</h2><p>&emsp;&emsp;Qt信号与槽是一种对象间通信的机制，可以让一个对象在发生某种事件时，通知另一个对象执行相应的操作。信号与槽机制是Qt的核心特性，也是Qt与其他框架最大的不同之处。</p>
-<p>&emsp;&emsp;信号是由对象发出的，表示某种状态的改变或者用户的操作。槽是用来响应信号的函数，可以是任何能和信号关联的成员函数或者普通函数。信号和槽可以通过QObject::connect()函数进行连接，指定发送对象、发送的信号、接收对象和接收的槽。例如：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//连接QPushButton的clicked信号和QLabel的setText槽</span></span><br><span class="line">connect(button, SIGNAL(clicked()), label, SLOT(setText(<span class="string">&quot;Hello World&quot;</span>)));</span><br></pre></td></tr></table></figure>
-
-<p>信号和槽有以下特点：</p>
-<ul>
-<li>信号和槽可以包含任意数量和类型的参数，只要参数类型可以进行隐式转换（类型匹配，信号参数的个数大于等于槽函数参数个数）或者注册到元对象系统。</li>
-<li>信号和槽必须使用void关键字声明，不能有返回值。</li>
-<li>信号和槽可以使用public、protected或者private修饰符，但是一般建议使用public或者protected。</li>
-<li>信号和槽可以使用Q_OBJECT宏声明在任何继承自QObject的类中，也可以使用Q_SIGNALS和Q_SLOTS宏声明在任何类中。</li>
-<li>一个信号可以连接到多个槽，一个槽也可以连接到多个信号。当信号发出时，连接到它的所有槽都会按照连接顺序依次执行。</li>
-<li>一个信号可以连接到另一个信号，这样当第一个信号发出时，会自动触发第二个信号。</li>
-<li>一个对象可以断开和另一个对象的所有连接，也可以断开特定的连接。断开连接可以使用QObject::disconnect()函数实现。</li>
-</ul>
-<p>信号与槽相连接的几种方法：</p>
-<ol>
-<li>右键组件-&gt;转到槽-&gt;选择信号-&gt;确定（命名规则：on_对象指针名_信号名）</li>
-<li>直接命名方式</li>
-<li>+/-</li>
-<li>connect(发送信号的对象，信号，接收信号的对象，槽函数)</li>
-</ol>
- 
+  <h1 id="day39-QT"><a href="#day39-QT" class="headerlink" title="day39-QT"></a><font color="green">day39-QT</font></h1> 
+      <a class="article-more-link" href="/2023/05/04/day39-QT%E7%AE%80%E4%BB%8B/"
+        >阅读更多...</a
+      >
+       
       <!-- reward -->
       
     </div>

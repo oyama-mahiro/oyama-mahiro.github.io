@@ -98,7 +98,7 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day44-系统移植bootloader"><a href="#day44-系统移植bootloader" class="headerlink" title="day44-系统移植bootloader"></a><font color="green">day44-系统移植bootloader</font></h1><!--mroe-->
+  <h1 id="day44-系统移植bootloader"><a href="#day44-系统移植bootloader" class="headerlink" title="day44-系统移植bootloader"></a><font color="green">day44-系统移植bootloader</font></h1><a id="more"></a>
 
 <h2 id="一、bootloader简介"><a href="#一、bootloader简介" class="headerlink" title="一、bootloader简介"></a>一、bootloader简介</h2><p>&emsp;&emsp;就是在操作系统内核运行之前运行的一段小程序。通过这段小程序，我们可以初始化硬件设备、建立内存空间的映射图，从而将系统的软硬件环境带到一个合适的状态，以便为最终调用操作系统内核准备好正确的环境，他就是所谓的引导加载程序（Boot Loader）。</p>
 <p>&emsp;&emsp;BootLoader的任务是引导操作系统，所谓引导操作系统，就是启动内核，让内核运行就是把内核加载到内存RAM中去运行，那先问两个问题：第一个问题，是谁把内核搬到内存中去运行？第二个问题：我们说的内存是SDRAM，大家都知道，这种内存和SRAM不同，最大的不同就是SRAM只要系统上电就可以运行，而SDRAM需要软件进行初始化才能运行，那么在把内核搬运到内存运行之前必须要先初始化内存吧，那么内存是由谁来初始化的呢？其实这两件事情都是由bootloader来干的，目的是为内核的运行准备好软硬件环境，没有bootloadr我们的系统当然不能跑起来。</p>
