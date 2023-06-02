@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    day43-系统移植简介 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-day43-系统移植简介"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  day43-系统移植简介
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/05/25/day43-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E7%AE%80%E4%BB%8B/" class="article-date">
+  <time datetime="2023-05-25T05:00:42.000Z" itemprop="datePublished">2023-05-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">3.1k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">12 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day43-系统移植简介"><a href="#day43-系统移植简介" class="headerlink" title="day43-系统移植简介"></a><font color="green">day43-系统移植简介</font></h1><!--mroe-->
+<h2 id="一、系统移植简介"><a href="#一、系统移植简介" class="headerlink" title="一、系统移植简介"></a>一、系统移植简介</h2><p>&emsp;&emsp;系统移植是将一个程序或操作系统从一个硬件平台转移到另一个硬件平台的过程。这个过程可能涉及到修改源代码，以使其能够在新的硬件平台上运行，或者使用交叉编译的技术，将源代码编译成在新硬件平台上运行的可执行文件。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、嵌入式linux系统"><a href="#二、嵌入式linux系统" class="headerlink" title="二、嵌入式linux系统"></a>二、嵌入式linux系统</h2><p>&emsp;&emsp;Linux系统由多个主要部分组成，包括：</p>
+<ol>
+<li><p>引导程序（BootLoader）：BootLoader是用于初始化硬件设备、建立内存空间的映射图，然后将系统的控制权交给操作系统内核的一段小程序。它负责在启动时加载内核到内存中，并传递给它控制权。常见的引导程序包括GRUB、LILO等。</p>
+</li>
+<li><p>内核（Kernel）：内核是操作系统的核心部分，它负责管理系统的硬件资源，并提供上层应用程序调用的接口服务程序。Linux内核包括了设备驱动、进程和内存管理、文件系统等。</p>
+</li>
+<li><p>设备树（Device Tree, DTB）：在嵌入式Linux系统中，设备树是一个数据结构，用于描述硬件设备的信息，例如设备的物理地址、设备的类型、设备的配置等。设备树可以让内核知道系统中存在哪些设备，这些设备如何配置，以及它们如何相互连接。</p>
+</li>
+<li><p>根文件系统（rootfs）：根文件系统是Linux系统启动后，用户可以直接操作的部分。它包含操作系统需要的各种文件和目录，例如/bin、/etc、/lib、/usr等。根文件系统可以是只读的（如在嵌入式系统或LiveCD中），也可以是可写的。</p>
+</li>
+</ol>
+<p>&emsp;&emsp;在Linux系统启动过程中，BootLoader首先被执行，它初始化硬件，并加载内核和设备树到内存中，然后将控制权交给内核。内核开始运行，并使用设备树信息来理解硬件配置。然后，内核挂载根文件系统，系统进入用户空间，开始执行init进程，最后用户可以开始使用系统。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、交叉编译"><a href="#三、交叉编译" class="headerlink" title="三、交叉编译"></a>三、交叉编译</h2><p>&emsp;&emsp;交叉编译是在一种系统平台（称为主机）上生成另一种系统平台（称为目标）上运行的可执行代码的过程。例如，你可能在一台运行Linux的x86架构的电脑（主机）上编译一份用于在ARM架构的设备（目标）上运行的程序。</p>
+<p>&emsp;&emsp;交叉编译器（Cross Compiler）是实现交叉编译的关键工具，它能够产生能在不同硬件或操作系统平台上运行的二进制文件。常见的交叉编译工具有GCC、Clang等。</p>
+<p>&emsp;&emsp;这里用的是arm-linuxg-gcc编译器</p>
+<br>
+<br>
+
+<hr>
+<h2 id="四、环境搭建（连接）"><a href="#四、环境搭建（连接）" class="headerlink" title="四、环境搭建（连接）"></a>四、环境搭建（连接）</h2><p>交叉开发环境的硬件组成主要由以下几大部分：</p>
+<blockquote>
+<ol>
+<li>开发主机</li>
+<li>目标机（开发板）</li>
+<li>二者的链接介质，常用的主要有3中方式：（1）串口线 （2）USB线 （3）网线</li>
+</ol>
+</blockquote>
+<p>对应的硬件介质，还必须要有相应的软件“介质”支持：</p>
+<blockquote>
+<ol>
+<li>对于串口，通常用的有串口调试助手，putty工具等，工具很多，功能都差不多，会用一两款就可以；</li>
+<li>对于USB线，当然必须要有USB的驱动才可以，一般芯片公司会提供，比如对于三星的芯片，USB下载主要由DNW软件来完成；</li>
+<li>对于网线，则必须要有网络协议支持才可以，常用的服务主要<code>tftp</code>和<code>nfs</code></li>
+</ol>
+</blockquote>
+<p>利用网线将windows，虚拟机，板子连接起来：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">(1) 设置虚拟机ip：</span><br><span class="line">    1. 编辑 -&gt; 虚拟网络编辑器（桥接模式） -&gt; VMnet0 桥接到（选连板子的网卡，就是连接到网口的那个网卡）</span><br><span class="line">    2. 虚拟机 -&gt; 设置 -&gt; 网卡适配器  -&gt; 自定义 (选 VMnet0)</span><br><span class="line">    3. 点ubuntu右上角网络图标 -&gt; 右键选编辑连接 -&gt; 全删掉 -&gt; 添加（改新连接名称为board）-&gt; IPV4 设置 -&gt; 方法（选手动） -&gt; 点添加 设置为 192.168.9.120 255.255.255.0 192.168.9.1 并保存退出</span><br><span class="line">    4. 断开网络再连接，ifconfig测试，ping主机</span><br><span class="line"></span><br><span class="line">(2) 设置windows的ip：</span><br><span class="line">    打开windows网络与共享中心--&gt;本地连接--&gt;属性--&gt;IPV4地址配置--&gt;配置IP；192.168.9.100</span><br><span class="line"></span><br><span class="line">(3) 设置板子ip：</span><br><span class="line">      set ipaddr 192.168.9.233		  //设置【目标机】开发板的ip地址；</span><br><span class="line">			set serverip 192.168.9.120		//设置【开发主机】ubuntu的ip地址；</span><br><span class="line">			set gatewayip 192.168.9.1		  //设置网关</span><br><span class="line">			set netmask 255.255.255.0		  //设置子网掩码</span><br><span class="line">			saveenv							          //保存环境变量到emmc中；</span><br><span class="line">板子命令：</span><br><span class="line">printenv（pri）： 输出当前环境信息；</span><br><span class="line">setenv（set）：设置环境变量；</span><br><span class="line">saveenv（save）：保存环境变量； </span><br><span class="line">ping ：是否能ping通虚拟机     </span><br></pre></td></tr></table></figure>
+<p><strong>上面是板子直连的情况，如果是在同一个局域网下的，就按局域网的ip进行连接，即更改板子的设置，注意板子的ip绝不能被占用</strong></p>
+<h3 id="4-1-tftp服务"><a href="#4-1-tftp服务" class="headerlink" title="4.1 tftp服务"></a>4.1 tftp服务</h3><p>&emsp;&emsp;主要用于实现文件的下载，比如开发调试的过程中，主要用<code>tftp</code>把要测试的bootloader、kernel和文件系统直接下载到内存中运行，而不需要预先烧录到Flash芯片中，一方面，在测试的过程中，往往需要频繁的下载，如果每次把这些要测试的文件都烧录到Flash中然后再运行也可以，但是缺点是：过程比较麻烦，而且Flash的擦写次数是由限的；另外一方面：测试的目的就是把这些目标文件加载到内存中直接运行就可以了，而<code>tftp</code>就刚好能够实现这样的功能，因此，更没有必要把这些文件都烧录到Flash中去。</p>
+<p>tftp建立：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">(1) 虚拟机建立tftp：</span><br><span class="line">    0.检查是否安装过tftp</span><br><span class="line">			sudo apt-cache policy tftpd-hpa</span><br><span class="line">			</span><br><span class="line">		1. 安装tftp服务器：</span><br><span class="line">			sudo apt-get install tftpd-hpa tftp-hpa</span><br><span class="line">			注意：虚拟机需要连外网，也就是能够ping www.baidu.com </span><br><span class="line">		2. 配置tftp服务器：</span><br><span class="line">			sudo vim /etc/default/tftpd-hpa</span><br><span class="line">			TFTP_USERNAME=&quot;tftp&quot;				    #用户的使用命令；</span><br><span class="line">			TFTP_DIRECTORY=&quot;/tftpboot&quot;			#共享文件的路径；</span><br><span class="line">			TFTP_ADDRESS=&quot;0.0.0.0:69&quot;			  #服务器的ip地址和端口号；</span><br><span class="line">			TFTP_OPTIONS=&quot;-l -c -s&quot;</span><br><span class="line">			根文件系统下面创建目录tftpboot,修改共享文件的权限（文件夹和文件的权限都要修改）</span><br><span class="line">				sudo chmod 0777 /tftpboot</span><br><span class="line">		3. 启动tftp服务器</span><br><span class="line">				sudo service tftpd-hpa restart	//重启</span><br><span class="line">		4. 将需要传输的文件存储在共享目录中(/tftpboot)</span><br><span class="line">				</span><br><span class="line">		5. 测试是否成功安装</span><br><span class="line">				tftp 127.0.0.1    </span><br><span class="line">				tftp&gt;get &lt;filename&gt;    </span><br><span class="line">				tftp&gt;q</span><br><span class="line">(2) 板子建立tftp</span><br><span class="line">    1. 把day1的镜像目录下的uImage，exynos4412-fs4412.dtb，ramdisk.img拷贝到/tftpboot目录下</span><br><span class="line">			tftp 41000000 uImage				//下载内核</span><br><span class="line">			tftp 42000000 exynos4412-fs4412.dtb	//下载设备树</span><br><span class="line">			tftp 43000000 ramdisk.img			//下载根文件系统</span><br><span class="line">			bootm 41000000 	43000000 		 42000000</span><br><span class="line">			      内核地址	 根文件系统地址	设备树地址</span><br><span class="line">			注意：地址顺序不能出错；	  </span><br><span class="line">				  </span><br><span class="line">			一次性配置：</span><br><span class="line">			set bootcmd tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> tftp 43000000 ramdisk.img<span class="tag">\<span class="name">;</span></span> bootm 41000000 43000000 42000000 </span><br><span class="line"></span><br><span class="line">      save</span><br><span class="line">(3) 交叉编译器安装：</span><br><span class="line">    1. 将gcc-4.6.4.tar.xz 拷贝到虚拟机的某一个目录中</span><br><span class="line">			cp gcc-4.6.4.tar.xz ~/workspace/fs4412	</span><br><span class="line">		2. 进入到所对应的目录中，解压gcc-4.6.4.tar.xz</span><br><span class="line">			cd ~/workspace/fs4412 </span><br><span class="line">			tar -xvf gcc-4.6.4.tar.xz</span><br><span class="line">		3. 进入到gcc-4.6.4目录中，通过pwd查看绝对路径；</span><br><span class="line">			cd gcc-4.6.4/bin</span><br><span class="line">			pwd   === &gt; /home/farsight/workspace/fs4412/gcc-4.6.4/bin</span><br><span class="line">		4. 修改PATH的值；</span><br><span class="line">			进入到/etc/bash.bashrc,在文件的最前面添加</span><br><span class="line">			sudo vim /etc/bash.bashrc</span><br><span class="line">			export PATH=<span class="formula">$PATH:/home/farsight/workspace/fs4412/gcc-4.6.4/bin</span></span><br><span class="line"><span class="formula">		5. 重启；</span></span><br><span class="line"><span class="formula">			source /etc/bash.bashrc</span></span><br><span class="line"><span class="formula">		</span></span><br><span class="line"><span class="formula">		6. 测试：</span></span><br><span class="line"><span class="formula">			a.生成可执行文件：arm-none-linux-guneabi-gcc 1.c</span></span><br><span class="line"><span class="formula">			b.拷贝执行文件到下载目录: cp a.out /tftpboot</span></span><br><span class="line"><span class="formula">			c.在板子上使用tftp下载a.out到板子上： tftp -g -r a.out 192.168.9.120 （注：板子和Ubuntu必须在同一网段）</span></span><br><span class="line"><span class="formula">				注：使用tftp上传文件到服务器 tftp -p -r a.out 192.168.9.120</span></span><br><span class="line"><span class="formula">			d.修改a.out权限：chmod 777 a.out</span></span><br><span class="line"><span class="formula">			e.执行a.out: ./a.out</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-nfs服务"><a href="#4-2-nfs服务" class="headerlink" title="4.2 nfs服务"></a>4.2 nfs服务</h3><p>&emsp;&emsp;主要用于实现网络文件的挂载，实际上是实现网络文件的共享，在开发的过程中，通常在系统移植的最后一步会制作文件系统，那么这是可以把制作好的文件系统放置在我们开发主机PC的相应位置，开发板通过nfs服务进行挂载，从而测试我们制作的文件系统是否正确，在整个过程中并不需要把文件系统烧录到Flash中去，而且挂载是自动进行挂载的，bootload启动后，kernel运行起来后会根据我们设置的启动参数进行自动挂载，因此，对于开发测试来讲，这种方式非常的方便，能够提高开发效率。(和共享文件差不多)</p>
+<p>nfs建立：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">(1)虚拟机</span><br><span class="line">	  0. 查看是否安装过nfs服务器：</span><br><span class="line">			sudo apt-cache policy nfs-kernel-server</span><br><span class="line">		1. 安装nfs服务器</span><br><span class="line">			sudo apt-get install nfs-kernel-server</span><br><span class="line">		2. 配置nfs服务器</span><br><span class="line">			1) 拷贝day1镜像目录下的根文件系统rootfs.tar.xz到开发主机中的一个目录（例如/source/nfs）</span><br><span class="line">				cp rootfs.tar.xz /source/nfs</span><br><span class="line">			2) 进入到rootfs.tar.xz所对应的目录中</span><br><span class="line">				cd /source/nfs</span><br><span class="line">			3) 解压根文件系统</span><br><span class="line">				tar -xvf rootfs.tar.xz</span><br><span class="line">			4) 进入到rootfs目录，使用pwd确定所对应的绝对路径</span><br><span class="line">				cd rootfs</span><br><span class="line">				pwd  ----&gt; /source/nfs/rootfs   就是用来挂载的共享路径；</span><br><span class="line">				</span><br><span class="line">			5) 修改nfs配置文件 sudo vim  /etc/exports </span><br><span class="line">				在文件的尾部添加代码：</span><br><span class="line">				/source/nfs/rootfs  *(rw,sync,no_root_squash,no_subtree_check)</span><br><span class="line">				注意：路径需要和根文件系统的实际路径一致；</span><br><span class="line"></span><br><span class="line">		3. 启动nfs服务器：</span><br><span class="line">			sudo service nfs-kernel-server restart</span><br><span class="line">				</span><br><span class="line">		4. 测试是否配置成功 </span><br><span class="line">			sudo mount -t nfs localhost:/source/nfs/rootfs/  /mnt/  //测试nfs服务是否安装成功。</span><br><span class="line"></span><br><span class="line">			ls /mnt/  （如果其中的内容和/nfs/rootfs中一致。 表示有挂载成功）</span><br><span class="line"></span><br><span class="line">			sudo umount /mnt   //解除挂载</span><br><span class="line">	</span><br><span class="line">(2) 设置板子nfs:</span><br><span class="line">			1. 设置启动参数：</span><br><span class="line">				set bootcmd tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> bootm 41000000 - 42000000</span><br><span class="line">				set bootargs root=/dev/nfs nfsroot=192.168.12.123:/source/nfs/rootfs rw console=ttySAC2,115200 init=/linuxrc ip=192.168.12.31 clk_ignore_unused=true</span><br><span class="line">				set bootargs root=/dev/nfs nfsroot=192.168.12.123:/source/nfs/rootfs rw console=ttySAC2,115200 init=/linuxrc ip=192.168.12.31 clk_ignore_unused=true</span><br><span class="line">									ubuntuIP              			                                 开发板IP</span><br><span class="line">				saveenv</span><br><span class="line">				</span><br><span class="line">			2、开发板重新启动: 开发板自动进入 下面界面</span><br><span class="line">				[root@farsight ]#   --- 成功</span><br><span class="line">				</span><br><span class="line">				把文件放入虚拟机中Linux的共享目录/source/nfs/rootfs中，开发板中自然会出现这个文件</span><br><span class="line">				在虚拟机中 cp  a.out  /source/nfs/rootfs</span><br><span class="line">				开发板中出现下面界面：</span><br><span class="line">				[root@farsight ]# ls</span><br><span class="line">				1.c      bin      etc      linuxrc  proc     sbin     tmp      var</span><br><span class="line">				a.out    dev      lib      mnt      root     sys      usr</span><br><span class="line">				</span><br><span class="line">		【问题解决】</span><br><span class="line">			5、nfs本机测试没问题，但是挂载到开发板失败</span><br><span class="line">			</span><br><span class="line">				方法一：如果ubuntu是18.04</span><br><span class="line">					/*Ubuntu 18.04 nfs 默认为协议3和协议4，但是 我的uboot 默认启动的是协议2的形式</span><br><span class="line">					如:  /srv/homes    hostname1(rw,sync,no_subtree_check)</span><br><span class="line">					若想要求 nfs 支持协议2，就在/etc/default/nfs-kernel-server末尾加一句：</span><br><span class="line">					RPCNFSDOPTS=&quot;--nfs-version 2,3,4 --debug --syslog&quot;</span><br><span class="line">					*/</span><br><span class="line">				方法二：如果ubuntu是20.04</span><br><span class="line">					1）把nfs配置文件备份</span><br><span class="line">						sudo mv /etc/default/nfs-kernel-server  /etc/default/nfs-kernel-server.back</span><br><span class="line">					2) 替换nfs配置文件</span><br><span class="line">						把day1镜像目录下的nfs-kernel-server拷贝到/etc/default目录下</span><br><span class="line">							sudo cp nfs-kernel-server  /etc/default</span><br><span class="line">					3) 重启nfs服务</span><br><span class="line">						sudo service nfs-kernel-server restart</span><br><span class="line">					4) 重新挂载到开发板</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-将系统存储到emmc中"><a href="#4-3-将系统存储到emmc中" class="headerlink" title="4.3 将系统存储到emmc中"></a>4.3 将系统存储到emmc中</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">在sd卡中烧录对应u-boot</span><br><span class="line">		a)	拷贝第一天/镜像文件/ramdisk.img拷贝到虚拟机/tftpboot目录下</span><br><span class="line">		b)	烧写内核镜像到EMMC上</span><br><span class="line">		# tftp 41000000 uImage</span><br><span class="line">		# movi  write  kernel  41000000</span><br><span class="line"></span><br><span class="line">		c)	烧写设备树文件到EMMC上</span><br><span class="line">		# tftp  41000000 exynos4412-fs4412.dtb</span><br><span class="line">		# movi  write  dtb  41000000</span><br><span class="line"></span><br><span class="line">		d)	烧写文件系统镜像到EMMC上</span><br><span class="line">		# tftp  41000000  ramdisk.img</span><br><span class="line">		#movi  write  rootfs  41000000  3000000</span><br><span class="line"></span><br><span class="line">		e)	设置启动参数</span><br><span class="line">		# set bootcmd movi read kernel 41000000<span class="tag">\<span class="name">;</span></span>movi read dtb 42000000<span class="tag">\<span class="name">;</span></span>movi read rootfs 43000000 3000000<span class="tag">\<span class="name">;</span></span>bootm 41000000 43000000 42000000</span><br><span class="line">		# set bootargs</span><br><span class="line">		# saveenv</span><br><span class="line"></span><br><span class="line">		f)	重新启动开发板，u-boot自动加载、执行内核</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/05/25/day43-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E7%AE%80%E4%BB%8B/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARM/" rel="tag">ARM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/" rel="tag">系统移植</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/05/30/day44-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8Dbootloader/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            day44-系统移植bootloader
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/22/day42-ARM%E5%BC%95%E8%84%9A%E3%80%81%E4%B8%B2%E5%8F%A3/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">day42-ARM引脚、串口</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "tuYk4qAcyDHqUmYKwnOzB9nI-9Nh9j0Va",
+    app_key: "EuYRm7WE36kxYD3nnGAQBK5y",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2023
+        <i class="ri-heart-fill heart_icon"></i> nakano-mahiro
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">文章</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechatpay.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.6/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+<!-- Katex -->
+
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        
+    
+
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+<script src="/js/dz.js"></script>
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=1975315159&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

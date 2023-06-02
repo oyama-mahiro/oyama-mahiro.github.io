@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    day37-c++类库 |  
+    day44-系统移植bootloader |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -44,7 +44,7 @@
     <main class="content on">
       <section class="outer">
   <article
-  id="post-day37-c-类库"
+  id="post-day44-系统移植bootloader"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -55,22 +55,26 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  day37-c++类库
+  day44-系统移植bootloader
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2023/04/28/day37-c-%E7%B1%BB%E5%BA%93/" class="article-date">
-  <time datetime="2023-04-28T01:02:41.000Z" itemprop="datePublished">2023-04-28</time>
-</a>   
+      <a href="/2023/05/30/day44-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8Dbootloader/" class="article-date">
+  <time datetime="2023-05-30T10:34:16.000Z" itemprop="datePublished">2023-05-30</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
 <div class="word_count">
     <span class="post-time">
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">0</span>
+            <span class="post-count">1.6k</span>
         </span>
     </span>
 
@@ -79,20 +83,138 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">1 min</span>
+            <span class="post-count">6 min</span>
         </span>
     </span>
 </div>
  
     </div>
       
+    <div class="tocbot"></div>
+
 
 
 
   
     <div class="article-entry" itemprop="articleBody">
        
-   
+  <h1 id="day44-系统移植bootloader"><a href="#day44-系统移植bootloader" class="headerlink" title="day44-系统移植bootloader"></a><font color="green">day44-系统移植bootloader</font></h1><!--mroe-->
+
+<h2 id="一、bootloader简介"><a href="#一、bootloader简介" class="headerlink" title="一、bootloader简介"></a>一、bootloader简介</h2><p>&emsp;&emsp;就是在操作系统内核运行之前运行的一段小程序。通过这段小程序，我们可以初始化硬件设备、建立内存空间的映射图，从而将系统的软硬件环境带到一个合适的状态，以便为最终调用操作系统内核准备好正确的环境，他就是所谓的引导加载程序（Boot Loader）。</p>
+<p>&emsp;&emsp;BootLoader的任务是引导操作系统，所谓引导操作系统，就是启动内核，让内核运行就是把内核加载到内存RAM中去运行，那先问两个问题：第一个问题，是谁把内核搬到内存中去运行？第二个问题：我们说的内存是SDRAM，大家都知道，这种内存和SRAM不同，最大的不同就是SRAM只要系统上电就可以运行，而SDRAM需要软件进行初始化才能运行，那么在把内核搬运到内存运行之前必须要先初始化内存吧，那么内存是由谁来初始化的呢？其实这两件事情都是由bootloader来干的，目的是为内核的运行准备好软硬件环境，没有bootloadr我们的系统当然不能跑起来。</p>
+<p>&emsp;&emsp;BootLoader种类众多，其中u-boot使用较为广泛</p>
+<blockquote>
+<p>① 开放源码；<br>② 支持多种嵌入式操作系统内核，如Linux、NetBSD， VxWorks， QNX， RTEMS， ARTOS， LynxOS；<br>③ 支持多个处理器系列，如PowerPC、ARM、x86、MIPS、XScale；<br>④ 较高的可靠性和稳定性；<br>⑤ 高度灵活的功能设置，适合U-Boot调试、操作系统不同引导要求、产品发布等；<br>⑥ 丰富的设备驱动源码，如串口、以太网、SDRAM、FLASH、LCD、NVRAM、EEPROM、RTC、键盘等；<br>⑦ 较为丰富的开发调试文档与强大的网络技术支持；</p>
+</blockquote>
+<br>
+<br>
+
+<hr>
+<h2 id="二、-u-boot"><a href="#二、-u-boot" class="headerlink" title="二、 u-boot"></a>二、 u-boot</h2><h3 id="2-1-u-boot结构"><a href="#2-1-u-boot结构" class="headerlink" title="2.1 u-boot结构"></a>2.1 u-boot结构</h3><table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>API</code></td>
+<td>存储U-Boot提供的接口函数</td>
+</tr>
+<tr>
+<td><code>arch</code></td>
+<td>与体系结构相关的代码，是核心文件夹</td>
+</tr>
+<tr>
+<td><code>board</code></td>
+<td>基于不同具体开发板的自定义代码</td>
+</tr>
+<tr>
+<td><code>common</code></td>
+<td>通用代码，涵盖所有方面，以处理命令行为主</td>
+</tr>
+<tr>
+<td><code>disk</code></td>
+<td>与分区相关的代码</td>
+</tr>
+<tr>
+<td><code>doc</code></td>
+<td>常见特性和问题描述的文档</td>
+</tr>
+<tr>
+<td><code>drivers</code></td>
+<td>常用设备驱动程序，每种类型的设备驱动程序都占用一个子目录</td>
+</tr>
+<tr>
+<td><code>fs</code></td>
+<td>文件系统，支持嵌入式开发常用的文件系统（CRAMFS，EXT2，EXT3，JFFS2等）</td>
+</tr>
+<tr>
+<td><code>include</code></td>
+<td>定义了全局需要的头文件</td>
+</tr>
+<tr>
+<td><code>lib</code></td>
+<td>通用库文件</td>
+</tr>
+<tr>
+<td><code>net</code></td>
+<td>网络相关代码，小型协议栈</td>
+</tr>
+<tr>
+<td><code>post</code></td>
+<td>上电自检</td>
+</tr>
+<tr>
+<td><code>tools</code></td>
+<td>辅助工具，用于编译和检查uboot目标文件</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-u-boot命令"><a href="#2-2-u-boot命令" class="headerlink" title="2.2 u-boot命令"></a>2.2 u-boot命令</h3><p><code>pri</code>:显示<br><code>set</code>:设置<br><code>save</code>:保存<br><code>tftp</code>:下载<br><code>loadb</code>:kermit协议下载二进制<br><code>movi</code>:emmc写入/读取<br><code>boot</code>：启动</p>
+<p><code>bootcmd</code>：启动命令<br><code>bootargs</code>:启动参数</p>
+<h3 id="2-3-u-boot工作模式"><a href="#2-3-u-boot工作模式" class="headerlink" title="2.3 u-boot工作模式"></a>2.3 u-boot工作模式</h3><p>&emsp;&emsp;U-Boot的工作模式有启动加载模式和下载模式。启动加载模式是Bootloader的正常工作模式，嵌入式产品发布时，Bootloader必须工作在这种模式下，Bootloader将嵌入式操作系统从FLASH中加载到SDRAM中运行，整个过程是自动的。下载模式就是Bootloader通过某些通信手段将内核映像或根文件系统映像等从PC机中下载到目标板的SDRAM中运行，用户可以利用Bootloader提供的一些令接口来完成自己想要的操作，这种模式主要用于测试和开发。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、-启动流程"><a href="#三、-启动流程" class="headerlink" title="三、 启动流程"></a>三、 启动流程</h2><p>启动模式包含：自启动和交互模式，正常使用是自启动模式。</p>
+<p>&emsp;&emsp;大多数BootLoader都分为stage1和stage2两大部分，U-boot也不例外。依赖于cpu体系结构的代码（如设备初始化代码等）通常都放在stage1且可以用汇编语言来实现，而stage2则通常用C语言来实现，这样可以实现复杂的功能，而且有更好的可读性和移植性。</p>
+<ol>
+<li>stage1（start.s代码结构）</li>
+</ol>
+<p>U-boot的stage1代码通常放在start.s文件中，它用汇编语言写成，其主要代码部分如下：</p>
+<ul>
+<li>定义入口。由于一个可执行的image必须有一个入口点，并且只能有一个全局入口，通常这个入口放在rom（Flash）的0x0地址，因此，必须通知编译器以使其知道这个入口，该工作可通过修改连接器脚本来完成。</li>
+<li>设置异常向量，设置SVC模式，关闭MMU Cache</li>
+<li>设置CPU的速度、时钟频率及中断控制寄存器。</li>
+<li>初始化内存控制器 。</li>
+<li>将rom中的程序复制到ram中。</li>
+<li>初始化堆栈 。</li>
+<li>转到ram中执行，该工作可使用指令ldrpc来完成。</li>
+</ul>
+<ol start="2">
+<li>stage2（C语言代码部分）</li>
+</ol>
+<p>lib_arm/board.c中的start armboot是C语言开始的函数，也是整个启动代码中C语言的主函数，同时还是整个u-boot（armboot）的主函数，该函数主要完成如下操作：</p>
+<ul>
+<li>调用一系列的初始化函数。</li>
+<li>初始化flash设备。</li>
+<li>初始化系统内存分配函数。</li>
+<li>如果目标系统拥有nand设备，则初始化nand设备。</li>
+<li>如果目标系统有显示设备，则初始化该类设备。</li>
+<li>初始化相关网络设备，填写ip，c地址等。</li>
+<li>进入命令循环（即整个boot的工作循环），接受用户从串口输入的命令，然后进行相应的工作。</li>
+</ul>
+<br>
+<br>
+
+<hr>
+<h2 id="四、u-boot移植"><a href="#四、u-boot移植" class="headerlink" title="四、u-boot移植"></a>四、u-boot移植</h2><h3 id="已配置好的："><a href="#已配置好的：" class="headerlink" title="已配置好的："></a>已配置好的：</h3><figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">0、注释配置文件中的中文设置, 在下面三行加#</span><br><span class="line">	# sudo vim ~/.bashrc</span><br><span class="line">	#export LANG=LANG=&quot;zh_CN.utf-8&quot;</span><br><span class="line">	#export LANGUAGE=&quot;zh_CN:zh:en_US:en&quot;</span><br><span class="line">	#export LC_ALL=&quot;zh_CN.utf-8&quot;</span><br><span class="line"></span><br><span class="line">1、解压day2中的u-boot-2013.01-fs4412.tar.bz2</span><br><span class="line">	tar -xvf u-boot-2013.01-fs4412.tar.xz</span><br><span class="line"></span><br><span class="line">2、拷贝day2下的build.sh到解压的目录下，替换原有的目录</span><br><span class="line"></span><br><span class="line">3、进入u-boot-2013.01-fs4412，执行build.sh</span><br><span class="line">	./build.sh</span><br><span class="line">注： 如果Flash不是三星的，则需要根据FS4412兼容高版本eMMC.pdf更改emmc配置</span><br><span class="line"></span><br><span class="line">4、验证u-boot.bin</span><br><span class="line">	1) 将生成的u-boot-fs4412.bin文件拷贝到tftp共享目录中；</span><br><span class="line">			cp u-boot-fs4412.bin /tftpboot</span><br><span class="line">	2) 通过sd方式将生产uboot烧写到mmc中；</span><br><span class="line">			将拨码开关拨到sd启动方式，启动开发板进入到交互模式：</span><br><span class="line">			tftp 41000000 u-boot-fs4412.bin</span><br><span class="line">			movi write u-boot 41000000</span><br><span class="line">			将拨码开关拨到emmc启动方式，观察现象,启动成功</span><br></pre></td></tr></table></figure>
+
+<h3 id="未配置好的"><a href="#未配置好的" class="headerlink" title="未配置好的"></a>未配置好的</h3><ol>
+<li>boot中的<code>makefile</code>中搜索<code>CROSS_COMPILE</code>指定架构(如arm)和交叉编译工具链（如arm-none-linux-gnueabi）</li>
+</ol>
+ 
       <!-- reward -->
       
       <div id="reword-out">
@@ -162,21 +284,32 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/04/28/day37-c-%E7%B1%BB%E5%BA%93/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/05/30/day44-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8Dbootloader/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARM/" rel="tag">ARM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bootloader/" rel="tag">bootloader</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/" rel="tag">系统移植</a></li></ul>
+
     </footer>
   </div>
 
    
   <nav class="article-nav">
     
+      <a href="/2023/06/01/day45-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E5%86%85%E6%A0%B8/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            day45-系统移植内核
+          
+        </div>
+      </a>
     
-      <a href="/2023/04/27/day37-c-%E5%BC%82%E5%B8%B8%EF%BC%8C%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" class="article-nav-link">
+    
+      <a href="/2023/05/25/day43-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E7%AE%80%E4%BB%8B/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">day37-c++异常，智能指针</div>
+        <div class="article-nav-title">day43-系统移植简介</div>
       </a>
     
   </nav>

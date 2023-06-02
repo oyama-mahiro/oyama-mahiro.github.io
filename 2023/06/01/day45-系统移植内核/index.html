@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    day45-系统移植内核 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-day45-系统移植内核"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  day45-系统移植内核
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/06/01/day45-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E5%86%85%E6%A0%B8/" class="article-date">
+  <time datetime="2023-06-01T00:58:21.000Z" itemprop="datePublished">2023-06-01</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">4k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">15 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day45-系统移植内核"><a href="#day45-系统移植内核" class="headerlink" title="day45-系统移植内核"></a><font color="green">day45-系统移植内核</font></h1><!--mroe-->
+
+<h2 id="一、内核简介"><a href="#一、内核简介" class="headerlink" title="一、内核简介"></a>一、内核简介</h2><p>Linux内核是Linux操作系统的核心部分，负责处理系统的主要操作，如硬件抽象、进程调度、内存管理，以及提供一个稳定、安全的环境来运行应用程序。从技术上来看，内核其实是硬件和软件之间的连接层，我们也可以称之为中间层。</p>
+<h3 id="1-1-内核实现策略"><a href="#1-1-内核实现策略" class="headerlink" title="1.1 内核实现策略"></a>1.1 内核实现策略</h3><ul>
+<li><p>宏内核<br>内核的所有代码，包括子系统（如内存管理、文件管理、设备驱动程序）都打包到一个文件中。内核中的每一个函数都可以访问到内核中所有其他部分。目前支持模块的动态装卸(裁剪)。Linux内核就是基于这个策略实现的</p>
+</li>
+<li><p>微内核<br>最基本的功能由中央内核（微内核）实现。所有其他的功能都委托给一些独立进程，这些进程通过明确定义的通信接口与中心内核通信。</p>
+</li>
+</ul>
+<h3 id="1-2-内核的核心模块"><a href="#1-2-内核的核心模块" class="headerlink" title="1.2 内核的核心模块"></a>1.2 内核的核心模块</h3><h4 id="1-2-1-进程的管理"><a href="#1-2-1-进程的管理" class="headerlink" title="1.2.1 进程的管理"></a>1.2.1 进程的管理</h4><p>Linux操作系统中的进程管理是内核的核心功能之一。以下是一些关键的概念和特性：</p>
+<h5 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h5><ul>
+<li><strong>进程</strong>：被视为执行环境的实例，包括程序代码、相关的数据、寄存器的状态、程序计数器、堆和栈等。</li>
+<li><strong>线程</strong>：进程中的一个执行单元，共享进程的资源，有自己独立的执行序列。Linux内核通过轻量级进程（LWP）实现线程。</li>
+</ul>
+<h5 id="进程状态"><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h5><p>进程可能处于以下状态之一：</p>
+<ul>
+<li>运行（正在CPU上执行或准备好运行但在等待CPU变得可用）</li>
+<li>等待/睡眠（等待某些条件成立或等待资源可用）</li>
+<li>停止（例如，当收到SIGSTOP信号或者正在被调试）</li>
+<li>僵尸（进程已经终止，但父进程还没有收集到它的终止状态）</li>
+</ul>
+<h5 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h5><p>内核的调度器负责决定哪个进程应该获得CPU的使用权。Linux使用优先级和调度策略来决定进程的执行顺序。</p>
+<p>以下是Linux进程调度的一些重要概念：</p>
+<blockquote>
+<p>(1)调度器和调度策略：</p>
+<p>Linux内核中有一个调度器组件，负责管理和调度所有的进程。调度器根据一定的策略来决定下一个要运行的进程。</p>
+<p>Linux支持多种调度策略，包括：</p>
+<p>SCHED_FIFO：实时调度策略，先进先出。对于具有相同优先级的进程，最早到达的进程首先获得处理器，一直运行直到自愿放弃或者更高优先级的进程就绪。</p>
+<p>SCHED_RR：实时调度策略，循环执行。这是一种为具有相同优先级的进程设计的公平策略，当一个进程耗尽了它的时间片，调度器将选择下一个进程执行。</p>
+<p>SCHED_OTHER：普通的非实时调度策略，这是默认的调度策略，采用的是CFS（Completely Fair Scheduler）调度算法。</p>
+<p>(2)优先级：</p>
+<p>Linux的每个进程都有一个相关联的优先级，决定了它在和其他进程竞争CPU时的地位。实时进程有静态优先级范围，普通进程有动态优先级范围。实时进程的优先级总是高于普通进程。</p>
+<p>(3)时间片：</p>
+<p>在Linux系统中，每个进程被赋予一个时间片，即进程可以运行的时间长度。时间片用完后，进程将被调度出CPU，然后调度器选择另一个进程运行。</p>
+<p>(4)上下文切换：</p>
+<p>当调度器决定替换当前正在运行的进程时，它执行一个被称为”上下文切换”的操作。这包括保存当前进程的状态，然后加载新进程的状态。这是一个开销相对较大的操作，因为它涉及到CPU寄存器和内存映射等状态信息的保存和加载。</p>
+</blockquote>
+<h5 id="进程创建与结束"><a href="#进程创建与结束" class="headerlink" title="进程创建与结束"></a>进程创建与结束</h5><p>进程通过系统调用<code>fork()</code>创建。进程结束通常是因为它完成了其工作或者因为收到一个终止信号。</p>
+<h5 id="进程间通信"><a href="#进程间通信" class="headerlink" title="进程间通信"></a>进程间通信</h5><p>Linux提供了多种进程间通信（IPC）机制，包括管道、信号、消息队列、共享内存、信号量等。</p>
+<h5 id="用户和权限"><a href="#用户和权限" class="headerlink" title="用户和权限"></a>用户和权限</h5><p>每个进程都有一个相关联的用户ID，用于确定它的权限。</p>
+<br>
+
+<h4 id="1-2-2-内存管理"><a href="#1-2-2-内存管理" class="headerlink" title="1.2.2 内存管理"></a>1.2.2 内存管理</h4><p>Linux内存管理是一个非常重要的部分，涉及到多个关键的概念和组件。</p>
+<h5 id="物理与虚拟内存"><a href="#物理与虚拟内存" class="headerlink" title="物理与虚拟内存"></a>物理与虚拟内存</h5><ul>
+<li><strong>物理内存</strong>：指的是实际的RAM。</li>
+<li><strong>虚拟内存</strong>：它允许计算机看似拥有比实际更多的RAM，通过使用硬盘空间作为额外的内存。</li>
+</ul>
+<h5 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h5><ul>
+<li><strong>分页</strong>：操作系统将虚拟内存划分为大小固定的块，称为页面。物理内存也被划分为大小固定的块，称为页帧。</li>
+<li><strong>分段</strong>：是将内存划分为大小可变的块。</li>
+</ul>
+<h5 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h5><ul>
+<li>当所有的物理内存都被使用时，操作系统需要决定哪些页面应被移出内存，为新的页面腾出空间。这个决定是由页面置换算法（page replacement algorithm）来做的。</li>
+</ul>
+<h5 id="内存分配"><a href="#内存分配" class="headerlink" title="内存分配"></a>内存分配</h5><ul>
+<li><strong>静态内存分配</strong>：在程序编译时由编译器自动完成。</li>
+<li><strong>自动内存分配（栈内存分配）</strong>：在程序运行时由编译器自动完成。</li>
+<li><strong>动态内存分配（堆内存分配）</strong>：由程序员显式调用malloc，calloc等函数完成。</li>
+</ul>
+<h5 id="内存映射"><a href="#内存映射" class="headerlink" title="内存映射"></a>内存映射</h5><ul>
+<li><strong>内存映射</strong>（Memory Mapping）是一种能让程序直接访问物理内存的方法。</li>
+</ul>
+<h5 id="Swap空间"><a href="#Swap空间" class="headerlink" title="Swap空间"></a>Swap空间</h5><ul>
+<li><strong>Swap空间</strong>是硬盘上的一块区域，被操作系统用作虚拟内存。当物理内存不足时，操作系统可以将一部分数据（页面）移出物理内存，存放到Swap空间，从而释放出物理内存供其他用途使用。</li>
+</ul>
+<br>
+
+<h4 id="1-2-3-文件系统"><a href="#1-2-3-文件系统" class="headerlink" title="1.2.3 文件系统"></a>1.2.3 文件系统</h4><h5 id="文件系统类型"><a href="#文件系统类型" class="headerlink" title="文件系统类型"></a>文件系统类型</h5><p>Linux支持多种文件系统类型，包括但不限于以下几种：</p>
+<ul>
+<li><strong>ext2/ext3/ext4</strong>：Linux的传统文件系统，ext4是最新版本，提供了许多改进和新功能。</li>
+<li><strong>XFS</strong>：一种高性能的日志文件系统，适合处理大文件和大存储设备。</li>
+<li><strong>Btrfs</strong>：一个现代的、具有许多高级功能的文件系统，如检查点、快照和动态空间分配。</li>
+<li><strong>FAT32/NTFS</strong>：由Microsoft开发，主要在Windows系统中使用，但Linux也提供了对它们的支持。</li>
+</ul>
+<h5 id="文件系统层次结构"><a href="#文件系统层次结构" class="headerlink" title="文件系统层次结构"></a>文件系统层次结构</h5><p>Linux文件系统遵循一种统一的目录结构，所有内容都从根目录<code>/</code>开始。以下是一些重要的目录：</p>
+<ul>
+<li>**/**：根目录，所有的文件和目录都从这里开始。</li>
+<li><strong>/home</strong>：用户的主目录，每个用户在这里都有一个自己的目录。</li>
+<li><strong>/etc</strong>：系统配置文件的存储位置。</li>
+<li><strong>/var</strong>：经常变化的文件，如日志文件和邮件队列等。</li>
+<li><strong>/bin</strong> 和 <strong>/sbin</strong>：二进制可执行文件的存储位置，如常用的命令和系统程序。</li>
+<li><strong>/lib</strong>：库文件的存储位置。</li>
+</ul>
+<h5 id="inode"><a href="#inode" class="headerlink" title="inode"></a>inode</h5><p>每个文件都有一个相关的inode，它存储了文件的元数据，如文件大小、创建时间、修改时间、所有者和权限等。inode号是文件在文件系统中的唯一标识。</p>
+<h5 id="硬链接和软链接"><a href="#硬链接和软链接" class="headerlink" title="硬链接和软链接"></a>硬链接和软链接</h5><p>Linux支持两种类型的文件链接：</p>
+<ul>
+<li><strong>硬链接</strong>：指向文件的inode的直接引用。所有的硬链接都指向同一个inode，因此看起来就像是同一个文件。</li>
+<li><strong>软链接（符号链接）</strong>：指向文件路径的引用，类似于Windows中的快捷方式。</li>
+</ul>
+<h5 id="挂载和卸载"><a href="#挂载和卸载" class="headerlink" title="挂载和卸载"></a>挂载和卸载</h5><p>在Linux中，设备（如硬盘分区或USB驱动器）必须先挂载到文件系统的某个点（称为挂载点），然后才能访问其中的文件。同样，设备可以从文件系统卸载，此后就无法访问其内容。</p>
+<br>
+
+<h4 id="1-2-4-设备驱动"><a href="#1-2-4-设备驱动" class="headerlink" title="1.2.4 设备驱动"></a>1.2.4 设备驱动</h4><p>设备驱动是一段可以让操作系统和硬件设备进行交互的程序。下面是一些关于Linux设备驱动的主要概念：</p>
+<h5 id="设备驱动的类型"><a href="#设备驱动的类型" class="headerlink" title="设备驱动的类型"></a>设备驱动的类型</h5><p>Linux中的设备驱动主要可以分为以下三种类型：</p>
+<ul>
+<li><strong>字符设备驱动</strong>：用于控制字符设备，这些设备以字符为单位进行数据传输，例如键盘和鼠标。</li>
+<li><strong>块设备驱动</strong>：用于控制块设备，这些设备以数据块为单位进行数据传输，例如硬盘和光驱。</li>
+<li><strong>网络设备驱动</strong>：用于控制网络设备，例如网络适配器和路由器。</li>
+</ul>
+<h5 id="加载和卸载设备驱动"><a href="#加载和卸载设备驱动" class="headerlink" title="加载和卸载设备驱动"></a>加载和卸载设备驱动</h5><p>在Linux中，设备驱动可以动态地加载和卸载。可以使用<code>insmod</code>命令来加载设备驱动，使用<code>rmmod</code>命令来卸载设备驱动。</p>
+<h5 id="设备文件"><a href="#设备文件" class="headerlink" title="设备文件"></a>设备文件</h5><p>Linux将所有的设备视为文件，设备文件通常位于<code>/dev</code>目录中。设备文件可以是字符设备文件或块设备文件，可以通过读写这些设备文件来控制硬件设备。</p>
+<h5 id="udev"><a href="#udev" class="headerlink" title="udev"></a>udev</h5><p><code>udev</code>是Linux 2.6内核和更高版本的一个设备管理工具，它可以动态地创建和管理设备节点，使设备管理更加灵活。</p>
+<h5 id="驱动模块"><a href="#驱动模块" class="headerlink" title="驱动模块"></a>驱动模块</h5><p>驱动模块是包含设备驱动函数的程序，它们可以在运行时动态地加载和卸载。这使得Linux内核可以保持小型和高效，同时也能支持大量不同类型的硬件设备。</p>
+<h5 id="编写设备驱动"><a href="#编写设备驱动" class="headerlink" title="编写设备驱动"></a>编写设备驱动</h5><p>编写设备驱动是一个复杂的任务，需要深入理解硬件设备的工作原理以及Linux内核的工作机制。驱动程序需要在内核空间运行，因此它们必须遵循特定的编程规则和约定。</p>
+<br>
+
+<h4 id="1-2-5-网络栈"><a href="#1-2-5-网络栈" class="headerlink" title="1.2.5 网络栈"></a>1.2.5 网络栈</h4><p>Linux网络栈是一个实现了TCP/IP网络协议的软件栈。以下是一些重要的概念：</p>
+<h5 id="网络模型"><a href="#网络模型" class="headerlink" title="网络模型"></a>网络模型</h5><p>TCP/IP模型由四层构成：应用层、传输层、网络层和链路层。每一层都负责处理特定的任务，并为上一层提供服务。</p>
+<h5 id="协议"><a href="#协议" class="headerlink" title="协议"></a>协议</h5><p>网络栈包括一组协议，这些协议定义了数据在网络中的传输方式。其中最重要的两个协议是TCP（传输控制协议）和IP（互联网协议）。</p>
+<h5 id="Socket编程"><a href="#Socket编程" class="headerlink" title="Socket编程"></a>Socket编程</h5><p>Socket API用于创建和管理网络连接。通过socket，应用程序可以发送和接收数据。</p>
+<h5 id="网络设备"><a href="#网络设备" class="headerlink" title="网络设备"></a>网络设备</h5><p>网络设备是用于发送和接收数据包的硬件设备。在Linux中，每个网络设备都由一个设备驱动程序来管理。</p>
+<h5 id="路由"><a href="#路由" class="headerlink" title="路由"></a>路由</h5><p>路由是决定数据包从源地址到目的地址所走的路径的过程。路由表是用于存储路由信息的数据结构。</p>
+<h5 id="网络安全"><a href="#网络安全" class="headerlink" title="网络安全"></a>网络安全</h5><p>网络安全包括一系列用于保护网络连接和数据的技术。其中包括防火墙（用于阻止未授权的网络访问）和IPSec（一种用于加密IP数据包的协议）。</p>
+<h5 id="网络调试工具"><a href="#网络调试工具" class="headerlink" title="网络调试工具"></a>网络调试工具</h5><p>Linux提供了多种用于调试网络问题的工具，如ping（用于测试网络连通性），traceroute（用于跟踪数据包的路由路径），netstat（用于显示网络状态）等等。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、内核移植"><a href="#二、内核移植" class="headerlink" title="二、内核移植"></a>二、内核移植</h2><ol>
+<li>准备内核源代码</li>
+<li>makefile编辑交叉编译环境</li>
+<li>make exynos_defconfig默认配置，配置文件放在 arch/arm/configs下</li>
+<li>make menuconfig图形界面配置内核</li>
+<li>make uImage编译内核</li>
+<li>make dtbs编译设备树</li>
+<li>按照需求在设备树中添加设备和配置内核，再重新编译</li>
+</ol>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br></pre></td><td class="code"><pre><span class="line">内核移植：</span><br><span class="line"></span><br><span class="line">一、 内核准备：</span><br><span class="line"></span><br><span class="line">1. 内核源代码准备</span><br><span class="line">	1）官网下载Linux内核源代码</span><br><span class="line">	2）找供应商要（得到Linux内核源代码：linux-3.14.tar.xz）</span><br><span class="line"></span><br><span class="line">2. 拷贝源代码到工作目录：</span><br><span class="line">	cp linux-3.14.tar.xz </span><br><span class="line">3. 进入Linux内核源代码所在目录，解压Linux内核源代码</span><br><span class="line">	cd </span><br><span class="line">	tar xf linux-3.14.tar.xz</span><br><span class="line">4. 进入到源代码目录中</span><br><span class="line">	cd linux-3.14</span><br><span class="line">	</span><br><span class="line">二、 内核编译：	</span><br><span class="line">5. 修改编译平台和交叉编译环境</span><br><span class="line">	进入Makefile文件，修改参数：</span><br><span class="line">	修改：</span><br><span class="line"> 199 ARCH		?= <span class="formula">$(SUBARCH)</span></span><br><span class="line"><span class="formula"> 200 CROSS_COMPILE	?= $</span>(CONFIG_CROSS_COMPILE:&quot;<span class="comment">%&quot;=%)</span></span><br><span class="line">	为：</span><br><span class="line"> 199 ARCH            ?= arm</span><br><span class="line"> 200 CROSS_COMPILE   ?= arm-none-linux-gnueabi-</span><br><span class="line"></span><br><span class="line">6. 导入默认配置，配置文件放在 arch/arm/configs下</span><br><span class="line">	make exynos_defconfig</span><br><span class="line">7. 配置内核</span><br><span class="line">	make menuconfig</span><br><span class="line">	正常执行，会弹出一个菜单选项，我们可以去选择需要配置的内核；</span><br><span class="line">	注意：</span><br><span class="line">	(如果在编译的时候出现了下面的错误，则说明图形界面库没有安装，需要安装库</span><br><span class="line">		sudo apt-get install exuberant-ctags</span><br><span class="line">		sudo apt-get install libncurses5-dev</span><br><span class="line">	)</span><br><span class="line"> *** Unable to find the ncurses libraries or the</span><br><span class="line"> *** required header files.</span><br><span class="line"> *** &#x27;make menuconfig&#x27; requires the ncurses libraries.</span><br><span class="line"> *** </span><br><span class="line"> *** Install ncurses (ncurses-devel) and try again.</span><br><span class="line"> *** </span><br><span class="line">make[1]: *** [scripts/kconfig/dochecklxdialog] Error 1</span><br><span class="line">make: *** [menuconfig] Error 2</span><br><span class="line">第二种：</span><br><span class="line">farsight@ubuntu:~/fs4412/1905/linux-3.14<span class="formula">$ make menuconfig</span></span><br><span class="line"><span class="formula">scripts/kconfig/mconf Kconfig</span></span><br><span class="line"><span class="formula">Your display is too small to run Menuconfig!</span></span><br><span class="line"><span class="formula">It must be at least 19 lines by 80 columns.</span></span><br><span class="line"><span class="formula">make[1]: *** [menuconfig] Error 1</span></span><br><span class="line"><span class="formula">make: *** [menuconfig] Error 2</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">表示终端太小，全屏显示就可以解决</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">	正常执行菜单选项，选择串口信息：</span></span><br><span class="line"><span class="formula">	/* 将串口选择为 2  */</span></span><br><span class="line"><span class="formula">	System Type  ---&gt;</span></span><br><span class="line"><span class="formula">		(2) S3C UART to use for low-level messages</span></span><br><span class="line"><span class="formula">	</span></span><br><span class="line"><span class="formula">8. 编译内核</span></span><br><span class="line"><span class="formula">	make uImage</span></span><br><span class="line"><span class="formula">	编译成功会生成一个经过压缩后的镜像文件uImage，其生成的文件路径为：arch/arm/boot/uImage</span></span><br><span class="line"><span class="formula">	注意：(如果在编译的时候出现了下面的错误，则说明缺少mkimage工具，</span></span><br><span class="line"><span class="formula">	需将第一天工具中的mkimage拷贝到ubuntu的/usr/bin目录下)</span></span><br><span class="line"><span class="formula">&quot;mkimage&quot; command not found - U-Boot images will not be built</span></span><br><span class="line"><span class="formula">make[1]: *** [arch/arm/boot/uImage] Error 1</span></span><br><span class="line"><span class="formula">make: *** [uImage] Error 2</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">三、设备树编译：</span></span><br><span class="line"><span class="formula">9. 修改设备树文件</span></span><br><span class="line"><span class="formula">	参考板origen的设备数文件为参考：</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/dts/exynos4412-origen.dts arch/arm/boot/dts/exynos4412-fs4412.dts</span></span><br><span class="line"><span class="formula">10. 修改Makefile，添加编译项：</span></span><br><span class="line"><span class="formula">	vim arch/arm/boot/dts/Makefile</span></span><br><span class="line"><span class="formula">	在</span></span><br><span class="line"><span class="formula">		exynos4412-origen.dtb <span class="tag">\</span></span></span><br><span class="line"><span class="formula">	下添加如下内容</span></span><br><span class="line"><span class="formula">		exynos4412-fs4412.dtb <span class="tag">\</span></span></span><br><span class="line"><span class="formula">11. 编译设备树文件：</span></span><br><span class="line"><span class="formula">	make dtbs</span></span><br><span class="line"><span class="formula">	</span></span><br><span class="line"><span class="formula">12. 拷贝编译的内核和设备树到tftp共享文件中</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/uImage /tftpboot</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/dts/exynos4412-fs4412.dtb /tftpboot</span></span><br><span class="line"><span class="formula">	</span></span><br><span class="line"><span class="formula">四、调试内核和设备树；</span></span><br><span class="line"><span class="formula">采用tftp下载内核和设备树，nfs挂载根文件系统</span></span><br><span class="line"><span class="formula">	set tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> bootm 41000000 - 42000000</span></span><br><span class="line"><span class="formula">	set bootargs root=/dev/nfs nfsroot=192.168.9.120:/source/nfs/rootfs rw clk_ignore_unused console=ttySAC2,115200 init=/linuxrc ip=192.168.9.233</span></span><br><span class="line"><span class="formula">	saveenv</span></span><br><span class="line"><span class="formula">掉电重启板子  //会看到内核信息输出。 但后面有报错，正常 （因为网卡等还没移植，nfs挂载肯定失败）</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">【网卡驱动的移植】 </span></span><br><span class="line"><span class="formula">1. 修改设备树文件</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">添加：linux-3.14/arch/arm/boot/dts/exynos4412-fs4412.dts</span></span><br><span class="line"><span class="formula">srom-cs1@5000000 &#123;</span></span><br><span class="line"><span class="formula">		compatible = &quot;simple-bus&quot;;</span></span><br><span class="line"><span class="formula">		#address-cells = &lt;1&gt;;</span></span><br><span class="line"><span class="formula">		#size-cells = &lt;1&gt;;</span></span><br><span class="line"><span class="formula">		reg = &lt;0x5000000 0x1000000&gt;;</span></span><br><span class="line"><span class="formula">		ranges;</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">		ethernet@5000000 &#123;</span></span><br><span class="line"><span class="formula">			compatible = &quot;davicom,dm9000&quot;;</span></span><br><span class="line"><span class="formula">			reg = &lt;0x5000000 0x2 0x5000004 0x2&gt;;</span></span><br><span class="line"><span class="formula">			interrupt-parent = &lt;&amp;gpx0&gt;;</span></span><br><span class="line"><span class="formula">			interrupts = &lt;6 4&gt;;</span></span><br><span class="line"><span class="formula">			davicom,no-eeprom;</span></span><br><span class="line"><span class="formula">			mac-address = [00 0a 2d a6 55 a2];</span></span><br><span class="line"><span class="formula">		&#125;;</span></span><br><span class="line"><span class="formula">	&#125;;</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">添加设备编译参数</span></span><br><span class="line"><span class="formula">make menuconfig</span></span><br><span class="line"><span class="formula">[*] Networking support  ---&gt;    //配置支持TCP/IP</span></span><br><span class="line"><span class="formula">	Networking options  ---&gt;</span></span><br><span class="line"><span class="formula">		&lt;*&gt; Packet socket</span></span><br><span class="line"><span class="formula">		&lt;*&gt;Unix domain sockets </span></span><br><span class="line"><span class="formula">		[*] TCP/IP networking</span></span><br><span class="line"><span class="formula">		[*]   IP: kernel level autoconfiguration</span></span><br><span class="line"><span class="formula">Device Drivers  ---&gt;   //配置支持DM9000网卡驱动</span></span><br><span class="line"><span class="formula">	[*] Network device support  ---&gt;</span></span><br><span class="line"><span class="formula">		[*]   Ethernet driver support (NEW)  ---&gt;</span></span><br><span class="line"><span class="formula">			&lt;*&gt;   DM9000 support</span></span><br><span class="line"><span class="formula">File systems  ---&gt;  //配置支持网络文件系统NFS</span></span><br><span class="line"><span class="formula">	[*] Network File Systems (NEW)  ---&gt;</span></span><br><span class="line"><span class="formula">		&lt;*&gt;   NFS client support</span></span><br><span class="line"><span class="formula">		[*]     NFS client support for NFS version 2</span></span><br><span class="line"><span class="formula">		[*]     NFS client support for NFS version 3</span></span><br><span class="line"><span class="formula">		[*]       NFS client support for the NFSv3 ACL protocol extension</span></span><br><span class="line"><span class="formula">		[*]   Root file system on NFS</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">		</span></span><br><span class="line"><span class="formula">重新编译内核和设备树</span></span><br><span class="line"><span class="formula">	make uImage</span></span><br><span class="line"><span class="formula">	make dtbs</span></span><br><span class="line"><span class="formula">将编译好的内核和设备树拷贝到tftp共享目录中</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/uImage /tftpboot</span></span><br><span class="line"><span class="formula">	cp arch/arm/boot/dts/exynos4412-fs4412.dtb /tftpboot</span></span><br><span class="line"><span class="formula">采用tftp下载内核和设备树，nfs挂载根文件系统</span></span><br><span class="line"><span class="formula">	set tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span> tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span> bootm 41000000 - 42000000</span></span><br><span class="line"><span class="formula">	set bootargs root=/dev/nfs nfsroot=192.168.1.190:/source/nfs/rootfs rw clk_ignore_unused console=ttySAC2,115200 init=/linuxrc ip=192.168.1.191</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">如果挂载失败：修改文件drivers/clk/clk.c  </span></span><br><span class="line"><span class="formula">	修改static bool clk_ignore_unused; 为：static bool clk_ignore_unused = true;    //忽略时钟</span></span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/06/01/day45-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E5%86%85%E6%A0%B8/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ARM/" rel="tag">ARM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%86%85%E6%A0%B8/" rel="tag">内核</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D/" rel="tag">系统移植</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/06/01/day46-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8D%E6%A0%B9%E6%96%87%E4%BB%B6/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            day46-系统移植根文件
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/05/30/day44-%E7%B3%BB%E7%BB%9F%E7%A7%BB%E6%A4%8Dbootloader/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">day44-系统移植bootloader</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "tuYk4qAcyDHqUmYKwnOzB9nI-9Nh9j0Va",
+    app_key: "EuYRm7WE36kxYD3nnGAQBK5y",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2023
+        <i class="ri-heart-fill heart_icon"></i> nakano-mahiro
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">文章</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechatpay.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.6/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+<!-- Katex -->
+
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        
+    
+
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+<script src="/js/dz.js"></script>
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=1975315159&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
