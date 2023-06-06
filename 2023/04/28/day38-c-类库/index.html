@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">624</span>
+            <span class="post-count">902</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">2 min</span>
+            <span class="post-count">3 min</span>
         </span>
     </span>
 </div>
@@ -150,6 +150,24 @@
 <li><code>begin()</code>: 返回指向vector第一个元素的迭代器。</li>
 <li><code>end()</code>: 返回指向vector末尾（最后一个元素的下一个位置）的迭代器。</li>
 </ol>
+<h2 id="三、其它类库"><a href="#三、其它类库" class="headerlink" title="三、其它类库"></a>三、其它类库</h2><ul>
+<li><p><strong>Boost</strong>: Boost库几乎是标准库的扩展，提供了许多有用的和高效的特性，例如智能指针、正则表达式处理、图形算法等。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;boost/shared_ptr.hpp&gt;</span></span></span><br><span class="line"><span class="function">boost::<span class="built_in">shared_ptr</span>&lt;<span class="keyword">int</span>&gt; <span class="title">ptr</span><span class="params">(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">2</span>))</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Qt</strong>: Qt是一个跨平台的C++图形用户界面应用程序开发框架。也可以用于开发非GUI程序，如命令行工具和服务器。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QApplication&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;QLabel&gt;</span></span></span><br><span class="line">   </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="function">QApplication <span class="title">app</span><span class="params">(argc, argv)</span></span>;</span><br><span class="line">    <span class="function">QLabel <span class="title">label</span><span class="params">(<span class="string">&quot;Hello, world!&quot;</span>)</span></span>;</span><br><span class="line">    label.show();</span><br><span class="line">    <span class="keyword">return</span> app.exec();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>OpenCV</strong>: OpenCV是一个专门用于计算机视觉的库，提供了许多图像处理和计算机视觉的算法。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;opencv2/opencv.hpp&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cv::Mat img = cv::imread(<span class="string">&quot;image.jpg&quot;</span>, cv::IMREAD_COLOR);</span><br><span class="line">    cv::imshow(<span class="string">&quot;image&quot;</span>, img);</span><br><span class="line">    cv::waitKey(<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Eigen</strong>: Eigen是一个高级的C++库，用于线性代数，矩阵和向量操作，数值分析和数学符号计算。</p>
+  <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Eigen/Dense&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">Eigen::MatrixXd <span class="title">m</span><span class="params">(<span class="number">2</span>,<span class="number">2</span>)</span></span>;</span><br><span class="line">    m(<span class="number">0</span>,<span class="number">0</span>) = <span class="number">3</span>;</span><br><span class="line">    m(<span class="number">1</span>,<span class="number">0</span>) = <span class="number">2.5</span>;</span><br><span class="line">    m(<span class="number">0</span>,<span class="number">1</span>) = <span class="number">-1</span>;</span><br><span class="line">    m(<span class="number">1</span>,<span class="number">1</span>) = m(<span class="number">1</span>,<span class="number">0</span>) + m(<span class="number">0</span>,<span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ul>
  
       <!-- reward -->
       

@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">8</span>
+            <span class="post-count">2.3k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">1 min</span>
+            <span class="post-count">9 min</span>
         </span>
     </span>
 </div>
@@ -98,7 +98,178 @@
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day46-系统移植根文件"><a href="#day46-系统移植根文件" class="headerlink" title="day46-系统移植根文件"></a><font color="green">day46-系统移植根文件</font></h1><a id="more"></a> 
+  <h1 id="day46-系统移植根文件"><a href="#day46-系统移植根文件" class="headerlink" title="day46-系统移植根文件"></a><font color="green">day46-系统移植根文件</font></h1><a id="more"></a>
+
+<h2 id="一、根文件目录"><a href="#一、根文件目录" class="headerlink" title="一、根文件目录"></a>一、根文件目录</h2><table>
+<thead>
+<tr>
+<th>目录</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/</td>
+<td>根目录，一般只存放子目录，不存放文件</td>
+</tr>
+<tr>
+<td>/bin</td>
+<td>存放常用的命令和程序，如 ls, cp, rm 等</td>
+</tr>
+<tr>
+<td>/boot</td>
+<td>存放启动 Linux 时使用的一些核心文件，包括链接文件和镜像文件</td>
+</tr>
+<tr>
+<td>/dev</td>
+<td>存放 Linux 的外部设备，如 cpu, disk 等</td>
+</tr>
+<tr>
+<td>/etc</td>
+<td>存放系统的配置文件和子目录</td>
+</tr>
+<tr>
+<td>/home</td>
+<td>存放普通用户的主目录，以用户的账号命名</td>
+</tr>
+<tr>
+<td>/lib</td>
+<td>存放系统最基本的动态连接共享库，类似于 Windows 里的 DLL 文件</td>
+</tr>
+<tr>
+<td>/lost+found</td>
+<td>存放系统非法关机后的一些文件</td>
+</tr>
+<tr>
+<td>/media</td>
+<td>存放自动识别的设备，如 U 盘，光驱等</td>
+</tr>
+<tr>
+<td>/mnt</td>
+<td>存放临时挂载的文件系统，如光驱等</td>
+</tr>
+<tr>
+<td>/opt</td>
+<td>存放额外安装的软件或者服务</td>
+</tr>
+<tr>
+<td>/proc</td>
+<td>存放当前内核运行状态的一系列特殊文件，是一个虚拟的目录</td>
+</tr>
+<tr>
+<td>/root</td>
+<td>系统管理员的用户主目录</td>
+</tr>
+<tr>
+<td>/run</td>
+<td>存放系统启动以来的信息，是一个临时文件系统</td>
+</tr>
+<tr>
+<td>/sbin</td>
+<td>存放系统管理员使用的高级管理程序和系统守护程序</td>
+</tr>
+<tr>
+<td>/selinux</td>
+<td>存放 selinux 相关的文件，是一个安全机制</td>
+</tr>
+<tr>
+<td>/srv</td>
+<td>存放一些服务启动后需要提取的数据</td>
+</tr>
+<tr>
+<td>/sys</td>
+<td>存放 2.6 内核中新出现的一个文件系统 sysfs ，集成了 proc, devfs 和 devpts 的信息</td>
+</tr>
+<tr>
+<td>/tmp</td>
+<td>存放一些临时文件</td>
+</tr>
+<tr>
+<td>/usr</td>
+<td>存放用户的应用程序和文件，类似于 Windows 下的 program files 目录</td>
+</tr>
+<tr>
+<td>/var</td>
+<td>存放不断扩充的东西，包括各种日志文件</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：<br>echo $PATH 查看环境变量<br>ls -l /dev 后”c”代表字符设备，”b”代表块设备。Linux中分主设备号和次设备号</p>
+</blockquote>
+<h3 id="设备节点"><a href="#设备节点" class="headerlink" title="设备节点"></a>设备节点</h3><table>
+<thead>
+<tr>
+<th>设备节点</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/dev/console</td>
+<td>字符设备</td>
+<td>系统控制台，用于显示系统启动信息和内核打印信息</td>
+</tr>
+<tr>
+<td>/dev/null</td>
+<td>字符设备</td>
+<td>空设备，可以向它写入任何数据，但是读取时总是返回 EOF</td>
+</tr>
+<tr>
+<td>/dev/zero</td>
+<td>字符设备</td>
+<td>零设备，可以向它写入任何数据，但是读取时总是返回 0</td>
+</tr>
+<tr>
+<td>/dev/random</td>
+<td>字符设备</td>
+<td>随机数生成器，可以从它读取随机数</td>
+</tr>
+<tr>
+<td>/dev/tty</td>
+<td>字符设备</td>
+<td>终端设备，用于表示当前登录的用户终端</td>
+</tr>
+<tr>
+<td>/dev/ttySx</td>
+<td>字符设备</td>
+<td>串口设备，用于表示串行通信接口，x 是数字编号</td>
+</tr>
+<tr>
+<td>/dev/ttyUSBx</td>
+<td>字符设备</td>
+<td>USB转串口设备，用于表示通过 USB 接口连接的串行通信接口，x 是数字编号</td>
+</tr>
+<tr>
+<td>/dev/hdax</td>
+<td>块设备</td>
+<td>IDE硬盘分区设备，用于表示 IDE 接口的硬盘分区，x 是数字编号</td>
+</tr>
+<tr>
+<td>/dev/sdax</td>
+<td>块设备</td>
+<td>SCSI/SATA/USB硬盘分区设备，用于表示 SCSI/SATA/USB 接口的硬盘分区，x 是数字编号</td>
+</tr>
+<tr>
+<td>/dev/mmcblkxp</td>
+<td>块设备</td>
+<td>MMC/SD卡分区设备，用于表示 MMC/SD 卡的分区，x 是数字编号，p 是分区号</td>
+</tr>
+</tbody></table>
+<h2 id="二、根文件系统的制作"><a href="#二、根文件系统的制作" class="headerlink" title="二、根文件系统的制作"></a>二、根文件系统的制作</h2><h3 id="1、linuxxrc"><a href="#1、linuxxrc" class="headerlink" title="1、linuxxrc"></a>1、linuxxrc</h3><p>用来启动linux的脚本文件，放在根文件系统的根目录下，通过内核命令产生init指令</p>
+<blockquote>
+<p>init = /linuxrc</p>
+</blockquote>
+<h3 id="创建根文件系统步骤"><a href="#创建根文件系统步骤" class="headerlink" title="创建根文件系统步骤"></a>创建根文件系统步骤</h3><ul>
+<li>创建根文件系统目录，一般在 /home 目录下创建一个 rootfs 的目录，然后在其中创建各种必要的子目录，如 /bin, /dev, /etc, /lib, /proc, /sys 等。</li>
+<li>创建设备文件，一般在 /dev 目录下创建一些常用的设备节点，如 console, null, zero, tty 等，可以使用 mknod 命令或者 udev/mdev 程序来创建。</li>
+<li>下载并编译内核源码，一般从 <a target="_blank" rel="noopener" href="https://www.kernel.org/">https://www.kernel.org/</a> 下载自己想要的内核版本，然后解压并进入内核源码目录，使用 make menuconfig 命令进行配置，选择合适的平台和功能选项，然后使用 make 命令编译内核，最后使用 make uImage 命令生成内核镜像文件。</li>
+<li>编译并安装内核模块，一般在编译内核后，使用 make modules 命令编译内核模块，然后使用 make modules_install 命令安装内核模块到根文件系统目录下的 /lib/modules 目录中。</li>
+<li>下载并编译 busybox，busybox 是一个集成了常用命令和工具的工具集，可以简化根文件系统的制作过程。一般从 <a target="_blank" rel="noopener" href="https://busybox.net/downloads/">https://busybox.net/downloads/</a> 下载自己想要的 busybox 版本，然后解压并进入 busybox 目录，使用 make menuconfig 命令进行配置，选择合适的平台和功能选项，然后使用 make 命令编译 busybox，最后使用 make install 命令安装 busybox 到根文件系统目录下的 /bin, /sbin, /usr 目录中。</li>
+<li>补全动态链接库，一般从交叉编译工具链中拷贝 lib 目录到根文件系统目录下的 /lib 目录中，以便运行时能够找到所需的动态链接库。</li>
+<li>生成配置文件，一般在根文件系统目录下的 /etc 目录中创建各种配置文件，如 fstab, inittab, profile, passwd, group, shadow 等。其中 fstab 文件用于指定哪些设备或文件系统需要被挂载到哪些目录上；inittab 文件用于指定 init 进程启动时需要执行哪些脚本或程序；profile 文件用于设置环境变量和命令提示符等；passwd, group, shadow 文件用于设置用户和组的信息和密码等。</li>
+<li>烧写和验证根文件系统，一般将根文件系统打包成一个镜像文件，如 ext4 格式或者 cramfs 格式等，然后将其烧写到相应的设备上，如硬盘分区或者 SD 卡等。然后将内核镜像文件也烧写到相应的设备上，如 NAND Flash 或者 SD 卡等。最后使用启动加载程序，如 U-boot 等，来加载内核镜像文件，并指定根文件系统的位置，如 root=/dev/mmcblk0p1 等，然后启动内核并进入根文件系统。</li>
+</ul>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">1. 安装 BusyBox</span><br><span class="line">	1) 将busybox-1.22.1.tar.bz2拷贝到你需要操作的目录</span><br><span class="line">		cp busybox-1.22.1.tar.bz2 /home/farsight/workpace/fs4412</span><br><span class="line">	2) 解压busybox-1.22.1.tar.bz2</span><br><span class="line">		tar xf busybox-1.22.1.tar.bz2</span><br><span class="line">	3) 进入到busybox目录中</span><br><span class="line">		cd busybox-1.22.1</span><br><span class="line">	4) 配置编译信息</span><br><span class="line">		make menuconfig		//弹出图像界面</span><br><span class="line">		Busybox Settings  ---&gt; 		//设置busybox</span><br><span class="line">			Build Options  ---&gt; 	//编译选项</span><br><span class="line">				[*] Build BusyBox as a static binary (no shared libs)	//采用静态编译</span><br><span class="line">				(arm-linux-) Cross Compiler prefix		//采用的编译器是arm-linux-</span><br><span class="line">			Installation Options (&quot;make install&quot; behavior)  ---&gt;	//设置安装路径</span><br><span class="line">				(./rootfs) BusyBox installation prefix	//设置安装路径为./rootfs,如果采用默认路径为./_install</span><br><span class="line">	5) 编译busybox</span><br><span class="line">		make</span><br><span class="line">	6) 安装busybox</span><br><span class="line">		make install</span><br><span class="line">	7) 替换共享目录</span><br><span class="line">		rm -r /source/nfs/rootfs</span><br><span class="line">		cp -r rootfs /source/nfs</span><br><span class="line">	</span><br><span class="line">	启动开发板，观察现象：</span><br><span class="line">	此时的文件系统能够启动，但是缺少文件；</span><br><span class="line">	</span><br><span class="line">2. 创建缺少的目录</span><br><span class="line">	mkdir etc dev tmp mnt proc sys var lib</span><br><span class="line">3. 添加所需要的库代码</span><br><span class="line">	sudo cp -a /home/farsight/gcc-4.6.4/arm-arm1176jzfssf-linux-gnueabi/lib/* ./lib/      */</span><br><span class="line">	进入lib目录删除无用的库，用来保证rootfs足够小，但是要功能的实训；</span><br><span class="line">	sudo rm *.a</span><br><span class="line">	sudo chmod 0777 *</span><br><span class="line">	arm-none-linux-gnueabi-strip *</span><br><span class="line">4. sudo mknod dev/console c 5 1</span><br><span class="line"></span><br><span class="line">5. 添加启动配置信息 &#123;</span><br><span class="line">	1)/etc/init.d/rcS</span><br><span class="line">		#!/bin/sh</span><br><span class="line">		# This is the first script called by init process</span><br><span class="line">		/bin/mount  -a</span><br><span class="line">		echo  /sbin/mdev  &gt;  /proc/sys/kernel/hotplug</span><br><span class="line">		/sbin/mdev  -s</span><br><span class="line">	2) /etc/inittab</span><br><span class="line">		#this is run first except when booting in single-user mode.</span><br><span class="line">		::sysinit:/etc/init.d/rcS</span><br><span class="line">		# /bin/sh invocations on selected ttys</span><br><span class="line">		# start an &quot;askfirst&quot; shell on the console (whatever that may be)</span><br><span class="line">		::askfirst:-/bin/sh</span><br><span class="line">		# stuff to do when restarting the init process</span><br><span class="line">		::restart:/sbin/init</span><br><span class="line">		# stuff to do before rebooting</span><br><span class="line">		::ctrlaltdel:/sbin/reboot</span><br><span class="line">	3) /etc/fstab </span><br><span class="line">		#device     mount-point         type            options         dump     fsck order</span><br><span class="line">		proc         /proc              proc            defaults         0               0</span><br><span class="line">		tmpfs        /tmp               tmpfs           defaults         0               0</span><br><span class="line">		sysfs        /sys               sysfs           defaults         0               0</span><br><span class="line">		tmpfs        /dev               tmpfs           defaults         0               0</span><br><span class="line">	4) /etc/profile</span><br><span class="line">		LD_LIBRARY_PATH=/lib:/usr/lib</span><br><span class="line">		export LD_LIBRARY_PAHT</span><br><span class="line">		PATH=/bin:/sbin:/usr/bin:/usr:/sbin</span><br><span class="line">		export PATH</span><br><span class="line">		export HOSTNAME=Farsight</span><br><span class="line">		export USER=root</span><br><span class="line">		export HOME=root</span><br><span class="line">		export PS1=&quot;[<span class="formula">$USER@$</span>HOSTNAME:<span class="tag">\<span class="name">W</span></span>]<span class="tag">\<span class="name">#</span></span> &quot;</span><br><span class="line"></span><br><span class="line">		export QTDIR=/usr/local/Trolltech/QtEmbedded-4.8.6-arm</span><br><span class="line">		export LD_LIBRARY_PATH=<span class="formula">$QTDIR/lib:$</span>LD_LIBRARY_PATH</span><br><span class="line">		export PATH=<span class="formula">$QTDIR/bin:$</span>PATH</span><br><span class="line">		export QWS_SIZE=&quot;1024x600&quot;</span><br><span class="line">		export QT_QWS_FONTDIR=<span class="formula">$QTDIR/lib/fonts</span></span><br><span class="line"><span class="formula">	&#125;</span></span><br><span class="line"><span class="formula"></span></span><br><span class="line"><span class="formula">如果根文件系统需要烧写flash里面，需要去制作镜像文件；</span></span><br><span class="line"><span class="formula">制作ramdisk.img</span></span><br><span class="line"><span class="formula">   $</span> cd ~</span><br><span class="line">   <span class="formula">$ dd if=/dev/zero of=initrd.img bs=1k count=8192  //创建一个8M的空磁盘， 表示把/dev/zero中数据读到initrd.img   if--表示输入设备  of--输出  bs--单元  count--数目</span></span><br><span class="line"><span class="formula">   $</span> mkfs.ext2 -F initrd.img         //把initrd.img制作成ext2格式的文件</span><br><span class="line">   <span class="formula">$ mount  -t  ext2   -o  loop  initrd.img  /mnt/     //把initrd.img挂载到/mnt/  设备需要挂载后才能拷贝</span></span><br><span class="line"><span class="formula">		//如果报错：cp: writing `/mnt/rootfs/lib/libBrokenLocale-2.17.so&#x27;: No space left on device</span></span><br><span class="line"><span class="formula">		//说明根文件太大，需要裁剪一部分</span></span><br><span class="line"><span class="formula">   $</span> cp /nfs/rootfs/* /mnt/ -a                     */    //把文件系统拷贝到/mnt中，也就是initrd.img中</span><br><span class="line">   <span class="formula">$ umount /mnt/</span></span><br><span class="line"><span class="formula">   $</span> gzip  --best  -c  initrd.img  &gt;  initrd.img.gz  //压缩之前，确认已umount ,避免数据正被使用，压缩出错</span><br><span class="line">   <span class="formula">$ mkimage -n &quot;ramdisk&quot; -A arm -O linux -T ramdisk -C gzip -d initrd.img.gz ramdisk.img   //把根文件系统制作成u-boot能识别的格式</span></span><br><span class="line"><span class="formula">   $</span> cp  ramdisk.img  /tftpboot</span><br><span class="line">   </span><br><span class="line">   //注意验证根文件系统时，使用的是第一天共享的完全OK的内核</span><br><span class="line">   #setenv bootcmd tftp 41000000 uImage<span class="tag">\<span class="name">;</span></span>tftp 42000000 exynos4412-fs4412.dtb<span class="tag">\<span class="name">;</span></span>tftp 43000000  ramdisk.img<span class="tag">\<span class="name">;</span></span>bootm 41000000 43000000 42000000   /* </span><br></pre></td></tr></table></figure>
+ 
       <!-- reward -->
       
       <div id="reword-out">
