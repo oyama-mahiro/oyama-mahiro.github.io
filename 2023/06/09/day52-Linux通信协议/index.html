@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    day52-Linux通信协议 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-day52-Linux通信协议"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  day52-Linux通信协议
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" class="article-date">
+  <time datetime="2023-06-09T01:11:56.000Z" itemprop="datePublished">2023-06-09</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/">通信协议</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">5.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">20 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day52-Linux通信协议"><a href="#day52-Linux通信协议" class="headerlink" title="day52-Linux通信协议"></a><font color="green">day52-Linux通信协议</font></h1><a id="more"></a>
+
+<h2 id="一、I2C"><a href="#一、I2C" class="headerlink" title="一、I2C"></a>一、I2C</h2><h3 id="1-1-I2C总线"><a href="#1-1-I2C总线" class="headerlink" title="1.1 I2C总线"></a>1.1 I2C总线</h3><p>IIC总线是由数据线SDA和时钟SCL构成的串行总线，可发送和接收数据。SDA传输数据是大端传输，每次传输8bit，即一字节。总线上每个设备都有自己的一个addr，共7个bit，广播地址全0。</p>
+<p>CPU发出的控制信号分为地址码（寄存器）和控制量（数据）两部分。</p>
+<p><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/i2c%E6%80%BB%E7%BA%BF.png" alt="i2c"></p>
+<h3 id="1-2-I2C信号"><a href="#1-2-I2C信号" class="headerlink" title="1.2 I2C信号"></a>1.2 I2C信号</h3><ul>
+<li>开始信号： SCL为高时，SDA下降沿，开始传送数据</li>
+<li>结束信号： SCL为高时，SDA上升沿，结束传送数据</li>
+<li>数据信号： 在开始后，SCL为高时，SDA的电平变化代表数据的传输。SCL为低时，SDA的数据才能改变。即一位数据一个时钟脉冲</li>
+<li>应答信号： 发送数据后，接收方会返回一个应答信号，发送方发送完数据后，会释放SDA，接收方会拉低SDA，发送方会读取SDA的电平，如果为低，则表示接收方接收成功，如果为高，则表示接收方接收失败。</li>
+</ul>
+<p><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/shixu.jpg" alt="时序"></p>
+<h3 id="1-3-主机发送数据"><a href="#1-3-主机发送数据" class="headerlink" title="1.3 主机发送数据"></a>1.3 主机发送数据</h3><p>（1）主机在检测到总线为“空闲状态”（即 SDA、SCL 线均为高电平）时，发送一个启动信号“S”（即开始信号，SCL为高时，SDA下降沿），开始一次通信的开始<br>（2）主机接着发送一个命令字节。该字节由 7 位的外围器件地址和 1 位读写控制位 R/W组成（此时 R/W=0，从主机写入从机）<br>（3）相对应的从机收到命令字节后向主机回馈应答信号 ACK（ACK=0）<br>（4）主机收到从机的应答信号后开始发送第一个字节的数据<br>（5）从机收到数据后返回一个应答信号 ACK<br>（6）主机收到应答信号后再发送下一个数据字节<br>（7）当主机发送最后一个数据字节并收到从机的 ACK 后，通过向从机发送一个停止信号P（即结束信号，SCL为高时，SDA上升沿）结束本次通信并释放总线。从机收到P信号后也退出与主机之间的通信<br><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/send.png" alt="send"></p>
+<h3 id="1-4-主机接收数据"><a href="#1-4-主机接收数据" class="headerlink" title="1.4 主机接收数据"></a>1.4 主机接收数据</h3><p>（1）主机发送开始信号后，接着发送命令字节（其中 R/W=1，从从机读入主机）<br>（2）对应的从机收到地址字节后，返回一个应答信号并向主机发送数据<br>（3）主机收到数据后向从机反馈一个应答信号<br>（4）从机收到应答信号后再向主机发送下一个数据<br>（5）当主机完成接收数据后，向从机发送一个“非应答信号（ACK=1）”，从机收到ACK=1 的非应答信号后便停止发送<br>（6）主机发送非应答信号后，再发送一个结束信号，释放总线结束通信</p>
+<p><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/recv.png" alt="recv"></p>
+<h3 id="1-5-I2C驱动"><a href="#1-5-I2C驱动" class="headerlink" title="1.5 I2C驱动"></a>1.5 I2C驱动</h3><p>Linux下IIC驱动架构简介</p>
+<p>IIC（Inter-Integrated Circuit）是一种串行通信总线，用于连接低速外围设备，如传感器、EEPROM、RTC等。Linux内核提供了一套完整的IIC驱动架构，包括IIC核心层、IIC总线适配器层和IIC设备驱动层。本文将详细介绍这三层的作用和实现方法。</p>
+<p><strong>IIC核心层</strong></p>
+<p>IIC核心层是Linux内核中负责管理IIC总线和设备的模块，它提供了一些基本的数据结构和函数接口，用于注册、注销和访问IIC总线适配器和设备。IIC核心层的主要数据结构有：</p>
+<ul>
+<li>struct i2c_adapter：表示一个IIC总线适配器，即一个物理的IIC控制器，它可以连接多个IIC设备。该结构体中包含了一个名为algo的指针，指向一个struct i2c_algorithm结构体，该结构体定义了该适配器的具体通信方法，如读写数据、设置时钟频率等。每个IIC总线适配器都需要实现自己的算法，并在注册时传递给IIC核心层。</li>
+<li>struct i2c_client：表示一个IIC设备，由系统根据设备树生成,它有一个唯一的7位或10位地址。该结构体中包含了一个名为driver的指针，指向一个struct i2c_driver结构体，该结构体定义了该设备的驱动程序，如初始化、释放、读写寄存器等。每个IIC设备都需要有一个对应的驱动程序，并在注册时传递给IIC核心层。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span>  <span class="title">i2c_client</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span>  flags;            <span class="comment">//标志位</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">short</span>  addr;　　　　　　 <span class="comment">//设备的地址， 7位为读写位,[6:0]地址</span></span><br><span class="line">	<span class="keyword">char</span> name[I2C_NAME_SIZE];　　　　 <span class="comment">//设备的名称，最大为20个字节</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span>  <span class="title">i2c_adapter</span> *<span class="title">adapter</span>;</span>　　 <span class="comment">//依附的适配器i2c_adapter，适配器指明所属的总线</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span>  <span class="title">i2c_driver</span> *<span class="title">driver</span>;</span>　　　 <span class="comment">//指向设备对应的驱动程序</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">device</span>  <span class="title">dev</span>;</span>　　　　　　　　<span class="comment">//设备结构体</span></span><br><span class="line">	<span class="keyword">int</span> irq;　　　　　　　　　　　　　　<span class="comment">//设备申请的中断号</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span>  <span class="title">list</span>;</span>　　　　　　<span class="comment">//连接到总线上的所有设备</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">list_head</span> 　　<span class="title">detected</span>;</span>　　<span class="comment">//已经被发现的设备链表</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">completion</span>　　<span class="title">released</span>;</span>　　<span class="comment">//是否已经释放的完成量</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+<li>struct i2c_msg：表示一个IIC消息，即一次IIC通信的操作，它包含了目标设备地址、读写标志、数据长度和数据缓冲区等信息。一次IIC通信可以由多个消息组成，例如先写入寄存器地址再读取寄存器数据，就需要两个消息。IIC核心层提供了一个名为i2c_transfer的函数接口，用于将一组消息发送给指定的适配器。<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">i2c_msg</span> &#123;</span></span><br><span class="line">	__u16 addr;					<span class="comment">/* 从机地址			*/</span></span><br><span class="line">	__u16 flags;				<span class="comment">/* 标志位，指定进行的操作 */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_TEN		0x0010	<span class="comment">/* this is a ten bit chip address */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_RD		0x0001	<span class="comment">/* read data, from slave to master */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_STOP		0x8000	<span class="comment">/* if I2C_FUNC_PROTOCOL_MANGLING */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_NOSTART		0x4000	<span class="comment">/* if I2C_FUNC_NOSTART */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_REV_DIR_ADDR	0x2000	<span class="comment">/* if I2C_FUNC_PROTOCOL_MANGLING */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_IGNORE_NAK	0x1000	<span class="comment">/* if I2C_FUNC_PROTOCOL_MANGLING */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_NO_RD_ACK		0x0800	<span class="comment">/* if I2C_FUNC_PROTOCOL_MANGLING */</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> I2C_M_RECV_LEN		0x0400	<span class="comment">/* length will be first received byte */</span></span></span><br><span class="line">	__u16 len;		<span class="comment">/* msg length（单位为字节，需要注意）				*/</span></span><br><span class="line">	__u8 *buf;		<span class="comment">/* pointer to msg data			*/</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p><strong>IIC总线适配器层</strong></p>
+<p>IIC总线适配器层是Linux内核中负责实现不同类型的IIC控制器驱动程序的模块，它根据不同的硬件平台和通信协议，提供了不同的算法来完成IIC通信。Linux内核支持多种常见的IIC控制器，如SMBus、GPIO模拟、PCI设备等。每种控制器都需要实现一个struct i2c_algorithm结构体，并在初始化时创建一个struct i2c_adapter结构体，并调用i2c_add_adapter函数将其注册到IIC核心层。</p>
+<p><strong>IIC设备驱动层</strong></p>
+<p>IIC设备驱动层是Linux内核中负责实现不同类型的IIC设备驱动程序的模块，它根据不同的硬件平台和通信协议，提供了不同的驱动程序来完成IIC设备的初始化、读写等操作。Linux内核支持多种常见的IIC设备，如EEPROM、RTC、传感器等。每种设备都需要实现一个struct i2c_driver结构体，并在初始化时调用i2c_add_driver函数将其注册到IIC核心层。</p>
+<p><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/i2c%E9%A9%B1%E5%8A%A8.png" alt="i2c驱动"></p>
+<br>
+<br>
+
+<hr>
+<h2 id="二、SPI"><a href="#二、SPI" class="headerlink" title="二、SPI"></a>二、SPI</h2><h3 id="2-1-SPI总线"><a href="#2-1-SPI总线" class="headerlink" title="2.1 SPI总线"></a>2.1 SPI总线</h3><p>SPI通信原理很简单，需要至少4根线，单向传输时3根线，它们是MISO（主设备数据输入）、MOSI（主设备数据输出）、SCLK（时钟）和CS/SS（片选）：</p>
+<ul>
+<li>MISO（ Master Input Slave Output）：主设备数据输入，从设备数据输出；</li>
+<li>MOSI（Master Output Slave Input）：主设备数据输出，从设备数据输入；</li>
+<li>SCLK（Serial Clock）：时钟信号，由主设备产生；</li>
+<li>CS/SS（Chip Select/Slave Select）：从设备使能信号，由主设备控制，一主多从时，CS/SS是从芯片是否被主芯片选中的控制信号，只有片选信号为预先规定的使能信号时（高电位或低电位），主芯片对此从芯片的操作才有效。</li>
+</ul>
+<h3 id="2-2-SPI原理"><a href="#2-2-SPI原理" class="headerlink" title="2.2 SPI原理"></a>2.2 SPI原理</h3><p>SPI数据通信的流程可以分为以下几步：</p>
+<blockquote>
+<p>1、主设备发起信号，将CS/SS拉低，启动通信。<br>2、主设备通过发送时钟信号，来告诉从设备进行写数据或者读数据操作（采集时机可能是时钟信号的上升沿（从低到高）或下降沿（从高到低），因为SPI有四种模式，后面会讲到），它将立即读取数据线上的信号，这样就得到了一位数据（1bit）。<br>3、主机（Master）将要发送的数据写到发送数据缓存区（Menory），缓存区经过移位寄存器（缓存长度不一定，看单片机配置），串行移位寄存器通过MOSI信号线将字节一位一位的移出去传送给从机，同时MISO接口接收到的数据经过移位寄存器一位一位的移到接收缓存区。<br>4、从机（Slave）也将自己的串行移位寄存器（缓存长度不一定，看单片机配置）中的内容通过MISO信号线返回给主机。同时通过MOSI信号线接收主机发送的数据，这样，两个移位寄存器中的内容就被交换。</p>
+</blockquote>
+<p>例如，下图示例中简单模拟SPI通信流程，主机拉低NSS片选信号，启动通信，并且产生时钟信号，上升沿触发边沿信号，主机在MOSI线路一位一位发送数据0X53，在MISO线路一位一位接收数据0X46，如下图所示：<br><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/spi%E9%80%9A%E4%BF%A1.png" alt="spi"></p>
+<h3 id="2-3-SPI时钟"><a href="#2-3-SPI时钟" class="headerlink" title="2.3 SPI时钟"></a>2.3 SPI时钟</h3><p>SPI时钟特点主要包括：时钟速率、时钟极性和时钟相位三方面。</p>
+<ul>
+<li><p>时钟速率<br>SPI总线上的主设备必须在通信开始时候配置并生成相应的时钟信号。从理论上讲，只要实际可行，时钟速率就可以是你想要的任何速率，当然这个速率受限于每个系统能提供多大的系统时钟频率，以及最大的SPI传输速率。</p>
+</li>
+<li><p>时钟极性<br>根据硬件制造商的命名规则不同，时钟极性通常写为CKP或CPOL。时钟极性和相位共同决定读取数据的方式，比如信号上升沿读取数据还是信号下降沿读取数据。</p>
+</li>
+</ul>
+<p>CKP可以配置为1或0。这意味着你可以根据需要将时钟的默认状态（IDLE）设置为高或低。极性反转可以通过简单的逻辑逆变器实现。你必须参考设备的数据手册才能正确设置CKP和CKE。</p>
+<blockquote>
+<p>CKP = 0：时钟空闲IDLE为低电平 0；<br>CKP = 1：时钟空闲IDLE为高电平1。</p>
+</blockquote>
+<ul>
+<li>时钟相位<br>根据硬件制造商的不同，时钟相位通常写为CKE或CPHA。顾名思义，时钟相位/边沿，也就是采集数据时是在时钟信号的具体相位或者边沿；</li>
+</ul>
+<blockquote>
+<p>CKE = 0：在时钟信号SCK的第一个跳变沿采样；<br>CKE = 1：在时钟信号SCK的第二个跳变沿采样。</p>
+</blockquote>
+<h3 id="2-4-SPI模式"><a href="#2-4-SPI模式" class="headerlink" title="2.4 SPI模式"></a>2.4 SPI模式</h3><p>根据SPI的时钟极性和时钟相位特性可以设置4种不同的SPI通信操作模式，它们的区别是定义了在时钟脉冲的哪条边沿转换（toggles）输出信号，哪条边沿采样输入信号，还有时钟脉冲的稳定电平值（就是时钟信号无效时是高还是低），详情如下所示：</p>
+<ul>
+<li>Mode0：CKP=0，CKE =0：当空闲态时，SCK处于低电平，数据采样是在第1个边沿，也就是SCK由低电平到高电平的跳变，所以数据采样是在上升沿（准备数据），（发送数据）数据发送是在下降沿。</li>
+<li>Mode1：CKP=0，CKE=1：当空闲态时，SCK处于低电平，数据发送是在第2个边沿，也就是SCK由低电平到高电平的跳变，所以数据采样是在下降沿，数据发送是在上升沿。</li>
+<li>Mode2：CKP=1，CKE=0：当空闲态时，SCK处于高电平，数据采集是在第1个边沿，也就是SCK由高电平到低电平的跳变，所以数据采集是在下降沿，数据发送是在上升沿。</li>
+<li>Mode3：CKP=1，CKE=1：当空闲态时，SCK处于高电平，数据发送是在第2个边沿，也就是SCK由高电平到低电平的跳变，所以数据采集是在上升沿，数据发送是在下降沿。</li>
+</ul>
+<p><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/spi_mode.png" alt="spimode"></p>
+<p>不同的模式就是取决SCK的空闲状态和在哪种边沿进行采样。</p>
+<h3 id="2-5-SPI驱动"><a href="#2-5-SPI驱动" class="headerlink" title="2.5 SPI驱动"></a>2.5 SPI驱动</h3><p>SPI驱动架构</p>
+<p>SPI驱动架构和IIC驱动架构类似，也是由SPI核心层、SPI总线适配器层和SPI设备驱动层组成。SPI核心层提供了一些基本的数据结构和函数接口，用于注册、注销和访问SPI总线适配器和设备。SPI总线适配器层提供了不同类型的SPI控制器驱动程序，SPI设备驱动层提供了不同类型的SPI设备驱动程序。</p>
+<h4 id="SPI核心层"><a href="#SPI核心层" class="headerlink" title="SPI核心层"></a>SPI核心层</h4><p>SPI核心层是Linux内核中负责管理SPI总线和设备的模块，它提供了一些基本的数据结构和函数接口，用于注册、注销和访问SPI总线适配器和设备。SPI核心层的主要数据结构有：</p>
+<ul>
+<li><p>struct spi_master：表示一个SPI总线适配器，即一个物理的SPI控制器，它可以连接多个SPI设备。该结构体中包含了一个名为bus的指针，指向一个struct spi_bus_type结构体，该结构体定义了该适配器的具体通信方法，如读写数据、设置时钟频率等。每个SPI总线适配器都需要实现自己的算法，并在注册时传递给SPI核心层。</p>
+</li>
+<li><p>struct spi_device：表示一个SPI设备，由系统根据设备树生成，它有一个唯一的7位或10位地址。该结构体中包含了一个名为driver的指针，指向一个struct spi_driver结构体，该结构体定义了该设备的驱动程序，如初始化、释放、读写寄存器等。每个SPI设备都需要有一个对应的驱动程序，并在注册时传递给SPI核心层。</p>
+</li>
+<li><p>struct spi_message：表示一个SPI消息，即一次SPI通信的操作，它包含了目标设备地址、读写标志、数据长度和数据缓冲区等信息。一次SPI通信可以由多个消息组成，例如先写入寄存器地址再读取寄存器数据，就需要两个消息。SPI核心层提供了一个名为spi_async函数接口，用于将一组消息发送给指定的适配器。</p>
+</li>
+</ul>
+<h4 id="SPI总线适配器层"><a href="#SPI总线适配器层" class="headerlink" title="SPI总线适配器层"></a>SPI总线适配器层</h4><p>SPI总线适配器层是Linux内核中负责实现不同类型的SPI控制器驱动程序的模块，它根据不同的硬件平台和通信协议，提供了不同的算法来完成SPI通信。Linux内核支持多种常见的SPI控制器，如SMBus、GPIO模拟、PCI设备等。每种控制器都需要实现一个struct spi_algorithm结构体，并在初始化时创建一个struct spi_master结构体，并调用spi_register_master函数将其注册到SPI核心层。</p>
+<h4 id="SPI设备驱动层"><a href="#SPI设备驱动层" class="headerlink" title="SPI设备驱动层"></a>SPI设备驱动层</h4><p>SPI设备驱动层是Linux内核中负责实现不同类型的SPI设备驱动程序的模块，它根据不同的硬件平台和通信协议，提供了不同的驱动程序来完成SPI设备的初始化、读写等操作。Linux内核支持多种常见的SPI设备，如EEPROM、RTC、传感器等。每种设备都需要实现一个struct spi_driver结构体，并在初始化时调用spi_register_driver函数将其注册到SPI核心层。</p>
+<br>
+<br>
+
+<hr>
+<h2 id="三、UART"><a href="#三、UART" class="headerlink" title="三、UART"></a>三、UART</h2><h3 id="3-1-UART总线"><a href="#3-1-UART总线" class="headerlink" title="3.1 UART总线"></a>3.1 UART总线</h3><p>&emsp;&emsp;在UART通信中，一般是两个UART直接进行信息交互，发送方的UART将来自CPU或其他控制单元的并行数据转化为串行数据并将其通过线缆传送到接收方的UART，接收方UART则将接收到的串行数据又重新转换为并行形式，因此一般情况下仅需两根电缆线即可实现全双工的UART通信。</p>
+<p>&emsp;&emsp;UART采用异步方式传输数据，这就意味着不存在时钟信号来同步发送方的输出数据位与接收方的输入数据位。由于没有了时钟信号，UART采用在数据包中引入起始位与停止位的方法，以协助UART在合适的时刻进行数据的读取。</p>
+<h3 id="3-2-UART原理"><a href="#3-2-UART原理" class="headerlink" title="3.2 UART原理"></a>3.2 UART原理</h3><p>&emsp;&emsp;UART的工作主要是发送数据至数据总线或者从数据总线上读取数据。通常数据都是由CPU，存储设备或者微控制器发送至数据总线，此后数据再从数据总线上由发送端UART发出。当发送端UART从数据总线上获取到并行的数据后，它将在数据中加入起始位、奇偶校验位与停止位以构成数据包，然后这个数据包经过UART的Tx引脚串行地发出。同理，接收端的UART通过其Rx引脚读取数据包，然后将数据包中的起始位、奇偶校验位和停止位移除并将串行数据转换为并行数据，最后这些数据传输到接收端的数据总线上。</p>
+<p>UART采用数据包的形式进行数据收发，每一个数据包包含一个起始位，5-9个数据位(数据帧)，一个可选的奇偶校验位和1-2个停止位。数据包的格式如下图所示：<br><img src="/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/uart%E5%8C%85.png" alt="uart包"></p>
+<ul>
+<li><p>起始位(Start Bit)<br>UART的数据传输线在未发送数据是默认保持高电平状态。当数据准备发送时，UART将传输线的电平由高拉低并保持一个时钟周期。当接收端的UART检测到电平变化时(起始位)，它就开始按照既定的波特率接收数据。</p>
+</li>
+<li><p>数据帧(Data Frame)<br>数据帧部分包含真正的有效信息。如果使用奇偶校验位则数据帧可包含5-8个数据位，如果不使用奇偶校验位则可以包含9个数据位。一般情况下，数据从最低位开始发出。</p>
+</li>
+<li><p>奇偶校验(Parity)<br>奇偶校验位表征数据从发送端传输到接收端的过程中是否发生了变化。在传输过程中，数据位可能因为电磁干扰，波特率失配或长距离传输导致的电平降落而产生变化。当接收端UART读取数据帧时，它不断计数数据中比特值为1的数据位的个数并计算其个数总和是奇数或偶数。如果数据包中的奇偶校验位为0(偶校验)，则表示初始数据帧中的逻辑高电平1的数据位数为偶数，同理，如果奇偶校验位是1（奇校验），则表示初始数据帧中的逻辑高电平1的数据位数为奇数。如果接收端统计的数据帧中的逻辑高电平数据位的个数与奇偶校验位相符，则表示数据传输没有发生错误。如果奇偶校验位为0，而计数得到的1的个数为奇数，或者奇偶校验位为1，而计数得到的1的个数为偶数，那么接收端的UART则可以知道数据帧接收出现异常。</p>
+</li>
+<li><p>停止位(Stop Bit)<br>为了标记数据传输已经结束，发送端的UART需要将数据传输线从低电平拉高至高电平并至少维持2个Bit时长(2个时钟周期)。</p>
+</li>
+</ul>
+<h3 id="3-3-UART步骤"><a href="#3-3-UART步骤" class="headerlink" title="3.3 UART步骤"></a>3.3 UART步骤</h3><p>UART传输步骤大致如下：</p>
+<ol>
+<li>发送UART从数据总线并行接收数据，并将其存储在内部缓冲区中。</li>
+<li>发送UART根据配置的数据位长度、奇偶校验位和停止位，将数据帧转换为串行数据，并在数据帧前后加上起始位和停止位，形成一个数据包。</li>
+<li>发送UART通过发送引脚（Tx）将数据包以串行方式发送到接收UART的接收引脚（Rx），两者之间需要使用相同的波特率来同步数据传输。</li>
+<li>接收UART根据起始位检测到数据包的开始，然后按照波特率对接收引脚（Rx）上的信号进行采样，还原出串行数据，并存储在内部缓冲区中。</li>
+<li>接收UART根据配置的数据位长度、奇偶校验位和停止位，将串行数据转换为并行数据，并去除起始位和停止位，形成一个数据帧。</li>
+<li>接收UART将数据帧通过数据总线并行发送到目标设备。</li>
+</ol>
+<br>
+<br>
+
+<hr>
+<h2 id="四、USB"><a href="#四、USB" class="headerlink" title="四、USB"></a>四、USB</h2><h3 id="4-1-USB数据传输"><a href="#4-1-USB数据传输" class="headerlink" title="4.1 USB数据传输"></a>4.1 USB数据传输</h3><p>&emsp;&emsp;USB的数据是通过数据线上的差分信号来传输的，差分信号是一种利用两根线上的电压差来表示逻辑0或1的信号，具有抗干扰和低功耗的优点。USB的数据线有两根，一根叫D+，一根叫D-，它们分别承载正向和反向的差分信号。USB的数据传输是基于包的，每个包都有一个包头和一个包尾，包头用于标识包的类型、地址、端点和长度，包尾用于校验包的正确性。USB的数据传输有四种模式，分别是控制传输、中断传输、批量传输和同步传输，它们适用于不同的数据类型和场景。控制传输用于配置设备和发送命令，中断传输用于实时性较高的设备，如鼠标和键盘，批量传输用于大量数据的设备，如打印机和硬盘，同步传输用于音频和视频等连续数据的设备。USB的数据传输遵循主从模式，即电脑作为主机（host），外部设备作为从机（device），主机负责发起请求和分配带宽，从机负责响应请求和发送或接收数据。USB的数据传输还遵循令牌-数据-握手（token-data-handshake）的三步交互模式，即主机先发送一个令牌包（token packet）来指定目标地址、端点和方向，然后主机或从机发送一个数据包（data packet）来传送实际的数据，最后主机或从机发送一个握手包（handshake packet）来确认数据是否成功接收。</p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/06/09/day52-Linux%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/I2C/" rel="tag">I2C</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SPI/" rel="tag">SPI</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UART/" rel="tag">UART</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE/" rel="tag">通信协议</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/06/07/python%E5%AD%A6%E4%B9%A0-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">python学习-基础知识</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "tuYk4qAcyDHqUmYKwnOzB9nI-9Nh9j0Va",
+    app_key: "EuYRm7WE36kxYD3nnGAQBK5y",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2023
+        <i class="ri-heart-fill heart_icon"></i> nakano-mahiro
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">文章</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechatpay.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.6/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+<!-- Katex -->
+
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        
+    
+
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+<script src="/js/dz.js"></script>
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=1975315159&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
