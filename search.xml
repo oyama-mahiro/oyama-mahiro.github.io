@@ -6422,4 +6422,24 @@ IP_MULTICAST_IF      允许开启组播报文的接口       struct ip_mreq    <
         <tag>进程线程</tag>
       </tags>
   </entry>
+  <entry>
+    <title>pyhton-常用包</title>
+    <url>/2023/06/20/pyhton-%E5%B8%B8%E7%94%A8%E5%8C%85/</url>
+    <content><![CDATA[<h1 id="pyhton-常用包"><a href="#pyhton-常用包" class="headerlink" title="pyhton-常用包"></a><font color="green">pyhton-常用包</font></h1><a id="more"></a>
+
+<h2 id="一、numpy"><a href="#一、numpy" class="headerlink" title="一、numpy"></a>一、numpy</h2><p>&emsp;&emsp;numpy是python的一个科学计算的库，提供了矩阵运算的功能，可以用来做矩阵运算，也可以用来做矩阵运算的加速，因为numpy是用C语言写的，所以运算速度很快。</p>
+<p>&emsp;&emsp;numpy的特点：</p>
+<ul>
+<li>numpy在创建时大小固定，不可变，而python的list是可以动态改变大小的。</li>
+<li>numpy里面的元素都是同一种类型，而python的list里面的元素可以是不同的类型。</li>
+<li>numyp可以用作矩阵运算，而python的list不能用作矩阵运算。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
 </search>
