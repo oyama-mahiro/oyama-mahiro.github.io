@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    C语言复习-基础部分 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-C语言复习-基础部分"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C语言复习-基础部分
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/12/29/C%E8%AF%AD%E8%A8%80%E5%A4%8D%E4%B9%A0-%E5%9F%BA%E7%A1%80%E9%83%A8%E5%88%86/" class="article-date">
+  <time datetime="2023-12-29T13:28:58.000Z" itemprop="datePublished">2023-12-29</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">5.7k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">22 min</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="C语言复习-基础部分"><a href="#C语言复习-基础部分" class="headerlink" title="C语言复习-基础部分"></a><font color="green">C语言复习-基础部分</font></h1><br>
+<br>
+
+<hr>
+<a id="more"></a>
+
+<h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><hr>
+<br>
+<br>
+<br>
+
+
+<h1 id="一、数据类型"><a href="#一、数据类型" class="headerlink" title="一、数据类型"></a>一、数据类型</h1><table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>大小（字节）</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>char</code></td>
+<td>1</td>
+<td>-128 到 127 或 0 到 255</td>
+</tr>
+<tr>
+<td><code>unsigned char</code></td>
+<td>1</td>
+<td>0 到 255</td>
+</tr>
+<tr>
+<td><code>signed char</code></td>
+<td>1</td>
+<td>-128 到 127</td>
+</tr>
+<tr>
+<td><code>int</code></td>
+<td>4</td>
+<td>-2,147,483,648 到 2,147,483,647</td>
+</tr>
+<tr>
+<td><code>unsigned int</code></td>
+<td>4</td>
+<td>0 到 4,294,967,295</td>
+</tr>
+<tr>
+<td><code>short</code></td>
+<td>2</td>
+<td>-32,768 到 32,767</td>
+</tr>
+<tr>
+<td><code>unsigned short</code></td>
+<td>2</td>
+<td>0 到 65,535</td>
+</tr>
+<tr>
+<td><code>long</code></td>
+<td>4 或 8</td>
+<td>-2,147,483,648 到 2,147,483,647 或 -9,223,372,036,854,775,808 到 9,223,372,036,854,775,807</td>
+</tr>
+<tr>
+<td><code>unsigned long</code></td>
+<td>4 或 8</td>
+<td>0 到 4,294,967,295 或 0 到 18,446,744,073,709,551,615</td>
+</tr>
+<tr>
+<td><code>float</code></td>
+<td>4</td>
+<td>约 ±3.4e−38 到 ±3.4e+38 的 6-7 位有效数字</td>
+</tr>
+<tr>
+<td><code>double</code></td>
+<td>8</td>
+<td>约 ±1.7e−308 到 ±1.7e+308 的 15-16 位有效数字</td>
+</tr>
+<tr>
+<td><code>long double</code></td>
+<td>8 或 16</td>
+<td>取决于实现</td>
+</tr>
+</tbody></table>
+<h2 id="1-1-浮点数精度问题"><a href="#1-1-浮点数精度问题" class="headerlink" title="1.1 浮点数精度问题"></a>1.1 浮点数精度问题</h2><p>  想搞清楚浮点数精度问题，首先得知道C中浮点数的表示方法和十进制中小数部分转为二进制的过程。</p>
+<p>  十进制的小数部分转为二进制的过程为：乘2取整，取整的部分为二进制的一位，剩下的部分再乘2取整，取整的部分为二进制的第二位，以此类推，直到小数部分为0。<br>  但是这样可能会遇到无限循环的情况，即小数部分永远不为0，计算机的内存是有限的，所以只能取一定的位数（float精度大概是6-7位十进制，double精度大概是15-16位十进制），这样就会损失精度。</p>
+<p>  以float为例，float的表示方法为：<code>符号位 + 指数位 + 尾数位</code>，其中符号位为1位，指数位为8位，尾数位为23位。</p>
+<blockquote>
+<p>例如，将十进制数 5.75 转换为浮点表示：<br>它首先被转换为二进制形式：101.11<br>然后标准化为 1.xxxx 形式：1.0111 × 2²<br>接着，以 IEEE 754 格式编码：<br>符号位为 0，因为它是正数。<br>指数为 2，偏移后为 129（即 2 + 127），二进制表示为 10000001。<br>尾数为 0111，但要填充到 23 位，所以变为 01110000000000000000000。<br>最终，5.75 的 float 表示为 0 10000001 01110000000000000000000。</p>
+</blockquote>
+<p>如果想解决此类问题，可以采取更高精度的数据类型，数据库的使用，定点表示法，预定误差等方法。</p>
+<hr>
+<h2 id="1-2-char与int的数字的关系"><a href="#1-2-char与int的数字的关系" class="headerlink" title="1.2 char与int的数字的关系"></a>1.2 char与int的数字的关系</h2><p>从技术层面来看，char是一个整型，只是它的大小是1个字节。里面存储的是对应的ASCII码。其中数字0-9对应的ASCII码是48-57，所以char类型的数字0-9对应的ASCII码是48-57，而不是0-9。（字母A-Z对应的ASCII码是65-90，a-z对应的ASCII码是97-122）</p>
+<hr>
+<h2 id="1-3-字符数组与字符串"><a href="#1-3-字符数组与字符串" class="headerlink" title="1.3 字符数组与字符串"></a>1.3 字符数组与字符串</h2><p>字符数组与字符串的区别在于，字符数组中的元素可以是任意字符，而字符串中的元素必须是字符。</p>
+<p>在C语言中，字符串是以空字符’\0’结尾的字符数组，所以字符串的长度比字符数组的长度少1。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> str[] = <span class="string">&quot;hello&quot;</span>; <span class="comment">// 自动加上 &#x27;\0&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> arr[] = &#123;<span class="string">&#x27;h&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;l&#x27;</span>, <span class="string">&#x27;o&#x27;</span>&#125;; <span class="comment">// 没有 &#x27;\0&#x27;，不是一个字符串，在打印这样的字符数组时，会出现乱码。所以要加上 &#x27;\0&#x27; 才是一个字符串。</span></span><br></pre></td></tr></table></figure>
+
+<p>用字符数组存储字符串时，一定要注意数组的长度，要比字符串的长度多1，即最后一个元素是’\0’。少了’\0’会出现打印或者安全检查的问题，因为计算机不知道字符串的结束位置，会一直往后读取，直到遇到’\0’为止。（越界操作）</p>
+<hr>
+<h2 id="1-4-位运算"><a href="#1-4-位运算" class="headerlink" title="1.4 位运算"></a>1.4 位运算</h2><p>嵌入式中，在对寄存器进行操作时，常常会用到位运算。</p>
+<ol>
+<li><p>**位与（AND）<code>&amp;</code>**：</p>
+<ul>
+<li>清除特定位：<code>x &amp; ~0x10</code> 会清除 <code>x</code> 的第 5 位。</li>
+<li>检查位是否设置：<code>if (x &amp; 0x01)</code> 检查 <code>x</code> 的最低位是否为 1。</li>
+</ul>
+</li>
+<li><p>**位或（OR）<code>|</code>**：</p>
+<ul>
+<li>设置特定位：<code>x | 0x10</code> 会设置 <code>x</code> 的第 5 位。</li>
+<li>合并位集合：用于将多个位模式组合在一起。</li>
+</ul>
+</li>
+<li><p>**位异或（XOR）<code>^</code>**：</p>
+<ul>
+<li>切换特定位：<code>x ^ 0x10</code> 会切换 <code>x</code> 的第 5 位。</li>
+<li>反转所有位：<code>x ^ 0xFF</code> 会反转 <code>x</code> 的所有位。</li>
+</ul>
+</li>
+<li><p>**位非（NOT）<code>~</code>**：</p>
+<ul>
+<li>取反所有位：<code>~x</code> 会将 <code>x</code> 中的 0 变为 1，1 变为 0。</li>
+</ul>
+</li>
+<li><p>**左移 <code>&lt;&lt;</code>**：</p>
+<ul>
+<li>向左移位：<code>x &lt;&lt; 2</code> 将 <code>x</code> 中的所有位向左移动两位。</li>
+<li>常用于乘以 2 的幂。</li>
+</ul>
+</li>
+<li><p>**右移 <code>&gt;&gt;</code>**：</p>
+<ul>
+<li>向右移位：<code>x &gt;&gt; 2</code> 将 <code>x</code> 中的所有位向右移动两位。</li>
+<li>常用于除以 2 的幂。注意：右移的行为（算术或逻辑）可能依编译器和平台而异。</li>
+</ul>
+</li>
+<li><p><strong>位域操作</strong>：</p>
+<ul>
+<li>结合掩码（mask）和移位来访问和修改特定的位域。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="1-4-优先级"><a href="#1-4-优先级" class="headerlink" title="1.4 优先级"></a>1.4 优先级</h2><p>关于自增和自减，a++是先赋值再自增，++a是先自增再赋值。但是在实际应用中，应该减少使用自增和自减，</p>
+<ol>
+<li>当一个变量在表达式中同时出现多个自增或自减时，计算机可能不会按照我们的预期的顺序来计算。</li>
+<li>当一个变量出现在一个函数的参数中时，计算机也可能不会按照我们的预期的顺序来计算。</li>
+</ol>
+<blockquote>
+<p>注：逻辑表达式中，顺序是从左到右的，且&amp;&amp;的优先级高于||，所以a||b&amp;&amp;c等价于a||(b&amp;&amp;c)。</p>
+</blockquote>
+<hr>
+<h2 id="1-5-类型大小"><a href="#1-5-类型大小" class="headerlink" title="1.5 类型大小"></a>1.5 类型大小</h2><p>判断类型的大小，可以用<code>sizeof()</code>函数或者strlen()函数。</p>
+<p><code>sizeof()</code>函数返回的是类型的大小<code>size_t size = sizeof(int);</code>，单位是字节，而strlen()函数返回的是字符串的长度(从1开始，不包括\0)，返回字符。</p>
+<blockquote>
+<p>注:size_t是一种数据类型，它是unsigned int的别名，用于存储内存中对象的大小。</p>
+</blockquote>
+<hr>
+<br>
+<br>
+
+
+<h1 id="二、变量、常量，存储类别"><a href="#二、变量、常量，存储类别" class="headerlink" title="二、变量、常量，存储类别"></a>二、变量、常量，存储类别</h1><h2 id="2-1-常量"><a href="#2-1-常量" class="headerlink" title="2.1 常量"></a>2.1 常量</h2><p>C语言中的常量分为以下几种：</p>
+<ol>
+<li>字面常量：整数常量、浮点数常量、字符常量、字符串常量</li>
+<li>枚举常量：枚举常量即在程序中定义的枚举类型的常量。</li>
+<li>符号常量：用#define预处理器来定义符号常量。或用const关键字来定义符号常量。</li>
+<li>指针常量：<code>int const *p=&amp;a;</code>—-p的内容不能改,<code>int *const p=&amp;a;</code>—-p的指向不能改</li>
+</ol>
+<blockquote>
+<p>注：</p>
+<ol>
+<li>字符串常量容易与字符数组混淆，字符串常量是一个字符数组，但是字符数组不一定是字符串常量。字符串常量是只能读取，不能修改的，而字符数组是可以修改的。</li>
+<li>字符串常量（如由 char* a = “hello”; 指向的）不应被修改。字符数组（如 char a[] = “hello”; 定义的）可以修改，但要注意不要越界。</li>
+</ol>
+</blockquote>
+<h3 id="2-2-变量"><a href="#2-2-变量" class="headerlink" title="2.2 变量"></a>2.2 变量</h3><p>想要理解变量的存储类别，首先要理解作用域和生存期以及链接的概念。</p>
+<blockquote>
+<ol>
+<li><strong>作用域</strong>：作用域是程序中定义的标识符所表示的区域。作用域决定了在程序中的哪些位置可以访问标识符。C语言中有三个作用域：块作用域（花括号）、函数作用域（局部作用域）、文件作用域（全局作用域）。</li>
+<li><strong>生存期</strong>：生存期是程序执行过程中变量存在的时间。C语言中有三个生存期：自动存储期（如局部变量）、静态存储期（变量在整个运行期间一直存在），动态存储期（通常需要自动销毁，如动态分配内存）。</li>
+<li><strong>链接</strong>：链接是指标识符在不同文件中的声明如何相互关联的。C语言中有三种链接：外部链接、内部链接、无链接。</li>
+</ol>
+</blockquote>
+<p>在C语言中，变量的存储类别都有关键字来表示，如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>存储类别</th>
+<th>关键字</th>
+<th>作用域</th>
+<th>生存期</th>
+<th>链接</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>auto</code></td>
+<td><code>auto</code></td>
+<td>块作用域（花括号）</td>
+<td>自动存储期</td>
+<td>无链接</td>
+</tr>
+<tr>
+<td><code>register</code></td>
+<td><code>register</code></td>
+<td>块作用域（花括号）</td>
+<td>自动存储期</td>
+<td>无链接</td>
+</tr>
+<tr>
+<td><code>static</code></td>
+<td><code>static</code></td>
+<td>块作用域（花括号）</td>
+<td>静态存储期</td>
+<td>无链接</td>
+</tr>
+<tr>
+<td><code>static</code></td>
+<td><code>static</code></td>
+<td>文件作用域（全局作用域）</td>
+<td>静态存储期</td>
+<td>内部链接</td>
+</tr>
+<tr>
+<td><code>extern</code></td>
+<td><code>extern</code></td>
+<td>文件作用域（全局作用域）</td>
+<td>静态存储期</td>
+<td>外部链接</td>
+</tr>
+</tbody></table>
+<p>解释：</p>
+<ul>
+<li>auto：<br>用于定义局部变量，一般不用，因为默认就是auto。</li>
+<li>register：<br>将变量存储在寄存器中可以优化性能，无法通过地址访问。而且现在一般不用，因为编译器会自动优化。</li>
+<li>static：<br>用于定义局部变量，使变量在函数调用之间保持值，即使函数退出，变量的值也不会消失。<br>用于定义全局变量，使变量的作用域限制在声明它的文件内。</li>
+<li>extern：<br>用于声明全局变量或函数，如果想在其它文件中使用全局变量或函数，在使用前用头文件中extern声明一下。现在的做法是，将全局变量和函数都放在头文件中，然后在需要的文件中包含头文件即可（不加extern）。但是要注意，在一些系统下，如果全局变量在头文件中定义，那么在其它文件中包含头文件时，全局变量会被重复定义，所以要在头文件中加上extern声明，这样就不会重复定义了。</li>
+</ul>
+<h3 id="2-3-其它关键字"><a href="#2-3-其它关键字" class="headerlink" title="2.3 其它关键字"></a>2.3 其它关键字</h3><h4 id="2-3-1-define和typedef"><a href="#2-3-1-define和typedef" class="headerlink" title="2.3.1 define和typedef"></a>2.3.1 define和typedef</h4><ol>
+<li>define：用于定义符号常量，也可以用于定义宏。在预处理阶段即编译之前，会将define定义的符号常量或宏替换为对应的值。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> PI 3.14159</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX(a, b) ((a) &gt; (b) ? (a) : (b))</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>typedef：用于定义类型别名，可以用于定义结构体类型、枚举类型、指针类型、函数类型等。在编译时处理。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> ulong;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">int</span> y;</span><br><span class="line">&#125; Point;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-2-volatile"><a href="#2-3-2-volatile" class="headerlink" title="2.3.2 volatile"></a>2.3.2 volatile</h4><p>volatile关键字用于告诉编译器，该变量可能会被意想不到地改变，所以编译器不要对该变量进行优化。这个关键字用于那些可能由程序外部以预料不到的方式改变的变量，比如硬件设备的状态、由中断处理程序修改的变量或者可能在多线程环境下被不同线程访问的变量。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">volatile</span> <span class="keyword">int</span> flag = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">interrupt_handler</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    flag = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main_loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (flag == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 等待中断处理程序设置 flag</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 执行后续操作</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-3-3-Thread-local"><a href="#2-3-3-Thread-local" class="headerlink" title="2.3.3 _Thread_local"></a>2.3.3 _Thread_local</h4><p>在C语言中，_Thread_local 是<code>C11</code>标准引入的一个存储类别说明符，用于声明线程局部存储。它指示每个线程都有该变量的自己的独立实例。换句话说，每个线程都有该变量的副本，线程间的变量互不影响。\</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;threads.h&gt;</span></span></span><br><span class="line"></span><br><span class="line">_Thread_local <span class="keyword">int</span> threadLocalVar = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">threadFunction</span><span class="params">(<span class="keyword">void</span>* arg)</span> </span>&#123;</span><br><span class="line">    threadLocalVar++;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Thread %d, threadLocalVar = %d\n&quot;</span>, (<span class="keyword">int</span>)(<span class="keyword">intptr_t</span>)arg, threadLocalVar);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">thrd_t</span> thread1, thread2;</span><br><span class="line">    thrd_create(&amp;thread1, threadFunction, (<span class="keyword">void</span>*)(<span class="keyword">intptr_t</span>)<span class="number">1</span>);</span><br><span class="line">    thrd_create(&amp;thread2, threadFunction, (<span class="keyword">void</span>*)(<span class="keyword">intptr_t</span>)<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    thrd_join(thread1, <span class="literal">NULL</span>);</span><br><span class="line">    thrd_join(thread2, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，threadLocalVar 是一个 _Thread_local 变量。即使两个线程执行相同的函数并修改这个变量，每个线程的 threadLocalVar 都是独立的，互不影响。</p>
+<hr>
+<br>
+<br>
+
+
+<h1 id="三、函数、指针、数组"><a href="#三、函数、指针、数组" class="headerlink" title="三、函数、指针、数组"></a>三、函数、指针、数组</h1><h2 id="3-1-指针与数组"><a href="#3-1-指针与数组" class="headerlink" title="3.1 指针与数组"></a>3.1 指针与数组</h2><p>指针与数组的关系：数组名是数组首元素的地址，指针变量存储的是地址，所以指针变量可以指向数组。一般趋近于数组名是指向数组首元素的指针。</p>
+<h3 id="3-1-1-指针与数组关于字符串的区别"><a href="#3-1-1-指针与数组关于字符串的区别" class="headerlink" title="3.1.1 指针与数组关于字符串的区别"></a>3.1.1 指针与数组关于字符串的区别</h3><p>但是在字符数组代表字符串的情况下，字符数组代表的字符串是可以修改的，而指针指向的字符串是不能修改的。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> str[] = <span class="string">&quot;hello&quot;</span>; <span class="comment">// 自动加上 &#x27;\0&#x27;，可修改</span></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">// 自动加上 &#x27;\0&#x27;，不可修改</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-1-2-指针与数组关于sizeof的区别"><a href="#3-1-2-指针与数组关于sizeof的区别" class="headerlink" title="3.1.2 指针与数组关于sizeof的区别"></a>3.1.2 指针与数组关于sizeof的区别</h3><ol>
+<li>sizeof(数组名)：数组名代表整个数组，所以sizeof(数组名)返回的是整个数组的大小，单位是字节。</li>
+<li>sizeof(指针变量)：指针变量存储的是地址，所以sizeof(指针变量)返回的是指针变量的大小，单位是字节。</li>
+</ol>
+<p>这点在函数中尤其重要，<strong>因为数组作为函数参数时，会退化为指针</strong>，所以在函数中无法通过sizeof(数组名)来获取数组的大小，而是要通过传入数组的长度来获取数组的大小。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(<span class="keyword">int</span> arr[])</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="keyword">sizeof</span>(arr)); <span class="comment">// 8</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[<span class="number">10</span>];</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%d\n&quot;</span>, <span class="keyword">sizeof</span>(arr)); <span class="comment">// 40</span></span><br><span class="line">    func(arr);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-1-3-指针与数组关于-的区别"><a href="#3-1-3-指针与数组关于-的区别" class="headerlink" title="3.1.3 指针与数组关于++的区别"></a>3.1.3 指针与数组关于++的区别</h3><ol>
+<li>数组名++：数组名代表整个数组，所以数组名++是不合法的。</li>
+<li>指针变量++：指针变量存储的是地址，所以指针变量++是合法的。</li>
+</ol>
+<h3 id="3-1-4-指针与多维数组"><a href="#3-1-4-指针与多维数组" class="headerlink" title="3.1.4 指针与多维数组"></a>3.1.4 指针与多维数组</h3><p>指针与多维数组的关系：指针变量存储的是地址，多维数组的每个元素也是一个数组，所以指针变量可以指向多维数组。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">3</span>][<span class="number">2</span>][<span class="number">2</span>]=&#123;</span><br><span class="line">    &#123;&#123;<span class="number">1</span>,<span class="number">2</span>&#125;,&#123;<span class="number">3</span>,<span class="number">4</span>&#125;&#125;,</span><br><span class="line">    &#123;&#123;<span class="number">5</span>,<span class="number">6</span>&#125;,&#123;<span class="number">7</span>,<span class="number">8</span>&#125;&#125;,</span><br><span class="line">    &#123;&#123;<span class="number">9</span>,<span class="number">10</span>&#125;,&#123;<span class="number">11</span>,<span class="number">12</span>&#125;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">2</span>][<span class="number">2</span>] = arr; <span class="comment">// 指向二维数组的指针</span></span><br><span class="line"><span class="keyword">int</span> (*q)[<span class="number">2</span>] = arr[<span class="number">0</span>]; <span class="comment">// 指向一维数组的指针</span></span><br><span class="line"><span class="keyword">int</span> *r = arr[<span class="number">0</span>][<span class="number">0</span>]; <span class="comment">// 指向元素的指针</span></span><br><span class="line"><span class="comment">// 即可以把arr[i][j][k]看成*(arr[i][j]+k),进一步可以拆成*(*(arr+i)+j)+k</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：</p>
+<blockquote>
+<p>arr=&amp;arr[0]—————-sizeof(arr)=12<br>arr[0]=<em>arr=&amp;arr[0][0]—————sizeof(<em>arr)=8<br>arr[0][0]=\</em>\</em>arr=&amp;arr[0][0][0]—————-sizeof(**arr)=4</p>
+</blockquote>
+<p>上面三个的值都是数组首元素的地址，但是类型不同，因为数组的类型包含了数组的长度，所以类型不同。</p>
+</blockquote>
+<h3 id="3-1-5-指针数组与数组指针"><a href="#3-1-5-指针数组与数组指针" class="headerlink" title="3.1.5 指针数组与数组指针"></a>3.1.5 指针数组与数组指针</h3><ol>
+<li>指针数组：数组中的元素是指针，指针数组的元素都是指针，指针数组的元素的类型是指针类型。</li>
+<li>数组指针：指针指向的是数组，数组指针指向的是数组，数组指针的类型是数组类型。</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p[<span class="number">3</span>] = &#123;arr[<span class="number">0</span>],arr[<span class="number">1</span>],arr[<span class="number">2</span>]&#125;; <span class="comment">// 本质是数组。指针数组，数组中的元素是指针，指针数组的元素都是指针，指针数组的元素的类型是指针类型。可以有二级指针</span></span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">3</span>] = arr; <span class="comment">// 本质是指针。数组指针，指针指向的是数组，数组指针指向的是数组，数组指针的类型是数组类型。</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-1-6-数组，指针与堆栈"><a href="#3-1-6-数组，指针与堆栈" class="headerlink" title="3.1.6 数组，指针与堆栈"></a>3.1.6 数组，指针与堆栈</h3><p>&emsp;&emsp;用通常的定义数组和指针时，他们都是在栈上分配的空间，而栈的空间是有限的，所以数组和指针的大小也是有限且无法修改大小的。</p>
+<p>&emsp;&emsp;但是在C语言中，可以通过malloc函数在堆上分配空间，这样就可以动态的分配空间，而且可以通过realloc函数来修改空间的大小。</p>
+<blockquote>
+<p>注意：</p>
+<ol>
+<li>malloc函数分配的空间是连续的，realloc函数修改空间的大小时，如果原来的空间后面有空间，那么会在原来的空间后面继续分配空间，如果原来的空间后面没有空间，那么会在原来的空间前面分配空间，然后将原来的空间的内容拷贝到新的空间中，然后释放原来的空间。(即无法保证原来的空间的地址不变)</li>
+<li>malloc函数返回的是void*类型的指针，所以要强制转换为对应的类型。</li>
+<li>malloc函数分配的空间不会自动释放，需要手动释放（free），否则会造成内存泄漏。</li>
+</ol>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> *p = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>) * <span class="number">10</span>); <span class="comment">// 分配10个int类型的空间</span></span><br><span class="line">p = (<span class="keyword">int</span> *)<span class="built_in">realloc</span>(p, <span class="keyword">sizeof</span>(<span class="keyword">int</span>) * <span class="number">20</span>);  <span class="comment">// 修改空间的大小为20个int类型的空间</span></span><br><span class="line"><span class="built_in">free</span>(p); <span class="comment">// 释放空间</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="3-2-指针与函数"><a href="#3-2-指针与函数" class="headerlink" title="3.2 指针与函数"></a>3.2 指针与函数</h2><h3 id="3-2-1-函数返回指针"><a href="#3-2-1-函数返回指针" class="headerlink" title="3.2.1 函数返回指针"></a>3.2.1 函数返回指针</h3><p>指针可以作为函数的参数和返回值。</p>
+<ul>
+<li><p>指针作为函数的参数,本质是值传递，传递的是指针变量的值，即地址。形参和实参的指针变量不同但指向的是同一个地址。</p>
+</li>
+<li><p><strong>函数的返回值是局部变量的地址是不合法的</strong>（即把函数中的局部变量指针作为返回值），因为函数执行完毕后，局部变量就会被销毁，所以返回的地址就是无效的。</p>
+</li>
+<li><p>但是因为堆和全局变量的空间是在程序运行期间一直存在的，所以返回堆（malloc）或者全局变量的地址是合法的。</p>
+</li>
+</ul>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">int</span> *p = &amp;a;</span><br><span class="line">    <span class="keyword">return</span> p; <span class="comment">// 返回局部变量的地址是不合法的</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> *p = (<span class="keyword">int</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">return</span> p; <span class="comment">// 返回堆上分配的空间的地址是合法的</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> *<span class="title">func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">return</span> &amp;a; <span class="comment">// 返回全局变量的地址是合法的</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-2-函数指针与回调函数"><a href="#3-2-2-函数指针与回调函数" class="headerlink" title="3.2.2 函数指针与回调函数"></a>3.2.2 函数指针与回调函数</h3><ol>
+<li><p>函数指针：指向函数的指针，函数指针的类型是函数类型。</p>
+</li>
+<li><p>回调函数：函数指针作为函数的参数，这个函数就是回调函数。</p>
+</li>
+</ol>
+<p>为什么要用回调函数？因为函数指针可以作为函数的参数，所以可以通过回调函数来实现函数的动态调用。（这就有点像面向对象中的多态）</p>
+<p>下面是一个回调函数的例子：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//冒泡排序</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 排序函数，主要是处理比较后两个数的排序问题</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bubble_sort</span><span class="params">(<span class="keyword">int</span> *arr, <span class="keyword">int</span> len, <span class="keyword">int</span> (*compare)(<span class="keyword">int</span>, <span class="keyword">int</span>))</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i, j, temp;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; len - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">for</span> (j = <span class="number">0</span>; j &lt; len - <span class="number">1</span> - i; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (compare(arr[j], arr[j + <span class="number">1</span>])) &#123;</span><br><span class="line">                temp = arr[j];</span><br><span class="line">                arr[j] = arr[j + <span class="number">1</span>];</span><br><span class="line">                arr[j + <span class="number">1</span>] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 比较函数，用于比较两个数的大小</span></span><br><span class="line"><span class="comment">//这里的compare就是回调函数，通过修改compare函数，可以实现不同的排序方式</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">compareMax</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a &gt; b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">compareMin</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> a &lt; b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">//这样在主函数中就可以通过选择用哪一个比较函数来实现不同的排序方式</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[] = &#123;<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">4</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> len = <span class="keyword">sizeof</span>(arr) / <span class="keyword">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line">    bubble_sort(arr, len, compareMax);</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;%d &quot;</span>, arr[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>补充：tyoedef可以用来定义函数类型，这样就可以用函数类型来定义函数指针了。</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">typedef</span> <span class="title">int</span> <span class="params">(*compare_func)</span><span class="params">(<span class="keyword">int</span>, <span class="keyword">int</span>)</span></span>;</span><br><span class="line"><span class="comment">//这样就可以用    compare_func(函数指针类型) cmopare（函数指针名）    来定义函数指针了</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> (*compare_func)(<span class="keyword">int</span>, <span class="keyword">int</span>);</span><br><span class="line"><span class="comment">//这样是直接定义了一个叫compare_func函数指针</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="keyword">int</span> arr[<span class="number">10</span>];</span><br><span class="line">arr a;</span><br><span class="line"><span class="comment">//数组也是可以用typedef来定义的</span></span><br></pre></td></tr></table></figure>
+
+<hr>
+<br>
+<br>
+
+<h1 id="四、结构体、共用体、枚举"><a href="#四、结构体、共用体、枚举" class="headerlink" title="四、结构体、共用体、枚举"></a>四、结构体、共用体、枚举</h1><h2 id="4-1-结构体"><a href="#4-1-结构体" class="headerlink" title="4.1 结构体"></a>4.1 结构体</h2><p>结构体是一种自定义的数据类型，可以包含多个不同类型的成员，这些成员可以是基本类型，也可以是自定义的数据类型。</p>
+<h3 id="4-1-1结构体基础"><a href="#4-1-1结构体基础" class="headerlink" title="4.1.1结构体基础"></a>4.1.1结构体基础</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义结构体 Person</span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">50</span>]; <span class="comment">// 结构体成员：名字</span></span><br><span class="line">    <span class="keyword">int</span> age;       <span class="comment">// 结构体成员：年龄</span></span><br><span class="line">    <span class="keyword">float</span> height;  <span class="comment">// 结构体成员：身高</span></span><br><span class="line">&#125; Person;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数声明：打印 Person 信息</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printPersonInfo</span><span class="params">(Person p)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 初始化结构体实例</span></span><br><span class="line">    Person person1 = &#123;<span class="string">&quot;Alice&quot;</span>, <span class="number">30</span>, <span class="number">5.5</span>&#125;; <span class="comment">// 直接初始化</span></span><br><span class="line">    Person person2;                      <span class="comment">// 后续赋值</span></span><br><span class="line">    <span class="built_in">strcpy</span>(person2.name, <span class="string">&quot;Bob&quot;</span>);         <span class="comment">// 字符串赋值使用 strcpy</span></span><br><span class="line">    person2.age = <span class="number">40</span>;</span><br><span class="line">    person2.height = <span class="number">6.0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//结构体指针</span></span><br><span class="line">    Person *p = &amp;person1;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, p-&gt;name); <span class="comment">// 通过指针访问结构体成员，使用 -&gt;</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, (*p).name); <span class="comment">// 通过结构体变量访问结构体成员，使用 .</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;%s\n&quot;</span>, person1.name); <span class="comment">// 通过结构体变量访问结构体成员，使用 .</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用结构体</span></span><br><span class="line">    printPersonInfo(person1); <span class="comment">// 将结构体作为参数传递给函数</span></span><br><span class="line">    printPersonInfo(person2);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数定义：打印 Person 信息</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">printPersonInfo</span><span class="params">(Person p)</span> </span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Name: %s, Age: %d, Height: %.2f\n&quot;</span>, p.name, p.age, p.height);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-结构体大小"><a href="#4-2-结构体大小" class="headerlink" title="4.2 结构体大小"></a>4.2 结构体大小</h3><p>想要知道结构体的大小，是通过结构体字节对齐的方式来计算的。</p>
+<p>结构体字节对齐的方式：<br>简单说就是，结构体的成员按照定义的顺序依次存放，但是每个成员的起始位置必须是该成员大小的整数倍，如果不是，那么编译器会在成员之间加上填充字节，使得成员的起始位置是该成员大小的整数倍。</p>
+<ol>
+<li>结构体的成员按照定义的顺序依次存放，但是每个成员的起始位置必须是该成员大小的整数倍，如果不是，那么编译器会在成员之间加上填充字节，使得成员的起始位置是该成员大小的整数倍。</li>
+<li>结构体中最大的成员的大小如果超过了计算机的字长，那么以该字长为准，即该成员的起始位置必须是该字长的整数倍。（如32位系统的最大字长是4字节，64位系统的最大字长是8字节）</li>
+<li>数组拆分来看</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//32位系统</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="keyword">char</span> a; <span class="comment">// 1,后面不够int的整数倍，所以要补齐3个字节</span></span><br><span class="line">    <span class="keyword">int</span> b; <span class="comment">// 4</span></span><br><span class="line">    <span class="keyword">double</span> c[<span class="number">2</span>] <span class="comment">// 16</span></span><br><span class="line">    <span class="keyword">char</span> d; <span class="comment">// 1,后面不够int的整数倍，所以要补齐3个字节</span></span><br><span class="line">&#125;; <span class="comment">// 28=4+4+16+4</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：如果想要将函数中的结构体作为返回值，那么用malloc函数在堆上分配空间，然后返回指针即可。</p>
+</blockquote>
+<h2 id="4-2-联合体"><a href="#4-2-联合体" class="headerlink" title="4.2 联合体"></a>4.2 联合体</h2><p>联合体是C语言中的一个数据类型，允许在相同的内存位置存储不同的数据类型。联合体的所有成员共享同一块内存空间。</p>
+<p>联合体的大小是其最大成员的大小。每次只能存储一个成员，对一个成员的赋值会覆盖其它成员的值。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">union</span> Data &#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">float</span> f;</span><br><span class="line">    <span class="keyword">char</span> str[<span class="number">20</span>];</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-3-枚举"><a href="#4-3-枚举" class="headerlink" title="4.3 枚举"></a>4.3 枚举</h3><p>枚举是C语言中的一种数据类型，用于定义变量，每个变量都可以赋予一个特定的值，这些值必须是整数，而且是不同的。每个变量的大小大概率是int类型的大小。通常用于定义状态码。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//默认情况下，第一个枚举值的值为0，后续枚举值的值依次加1</span></span><br><span class="line"><span class="keyword">enum</span> StatusCode &#123;</span><br><span class="line">    OK = <span class="number">200</span>,</span><br><span class="line">    NOT_FOUND = <span class="number">404</span>,</span><br><span class="line">    SERVER_ERROR = <span class="number">500</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> StatusCode status = OK;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(status == NOT_FOUND) &#123;</span><br><span class="line">    <span class="comment">// do something</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2023/12/29/C%E8%AF%AD%E8%A8%80%E5%A4%8D%E4%B9%A0-%E5%9F%BA%E7%A1%80%E9%83%A8%E5%88%86/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c%E8%AF%AD%E8%A8%80/" rel="tag">c语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%9F%BA%E7%A1%80/" rel="tag">基础</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/06/20/pyhton-%E5%B8%B8%E7%94%A8%E5%8C%85/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">pyhton-常用包</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "tuYk4qAcyDHqUmYKwnOzB9nI-9Nh9j0Va",
+    app_key: "EuYRm7WE36kxYD3nnGAQBK5y",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2024
+        <i class="ri-heart-fill heart_icon"></i> nakano-mahiro
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        Powered by <a href="https://hexo.io" target="_blank">Hexo</a>
+        <span class="division">|</span>
+        Theme - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>Visitors:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>Views:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript" src='https://s9.cnzz.com/z_stat.php?id=1278069914&amp;web_id=1278069914'></script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.jpg" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">文章</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechatpay.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.6/unpacked/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true
+  }
+</script>
+
+<!-- Katex -->
+
+
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"></script>
+        
+    
+
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+<script src="/js/dz.js"></script>
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=1975315159&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
