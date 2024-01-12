@@ -9,7 +9,7 @@
     
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    c语言 |  
+    C语言复习-数据结构和算法 |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -43,89 +43,244 @@
       
     <main class="content on">
       <section class="outer">
-  
-  <article class="articles">
+  <article
+  id="post-C语言复习-数据结构和算法"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
     
-    
-    <h1 class="page-type-title">c语言</h1>
-    
-    
-  
-  
-  
-  
-  
-  
-  <div class="archives-wrap">
-    <div class="archive-year-wrap">
-      <a href="/archives/2020" class="archive-year">2020</a>
-    </div>
-    <div class="archives">
-      
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/" class="archive-article-date">
-  <time datetime="2020-05-09T05:56:21.000Z" itemprop="datePublished">05/09</time>
-</a>
+    <header class="article-header">
        
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/05/09/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E5%AD%98%E5%82%A8%E7%B1%BB%E5%88%AB/"
-    >C语言基础-存储类别</a> 
-</h2>
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  C语言复习-数据结构和算法
+</h1>
  
 
     </header>
-    
-      
+     
+    <div class="article-meta">
+      <a href="/2024/01/09/C%E8%AF%AD%E8%A8%80%E5%A4%8D%E4%B9%A0-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" class="article-date">
+  <time datetime="2024-01-09T06:24:25.000Z" itemprop="datePublished">2024-01-09</time>
+</a> 
   <div class="article-category">
     <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
   </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> Word count:</span>
+            <span class="post-count">849</span>
+        </span>
+    </span>
 
-    
-    
-  </div>
-</article>
-      
-  
-  
-      <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/" class="archive-article-date">
-  <time datetime="2020-04-28T07:24:33.000Z" itemprop="datePublished">04/28</time>
-</a>
-       
-<h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/04/28/C%E8%AF%AD%E8%A8%80%E5%9F%BA%E7%A1%80-%E9%80%92%E5%BD%92/"
-    >C语言基础-递归</a> 
-</h2>
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> Reading time≈</span>
+            <span class="post-count">3 min</span>
+        </span>
+    </span>
+</div>
  
-
-    </header>
-    
+    </div>
       
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/c%E8%AF%AD%E8%A8%80/">c语言</a>
-  </div>
+    <div class="tocbot"></div>
 
-    
-    
-  </div>
-</article>
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="C语言复习-数据结构和算法"><a href="#C语言复习-数据结构和算法" class="headerlink" title="C语言复习-数据结构和算法"></a><font color="green">C语言复习-数据结构和算法</font></h1><br>
+<br>
+
+<hr>
+<a id="more"></a>
+
+<h2 id="1-基础知识"><a href="#1-基础知识" class="headerlink" title="1.基础知识"></a>1.基础知识</h2><h3 id="1-1-时间复杂度"><a href="#1-1-时间复杂度" class="headerlink" title="1.1 时间复杂度"></a>1.1 时间复杂度</h3><p>判断一个程序的时间复杂度主要涉及对程序结构的分析和对其算法的理解。以下是一些基本的指导原则和步骤：</p>
+<ol>
+<li><p>识别最影响时间的部分<br>通常程序中的一小部分代码（如循环或递归调用）会占据大部分运行时间。专注于这些部分。</p>
+</li>
+<li><p>计算循环次数</p>
+</li>
+</ol>
+<ul>
+<li><strong>单层循环</strong>：如果有一个基于n的单层循环（n是输入大小），时间复杂度通常是O(n)。</li>
+<li><strong>嵌套循环</strong>：对于嵌套循环，时间复杂度是每层循环复杂度的乘积。例如，两个嵌套的n大小的循环将有O(n²)的时间复杂度。</li>
+<li><strong>不等循环</strong>：如果循环的次数随每次迭代而减少，可能是一个O(n²)的情况。（例如，第一个循环n次，第二个循环n-1次，依此类推）</li>
+<li><strong>等比循环</strong>：如果循环的次数随每次迭代而增加且和<code>2</code>的倍数有关，可能是一个O(log n)的情况。</li>
+</ul>
+<ol start="3">
+<li><p>递归调用<br>递归函数的时间复杂度取决于递归调用的次数和每次调用的复杂度。例如，二分查找的递归实现通常有O(log n)的时间复杂度。</p>
+</li>
+<li><p>顺序执行的多部分<br>如果代码有几个部分顺序执行，总的时间复杂度是所有部分中最大的那个。例如，一个O(n)的循环后跟一个O(1)的操作，总的时间复杂度仍然是O(n)。</p>
+</li>
+<li><p>并行和分支<br>如果代码分支不影响操作的总数（如if-else语句），它们通常不影响总体时间复杂度。</p>
+</li>
+<li><p>数据结构的影响<br>考虑数据结构对操作效率的影响。例如，数组和链表的插入、删除、搜索操作具有不同的时间复杂度。</p>
+</li>
+<li><p>忽略非主导项和常数<br>在大致估算时，可以忽略常数因子和非主导项。例如，O(2n)简化为O(n)，O(n² + n)简化为O(n²)。</p>
+</li>
+</ol>
+<h2 id="1-2-正码，反码和补码"><a href="#1-2-正码，反码和补码" class="headerlink" title="1.2 正码，反码和补码"></a>1.2 正码，反码和补码</h2><ul>
+<li><p>反码：正数的反码是其本身；负数的反码是在其原码的基础上，符号位不变，其余各个位取反。</p>
+</li>
+<li><p>补码：正数的补码是其本身；负数的补码是在其原码的基础上，符号位不变，其余各位取反，最后+1。</p>
+</li>
+</ul>
+<p>补码的本质：<br>&emsp;&emsp; 补码本质上是为了解决减法运算的问题，在计算机中，所有的运算都是加法运算，减法运算是通过加法运算来实现的。</p>
+<p>比如：5和-5在有符号整型中的表示为0101和1011，但是5+（-5）=0010而不是0，这样补码才会出现。-5的补码为1011，5的补码为0101，相加得到0000。（这里的进位1被舍弃了）</p>
+<p>补码溢出：<br>&emsp;&emsp; 补码可以解决减法运算的问题，但是也会出现溢出的问题。两个补码相加后，如果最高位的进位不等于进位前的最高位，就会出现溢出。<br>&emsp;&emsp; 如果两个正数相加，结果为负数，就会出现溢出。<br>&emsp;&emsp; 如果两个负数相加，结果为正数，也会出现溢出。</p>
+ 
+      <!-- reward -->
       
+      <div id="reword-out">
+        <div id="reward-btn">
+          Donate
+        </div>
+      </div>
       
     </div>
-  </div>
-  
-  
-
-  
-  <nav class="page-nav">
     
-    <a class="extend prev" rel="prev" href="/categories/c%E8%AF%AD%E8%A8%80/">上一页</a><a class="page-number" href="/categories/c%E8%AF%AD%E8%A8%80/">1</a><span class="page-number current">2</span>
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>Copyright： </strong>
+          
+          Copyright is owned by the author. For commercial reprints, please contact the author for authorization. For non-commercial reprints, please indicate the source.
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://oyama-mahiro.github.io/2024/01/09/C%E8%AF%AD%E8%A8%80%E5%A4%8D%E4%B9%A0-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c%E8%AF%AD%E8%A8%80/" rel="tag">c语言</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%EF%BC%8C%E7%AE%97%E6%B3%95/" rel="tag">数据结构，算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/12/29/C%E8%AF%AD%E8%A8%80%E5%A4%8D%E4%B9%A0-%E5%9F%BA%E7%A1%80%E9%83%A8%E5%88%86/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">C语言复习-基础部分</div>
+      </a>
+    
   </nav>
-  
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "tuYk4qAcyDHqUmYKwnOzB9nI-9Nh9j0Va",
+    app_key: "EuYRm7WE36kxYD3nnGAQBK5y",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
 </section>
       <footer class="footer">
   <div class="outer">
@@ -279,6 +434,23 @@
 <script src="/js/lazyload.min.js"></script>
 
 <!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">

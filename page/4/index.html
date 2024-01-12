@@ -97,6 +97,67 @@
     
     
     <article
+  id="post-day28-进程线程"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h2 itemprop="name">
+  <a class="article-title" href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/"
+    >day28-进程线程</a> 
+</h2>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" class="article-date">
+  <time datetime="2023-04-01T01:08:23.000Z" itemprop="datePublished">2023-04-01</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+  </div>
+   
+    </div>
+      
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h1 id="day28-进程线程"><a href="#day28-进程线程" class="headerlink" title="day28-进程线程"></a><font color="green">day28-进程线程</font></h1><p>下面当我问你LINUX下的c语言中的函数是，你要从函数原型，功能，头文件，返回值，参数这几个方面讲解，并给出示例代码和使用函数的注意事项，明白了吗</p>
+<h2 id="一、基本概念"><a href="#一、基本概念" class="headerlink" title="一、基本概念"></a>一、基本概念</h2><h3 id="1-进程和线程"><a href="#1-进程和线程" class="headerlink" title="1. 进程和线程"></a>1. 进程和线程</h3><ul>
+<li>程序：是一些二进制、数据的有序集合，没有被加载到内存。没有“生命”</li>
+<li>进程：程序执行一次的过程。程序执行时资源分配的总称。Linux 是一个多道程序设计系统，因此系统中存在彼此相互独立的进程同时运行。</li>
+<li>页表：<br>&emsp;&emsp;在 Linux 中，每个进程都有自己的页表，用于映射虚拟地址到物理地址。页表是由一系列页表项（PTE）组成的数据结构，每个页表项对应着虚拟地址空间中的一个页面（通常是4KB），并描述了该页面的物理地址、访问权限等信息。<br>&emsp;&emsp;Linux 中的页表采用了多级页表的结构，即每个页表项可以指向下一级的页表，最终指向物理页面。<br>&emsp;&emsp;Linux 中的页表是按需分配的，即当进程需要访问某个虚拟地址时，如果该地址对应的页表项不存在，则会触发缺页异常，内核会根据需要分配新的物理页面，并更新页表项，使得虚拟地址能够正确映射到物理地址。</li>
+<li>线程：线程是进程中的执行单元，它与进程共享同一个地址空间，因此线程之间可以直接共享数据。线程相对于进程来说更加轻量级。多个线程可以共享一个进程的以下资源(可执行的指令,静态数据,进程中打开的文件描述符,信号处理函数,当前工作目录用户ID,用户组ID)</li></ul> 
+      <a class="article-more-link" href="/2023/04/01/day28-%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/"
+        >阅读更多...</a
+      >
+       
+      <!-- reward -->
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BF%9B%E7%A8%8B%E7%BA%BF%E7%A8%8B/" rel="tag">进程线程</a></li></ul>
+
+    </footer>
+  </div>
+
+    
+ 
+   
+</article>
+
+    
+    <article
   id="post-day27-文件与系统IO"
   class="article article-type-post"
   itemscope
@@ -241,11 +302,11 @@
       
     <div class="article-entry" itemprop="articleBody">
        
-  <h1 id="day25-树"><a href="#day25-树" class="headerlink" title="day25-树"></a><font color="green">day25-树</font></h1><h2 id="一、树的概念"><a href="#一、树的概念" class="headerlink" title="一、树的概念"></a>一、树的概念</h2><h3 id="1-树形结构的形式化"><a href="#1-树形结构的形式化" class="headerlink" title="1. 树形结构的形式化"></a>1. 树形结构的形式化</h3><h4 id="1-1-序偶"><a href="#1-1-序偶" class="headerlink" title="1.1 序偶"></a>1.1 序偶</h4><p>定义：设有两个元素x和y，由x和y构成的序偶记为&lt;x,y&gt;。  </p>
+  <h1 id="day25-树"><a href="#day25-树" class="headerlink" title="day25-树"></a><font color="green">day25-树</font></h1><h2 id="一、树的概念"><a href="#一、树的概念" class="headerlink" title="一、树的概念"></a>一、树的概念</h2><h3 id="1-1-树形结构的形式化"><a href="#1-1-树形结构的形式化" class="headerlink" title="1.1 树形结构的形式化"></a>1.1 树形结构的形式化</h3><h4 id="1-1-1-序偶"><a href="#1-1-1-序偶" class="headerlink" title="1.1.1 序偶"></a>1.1.1 序偶</h4><p>定义：设有两个元素x和y，由x和y构成的序偶记为&lt;x,y&gt;。  </p>
 <blockquote>
 <p>序偶可以描述有先后顺序要求的一对元素之间的关系，顺序很重要&lt;x,y&gt; $\not =$ &lt;y,x&gt;  </p>
 </blockquote>
-<h4 id="1-2-树的直接定义"><a href="#1-2-树的直接定义" class="headerlink" title="1.2 树的直接定义"></a>1.2 树的直接定义</h4><p>&emsp;&emsp;树是包括n（n$\geq$0）个元素的集合D，R是D中元素的序偶集合，若D为空，R也为空，此时为空树，否则R满足以下要求：</p>
+<h4 id="1-1-2-树的直接定义"><a href="#1-1-2-树的直接定义" class="headerlink" title="1.1.2 树的直接定义"></a>1.1.2 树的直接定义</h4><p>&emsp;&emsp;树是包括n（n$\geq$0）个元素的集合D，R是D中元素的序偶集合，若D为空，R也为空，此时为空树，否则R满足以下要求：</p>
 <ul>
 <li>有且仅有一个结点a $\in$ D，不存在任何节点v $\in$ D,v $\not =$ a，使得&lt;v,a&gt; $\in$ R,该结点为树的根。<font color="blue">如果树不为空，则树的根节点是唯一的</font></li>
 <li>对于除根结点a以外任一结点u $\in$ D而言，都有且仅有一个结点 v $\in$ D，v $\not =$ u，使得&lt;v,u&gt; $\in$ R成立。<font color="blue">根节点没有前驱，其他结点均有唯一前驱</font></li>
@@ -623,66 +684,6 @@
     <footer class="article-footer">
        
   <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux%E5%9F%BA%E7%A1%80/" rel="tag">Linux基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/" rel="tag">shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell%E8%84%9A%E6%9C%AC/" rel="tag">shell脚本</a></li></ul>
-
-    </footer>
-  </div>
-
-    
- 
-   
-</article>
-
-    
-    <article
-  id="post-day17-Linux基础"
-  class="article article-type-post"
-  itemscope
-  itemprop="blogPost"
-  data-scroll-reveal
->
-  <div class="article-inner">
-    
-    <header class="article-header">
-       
-<h2 itemprop="name">
-  <a class="article-title" href="/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/"
-    >day17-Linux基础</a> 
-</h2>
- 
-
-    </header>
-     
-    <div class="article-meta">
-      <a href="/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/" class="article-date">
-  <time datetime="2023-03-14T11:29:36.000Z" itemprop="datePublished">2023-03-14</time>
-</a> 
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-  </div>
-   
-    </div>
-      
-    <div class="article-entry" itemprop="articleBody">
-       
-  <h1 id="day17-linux基础"><a href="#day17-linux基础" class="headerlink" title="day17-linux基础"></a><font color="green">day17-linux基础</font></h1><hr>
-<h2 id="一、复习补充："><a href="#一、复习补充：" class="headerlink" title="一、复习补充："></a>一、复习补充：</h2><p>缩进：</p>
-<p>命令行模式：gg=G</p>
-<p>可视化模式：v，上下键选中要对齐的代码，按=</p>
-<p>底行模式：set nonumber  不显示行号，set number 显示行号</p> 
-      <a class="article-more-link" href="/2023/03/14/day17-Linux%E5%9F%BA%E7%A1%80/"
-        >阅读更多...</a
-      >
-       
-      <!-- reward -->
-      
-    </div>
-    
-
-    <!-- copyright -->
-    
-    <footer class="article-footer">
-       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux%E5%9F%BA%E7%A1%80/" rel="tag">Linux基础</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/" rel="tag">shell</a></li></ul>
 
     </footer>
   </div>
