@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">5.8k</span>
+            <span class="post-count">6.1k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">22 min</span>
+            <span class="post-count">24 min</span>
         </span>
     </span>
 </div>
@@ -107,7 +107,9 @@
 <h1 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h1><p>数据类型</p>
 <p>变量、常量，存储类别</p>
 <p>函数、指针、数组</p>
-<h2 id="结构体、共用体、枚举"><a href="#结构体、共用体、枚举" class="headerlink" title="结构体、共用体、枚举"></a>结构体、共用体、枚举</h2><br>
+<p>结构体、共用体、枚举</p>
+<hr>
+<br>
 <br>
 <br>
 
@@ -337,6 +339,9 @@
 <li>static：<br>用于定义局部变量，使变量在函数调用之间保持值，即使函数退出，变量的值也不会消失。<br>用于定义全局变量，使变量的作用域限制在声明它的文件内。</li>
 <li>extern：<br>用于声明全局变量或函数，如果想在其它文件中使用全局变量或函数，在使用前用头文件中extern声明一下。现在的做法是，将全局变量和函数都放在头文件中，然后在需要的文件中包含头文件即可（不加extern）。但是要注意，在一些系统下，如果全局变量在头文件中定义，那么在其它文件中包含头文件时，全局变量会被重复定义，所以要在头文件中加上extern声明，这样就不会重复定义了。</li>
 </ul>
+<blockquote>
+<p>注：在c++中用extern “C”来声明c语言的函数和变量，这样可以在c++中调用c语言的函数和变量。</p>
+</blockquote>
 <h3 id="2-3-其它关键字"><a href="#2-3-其它关键字" class="headerlink" title="2.3 其它关键字"></a>2.3 其它关键字</h3><h4 id="2-3-1-define和typedef"><a href="#2-3-1-define和typedef" class="headerlink" title="2.3.1 define和typedef"></a>2.3.1 define和typedef</h4><ol>
 <li>define：用于定义符号常量，也可以用于定义宏。在预处理阶段即编译之前，会将define定义的符号常量或宏替换为对应的值。</li>
 </ol>
@@ -360,6 +365,11 @@
 
 
 <h1 id="三、函数、指针、数组"><a href="#三、函数、指针、数组" class="headerlink" title="三、函数、指针、数组"></a>三、函数、指针、数组</h1><h2 id="3-1-指针与数组"><a href="#3-1-指针与数组" class="headerlink" title="3.1 指针与数组"></a>3.1 指针与数组</h2><p>指针与数组的关系：数组名是数组首元素的地址，指针变量存储的是地址，所以指针变量可以指向数组。一般趋近于数组名是指向数组首元素的指针。</p>
+<blockquote>
+<p>数组名arr和&amp;arr的区别<br>arr本身是指针，指向的是数组首地址，但是arr+1只是将数组偏移到下一个元素<br>&amp;arr也是指针，指向的是数组首地址，但是&amp;arr+1是将数组偏移整个数组</p>
+</blockquote>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//对于一维数组</span></span><br><span class="line"><span class="keyword">int</span> arr[<span class="number">5</span>] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>&#125;;</span><br><span class="line"><span class="keyword">int</span> (*p)[<span class="number">5</span>] = arr;   <span class="comment">//这样写不合法，但因为有隐形转换，所以可以通过编译 ，int arr[2][3] = &#123;1,2,3,4,5,6&#125;; int (*p)[3] = arr;这样写是合法的</span></span><br><span class="line"><span class="keyword">int</span> (*q)[<span class="number">5</span>] = &amp;arr;  <span class="comment">//这样写就是规定了指针每次偏移量为(int*5)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span> (<span class="string">&quot;arr=%d&quot;</span>,arr);     <span class="comment">//-656409648</span></span><br><span class="line"><span class="built_in">printf</span> (<span class="string">&quot;&amp;arr=%d&quot;</span>,&amp;arr);   <span class="comment">//-656409648</span></span><br><span class="line"><span class="built_in">printf</span> (<span class="string">&quot;arr+1=%d&quot;</span>,arr+<span class="number">1</span>); <span class="comment">//-656409644  偏移4</span></span><br><span class="line"><span class="built_in">printf</span> (<span class="string">&quot;&amp;arr=%d&quot;</span>,&amp;arr+<span class="number">1</span>); <span class="comment">//-656409628  偏移20</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;p=%d&quot;</span>,p);            <span class="comment">//-656409648</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;p+1=%d&quot;</span>,p+<span class="number">1</span>);        <span class="comment">//-656409628  偏移20</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;*p+1=%d&quot;</span>,*p+<span class="number">1</span>);       <span class="comment">//-656409644  偏移4</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;q=%d&quot;</span>,q);             <span class="comment">//-656409648</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;q+1=%d&quot;</span>,q+<span class="number">1</span>);         <span class="comment">//-656409628  偏移20</span></span><br><span class="line"><span class="built_in">printf</span>(<span class="string">&quot;*q+1=%d&quot;</span>,*q+<span class="number">1</span>);       <span class="comment">//-656409644  偏移4</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//这里的*p只是进行了一次降维，值不变但每次的偏移量从整个数组变成了一个元素</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
 <h3 id="3-1-1-指针与数组关于字符串的区别"><a href="#3-1-1-指针与数组关于字符串的区别" class="headerlink" title="3.1.1 指针与数组关于字符串的区别"></a>3.1.1 指针与数组关于字符串的区别</h3><p>但是在字符数组代表字符串的情况下，字符数组代表的字符串是可以修改的，而指针指向的字符串是不能修改的。</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> str[] = <span class="string">&quot;hello&quot;</span>; <span class="comment">// 自动加上 &#x27;\0&#x27;，可修改</span></span><br><span class="line"><span class="keyword">char</span> *p = <span class="string">&quot;hello&quot;</span>; <span class="comment">// 自动加上 &#x27;\0&#x27;，不可修改</span></span><br></pre></td></tr></table></figure>
 
