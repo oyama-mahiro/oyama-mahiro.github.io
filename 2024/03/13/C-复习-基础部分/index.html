@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">6.9k</span>
+            <span class="post-count">7k</span>
         </span>
     </span>
 
@@ -419,7 +419,7 @@
 <h4 id="9-1-7-set（集合）"><a href="#9-1-7-set（集合）" class="headerlink" title="9.1.7 set（集合）"></a>9.1.7 set（集合）</h4><p>集合是一种不包含重复元素的容器。</p>
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">头文件：</span><br><span class="line">#include &lt;set&gt;</span><br><span class="line"></span><br><span class="line">初始化：</span><br><span class="line">std::set&lt;int&gt; a;</span><br><span class="line"></span><br><span class="line">方法：</span><br><span class="line">a.insert(1); //插入元素</span><br><span class="line">a.erase(1); //删除元素</span><br><span class="line">a.size(); //返回元素个数</span><br><span class="line">a.empty(); //判断是否为空</span><br><span class="line">a.clear(); //清空</span><br><span class="line">a.begin(); //返回指向第一个元素的迭代器</span><br><span class="line">a.end(); //返回指向最后一个元素的下一个位置的迭代器</span><br><span class="line">a.find(1); //查找元素，返回指向该元素的迭代器</span><br></pre></td></tr></table></figure>
 
-<h4 id="9-1-8-string（字符串）"><a href="#9-1-8-string（字符串）" class="headerlink" title="9.1.8 string（字符串）"></a>9.1.8 string（字符串）</h4><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">头文件：</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line"></span><br><span class="line">初始化：</span><br><span class="line">std::string a;</span><br><span class="line"></span><br><span class="line">方法：</span><br><span class="line">a.size(); //返回字符串长度</span><br><span class="line">a.empty(); //判断是否为空</span><br><span class="line">a.clear(); //清空</span><br><span class="line">a.insert(1, &quot;a&quot;); //在指定位置插入字符串</span><br><span class="line">a.erase(1); //删除指定位置的字符</span><br><span class="line">a.erase(1, 3); //删除指定范围的字符</span><br><span class="line">a.find(&quot;a&quot;); //查找字符串，返回指向该字符串的迭代器</span><br><span class="line">a.substr(1, 3); //返回指定范围的子字符串</span><br></pre></td></tr></table></figure>
+<h4 id="9-1-8-string（字符串）"><a href="#9-1-8-string（字符串）" class="headerlink" title="9.1.8 string（字符串）"></a>9.1.8 string（字符串）</h4><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">头文件：</span><br><span class="line">#include &lt;string&gt;</span><br><span class="line"></span><br><span class="line">初始化：</span><br><span class="line">std::string a;</span><br><span class="line"></span><br><span class="line">方法：</span><br><span class="line">a.size(); //返回字符串长度</span><br><span class="line">a.empty(); //判断是否为空</span><br><span class="line">a.clear(); //清空</span><br><span class="line">a.insert(1, &quot;a&quot;); //在指定位置插入字符串</span><br><span class="line">a.erase(1); //删除指定位置的字符</span><br><span class="line">a.erase(1, 3); //删除指定范围的字符</span><br><span class="line">a.find(&quot;a&quot;); //查找字符串，返回指向该字符串的迭代器</span><br><span class="line">a.substr(1, 3); //返回指定范围的子字符串</span><br><span class="line">a.begin(); //返回指向第一个字符的迭代器</span><br><span class="line">a.end(); //返回指向最后一个字符的下一个位置的迭代器(注意！：是最后一个字符的下一个位置)</span><br></pre></td></tr></table></figure>
 
 <h4 id="9-1-9-array（数组）"><a href="#9-1-9-array（数组）" class="headerlink" title="9.1.9 array（数组）"></a>9.1.9 array（数组）</h4><figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">头文件：</span><br><span class="line">#include &lt;array&gt;</span><br><span class="line"></span><br><span class="line">初始化：</span><br><span class="line">std::array&lt;int, 5&gt; a;</span><br><span class="line"></span><br><span class="line">方法：</span><br><span class="line">a.size(); //返回数组长度</span><br><span class="line">a.empty(); //判断是否为空</span><br><span class="line">a.fill(1); //填充数组</span><br><span class="line">a.begin(); //返回指向第一个元素的迭代器</span><br><span class="line">a.end(); //返回指向最后一个元素的下一个位置的迭代器</span><br></pre></td></tr></table></figure>
 
@@ -508,6 +508,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2024/03/20/leetcode%E7%AE%97%E6%B3%95%E9%A2%98/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            leetcode算法题
+          
+        </div>
+      </a>
     
     
       <a href="/2024/03/12/%E6%9D%82%E4%B9%B1%E7%9A%84C%E8%AF%AD%E8%A8%80%E7%9F%A5%E8%AF%86/" class="article-nav-link">
