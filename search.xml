@@ -8556,13 +8556,16 @@ public:
 <li>发送应答：主机在接收完一个字节之后，在下一个时钟发送一位数据，数据0表示应答，数据1表示非应答</li>
 <li>接收应答：主机在发送完一个字节之后，在下一个时钟接收一位数据，判断从机是否应答，数据0表示应答，数据1表示非应答（主机在接收之前，需要释放SDA）</li>
 </ul>
-<p>·<img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/I2CAck.png" alt="49"></p>
+<p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/I2CAck.png" alt="49"></p>
 <h5 id="2-11-2-4-指定地址写"><a href="#2-11-2-4-指定地址写" class="headerlink" title="2.11.2.4 指定地址写"></a>2.11.2.4 指定地址写</h5><p>起始-&gt;发送地址（左移1位）+写位（0）-&gt;应答-&gt;发送对应寄存器地址-&gt;应答-&gt;发送数据-&gt;应答-&gt;终止</p>
 <p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/I2CZhiDingDiZhiXie.png" alt="50"></p>
 <h5 id="2-11-2-5-指定地址读"><a href="#2-11-2-5-指定地址读" class="headerlink" title="2.11.2.5 指定地址读"></a>2.11.2.5 指定地址读</h5><p>起始-&gt;发送地址（左移1位）+写位（0）-&gt;应答-&gt;发送对应寄存器地址-&gt;应答-&gt;起始-&gt;发送地址（左移1位）+读位（1）-&gt;应答-&gt;接收数据-&gt;非应答-&gt;终止</p>
 <p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/I2CZhiDingDiZhiDu.png" alt="51"></p>
 <blockquote>
 <p><strong>注意：在I2C通信中，数据的传输是先高位后低位，即高位先行，USART通信中是低位先行</strong></p>
+</blockquote>
+<blockquote>
+<p>12C总线上可能在某一时刻有两个主控设备要同时向总线发送数据，这种情况叫做总线竞争。12C总线具有多主控能力，可以对发生在SDA线上的总线竞争进行仲裁，其仲裁原则是这样的:<br>假设主控器1要发送“1010…”:主控器2要发送的数据DATA2为“1001…”总线被启动后两个主控器在每发送一个数据位时都要对自己的输出电平进行检测，只要检测的电平与自己发出的电平一致，他们就会继续占用总线。在这种情况下总线还是得不到仲裁。当主控器1发送第3位数据“1”时(主控器2发送“0”)，由于“线与”的结果SDA上的电平为“0”，这样当主控器1检测自己的输出电平时，就会测到一个与自身不相符的“0”电平。这时主控器1只好放弃对总线的控制权;因此主控器2就成为总线的唯一主宰者。(即在不同的电平时谁0谁赢)</p>
 </blockquote>
 <h4 id="2-11-3-MPU6050"><a href="#2-11-3-MPU6050" class="headerlink" title="2.11.3 MPU6050"></a>2.11.3 MPU6050</h4><ul>
 <li>MPU6050是一个6轴姿态传感器，可以测量芯片自身X、Y、Z轴的加速度、角速度参数，通过数据融合，可进一步得到姿态角，常应用于平衡车、飞行器等需要检测自身姿态的场景</li>
@@ -8768,6 +8771,154 @@ public:
 <blockquote>
 <p><strong>注：在停止模式下，STM32的时钟会被关闭，所以在唤醒后会默认成8MHZ，需要重新配置时钟</strong></p>
 </blockquote>
+<br>
+<br>
+
+<hr>
+<h3 id="2-14-WDG看门狗"><a href="#2-14-WDG看门狗" class="headerlink" title="2.14 WDG看门狗"></a>2.14 WDG看门狗</h3><h4 id="2-14-1-WDG简介"><a href="#2-14-1-WDG简介" class="headerlink" title="2.14.1 WDG简介"></a>2.14.1 WDG简介</h4><ul>
+<li>WDG（Watchdog）看门狗</li>
+<li>看门狗可以监控程序的运行状态，当程序因为设计漏洞、硬件故障、电磁干扰等原因，出现卡死或跑飞现象时，看门狗能及时复位程序，避免程序陷入长时间的罢工状态，保证系统的可靠性和安全性</li>
+<li>看门狗本质上是一个定时器，当指定时间范围内，程序没有执行喂狗（重置计数器）操作时，看门狗硬件电路就自动产生复位信号</li>
+<li>STM32内置两个看门狗<br>独立看门狗（IWDG）：独立工作，对时间精度要求较低<br>窗口看门狗（WWDG）：要求看门狗在精确计时窗口起作用</li>
+</ul>
+<h4 id="2-14-2-IWDG独立看门狗"><a href="#2-14-2-IWDG独立看门狗" class="headerlink" title="2.14.2 IWDG独立看门狗"></a>2.14.2 IWDG独立看门狗</h4><p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/IWDGKuangTu.png" alt="70"></p>
+<p>为了实现看门狗的稳定，设置了键寄存器，即需要输入特定的值，才能对看门狗进行操作，有效防止误操作或干扰（就像密码一样）<br><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/IWDGJianJiCunQi.png" alt="71"></p>
+<blockquote>
+<p>超时时间：TIWDG = TLSI × PR预分频系数 × (RL + 1)<br>其中：TLSI = 1 / FLSI(40MHZ)</p>
+</blockquote>
+<h4 id="2-14-3-WWGD窗口看门狗"><a href="#2-14-3-WWGD窗口看门狗" class="headerlink" title="2.14.3 WWGD窗口看门狗"></a>2.14.3 WWGD窗口看门狗</h4><p>窗口看门狗除了有IWDG的功能外，还有一个窗口功能，即在一个时间窗口内，看门狗必须喂狗，太早或太晚都不行，否则会产生复位信号</p>
+<p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/WWDG.png" alt="72"></p>
+<blockquote>
+<p>WWDG是把最高位当成了标志位，所以实际计数只有T[5:0]，当T0-T5为0后会产生一个中断信号，之后再减1，就会使T6变为0，产生复位信号<br>当写入的值大于窗口值（即过早），也会产生复位信号</p>
+</blockquote>
+<ul>
+<li>超时时间：<br>  TWWDG = TPCLK1(72MHZ) × 4096 × WDGTB预分频系数 × (T[5:0] + 1)</li>
+<li>窗口时间：<br>  TWIN = TPCLK1 × 4096 × WDGTB预分频系数 × (T[5:0] - W[5:0])<br>其中：TPCLK1 = 1 / FPCLK1</li>
+</ul>
+<h4 id="2-14-4-IWDG和WWDG比较"><a href="#2-14-4-IWDG和WWDG比较" class="headerlink" title="2.14.4 IWDG和WWDG比较"></a>2.14.4 IWDG和WWDG比较</h4><p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/IWDGvsWWDG.png" alt="73"></p>
+<h4 id="2-14-5-WDG代码"><a href="#2-14-5-WDG代码" class="headerlink" title="2.14.5 WDG代码"></a>2.14.5 WDG代码</h4><p>IWDG:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;Delay.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;OLED.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;Key.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">/*模块初始化*/</span></span><br><span class="line">	OLED_Init();						<span class="comment">//OLED初始化</span></span><br><span class="line">	Key_Init();							<span class="comment">//按键初始化</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*显示静态字符串*/</span></span><br><span class="line">	OLED_ShowString(<span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot;IWDG TEST&quot;</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*判断复位信号来源*/</span></span><br><span class="line">	<span class="keyword">if</span> (RCC_GetFlagStatus(RCC_FLAG_IWDGRST) == SET)	<span class="comment">//如果是独立看门狗复位</span></span><br><span class="line">	&#123;</span><br><span class="line">		OLED_ShowString(<span class="number">2</span>, <span class="number">1</span>, <span class="string">&quot;IWDGRST&quot;</span>);			<span class="comment">//OLED闪烁IWDGRST字符串</span></span><br><span class="line">		Delay_ms(<span class="number">500</span>);</span><br><span class="line">		OLED_ShowString(<span class="number">2</span>, <span class="number">1</span>, <span class="string">&quot;       &quot;</span>);</span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		</span><br><span class="line">		RCC_ClearFlag();							<span class="comment">//清除标志位</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>											<span class="comment">//否则，即为其他复位</span></span><br><span class="line">	&#123;</span><br><span class="line">		OLED_ShowString(<span class="number">3</span>, <span class="number">1</span>, <span class="string">&quot;RST&quot;</span>);				<span class="comment">//OLED闪烁RST字符串</span></span><br><span class="line">		Delay_ms(<span class="number">500</span>);</span><br><span class="line">		OLED_ShowString(<span class="number">3</span>, <span class="number">1</span>, <span class="string">&quot;   &quot;</span>);</span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*IWDG初始化*/</span></span><br><span class="line">	IWDG_WriteAccessCmd(IWDG_WriteAccess_Enable);	<span class="comment">//独立看门狗写使能</span></span><br><span class="line">	IWDG_SetPrescaler(IWDG_Prescaler_16);			<span class="comment">//设置预分频为16</span></span><br><span class="line">	IWDG_SetReload(<span class="number">2499</span>);							<span class="comment">//设置重装值为2499，独立看门狗的超时时间为1000ms</span></span><br><span class="line">	IWDG_ReloadCounter();							<span class="comment">//重装计数器，喂狗</span></span><br><span class="line">	IWDG_Enable();									<span class="comment">//独立看门狗使能</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Key_GetNum();								<span class="comment">//调用阻塞式的按键扫描函数，模拟主循环卡死</span></span><br><span class="line">		</span><br><span class="line">		IWDG_ReloadCounter();						<span class="comment">//重装计数器，喂狗</span></span><br><span class="line">		</span><br><span class="line">		OLED_ShowString(<span class="number">4</span>, <span class="number">1</span>, <span class="string">&quot;FEED&quot;</span>);				<span class="comment">//OLED闪烁FEED字符串</span></span><br><span class="line">		Delay_ms(<span class="number">200</span>);								<span class="comment">//喂狗间隔为200+600=800ms</span></span><br><span class="line">		OLED_ShowString(<span class="number">4</span>, <span class="number">1</span>, <span class="string">&quot;    &quot;</span>);</span><br><span class="line">		Delay_ms(<span class="number">600</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>WWDG:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;stm32f10x.h&quot;</span>                  <span class="comment">// Device header</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;Delay.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;OLED.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;Key.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">/*模块初始化*/</span></span><br><span class="line">	OLED_Init();						<span class="comment">//OLED初始化</span></span><br><span class="line">	Key_Init();							<span class="comment">//按键初始化</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*显示静态字符串*/</span></span><br><span class="line">	OLED_ShowString(<span class="number">1</span>, <span class="number">1</span>, <span class="string">&quot;WWDG TEST&quot;</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*判断复位信号来源*/</span></span><br><span class="line">	<span class="keyword">if</span> (RCC_GetFlagStatus(RCC_FLAG_WWDGRST) == SET)	<span class="comment">//如果是窗口看门狗复位</span></span><br><span class="line">	&#123;</span><br><span class="line">		OLED_ShowString(<span class="number">2</span>, <span class="number">1</span>, <span class="string">&quot;WWDGRST&quot;</span>);			<span class="comment">//OLED闪烁WWDGRST字符串</span></span><br><span class="line">		Delay_ms(<span class="number">500</span>);</span><br><span class="line">		OLED_ShowString(<span class="number">2</span>, <span class="number">1</span>, <span class="string">&quot;       &quot;</span>);</span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">		</span><br><span class="line">		RCC_ClearFlag();							<span class="comment">//清除标志位</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">else</span>											<span class="comment">//否则，即为其他复位</span></span><br><span class="line">	&#123;</span><br><span class="line">		OLED_ShowString(<span class="number">3</span>, <span class="number">1</span>, <span class="string">&quot;RST&quot;</span>);				<span class="comment">//OLED闪烁RST字符串</span></span><br><span class="line">		Delay_ms(<span class="number">500</span>);</span><br><span class="line">		OLED_ShowString(<span class="number">3</span>, <span class="number">1</span>, <span class="string">&quot;   &quot;</span>);</span><br><span class="line">		Delay_ms(<span class="number">100</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*开启时钟*/</span></span><br><span class="line">	RCC_APB1PeriphClockCmd(RCC_APB1Periph_WWDG, ENABLE);	<span class="comment">//开启WWDG的时钟</span></span><br><span class="line">	</span><br><span class="line">	<span class="comment">/*WWDG初始化*/</span></span><br><span class="line">	WWDG_SetPrescaler(WWDG_Prescaler_8);			<span class="comment">//设置预分频为8</span></span><br><span class="line">	WWDG_SetWindowValue(<span class="number">0x40</span> | <span class="number">21</span>);					<span class="comment">//设置窗口值，窗口时间为30ms,或上0x40是让第六位置1</span></span><br><span class="line">	WWDG_Enable(<span class="number">0x40</span> | <span class="number">54</span>);							<span class="comment">//使能并第一次喂狗，超时时间为50ms，或上0x40是让第六位置1</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">	&#123;</span><br><span class="line">		Key_GetNum();								<span class="comment">//调用阻塞式的按键扫描函数，模拟主循环卡死</span></span><br><span class="line">		</span><br><span class="line">		OLED_ShowString(<span class="number">4</span>, <span class="number">1</span>, <span class="string">&quot;FEED&quot;</span>);				<span class="comment">//OLED闪烁FEED字符串</span></span><br><span class="line">		Delay_ms(<span class="number">20</span>);								<span class="comment">//喂狗间隔为20+20=40ms</span></span><br><span class="line">		OLED_ShowString(<span class="number">4</span>, <span class="number">1</span>, <span class="string">&quot;    &quot;</span>);</span><br><span class="line">		Delay_ms(<span class="number">20</span>);</span><br><span class="line">		</span><br><span class="line">		WWDG_SetCounter(<span class="number">0x40</span> | <span class="number">54</span>);					<span class="comment">//重装计数器，喂狗</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<br>
+<br>
+
+<hr>
+<h3 id="2-15-CAN通信"><a href="#2-15-CAN通信" class="headerlink" title="2.15 CAN通信"></a>2.15 CAN通信</h3><h4 id="2-15-1-CAN简介"><a href="#2-15-1-CAN简介" class="headerlink" title="2.15.1 CAN简介"></a>2.15.1 CAN简介</h4><ul>
+<li>CAN是控制器局域网络(Controller Area Network)的简称，CAN总线协议已经成为汽车计算机控制系统和嵌入式工业控制局域网的标准总线。</li>
+<li>CAN是国际标准化的 串行通信协议 ，采用数据块编码的方式，数据块根据帧的类型，能够让挂载在总线上的不</li>
+<li>同节点接收到相同的数据，再根据每个节点的配置对信息进行选择性处理(接收or丢弃)。</li>
+</ul>
+<blockquote>
+<p>我个人认为有三层（这个和真实的标准有出入，但对新手以及不开发硬件的嵌入式开发者来说，理解足够）：物理信号层，链路传输层，应用数据层<br>物理信号层，规定了硬件电路的设计规则、用户使用的接线方式、线路上传输信号与电平格式对应关系、波特率比特率、数据同步异步传输、收发模式等内容<br>链路传输层，规定了地址（CAN ID）、冲突检测与避免（仲裁）、误码校验、滤波器与掩码、该层的帧格式<br>应用数据层是被传输的数据主体；链路层把应用层的数据拿来，加上相关的地址、校验等信息封装；物理层把链路层的数据拿来，编码成物理信号传输出去</p>
+</blockquote>
+<h4 id="2-15-2-CAN硬件链接"><a href="#2-15-2-CAN硬件链接" class="headerlink" title="2.15.2 CAN硬件链接"></a>2.15.2 CAN硬件链接</h4><p>接线方式：总线接法</p>
+<ul>
+<li>每个设备引出两根线，一根是CAN_H，一根是CAN_L（当然也有单线CAN但速度低我们不考虑使用）； 不同设备的CAN_H接到一起， CAN_L接到一起</li>
+<li>CAN_H与CAN_L通过120Ohm电阻连接在一起，防止总线上传输的高频信号存在反射振铃效应导致信号不稳定、寄生电容导致信号响应速度变慢等情况</li>
+</ul>
+<p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/CANYingJianLIanJie.png" alt="74"></p>
+<p>线路传输的电平的形式：差分信号传输</p>
+<ul>
+<li>差分信号传输，在长距离传输时可保证信号质量（展示为双绞线，当有干扰时，两根线的干扰是一样的，所以差分信号传输时，干扰信号会被消除）</li>
+<li>码元1被编码成CAN_H与CAN_L电平相同，称为隐性电平，一般两根线电平均为2.5V</li>
+<li>码元0被编码成CAN_H与CAN_L电平不同，称为显性电平，一般CAN_H为3.5V，CAN_L为1.5V</li>
+<li>后续为表述方便，仍以传统的低电平为0高电平为1表示信号,<strong>但CAN的逻辑0仍然是显性信号！</strong></li>
+</ul>
+<p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/CANChaFenXinHao.png" alt="75"></p>
+<h4 id="2-15-3-CAN采样形式"><a href="#2-15-3-CAN采样形式" class="headerlink" title="2.15.3 CAN采样形式"></a>2.15.3 CAN采样形式</h4><p>CAN采用的是异步通信，所以需要配置波特率，在每一个波特率单位中，CAN划分了不同的时间段来保证采样的准确性：</p>
+<p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/CANCaiYang.png" alt="76"></p>
+<ul>
+<li>同步段对整条总线各个设备进行同步</li>
+<li>传播段是时间占用片，因为有些CAN总线可能比较长，要考虑物理信号在总线的传播时间以及CAN驱动器的处理时间。传播速度一般是光速的2/3，也就是2*10^8m/s；传播段时间一般是信号在总线上传播时间的两倍</li>
+<li>相位缓冲段有两个，<strong>其中夹住的时间点就是采样时间点</strong>，硬件设备在这个时间点上对电平采样获取当前比特的状态是0还是1</li>
+</ul>
+<h4 id="2-15-4-CAN收发模式"><a href="#2-15-4-CAN收发模式" class="headerlink" title="2.15.4 CAN收发模式"></a>2.15.4 CAN收发模式</h4><ol>
+<li>常规模式</li>
+</ol>
+<ul>
+<li>向总线发送</li>
+<li>从总线接收</li>
+</ul>
+<ol start="2">
+<li>回环模式</li>
+</ol>
+<ul>
+<li>向总线和本机发送</li>
+<li>不从总线接收仅从本机接收</li>
+</ul>
+<ol start="3">
+<li>静默模式</li>
+</ol>
+<ul>
+<li>不向总线发送仅向本机发送</li>
+<li>从总线和本机接收</li>
+</ul>
+<ol start="4">
+<li>回环静默模式</li>
+</ol>
+<ul>
+<li>不向总线发送</li>
+<li>不从总线接收</li>
+<li>自收自发</li>
+</ul>
+<h4 id="2-15-5-CAN帧格式"><a href="#2-15-5-CAN帧格式" class="headerlink" title="2.15.5 CAN帧格式"></a>2.15.5 CAN帧格式</h4><p><img src="/2024/03/28/stm32%E5%9F%BA%E7%A1%80/CANBiaoZhunZhen.png" alt="77"></p>
+<ol>
+<li>地址（CAN ID）</li>
+</ol>
+<ul>
+<li>由于是广播性质的总线协议，因此用地址来说并不是十分标准的</li>
+<li>CAN ID承担了类似于地址的功能，是一帧的标识符，一般指明是“谁发的”</li>
+<li>在计算机网络中的大多数协议里，地址与一个设备或一个终端完全绑定且一定范畴内一一对应；但CAN设备不存在一个固定的地址，而是以ID加以区分不同的帧的来源或目标(即每个帧都能有不同的ID)</li>
+<li>比如，IP地址可以在一个网络内唯一指定一个网络设备（不考虑伪造等非法的网络攻击或IP冲突等错误情况）；但CAN ID不可以，它只对它发送的报文负责，我的设备可以发ID为0x201的报文，也可以发ID为0x202的报文，每个报文也可以指定不同的信息</li>
+</ul>
+<ol start="2">
+<li>冲突检测与避免（仲裁）</li>
+</ol>
+<ul>
+<li>众所周知，一根物理意义的导线上不可能同时是高电平和低电平，一条传统通信方式的链路上也不可能同时传输0和1，因此需要一定的冲突处理机制</li>
+<li>冲突的处理机制主要有两种，一种是冲突检测，一种是冲突避免，CAN采用的是冲突检测</li>
+</ul>
+<p>冲突检测： </p>
+<ul>
+<li>出现可能的冲突，然后解决冲突</li>
+<li>显性电平是0，即当CAN总线上同时出现0和1时，1会被隐藏，线路显示为0</li>
+<li>所以，当链路上存在设备想发送0的同时又有设备发送1的时候，链路中表现为0，因为0是显性电平</li>
+<li>此时，想发送1的设备发现，链路怎么变成0了？原来是有人也要发消息，那我闭嘴</li>
+</ul>
+<ol start="3">
+<li>误码校验</li>
+</ol>
+<ul>
+<li>采用的是CRC算法</li>
+</ul>
+<ol start="4">
+<li>滤波器</li>
+</ol>
+<p>列表模式：</p>
+<ul>
+<li>即存放需要的ID，如果帧中的ID与其相等则接收，但列表能存放的ID数量有限制（STM32中scale为32时能写2个ID，16时能写4个ID）</li>
+</ul>
+<p>掩码模式：</p>
+<ul>
+<li>用于配置接收设备，注意，是过滤通过，而非过滤排除机制。即符合条件的报文会接收（即每个节点都有滤波器，用来检测该帧的ID是否是自己需要）</li>
+<li>滤波器用于过滤出想要接收的信息，掩码Mask用于匹配想要接收的信息ID</li>
+<li>如何过滤与匹配？以CAN ID作为匹配规则。标准格式中的CAN ID长度为11b，也就是CAN ID最大为0x7ff。滤波器中掩码和ID相与。得到的值如果与ID_filter（配置好的，需要接收的值或范围）一样则接收。</li>
+</ul>
+<ol start="5">
+<li><p>仲裁方法</p>
+<ul>
+<li>开始发送后其它节点不会发送</li>
+<li>如有同时发送的，节点会对线路进行匹配，线路上同时接收到0和1时会显示为0。如果节点发现线路为0而自己发送的是1，则退出。如果线路是0而自己发送的是0，则继续发送。</li>
+<li>具有相同ID的数据帧和遥控帧在总线上竞争时，仲裁段的最后一位(RTR)为显性位的数据帧具有优先权可继续发送。</li>
+</ul>
+</li>
+<li><p>邮箱</p>
+</li>
+</ol>
+<p>STM32F103中有2个接受邮箱（每个邮箱3层，能存3个帧），和3个发送邮箱（每个邮箱只有1层）。每一个接收邮箱都有自己的过滤器（一般是中断接收），当CPU需要时才会从接收邮箱中读取数据（先进先出）。发送邮箱具有优先级，优先级高的先发送。</p>
 ]]></content>
       <categories>
         <category>stm32</category>
@@ -8884,6 +9035,64 @@ public:
         <tag>算法</tag>
         <tag>概念</tag>
         <tag>数据结构与算法</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>FreeRTOS移植</title>
+    <url>/2024/04/11/FreeRTOS%E7%A7%BB%E6%A4%8D/</url>
+    <content><![CDATA[<h1 id="FreeRTOS移植"><a href="#FreeRTOS移植" class="headerlink" title="FreeRTOS移植"></a><font color="green">FreeRTOS移植</font></h1><br>
+<br>
+
+<hr>
+<a id="more"></a>
+
+<h2 id="一、手动移植"><a href="#一、手动移植" class="headerlink" title="一、手动移植"></a>一、手动移植</h2><ol>
+<li>到FreeRTOS官网下载最新版本的FreeRTOS</li>
+<li>创建一个新的工程（可以将SYS中的时钟设置为TIM2，使用于延时函数，SysTikc被用作任务切换了），其它的和裸机一样</li>
+<li>在keil软件的项目中创建两个文件夹（<code>FreeRTOS/Source</code>和<code>FreeRTOS/Other</code>）</li>
+<li>在实际的工程根目录下创建一个FreeRTOS文件夹，</li>
+<li>先将下载的FreeRTOS源码中的<code>FreeRTOSv202212.01\FreeRTOS\Source</code>两个文件夹<code>include</code> 和<code>portable</code>,以及所有的<code>*.c</code>文件复制到工程的<code>FreeRTOS</code>文件夹下</li>
+<li>裁剪工程中的<code>FreeRTOS\portable</code>文件夹下的文件，只保留<code>keil</code>,<code>MemMang</code>和<code>RVDS</code>文件夹.</li>
+<li><code>RVDS</code>文件夹中只保留<code>ARM_CM3</code></li>
+<li>在keil软件里将移植的文件添加到工程中。</li>
+</ol>
+<ul>
+<li>将<code>FreeRTOS</code>下的所有<code>.c</code>文件(不包括文件夹中的)添加到工程<code>FreeRTOS/Source</code>中。</li>
+<li>将<code>FreeRTOS\portable\MemMang</code>下的<code>heap_4.c</code>添加到工程<code>FreeRTOS/Other</code>中。</li>
+<li>将<code>FreeRTOS\portable\RVDS\ARM_CM3</code>下的<code>port.c</code>添加到工程<code>FreeRTOS/Other</code>中。</li>
+</ul>
+<ol start="9">
+<li>在工程中添加头文件路径，<code>FreeRTOS\include</code>和<code>FreeRTOS\portable\RVDS\ARM_CM3</code>，以及<code>FreeRTOS</code>(在后面FreeRTOSConfig.h会用到)</li>
+<li>将源码<code>FreeRTOSv202212.01\FreeRTOS\Demo\CORTEX_STM32F103_Keil</code>下的<code>FreeRTOSConfig.h</code>文件复制到工程的<code>FreeRTOS</code>下。(可以顺便加到keil的工程目录<code>FreeRTOS/Source</code>中)</li>
+<li>修改<code>FreeRTOSConfig.h</code>文件，在文件最后（#endif前）添加几个宏定义</li>
+</ol>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> xPortPendSVHandler  PendSV_Handler</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> vPortSVCHandler     SVC_Handler</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> xPortSysTickHandler SysTick_Handler</span></span><br></pre></td></tr></table></figure>
+<ol start="12">
+<li>找到<code>stm32f1xx_it.c</code>,将其中的<code>void SVC_Handler(void)</code>,<code>void PendSV_Handler(void)</code>,<code>void SysTick_Handler(void)</code>，注释掉</li>
+<li>编译工程，如果没有错误，就可以开始使用FreeRTOS了</li>
+</ol>
+<p>要在FreeRTOS中使用任务，需要在<code>main</code>函数前添加任务函数，然后在<code>main</code>函数中创建任务</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">TaskHandle_t LED1handler,LED2handler;<span class="comment">//对应任务的句柄</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//任务执行函数</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vTask1</span><span class="params">(<span class="keyword">void</span> *pvParameters)</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		HAL_GPIO_WritePin(LED_1_GPIO_Port,LED_1_Pin,<span class="number">0</span>);</span><br><span class="line">		HAL_Delay(<span class="number">1000</span>);</span><br><span class="line">		HAL_GPIO_WritePin(LED_1_GPIO_Port,LED_1_Pin,<span class="number">1</span>);</span><br><span class="line">		HAL_Delay(<span class="number">1000</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">vTask2</span><span class="params">(<span class="keyword">void</span> *pvParameters)</span></span>&#123;</span><br><span class="line">	<span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">		HAL_GPIO_WritePin(LED_2_GPIO_Port,LED_2_Pin,<span class="number">0</span>);</span><br><span class="line">		HAL_Delay(<span class="number">500</span>);</span><br><span class="line">		HAL_GPIO_WritePin(LED_2_GPIO_Port,LED_2_Pin,<span class="number">1</span>);</span><br><span class="line">		HAL_Delay(<span class="number">500</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">//创建任务(函数名，任务名，堆栈大小，传递参数，任务优先级，句柄地址)</span></span><br><span class="line">	xTaskCreate(vTask1,<span class="string">&quot;LED1&quot;</span>,<span class="number">128</span>,<span class="literal">NULL</span>,<span class="number">2</span>,&amp;LED1handler); </span><br><span class="line">	xTaskCreate(vTask2,<span class="string">&quot;LED2&quot;</span>,<span class="number">128</span>,<span class="literal">NULL</span>,<span class="number">2</span>,&amp;LED2handler);</span><br><span class="line">	</span><br><span class="line">	vTaskStartScheduler(); <span class="comment">//开启任务</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">while</span> (<span class="number">1</span>)</span><br><span class="line">  &#123;</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<br>
+<br>
+
+<hr>
+<h2 id="二、使用CubeMX移植"><a href="#二、使用CubeMX移植" class="headerlink" title="二、使用CubeMX移植"></a>二、使用CubeMX移植</h2><ol>
+<li>前面一样，创建一个基础工程，配置时钟，SYS中的时钟设置为TIM2。</li>
+<li>左边菜单栏下的Middleware中找到FreeRTOS，点击配置，选择版本(一般CMSIS_V2)</li>
+<li>配置FreeRTOS基本设置</li>
+</ol>
+<p><img src="/2024/04/11/FreeRTOS%E7%A7%BB%E6%A4%8D/CubeMx_FreeRTOSInit.png" alt="1"></p>
+<ol start="4">
+<li>按需求配置任务，队列，信号量等</li>
+</ol>
+]]></content>
+      <categories>
+        <category>stm32</category>
+      </categories>
+      <tags>
+        <tag>c</tag>
+        <tag>stm32，FreeRTOS</tag>
       </tags>
   </entry>
 </search>
