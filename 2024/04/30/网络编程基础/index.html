@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">16.6k</span>
+            <span class="post-count">17.1k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">59 min</span>
+            <span class="post-count">60 min</span>
         </span>
     </span>
 </div>
@@ -930,9 +930,52 @@
 <ol>
 <li>方法：请求的方法，如GET、POST、PUT、DELETE等。</li>
 </ol>
-<p><img src="./%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/httpqingqiufangfa.png" alt="HTTP请求方法"></p>
-<ol start="2">
-<li>URL：请求的资源路径，如<a target="_blank" rel="noopener" href="http://www.baidu.com/index.html">http://www.baidu.com/index.html</a></li>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GET</td>
+<td>请求指定的页面信息，并返回实体主体。</td>
+</tr>
+<tr>
+<td>HEAD</td>
+<td>类似于GET请求，但返回的响应中没有具体的内容，用于获取报头。</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>向指定资源提交数据进行处理请求（例如提交表单或上传文件）。数据被包含在请求体中。POST请求可能会导致新的资源的建立和/或已有资源的修改。</td>
+</tr>
+<tr>
+<td>PUT</td>
+<td>从客户端向服务器传送的数据取代指定的文档的内容。</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>请求服务器删除指定的页面。</td>
+</tr>
+<tr>
+<td>CONNECT</td>
+<td>HTTP/1.1协议中预留给能够将连接改为管道方式的代理服务器。</td>
+</tr>
+<tr>
+<td>OPTIONS</td>
+<td>允许客户端查看服务器的性能。</td>
+</tr>
+<tr>
+<td>TRACE</td>
+<td>回显服务器收到的请求，主要用于测试或诊断。</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td>实体中包含一个表，表中说明与该URI所表示的原内容的区别。</td>
+</tr>
+</tbody></table>
+<ol>
+<li>URL：请求的资源路径，如</li>
 <li>版本：HTTP协议的版本，如HTTP/1.1</li>
 <li>头部：请求报文的头部，包含了请求的一些信息，如Host、User-Agent、Content-Type等。</li>
 </ol>
@@ -940,11 +983,68 @@
 <p>常见头部：<br>GET /index.html HTTP/1.1<br>Host: <a target="_blank" rel="noopener" href="http://www.example.com/">www.example.com</a>           # 请求的目标服务器<br>User-Agent: Mozilla/5.0         # 客户端的用户代理，标识发出请求的浏览器类型<br>Accept: text/html               # 客户端可接受的响应内容类型<br>Accept-Language: en-US          # 客户端可接受的自然语言<br>Accept-Encoding: gzip, deflate  # 客户端可接受的内容编码<br>Connection: keep-alive          # 控制当前的连接持续状态<br>Cache-Control: max-age=0        # 控制缓存的行为</p>
 </blockquote>
 <p><strong>响应报文格式</strong></p>
-<p><img src="./%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/httpxiangyingbaowen.png" alt="HTTP响应报文格式"></p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">版本 状态码 短语 CRLF</span><br><span class="line">响应头字段名: 响应头字段值 CRLF</span><br><span class="line">...</span><br><span class="line">CRLF</span><br><span class="line">响应体</span><br></pre></td></tr></table></figure>
+
 <ul>
 <li>短语：响应的状态码对应的短语，如200 OK、404 Not Found、500 Internal Server Error等。</li>
 <li>头部：响应报文的头部，包含了响应的一些信息，如Content-Type、Content-Length等。</li>
 </ul>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>200</td>
+<td>请求成功。一般用于GET与POST请求。</td>
+</tr>
+<tr>
+<td>201</td>
+<td>已创建。成功请求并创建了新的资源。</td>
+</tr>
+<tr>
+<td>202</td>
+<td>已接受。已经接受请求，但未处理完成。</td>
+</tr>
+<tr>
+<td>204</td>
+<td>无内容。服务器成功处理，但未返回内容。</td>
+</tr>
+<tr>
+<td>301</td>
+<td>永久移动。请求的网页已永久移动到新位置。</td>
+</tr>
+<tr>
+<td>302</td>
+<td>临时移动。服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来进行以后的请求。</td>
+</tr>
+<tr>
+<td>400</td>
+<td>错误请求。服务器不理解请求的语法。</td>
+</tr>
+<tr>
+<td>401</td>
+<td>未授权。请求要求身份验证。对于需要登录的网页，服务器可能返回此响应。</td>
+</tr>
+<tr>
+<td>403</td>
+<td>禁止。服务器拒绝请求。</td>
+</tr>
+<tr>
+<td>404</td>
+<td>未找到。服务器找不到请求的网页。</td>
+</tr>
+<tr>
+<td>500</td>
+<td>服务器内部错误。服务器遇到错误，无法完成请求。</td>
+</tr>
+<tr>
+<td>503</td>
+<td>服务不可用。服务器目前无法使用（由于超载或停机维护）。通常，这只是暂时状态。</td>
+</tr>
+</tbody></table>
 <h4 id="6-4-1-cookie"><a href="#6-4-1-cookie" class="headerlink" title="6.4.1 cookie"></a>6.4.1 cookie</h4><p>cookie是一种存储在客户端的数据，用于跟踪用户的会话信息，即让服务器记住用户。cookie通常包含了一个名字、一个值、一个过期时间、一个路径和一个域名。</p>
 <p>cookie的工作原理：</p>
 <ol>
@@ -966,7 +1066,6 @@
 <li>服务器收到加密的随机数后，使用自己的私钥解密这个随机数。之后会将其与第一次随机数，第二次随机数和解密的密钥一起使用加密算法生成对话密钥。客户端也会第一次随机数，第二次随机数和第三次随机数用加密算法生成对话密钥。</li>
 <li>双方使用对话密钥进行加密通信。</li>
 </ol>
-<p><img src="./%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E5%9F%BA%E7%A1%80/httpsjiami.png" alt="HTTPS工作原理"></p>
  
       <!-- reward -->
       
