@@ -148,8 +148,8 @@
 <li><p>使用静态库<br>假设头文件在includes目录中，生成的libmymath.a库在libs中</p>
 <blockquote>
 <ol>
-<li>编译头文件：<code>gcc -c -I ./includes</code></li>
-<li>链接静态库：<code>gcc -o main.o -L ./libs -lmymath</code> (链接库的名字时只需要<code>-l+名字</code>，不用加前面的lib)</li>
+<li>编译头文件：<code>gcc -c main.c -I ./includes</code></li>
+<li>链接静态库：<code>gcc main.o -o main -L ./libs -lmymath</code> (链接库的名字时只需要<code>-l+名字</code>，不用加前面的lib)</li>
 </ol>
 </blockquote>
 </li>
@@ -166,7 +166,7 @@
 <li>动态库的使用</li>
 </ul>
 <blockquote>
-<p>编译：和静态库差不多，编译头文件：<code>gcc -c -I ./includes</code><br>再编译动态库：<code>gcc -o main.o -L ./libs -lmymath</code>(记得去掉打头的lib和结尾的.so)<br>运行：先把编译的库的目录加入到环境变量中（设库目录是./libs）：<code>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./libs</code>(将./libs追加到环境变量的后面)。再启动执行文件</p>
+<p>编译：和静态库差不多，编译头文件：<code>gcc -c main.c -I ./includes</code><br>再编译动态库：<code>gcc main.o  -o main -L ./libs -lmymath</code>(记得去掉打头的lib和结尾的.so)<br>运行：先把编译的库的目录加入到环境变量中（设库目录是./libs）：<code>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:./libs</code>(将./libs追加到环境变量的后面)。再启动执行文件</p>
 </blockquote>
  
       <!-- reward -->
