@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">1.5k</span>
+            <span class="post-count">1.6k</span>
         </span>
     </span>
 
@@ -146,9 +146,11 @@
 <hr>
 <h2 id="四、gdb调试工具："><a href="#四、gdb调试工具：" class="headerlink" title="四、gdb调试工具："></a>四、gdb调试工具：</h2><p>帮助我们找出代码的问题</p>
 <p>gcc -g 编译的文件名，会生成一个a.out的执行文件，这个执行文件就可以调试</p>
-<p>gdb 执行文件名</p>
 <blockquote>
-<p>r—运行我们的程序<br>l—查看我们的程序代码<br>b—设置断点，让程序跑到我们断点的那一行<br>c–继续运行我们的程序，直到下一个断点，如果没有直接运行完<br>p+变量===查看变量的值<br>n—按行运行，但是不进入函数<br>s—按行运行，会进入函数<br>delete—删除所有断点<br>q—退出dgb调试</p>
+<p>gdb 执行文件名<br>gdb 执行文件名 -p 进程号—调试正在运行的程序</p>
+</blockquote>
+<blockquote>
+<p>r—运行我们的程序<br>l—查看我们的程序代码<br>b—设置断点，让程序跑到我们断点的那一行<br>c–继续运行我们的程序，直到下一个断点，如果没有直接运行完<br>p+变量===查看变量的值<br>n—按行运行，但是不进入函数<br>s—按行运行，会进入函数<br>delete—删除所有断点<br>q—退出dgb调试<br>layout src—查看源代码和调试信息<br>layout regs—查看寄存器<br>bt—查看函数调用栈</p>
 </blockquote>
 <br>
 <br>
