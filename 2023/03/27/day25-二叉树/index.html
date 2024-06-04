@@ -74,7 +74,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> Word count:</span>
-            <span class="post-count">2.8k</span>
+            <span class="post-count">5.6k</span>
         </span>
     </span>
 
@@ -83,7 +83,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> Reading time≈</span>
-            <span class="post-count">11 min</span>
+            <span class="post-count">22 min</span>
         </span>
     </span>
 </div>
@@ -189,6 +189,109 @@
 </blockquote>
 <p>因为C语言中没有队列，所以这里用c++来实现</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; <span class="title">levelOrder</span><span class="params">(TreeNode *root)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) <span class="keyword">return</span> &#123;&#125;;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&gt; ans; <span class="comment">// 创建二维数组</span></span><br><span class="line">        <span class="built_in">queue</span>&lt;TreeNode *&gt; q; <span class="comment">// 创建队列</span></span><br><span class="line">        q.push(root);</span><br><span class="line">        <span class="keyword">while</span> (!q.empty()) &#123;</span><br><span class="line">            <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vals; <span class="comment">// 保存一层的元素的值</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> n = q.size(); n--;) &#123; <span class="comment">// 遍历队列</span></span><br><span class="line">                <span class="keyword">auto</span> node = q.front(); <span class="comment">// 取出队头元素</span></span><br><span class="line">                q.pop();</span><br><span class="line">                vals.push_back(node-&gt;val); <span class="comment">// 将队头元素的值存入一维数组</span></span><br><span class="line">                <span class="keyword">if</span> (node-&gt;left)  q.push(node-&gt;left);</span><br><span class="line">                <span class="keyword">if</span> (node-&gt;right) q.push(node-&gt;right);</span><br><span class="line">            &#125;</span><br><span class="line">            ans.emplace_back(vals); <span class="comment">// 将一层的元素存入二维数组</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-8-二叉搜索树"><a href="#2-8-二叉搜索树" class="headerlink" title="2.8 二叉搜索树"></a>2.8 二叉搜索树</h3><h4 id="2-8-1-二叉搜索树的概念"><a href="#2-8-1-二叉搜索树的概念" class="headerlink" title="2.8.1 二叉搜索树的概念"></a>2.8.1 二叉搜索树的概念</h4><p>二叉搜索树是一种特殊的二叉树，它具备以下特点：</p>
+<ol>
+<li>每个节点的值都大于其左子树中所有节点的值。</li>
+<li>每个节点的值都小于其右子树中所有节点的值。</li>
+</ol>
+<h4 id="2-8-2-二叉搜索树的插入"><a href="#2-8-2-二叉搜索树的插入" class="headerlink" title="2.8.2 二叉搜索树的插入"></a>2.8.2 二叉搜索树的插入</h4><p>插入较为简单，即从根节点开始，如果插入的值小于根节点的值，就插入到左子树，如果插入的值大于根节点的值，就插入到右子树，直到找到一个空的位置插入。如果插入的值已经存在则不插入。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">TreeNode* <span class="title">insert</span><span class="params">(TreeNode* root, <span class="keyword">int</span> val)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> TreeNode(val);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (val &lt; root-&gt;val) &#123;</span><br><span class="line">            root-&gt;left = insert(root-&gt;left, val);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (val &gt; root-&gt;val) &#123;</span><br><span class="line">            root-&gt;right = insert(root-&gt;right, val);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 如果 val == root-&gt;val，直接返回 root，不插入重复值</span></span><br><span class="line">        <span class="keyword">return</span> root;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="2-8-3-二叉搜索树的删除"><a href="#2-8-3-二叉搜索树的删除" class="headerlink" title="2.8.3 二叉搜索树的删除"></a>2.8.3 二叉搜索树的删除</h4><p>删除操作比较复杂，具体可看<code>leetcode算法题</code>中的二叉搜索树的删除操作。</p>
+<h4 id="2-8-4-二叉搜索树的查找"><a href="#2-8-4-二叉搜索树的查找" class="headerlink" title="2.8.4 二叉搜索树的查找"></a>2.8.4 二叉搜索树的查找</h4><p>二叉搜索树的查找和二分法一样。</p>
+<p>二叉搜索树的查找、插入和删除操作的时间复杂度在平均情况下是 O(log n)，其中 n 是树中节点的数量。然而，在最坏情况下（例如，当树退化为链表），时间复杂度会变成 O(n)。</p>
+<h4 id="2-8-5-二叉搜索树的缺点"><a href="#2-8-5-二叉搜索树的缺点" class="headerlink" title="2.8.5 二叉搜索树的缺点"></a>2.8.5 二叉搜索树的缺点</h4><p>二叉搜索树的缺点是可能退化为链表，从而导致时间复杂度降低。</p>
+<h3 id="2-9-平衡二叉树"><a href="#2-9-平衡二叉树" class="headerlink" title="2.9 平衡二叉树"></a>2.9 平衡二叉树</h3><h4 id="2-9-1-平衡二叉树的概念"><a href="#2-9-1-平衡二叉树的概念" class="headerlink" title="2.9.1 平衡二叉树的概念"></a>2.9.1 平衡二叉树的概念</h4><p>因为二叉搜索树的缺点是可能退化为链表，所以引入了平衡二叉树，平衡二叉树是一种特殊的二叉搜索树，其特点是任何节点的两个子树的高度差不超过1。通过保持这种平衡性，平衡二叉树可以在最坏情况下仍然保持高效的查找、插入和删除操作。</p>
+<h4 id="2-9-2-平衡二叉树的条件"><a href="#2-9-2-平衡二叉树的条件" class="headerlink" title="2.9.2 平衡二叉树的条件"></a>2.9.2 平衡二叉树的条件</h4><ol>
+<li>该树必须是二叉搜索树</li>
+<li>该树的左右子树的高度差不超过1</li>
+</ol>
+<h4 id="2-9-3-平衡二叉树的平衡方法"><a href="#2-9-3-平衡二叉树的平衡方法" class="headerlink" title="2.9.3 平衡二叉树的平衡方法"></a>2.9.3 平衡二叉树的平衡方法</h4><p>平衡二叉树的平衡方法有很多，比如红黑树、AVL树、B树等。</p>
+<h3 id="2-10-B树"><a href="#2-10-B树" class="headerlink" title="2.10 B树"></a>2.10 B树</h3><p>B树（B-Tree）是一种自平衡的树数据结构，专门为磁盘或其他存储设备设计，能够保持数据有序，并允许高效的插入、删除和查找操作。</p>
+<h4 id="2-10-1-B树的概念"><a href="#2-10-1-B树的概念" class="headerlink" title="2.10.1 B树的概念"></a>2.10.1 B树的概念</h4><p>B树是一种广义的二叉搜索树，它不仅可以有两个子节点，还可以有更多的子节点。B树中的每个节点可以包含多个键和子树，并且所有叶子节点都位于同一层。这种设计使得B树非常适合存储大量数据并进行高效的磁盘访问。</p>
+<p>其中较为常用的是B+树，二三树，二三树是B树的特例，B+树是B树的变种。</p>
+<h4 id="2-10-2-B树的特点"><a href="#2-10-2-B树的特点" class="headerlink" title="2.10.2 B树的特点"></a>2.10.2 B树的特点</h4><ol>
+<li>所有叶子节点都在同一层</li>
+<li>每个节点可以有多个子节点</li>
+<li>每个节点可以有多个键</li>
+<li>B树是一种平衡二叉搜索树</li>
+</ol>
+<h4 id="2-10-3-B树的平衡"><a href="#2-10-3-B树的平衡" class="headerlink" title="2.10.3 B树的平衡"></a>2.10.3 B树的平衡</h4><ol>
+<li>节点过载</li>
+</ol>
+<ul>
+<li>B树的每个节点都有多个子节点，这使得B树更加平衡，因为每个节点都有多个子节点，所以树的高度更低。</li>
+<li>但是一个节点中不能放入太多的值，否则和普通的二叉搜索树没有区别，所以B树中的每个节点都有一个上限，当节点中的键的数量超过上限时，需要进行分裂操作。</li>
+</ul>
+<ol start="2">
+<li>节点分裂</li>
+</ol>
+<ul>
+<li>当一个节点中的键的数量超过上限时，需要进行分裂操作。分裂操作会将节点中的键分成两部分），并将其中一部分向上移动到一个新的节点中。这样可以保持树的平衡性。（比如3为最大容量，过载时将中间的值给父子节点）</li>
+<li>根节点的分裂操作会使树的高度增加1，这样可以保持树的平衡性。</li>
+</ul>
+<h4 id="2-10-4-B树的性能"><a href="#2-10-4-B树的性能" class="headerlink" title="2.10.4 B树的性能"></a>2.10.4 B树的性能</h4><p>时间复杂度：B树的查找、插入和删除操作的时间复杂度都是 O(log n)，其中 n 是树中节点的数量。</p>
+<h4 id="2-10-5-B树的缺点"><a href="#2-10-5-B树的缺点" class="headerlink" title="2.10.5 B树的缺点"></a>2.10.5 B树的缺点</h4><p>B树看起来不错，但是它的实现比较复杂。</p>
+<h3 id="2-11-B-树"><a href="#2-11-B-树" class="headerlink" title="2.11 B+树"></a>2.11 B+树</h3><p>B+树是B树的变种，它在B树的基础上做了一些改进，使得B+树更适合磁盘存储。</p>
+<h4 id="2-11-1-B-树的特点"><a href="#2-11-1-B-树的特点" class="headerlink" title="2.11.1 B+树的特点"></a>2.11.1 B+树的特点</h4><ol>
+<li>所有叶子节点都在同一层</li>
+<li>非叶子节点只存储键，不存储值</li>
+<li>叶子节点之间通过指针连接，形成一个双向链表</li>
+</ol>
+<h4 id="2-11-2-为什么B-树更适合磁盘存储"><a href="#2-11-2-为什么B-树更适合磁盘存储" class="headerlink" title="2.11.2 为什么B+树更适合磁盘存储"></a>2.11.2 为什么B+树更适合磁盘存储</h4><ol>
+<li>磁盘读写效率高：B+树的内部节点只存储关键字，因此每个节点能容纳更多的关键字，树的高度更低，减少了磁盘IO次数。</li>
+<li>范围查询高效：由于叶子节点形成有序链表，范围查询可以通过遍历叶子节点实现，而不需要回溯树结构，大大提高了范围查询的效率。</li>
+<li>全表扫描效率高：B+树的叶子节点按顺序链在一起，全表扫描可以直接遍历叶子节点，而不需要逐层读取整个树。</li>
+</ol>
+<h3 id="2-12-AVL树"><a href="#2-12-AVL树" class="headerlink" title="2.12 AVL树"></a>2.12 AVL树</h3><p>在说AVL之前，首先要了解平衡二叉树的平衡操作：旋转。</p>
+<h4 id="2-12-1-旋转"><a href="#2-12-1-旋转" class="headerlink" title="2.12.1 旋转"></a>2.12.1 旋转</h4><p>旋转是平衡二叉树的一种常见操作，用于调整树的平衡性。平衡二叉树的旋转操作主要有两种：左旋和右旋。</p>
+<p>旋转后的树仍然是一棵二叉搜索树，只是树的结构发生了变化。</p>
+<ul>
+<li><strong>左旋</strong></li>
+</ul>
+<p>左旋是将一个节点的右子树变为新的根节点，原来的根节点变为新根节点的左子树。</p>
+<p><img src="/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/rotateleft.png" alt="左旋"></p>
+<ul>
+<li><strong>右旋</strong></li>
+</ul>
+<p>右旋是将一个节点的左子树变为新的根节点，原来的根节点变为新根节点的右子树。</p>
+<p><img src="/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/rotateright.png" alt="右旋"></p>
+<p><img src="/2023/03/27/day25-%E4%BA%8C%E5%8F%89%E6%A0%91/rotate.png" alt="旋转"></p>
+<p>下面是代码实现：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">TreeNode</span> &#123;</span></span><br><span class="line">    <span class="keyword">int</span> key;</span><br><span class="line">    TreeNode *left;</span><br><span class="line">    TreeNode *right;</span><br><span class="line">    TreeNode *parent;</span><br><span class="line"></span><br><span class="line">    TreeNode(<span class="keyword">int</span> k) : key(k), left(<span class="literal">nullptr</span>), right(<span class="literal">nullptr</span>), parent(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BinaryTree</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    TreeNode* root;</span><br><span class="line"></span><br><span class="line">    BinaryTree() : root(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 左旋操作</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">leftRotate</span><span class="params">(TreeNode* x)</span> </span>&#123;</span><br><span class="line">        TreeNode* y = x-&gt;right; <span class="comment">// y 是 x 的右孩子</span></span><br><span class="line">        x-&gt;right = y-&gt;left; <span class="comment">// 将 y 的左子树挂到 x 的右子树上</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (y-&gt;left != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            y-&gt;left-&gt;parent = x; <span class="comment">// 如果 y 的左子树不为空，将其父节点设为 x</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        y-&gt;parent = x-&gt;parent; <span class="comment">// 将 y 的父节点设为 x 的父节点</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (x-&gt;parent == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            root = y; <span class="comment">// 如果 x 是根节点，则将根节点设为 y</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (x == x-&gt;parent-&gt;left) &#123;</span><br><span class="line">            x-&gt;parent-&gt;left = y; <span class="comment">// 如果 x 是其父节点的左孩子，将其父节点的左孩子设为 y</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            x-&gt;parent-&gt;right = y; <span class="comment">// 如果 x 是其父节点的右孩子，将其父节点的右孩子设为 y</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        y-&gt;left = x; <span class="comment">// 将 x 设为 y 的左孩子</span></span><br><span class="line">        x-&gt;parent = y; <span class="comment">// 将 x 的父节点设为 y</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 右旋操作</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">rightRotate</span><span class="params">(TreeNode* y)</span> </span>&#123;</span><br><span class="line">        TreeNode* x = y-&gt;left; <span class="comment">// x 是 y 的左孩子</span></span><br><span class="line">        y-&gt;left = x-&gt;right; <span class="comment">// 将 x 的右子树挂到 y 的左子树上</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (x-&gt;right != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            x-&gt;right-&gt;parent = y; <span class="comment">// 如果 x 的右子树不为空，将其父节点设为 y</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        x-&gt;parent = y-&gt;parent; <span class="comment">// 将 x 的父节点设为 y 的父节点</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (y-&gt;parent == <span class="literal">nullptr</span>) &#123;</span><br><span class="line">            root = x; <span class="comment">// 如果 y 是根节点，则将根节点设为 x</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (y == y-&gt;parent-&gt;right) &#123;</span><br><span class="line">            y-&gt;parent-&gt;right = x; <span class="comment">// 如果 y 是其父节点的右孩子，将其父节点的右孩子设为 x</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            y-&gt;parent-&gt;left = x; <span class="comment">// 如果 y 是其父节点的左孩子，将其父节点的左孩子设为 x</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        x-&gt;right = y; <span class="comment">// 将 y 设为 x 的右孩子</span></span><br><span class="line">        y-&gt;parent = x; <span class="comment">// 将 y 的父节点设为 x</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="AVL树"><a href="#AVL树" class="headerlink" title="AVL树"></a>AVL树</h4><p>AVL树中有一个平衡因子，用于衡量树的平衡性。平衡因子是左子树的高度减去右子树的高度。</p>
+<p>AVL树是一种自平衡的二叉搜索树，它的每个节点的平衡因子只能是 -1、0 或 1。当插入或删除节点后，AVL树会通过旋转操作来保持树的平衡性。</p>
+<h3 id="2-13-红黑树"><a href="#2-13-红黑树" class="headerlink" title="2.13 红黑树"></a>2.13 红黑树</h3><p>要了解红黑树，首先要知道B树和平衡树的优缺点。</p>
+<ul>
+<li>B树：适合磁盘存储，但是实现复杂。一个节点中的值可变很麻烦</li>
+<li>平衡树：适合内存存储，但是平衡操作复杂。</li>
+</ul>
+<p>所以我们将B树和平衡树结合，用二叉树去表示一个二三树。（补充：二三树的过载阈值是2）</p>
+<p>那么二三树中一个节点的多个值该怎么用二叉树表示呢，一个简单的方式就是用颜色表示。比如红色连接的两个节点表示一个节点中的两个值。黑色节点表示一个单独节点</p>
+<p>但是这个红线不好表示，所以我们就给节点添加一个颜色属性，红色或者黑色。这就是红黑树。</p>
+<p>这里介绍比较红黑树中比较简单的一种实现方式，即左倾红黑树。</p>
+<h4 id="2-13-1-红黑树的性质"><a href="#2-13-1-红黑树的性质" class="headerlink" title="2.13.1 红黑树的性质"></a>2.13.1 红黑树的性质</h4><ol>
+<li>一个节点不可能有两个红色边（该边包括父节点那个边）</li>
+<li>从根节点到叶子节点的路径上，黑色节点的数量相同（即叶子节点都在同一层）</li>
+<li>如果是左偏红黑树，那么一个节点的左子节点是红色的，右子节点是黑色的</li>
+</ol>
+<h4 id="2-13-2-红黑树的插入"><a href="#2-13-2-红黑树的插入" class="headerlink" title="2.13.2 红黑树的插入"></a>2.13.2 红黑树的插入</h4><blockquote>
+<p><strong>插入的节点默认为红色</strong></p>
+</blockquote>
+<ol>
+<li>如果插入到了右子树(即左节点黑右节点红)，那么左旋</li>
+<li>如果插入后产生了相邻的红边（即一个红节点的子节点中有红节点），将上面的红节点进行右旋（还没完，这样会出现一个黑节点会有两个红节点）</li>
+<li>插入后出现了黑节点有两个红节点，将颜色翻转（即将黑节点变为红节点，两个红节点变为黑节点）</li>
+</ol>
+<p>伪代码如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">function insert(value):</span><br><span class="line">    root = insertRec(root, value)</span><br><span class="line">    root.color = BLACK</span><br><span class="line"></span><br><span class="line">function insertRec(node, value):</span><br><span class="line">    if node == null:</span><br><span class="line">        return new Node(value, RED) // 新节点总是红色</span><br><span class="line"></span><br><span class="line">    if value &lt; node.value:</span><br><span class="line">        node.left = insertRec(node.left, value)</span><br><span class="line">    else:</span><br><span class="line">        node.right = insertRec(node.right, value)</span><br><span class="line"></span><br><span class="line">    if isRed(node.right) and not isRed(node.left):</span><br><span class="line">        node = leftRotate(node) // 修复右倾红链接</span><br><span class="line">    if isRed(node.left) and isRed(node.left.left):</span><br><span class="line">        node = rightRotate(node) // 修复两个连续的红链接</span><br><span class="line">    if isRed(node.left) and isRed(node.right):</span><br><span class="line">        flipColors(node) // 修复红红冲突</span><br><span class="line"></span><br><span class="line">    return node</span><br></pre></td></tr></table></figure>
+
+
+
+
+
  
       <!-- reward -->
       
