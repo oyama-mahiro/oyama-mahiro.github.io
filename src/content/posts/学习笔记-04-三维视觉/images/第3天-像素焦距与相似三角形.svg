@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <marker id="arrowBoth" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto-start-reverse">
+      <path d="M0,0 L8,4 L0,8 z" fill="#2563eb"/>
+    </marker>
+    <style>
+      .title { font: 700 27px 'Microsoft YaHei', sans-serif; fill: #0f172a; }
+      .text { font: 20px 'Microsoft YaHei', sans-serif; fill: #1e293b; }
+      .small { font: 17px 'Microsoft YaHei', sans-serif; fill: #475569; }
+      .formula { font: 22px 'Microsoft YaHei', sans-serif; fill: #0f172a; }
+      .axis { stroke: #64748b; stroke-width: 2; marker-end: url(#arrow); }
+      .ray { stroke: #dc2626; stroke-width: 2.5; fill: none; }
+      .measure { stroke: #2563eb; stroke-width: 2; marker-start: url(#arrowBoth); marker-end: url(#arrowBoth); }
+      .guide { stroke: #94a3b8; stroke-width: 1.5; stroke-dasharray: 7 6; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="620" fill="#ffffff"/>
+  <text x="600" y="42" text-anchor="middle" class="title">像素焦距与物体深度：相似三角形关系</text>
+
+  <!-- 光轴与相机光心 -->
+  <line x1="105" y1="310" x2="1035" y2="310" class="axis"/>
+  <text x="820" y="340" class="small">相机光轴 Z</text>
+  <circle cx="220" cy="310" r="7" fill="#111827"/>
+  <text x="145" y="292" class="text">相机光心 O</text>
+
+  <!-- 等效虚拟成像平面 -->
+  <line x1="420" y1="205" x2="420" y2="415" stroke="#0f766e" stroke-width="5"/>
+  <text x="420" y="445" text-anchor="middle" class="text">等效虚拟成像平面</text>
+  <text x="420" y="470" text-anchor="middle" class="small">放在光心前方，便于表示正立图像</text>
+
+  <!-- 物体平面 -->
+  <line x1="980" y1="125" x2="980" y2="495" stroke="#7c3aed" stroke-width="7"/>
+  <line x1="962" y1="125" x2="998" y2="125" stroke="#7c3aed" stroke-width="7"/>
+  <line x1="962" y1="495" x2="998" y2="495" stroke="#7c3aed" stroke-width="7"/>
+  <text x="980" y="535" text-anchor="middle" class="text">已知尺寸的物体</text>
+
+  <!-- 两条成像射线 -->
+  <line x1="220" y1="310" x2="980" y2="125" class="ray"/>
+  <line x1="220" y1="310" x2="980" y2="495" class="ray"/>
+
+  <!-- 成像平面上的交点与像素跨度 -->
+  <circle cx="420" cy="261.3" r="5" fill="#dc2626"/>
+  <circle cx="420" cy="358.7" r="5" fill="#dc2626"/>
+  <line x1="445" y1="261.3" x2="445" y2="358.7" class="measure"/>
+  <text x="457" y="304" class="text">成像跨度</text>
+  <text x="457" y="330" class="text">hₚₓ 个像素</text>
+
+  <!-- 物体长度 -->
+  <line x1="1025" y1="125" x2="1025" y2="495" class="measure"/>
+  <text x="1042" y="256" class="text">物体实际长度</text>
+  <text x="1042" y="284" class="text">L</text>
+
+  <!-- 焦距与深度 -->
+  <line x1="220" y1="380" x2="420" y2="380" class="measure"/>
+  <line x1="220" y1="370" x2="220" y2="395" class="guide"/>
+  <line x1="420" y1="370" x2="420" y2="395" class="guide"/>
+  <text x="320" y="405" text-anchor="middle" class="text">像素焦距 fᵧ</text>
+
+  <line x1="220" y1="555" x2="980" y2="555" class="measure"/>
+  <line x1="220" y1="505" x2="220" y2="570" class="guide"/>
+  <line x1="980" y1="505" x2="980" y2="570" class="guide"/>
+  <text x="600" y="585" text-anchor="middle" class="text">物体深度 Z</text>
+
+  <!-- 公式说明 -->
+  <rect x="535" y="180" width="315" height="112" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+  <text x="692" y="217" text-anchor="middle" class="formula">两个三角形相似</text>
+  <text x="692" y="252" text-anchor="middle" class="formula">hₚₓ / fᵧ = L / Z</text>
+  <text x="692" y="282" text-anchor="middle" class="formula">Z = fᵧ × L / hₚₓ</text>
+</svg>

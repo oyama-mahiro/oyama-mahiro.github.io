@@ -1,0 +1,52 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+	visible?: boolean;
+}
+
+const { visible = false } = Astro.props;
+---
+
+<div class="sidebar-toggle-wrapper hidden lg:block">
+    <div id="sidebar-toggle-btn" class:list={["sidebar-toggle-btn flex items-center rounded-2xl overflow-hidden transition", {"hide": !visible}]}>
+        <button type="button" aria-label="Toggle sidebar" class="btn-card h-[3.75rem] w-[3.75rem]">
+            <span id="sidebar-toggle-expand-icon" class="mx-auto flex items-center justify-center">
+                <Icon name="material-symbols:chevron-right-rounded"></Icon>
+            </span>
+            <span id="sidebar-toggle-collapse-icon" class="mx-auto hidden">
+                <Icon name="material-symbols:chevron-left-rounded"></Icon>
+            </span>
+        </button>
+    </div>
+</div>
+
+<style lang="stylus">
+.sidebar-toggle-wrapper
+    width: 3.75rem
+    height: 3.75rem
+    position: absolute
+    left: 0
+    top: 0
+    pointer-events: none
+
+.sidebar-toggle-btn
+    color: var(--primary)
+    font-size: 2.25rem
+    font-weight: bold
+    border: none
+    position: fixed
+    left: 1.25rem
+    bottom: 10rem
+    opacity: 1
+    cursor: pointer
+    pointer-events: auto
+    i
+        font-size: 1.75rem
+    &.hide
+        transform: scale(0.9)
+        opacity: 0
+        pointer-events: none
+    &:active
+        transform: scale(0.9)
+</style>

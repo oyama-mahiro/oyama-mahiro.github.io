@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>博客工作台</title>
+	<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+	<header class="topbar">
+		<div>
+			<p class="eyebrow">Fuwari</p>
+			<h1>博客工作台</h1>
+		</div>
+		<p class="hint">没开预览时，关掉这个页面，后台会自己停。预览开着时，终端会一直留着，网站不会中途关掉。</p>
+	</header>
+
+	<nav class="tabs" aria-label="工作台分页">
+		<button type="button" class="tab" data-page="publish" aria-selected="true">发布文章</button>
+		<button type="button" class="tab" data-page="build" aria-selected="false">构建与预览</button>
+		<button type="button" class="tab" data-page="appearance" aria-selected="false">网站设置</button>
+	</nav>
+
+	<main>
+		<section class="page" data-page="publish">
+			<div class="card">
+				<div class="card-head">
+					<h2>发布文章</h2>
+					<p>文章和封面分开拖入。没有头部信息时会先补一套基础字段，已有的会直接填入。</p>
+				</div>
+				<div class="drops">
+					<div id="dropzone" class="dropzone" tabindex="0">
+						<strong id="article-label">文章</strong>
+						<span id="article-name">把 .md 拖到这里</span>
+						<label class="file-button">
+							选择文章
+							<input id="file-input" type="file" accept=".md,.mdx,text/markdown" hidden>
+						</label>
+					</div>
+					<div id="cover-drop" class="dropzone" tabindex="0">
+						<strong>封面</strong>
+						<span id="cover-name">把封面图拖到这里，可选</span>
+						<label class="file-button">
+							选择封面
+							<input id="cover-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+						</label>
+						<img id="cover-preview" class="cover-preview hidden" alt="文章封面预览">
+					</div>
+				</div>
+				<p id="frontmatter-note" class="note hidden"></p>
+				<form id="post-form" class="form hidden">
+					<label>文件名<input id="slug" name="slug" required></label>
+					<label>标题<input id="title" name="title" required></label>
+					<label>发布日期<input id="published" name="published" type="date" required></label>
+					<label>分类<input id="category" name="category"></label>
+					<label class="wide">标签<input id="tags" name="tags" placeholder="用逗号分隔"></label>
+					<label class="wide">简介<textarea id="description" name="description" rows="3"></textarea></label>
+					<label>语言<input id="lang" name="lang" placeholder="例如 zh_CN，可留空"></label>
+					<label class="check"><input id="draft" name="draft" type="checkbox"> 保存为草稿</label>
+					<label class="check"><input id="password-protected" name="passwordProtected" type="checkbox"> 需要密码才能查看</label>
+					<div class="actions wide">
+						<button type="submit" class="primary">写入文章</button>
+					</div>
+				</form>
+			</div>
+		</section>
+
+		<section class="page hidden" data-page="build">
+			<div class="card">
+				<div class="card-head">
+					<h2>构建与预览</h2>
+					<p>开启预览会启动当前站点，并直接打开浏览器。一键构建用来生成可上传的成品。</p>
+				</div>
+				<div class="actions">
+					<button id="build-button" type="button">一键构建</button>
+					<button id="preview-start" type="button" class="primary">开启预览</button>
+					<button id="preview-stop" type="button">关闭预览</button>
+					<button id="upload-button" type="button" disabled title="即将支持">一键上传</button>
+				</div>
+				<p id="job-status" class="note">预览未开启</p>
+				<pre id="log" class="log" aria-label="命令输出"></pre>
+			</div>
+		</section>
+
+		<section class="page hidden" data-page="appearance">
+			<div class="card">
+				<div class="card-head">
+					<h2>网站设置</h2>
+					<p>这里改站点外观、个人介绍、「关于」页面，以及受保护文章使用的访问密码。</p>
+				</div>
+				<form id="site-form" class="form">
+					<figure class="wide media">
+						<img id="banner-preview" alt="当前横幅">
+						<figcaption>
+							<span>首页横幅</span>
+							<label class="file-button">更换横幅<input id="banner-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden></label>
+						</figcaption>
+					</figure>
+					<div class="profile-row wide">
+						<img id="avatar-preview" alt="当前头像">
+						<label class="file-button">更换头像<input id="avatar-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden></label>
+					</div>
+					<label>站点标题<input id="site-title" required></label>
+					<label>副标题<input id="site-subtitle"></label>
+					<label>显示名称<input id="profile-name" required></label>
+					<label class="wide">个人介绍<textarea id="profile-bio" rows="3"></textarea></label>
+					<label>文章访问密码<input id="post-password" type="password" autocomplete="new-password" required></label>
+					<label class="check"><input id="show-post-password" type="checkbox"> 显示密码</label>
+					<p class="muted wide">勾选“需要密码才能查看”的文章统一使用这个密码。修改后，已经解锁的浏览器标签页也需要输入新密码。</p>
+					<label class="wide">关于我
+						<textarea id="about-content" rows="14" spellcheck="false"></textarea>
+					</label>
+					<p class="muted wide">关于我对应网站里的「关于」页面，可以直接写 Markdown。</p>
+					<div class="actions wide">
+						<button type="submit" class="primary">保存网站设置</button>
+					</div>
+				</form>
+			</div>
+		</section>
+	</main>
+	<script src="/app.js"></script>
+</body>
+</html>

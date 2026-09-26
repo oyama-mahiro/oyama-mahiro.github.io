@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="700" viewBox="0 0 1400 700">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <style>
+      .title{font:700 30px 'Microsoft YaHei',sans-serif;fill:#172033}
+      .head{font:700 25px 'Microsoft YaHei',sans-serif;fill:#1e3a8a}
+      .txt{font:21px 'Microsoft YaHei',sans-serif;fill:#253047}
+      .math{font:italic 25px Georgia,'Times New Roman',serif;fill:#172033}
+      .axis{stroke:#334155;stroke-width:2.5;fill:none;marker-end:url(#arr)}
+      .ray{stroke:#dc2626;stroke-width:4;fill:none}
+      .plane{stroke:#2563eb;stroke-width:5}
+      .guide{stroke:#64748b;stroke-width:2;stroke-dasharray:7 6}
+      .panel{fill:#fff;stroke:#cbd5e1;stroke-width:2}
+    </style>
+  </defs>
+  <rect width="1400" height="700" fill="#fff"/>
+  <text x="700" y="48" text-anchor="middle" class="title">同一条投影射线：图形学近平面 z=N 与视觉归一化平面 z=1</text>
+
+  <!-- graphics -->
+  <rect x="25" y="80" width="660" height="545" rx="16" class="panel"/>
+  <text x="355" y="125" text-anchor="middle" class="head">计算机图形学：投到近平面 z=N</text>
+  <line x1="95" y1="515" x2="625" y2="515" class="axis"/>
+  <line x1="95" y1="515" x2="95" y2="165" class="axis"/>
+  <text x="632" y="523" class="math">z</text>
+  <text x="78" y="160" class="math">y</text>
+  <circle cx="95" cy="515" r="7" fill="#111827"/>
+  <text x="72" y="548" class="txt">光心 O</text>
+
+  <line x1="275" y1="210" x2="275" y2="555" class="plane"/>
+  <text x="275" y="190" text-anchor="middle" class="txt">近平面 z=N</text>
+  <line x1="590" y1="150" x2="590" y2="555" class="guide"/>
+  <text x="545" y="155" text-anchor="middle" class="txt">远平面 z=F</text>
+  <text x="545" y="184" text-anchor="middle" class="small">超过 F 的内容不渲染</text>
+
+  <circle cx="430" cy="305" r="10" fill="#dc2626"/>
+  <text x="365" y="283" class="math">P: (Y,Z)</text>
+  <line x1="95" y1="515" x2="590" y2="205" class="ray"/>
+  <line x1="430" y1="305" x2="430" y2="555" class="guide"/>
+  <circle cx="275" cy="402" r="9" fill="#2563eb"/>
+  <text x="288" y="392" class="math">y'</text>
+
+  <line x1="95" y1="540" x2="275" y2="540" class="guide"/>
+  <text x="185" y="570" text-anchor="middle" class="math">N</text>
+  <line x1="95" y1="602" x2="590" y2="602" class="guide"/>
+  <text x="343" y="623" text-anchor="middle" class="math">F</text>
+  <text x="430" y="585" text-anchor="middle" class="math">z=Z</text>
+
+  <rect x="215" y="465" width="385" height="55" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="408" y="501" text-anchor="middle" class="math">y' / N = Y / Z  ⇒  y' = N·Y/Z</text>
+
+  <!-- vision -->
+  <rect x="715" y="80" width="660" height="545" rx="16" class="panel"/>
+  <text x="1045" y="125" text-anchor="middle" class="head">计算机视觉：投到归一化平面 z=1</text>
+  <line x1="785" y1="515" x2="1315" y2="515" class="axis"/>
+  <line x1="785" y1="515" x2="785" y2="165" class="axis"/>
+  <text x="1322" y="523" class="math">z</text>
+  <text x="768" y="160" class="math">y</text>
+  <circle cx="785" cy="515" r="7" fill="#111827"/>
+  <text x="762" y="548" class="txt">光心 O</text>
+
+  <line x1="965" y1="210" x2="965" y2="555" class="plane"/>
+  <text x="965" y="190" text-anchor="middle" class="txt">归一化平面 z=1</text>
+  <line x1="1280" y1="150" x2="1280" y2="555" class="guide"/>
+  <text x="1280" y="585" text-anchor="middle" class="math">z=Z</text>
+
+  <circle cx="1280" cy="205" r="10" fill="#dc2626"/>
+  <text x="1205" y="180" class="math">P: (Y,Z)</text>
+  <line x1="785" y1="515" x2="1280" y2="205" class="ray"/>
+  <circle cx="965" cy="402" r="9" fill="#2563eb"/>
+  <text x="978" y="392" class="math">y_n</text>
+
+  <line x1="785" y1="540" x2="965" y2="540" class="guide"/>
+  <text x="875" y="570" text-anchor="middle" class="math">1</text>
+  <line x1="785" y1="602" x2="1280" y2="602" class="guide"/>
+  <text x="1033" y="623" text-anchor="middle" class="txt">Z：点自身的深度；理想视觉模型不设 F</text>
+
+  <rect x="905" y="465" width="385" height="55" rx="10" fill="#fff7ed" stroke="#fdba74"/>
+  <text x="1098" y="501" text-anchor="middle" class="math">y_n / 1 = Y / Z  ⇒  y_n = Y/Z</text>
+
+  <rect x="230" y="645" width="940" height="42" rx="10" fill="#ecfdf5" stroke="#34d399"/>
+  <text x="700" y="674" text-anchor="middle" class="txt">视觉公式里没有 N，是因为它把投影平面的距离固定成了 1；如果使用距离 N，同样得到 N·Y/Z。</text>
+</svg>
