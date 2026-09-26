@@ -111,6 +111,13 @@
 				<div class="git-commit-panel">
 					<label for="git-message">提交说明</label>
 					<textarea id="git-message" rows="3" maxlength="500" placeholder="例如：新增一篇文章"></textarea>
+					<div class="git-proxy-panel">
+						<label class="check"><input id="git-use-proxy" type="checkbox"> 推送时启用本机代理</label>
+						<label for="git-proxy-port">代理端口
+							<input id="git-proxy-port" type="number" inputmode="numeric" min="1" max="65535" step="1" value="7897">
+						</label>
+						<p class="muted">启用后，本次推送使用 <code>http://127.0.0.1:端口</code>，结束后恢复原有 Git 代理配置。</p>
+					</div>
 					<div class="actions">
 						<button id="git-commit" type="button" class="primary">提交已暂存内容</button>
 						<button id="git-push" type="button">推送到 GitHub</button>

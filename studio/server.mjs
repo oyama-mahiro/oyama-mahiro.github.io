@@ -491,15 +491,51 @@ async function commitGitChanges(payload) {
 	});
 }
 
-async function pushGitChanges() {
-	return withGitMutation("推送到 GitHub", async () => {
+async function readLocalGitConfig(key) {
+	const result = await runGit(["config", "--local", "--get-all", key], { allowFailure: true });
+	if (result.code !== 0) return [];
+	return result.stdout.split(/\r?\n/).filter(Boolean);
+}
+
+async function replaceLocalGitConfig(key, values) {
+	await runGit(["config", "--local", "--unset-all", key], { allowFailure: true });
+	for (const value of values) {
+		await runGit(["config", "--local", "--add", key, value]);
+	}
+}
+
+async function withTemporaryGitProxy(proxyUrl, operation) {
+	const previousHttp = await readLocalGitConfig("http.proxy");
+	const previousHttps = await readLocalGitConfig("https.proxy");
+	try {
+		await replaceLocalGitConfig("http.proxy", [proxyUrl]);
+		await replaceLocalGitConfig("https.proxy", [proxyUrl]);
+		return await operation();
+	} finally {
+		await replaceLocalGitConfig("http.proxy", previousHttp);
+		await replaceLocalGitConfig("https.proxy", previousHttps);
+	}
+}
+
+async function pushGitChanges(payload = {}) {
+	const useProxy = payload.useProxy === true;
+	const proxyPort = Number(payload.proxyPort);
+	if (useProxy && (!Number.isInteger(proxyPort) || proxyPort < 1 || proxyPort > 65535)) {
+		throw new Error("代理端口必须是 1 到 65535 之间的整数");
+	}
+	const label = useProxy ? `通过 127.0.0.1:${proxyPort} 推送到 GitHub` : "推送到 GitHub";
+	return withGitMutation(label, async () => {
 		const status = await gitStatus();
 		if (!status.branch) throw new Error("当前不在可推送的本地分支上");
 		if (!status.hasOrigin) throw new Error("仓库没有名为 origin 的远程地址");
 		const args = ["push"];
 		if (!status.upstream) args.push("--set-upstream");
 		args.push("origin", status.branch);
-		return runGit(args);
+		if (!useProxy) return runGit(args);
+
+		const proxyUrl = `http://127.0.0.1:${proxyPort}`;
+		appendLog(`[Git] 本次推送临时使用代理 ${proxyUrl}\n`);
+		return withTemporaryGitProxy(proxyUrl, () => runGit(args));
 	});
 }
 async function buildSite() {
@@ -800,7 +836,7 @@ const server = http.createServer(async (req, res) => {
 			return;
 		}
 		if (req.method === "POST" && url.pathname === "/api/git/push") {
-			send(res, 200, await pushGitChanges());
+			send(res, 200, await pushGitChanges(await readJson(req)));
 			return;
 		}
 		if (req.method === "POST" && url.pathname === "/api/build") {

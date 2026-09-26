@@ -43,6 +43,23 @@ html.is-animating .transition-swup-fade {
     animation-delay: 400ms;
 }
 
+/* Avoid compositing an entire long article into one animated layer on phones. */
+@media (max-width: 768px) and (pointer: coarse) {
+    html.is-changing .transition-swup-fade,
+    html.is-animating .transition-swup-fade,
+    .transition-swup-fade {
+        transition: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+
+    .onload-animation {
+        animation: none !important;
+        transform: none !important;
+        opacity: 1 !important;
+    }
+}
+
 /* Post content */
 #post-container :nth-child(1) { animation-delay: calc(var(--content-delay) + 0ms) }
 #post-container :nth-child(2) { animation-delay: calc(var(--content-delay) + 50ms) }

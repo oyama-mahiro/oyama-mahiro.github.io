@@ -125,5 +125,14 @@
         overflow-x: auto;
         margin: 1em 0;
     }
+
+    @media (max-width: 768px) and (pointer: coarse) {
+        .katex-display {
+            max-width: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
     
 }

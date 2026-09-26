@@ -94,7 +94,7 @@ const bannerOffset =
 		<meta name="twitter:title" content={pageTitle}>
 		<meta name="twitter:description" content={description || pageTitle}>
 
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		{favicons.map(favicon => (
 			<link rel="icon"
@@ -283,6 +283,12 @@ function loadHue() {
 function initCustomScrollbar() {
 	const bodyElement = document.querySelector('body');
 	if (!bodyElement) return;
+
+	// Native scrolling is lighter and more reliable than one OverlayScrollbars
+	// instance per formula on touch phones, especially in very long posts.
+	const useNativeMobileScrolling = window.matchMedia('(max-width: 768px) and (pointer: coarse)').matches;
+	if (useNativeMobileScrolling) return;
+
 	OverlayScrollbars(
 		// docs say that a initialization to the body element would affect native functionality like window.scrollTo
 		// but just leave it here for now
@@ -368,6 +374,33 @@ function init() {
 /* Load settings when entering the site */
 init();
 
+// Swup keeps the current document alive while it parses and replaces the next
+// one. On iOS this can exhaust the rendering budget of large KaTeX-heavy posts.
+// Capture internal link clicks on phones and use a normal navigation instead,
+// which lets WebKit release the previous page completely.
+const useNativeMobileNavigation = window.matchMedia('(max-width: 768px) and (pointer: coarse)').matches;
+if (useNativeMobileNavigation) {
+	document.addEventListener('click', event => {
+		if (!(event instanceof MouseEvent) || event.button !== 0) return;
+		if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+		const target = event.target;
+		if (!(target instanceof Element)) return;
+		const anchor = target.closest('a[href]');
+		if (!(anchor instanceof HTMLAnchorElement)) return;
+		if (anchor.target && anchor.target !== '_self') return;
+		if (anchor.hasAttribute('download')) return;
+
+		const destination = new URL(anchor.href, window.location.href);
+		if (destination.origin !== window.location.origin) return;
+		if (destination.pathname === window.location.pathname &&
+			destination.search === window.location.search && destination.hash) return;
+
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		window.location.assign(destination.href);
+	}, true);
+}
+
 const setup = () => {
 	// TODO: temp solution to change the height of the banner
 /*
@@ -413,10 +446,10 @@ const setup = () => {
 		}
 	});
 	window.swup.hooks.on('page:view', () => {
-		// hide the temp high element when the transition is done
+		// hide the temporary height extension when the new page is visible
 		const heightExtend = document.getElementById('page-height-extend')
 		if (heightExtend) {
-			heightExtend.classList.remove('hidden')
+			heightExtend.classList.add('hidden')
 		}
 	});
 	window.swup.hooks.on('visit:end', (_visit: {to: {url: string}}) => {

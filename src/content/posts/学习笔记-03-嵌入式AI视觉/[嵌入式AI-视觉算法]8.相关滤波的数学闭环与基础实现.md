@@ -1,9 +1,9 @@
 ---
-title: '[嵌入式AI-视觉算法] 相关滤波的数学闭环与基础实现'
+title: '[嵌入式AI-单目标跟踪算法] 相关滤波的数学闭环与基础实现'
 published: 2026-09-24T08:38:00+08:00
 description: '围绕嵌入式 AI 视觉工程，介绍相关滤波的数学闭环与基础实现的核心原理、常用方法与实践要点。'
 tags: ['嵌入式AI', '计算机视觉', '深度学习']
-category: '嵌入式AI-视觉算法'
+category: '嵌入式AI-单目标跟踪算法'
 draft: false
 passwordProtected: true
 lang: zh_CN

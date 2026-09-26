@@ -15,6 +15,7 @@ import remarkDirective from "remark-directive"; /* Handle directives */
 import remarkGithubAdmonitionsToDirectives from "remark-github-admonitions-to-directives";
 import remarkMath from "remark-math";
 import remarkSectionize from "remark-sectionize";
+import { visit } from "unist-util-visit";
 import { expressiveCodeConfig } from "./src/config.ts";
 import { pluginLanguageBadge } from "./src/plugins/expressive-code/language-badge.ts";
 import { AdmonitionComponent } from "./src/plugins/rehype-component-admonition.mjs";
@@ -23,6 +24,17 @@ import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
+
+function rehypeLazyImages() {
+	return tree => {
+		visit(tree, "element", node => {
+			if (node.tagName !== "img") return;
+			node.properties ??= {};
+			node.properties.loading ??= "lazy";
+			node.properties.decoding ??= "async";
+		});
+	};
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -40,8 +52,10 @@ export default defineConfig({
 			// when the Tailwind class `transition-all` is used
 			containers: ["main", "#toc"],
 			smoothScrolling: true,
-			cache: true,
-			preload: true,
+			// Long technical posts can contain tens of thousands of DOM nodes.
+			// Keeping parsed pages in memory is especially expensive on iOS Safari.
+			cache: false,
+			preload: false,
 			accessibility: true,
 			updateHead: true,
 			updateBodyClass: false,
@@ -129,6 +143,7 @@ export default defineConfig({
 		],
 		rehypePlugins: [
 			[rehypeKatex, { strict: "ignore" }],
+			rehypeLazyImages,
 			rehypeSlug,
 			[
 				rehypeComponents,

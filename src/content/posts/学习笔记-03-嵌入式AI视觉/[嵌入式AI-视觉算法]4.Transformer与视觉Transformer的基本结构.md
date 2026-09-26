@@ -5,7 +5,6 @@ description: '围绕嵌入式 AI 视觉工程，介绍Transformer与视觉Transf
 tags: ['嵌入式AI', '计算机视觉', '深度学习']
 category: '嵌入式AI-视觉算法'
 draft: false
-passwordProtected: true
 lang: zh_CN
 ---
 

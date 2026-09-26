@@ -195,6 +195,25 @@ postForm.addEventListener("submit", async (event) => {
 
 let gitFiles = [];
 let gitRequestId = 0;
+const gitUseProxy = document.querySelector("#git-use-proxy");
+const gitProxyPort = document.querySelector("#git-proxy-port");
+
+gitUseProxy.checked = localStorage.getItem("studio-git-use-proxy") === "true";
+gitProxyPort.value = localStorage.getItem("studio-git-proxy-port") || "7897";
+
+function syncGitProxyControls(running = false) {
+	gitUseProxy.disabled = running;
+	gitProxyPort.disabled = running || !gitUseProxy.checked;
+}
+
+gitUseProxy.addEventListener("change", () => {
+	localStorage.setItem("studio-git-use-proxy", String(gitUseProxy.checked));
+	syncGitProxyControls();
+});
+gitProxyPort.addEventListener("input", () => {
+	localStorage.setItem("studio-git-proxy-port", gitProxyPort.value);
+});
+syncGitProxyControls();
 
 function selectedGitPaths() {
 	return [...document.querySelectorAll(".git-file-check:checked")].map((input) => input.value);
@@ -261,6 +280,7 @@ function setGitButtons(status) {
 	document.querySelector("#git-unstage-selected").disabled = running || !selected.some((filePath) => gitFiles.find((file) => file.path === filePath)?.staged);
 	document.querySelector("#git-commit").disabled = running || !status?.hasStaged;
 	document.querySelector("#git-push").disabled = running || !status?.hasOrigin || (Boolean(status?.upstream) && status?.ahead === 0);
+	syncGitProxyControls(running);
 }
 
 async function loadGitStatus() {
@@ -329,7 +349,20 @@ document.querySelector("#git-commit").addEventListener("click", () => {
 	});
 });
 document.querySelector("#git-push").addEventListener("click", () => {
-	runGitAction("正在推送到 GitHub…", () => api("/api/git/push", {}));
+	if (gitUseProxy.checked && !gitProxyPort.checkValidity()) {
+		showGitError(new Error("代理端口必须是 1 到 65535 之间的整数"));
+		return;
+	}
+	const proxyPort = Number(gitProxyPort.value);
+	localStorage.setItem("studio-git-use-proxy", String(gitUseProxy.checked));
+	localStorage.setItem("studio-git-proxy-port", gitProxyPort.value);
+	const message = gitUseProxy.checked
+		? `正在通过 127.0.0.1:${proxyPort} 推送到 GitHub…`
+		: "正在推送到 GitHub…";
+	runGitAction(message, () => api("/api/git/push", {
+		useProxy: gitUseProxy.checked,
+		proxyPort,
+	}));
 });
 setInterval(() => {
 	const gitPage = document.querySelector('[data-page="git"]');
