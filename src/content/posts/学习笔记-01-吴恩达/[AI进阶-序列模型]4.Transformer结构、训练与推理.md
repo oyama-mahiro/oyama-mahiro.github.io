@@ -101,8 +101,10 @@ man bites dog
 
 原始 Transformer 同时使用正弦和余弦：偶数维使用正弦，奇数维使用余弦：
 
-$$PE(pos,2i)=\sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right),\qquad
-PE(pos,2i+1)=\cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)$$
+$$
+PE(pos,2i)=\sin\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right),\qquad
+PE(pos,2i+1)=\cos\left(\frac{pos}{10000^{2i/d_{\text{model}}}}\right)
+$$
 
 不同维度使用不同波长：高频维度对相邻位置敏感，低频维度负责区分较远位置，组合后能在模型使用的长度范围内得到可区分的位置向量。选择正弦和余弦不只是为了“每个位置不同”，还因为 $PE(pos+k)$ 能由 $PE(pos)$ 通过只与相对距离 $k$ 有关的线性关系表示，这有利于模型学习相对位置。位置 One-hot 也能区分位置，但维度会随最大序列长度增长，而且任意两个位置都同样远，不能直接表达“位置 1 比位置 100 更接近位置 2”。正弦—余弦编码维度固定、可直接计算任意位置，并保留连续的距离结构。最后把含义向量与同维度的位置向量逐元素相加：$x_t^{(0)}=e_{w_t}+PE(t)$，即前者表示“这个 token 是什么”，后者表示“它位于哪里”。整个序列写为 $X^{(0)}=X_{\text{token}}+PE$，这才是送入第一个 Transformer Layer 的输入矩阵。
 

@@ -174,13 +174,13 @@ $$
 
 $$
 \#\text{params}
-=$K_HK_WC_{\text{in}}+1$C_{\text{out}}.
+= (K_HK_WC_{\text{in}} + 1)C_{\text{out}}.
 $$
 
 代入当前数值：
 
 $$
-$3\times3\times3+1$\times16=448.
+(3\times3\times3+1)\times16=448.
 $$
 
 如果卷积后紧接 BatchNorm，线性偏置常被关闭，此时参数量是
@@ -525,7 +525,7 @@ $$
 冻结骨干参数，只训练新分类头。模型实际执行
 
 $$
-z=f_{\theta_{\text{pre}}}$x$,qquad
+z=f_{\theta_{\text{pre}}}(x),\qquad
 \hat y=g_\phi(z),
 $$
 
