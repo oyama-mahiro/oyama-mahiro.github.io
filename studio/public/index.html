@@ -18,6 +18,7 @@
 	<nav class="tabs" aria-label="工作台分页">
 		<button type="button" class="tab" data-page="publish" aria-selected="true">发布文章</button>
 		<button type="button" class="tab" data-page="build" aria-selected="false">构建与预览</button>
+		<button type="button" class="tab" data-page="git" aria-selected="false">Git 管理</button>
 		<button type="button" class="tab" data-page="appearance" aria-selected="false">网站设置</button>
 	</nav>
 
@@ -75,10 +76,47 @@
 					<button id="build-button" type="button">一键构建</button>
 					<button id="preview-start" type="button" class="primary">开启预览</button>
 					<button id="preview-stop" type="button">关闭预览</button>
-					<button id="upload-button" type="button" disabled title="即将支持">一键上传</button>
 				</div>
 				<p id="job-status" class="note">预览未开启</p>
 				<pre id="log" class="log" aria-label="命令输出"></pre>
+			</div>
+		</section>
+
+
+		<section class="page hidden" data-page="git">
+			<div class="card">
+				<div class="card-head">
+					<h2>Git 管理</h2>
+					<p>先暂存准备提交的文件，再填写提交说明并提交。推送成功后，GitHub 会自动构建并发布博客。</p>
+				</div>
+				<div class="git-summary">
+					<div>
+						<span class="muted">当前分支</span>
+						<strong id="git-branch">读取中…</strong>
+					</div>
+					<div>
+						<span class="muted">远端状态</span>
+						<strong id="git-sync">读取中…</strong>
+					</div>
+				</div>
+				<div class="actions git-toolbar">
+					<button id="git-refresh" type="button">刷新状态</button>
+					<button id="git-select-all" type="button">全选文件</button>
+					<button id="git-stage-selected" type="button" class="primary">暂存所选</button>
+					<button id="git-stage-all" type="button">全部暂存</button>
+					<button id="git-unstage-selected" type="button">取消暂存所选</button>
+				</div>
+				<p id="git-note" class="note">正在读取仓库状态…</p>
+				<div id="git-files" class="git-files" aria-live="polite"></div>
+				<div class="git-commit-panel">
+					<label for="git-message">提交说明</label>
+					<textarea id="git-message" rows="3" maxlength="500" placeholder="例如：新增一篇文章"></textarea>
+					<div class="actions">
+						<button id="git-commit" type="button" class="primary">提交已暂存内容</button>
+						<button id="git-push" type="button">推送到 GitHub</button>
+					</div>
+					<p class="muted">“提交”只记录到本机；“推送”才会上传到 GitHub，并触发线上博客构建。</p>
+				</div>
 			</div>
 		</section>
 

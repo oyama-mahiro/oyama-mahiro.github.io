@@ -1,4 +1,4 @@
-import { spawn, execFile } from "node:child_process";
+import { execFile, spawn } from "node:child_process";
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
@@ -147,7 +147,7 @@ function suggestedSlug(filename) {
 
 function assertSlug(slug) {
 	const name = String(slug || "").trim();
-	if (!name || name === "." || name === ".." || /[<>:"/\\|?*\u0000]/.test(name)) {
+	if (!name || name === "." || name === ".." || /[<>:"/\\|?*]/.test(name) || name.includes("\0")) {
 		throw new Error("文章文件名不合法");
 	}
 	return name;
@@ -344,6 +344,164 @@ function runCommand(command, args) {
 	});
 }
 
+
+const gitState = { running: false };
+
+function runGit(args, { allowFailure = false } = {}) {
+	return new Promise((resolve, reject) => {
+		const child = spawn("git", args, {
+			cwd: ROOT,
+			shell: false,
+			windowsHide: true,
+			env: process.env,
+		});
+		const stdout = [];
+		const stderr = [];
+		child.stdout.on("data", (chunk) => stdout.push(chunk));
+		child.stderr.on("data", (chunk) => stderr.push(chunk));
+		child.on("error", reject);
+		child.on("close", (code) => {
+			const result = {
+				code,
+				stdout: Buffer.concat(stdout).toString("utf8"),
+				stderr: Buffer.concat(stderr).toString("utf8"),
+			};
+			if (code === 0 || allowFailure) {
+				resolve(result);
+				return;
+			}
+			const detail = (result.stderr || result.stdout).trim();
+			reject(new Error(detail || `git ${args[0]} 执行失败（退出码 ${code}）`));
+		});
+	});
+}
+
+function parseGitStatus(output) {
+	const records = output.split("\0");
+	const files = [];
+	for (let index = 0; index < records.length; index++) {
+		const record = records[index];
+		if (!record || record.length < 3) continue;
+		const indexStatus = record[0];
+		const workingStatus = record[1];
+		const file = {
+			path: record.slice(3),
+			indexStatus,
+			workingStatus,
+			staged: indexStatus !== " " && indexStatus !== "?",
+			unstaged: workingStatus !== " " && workingStatus !== "?",
+			untracked: indexStatus === "?" && workingStatus === "?",
+		};
+		if (indexStatus === "R" || indexStatus === "C" || workingStatus === "R" || workingStatus === "C") {
+			file.oldPath = records[++index] || "";
+		}
+		files.push(file);
+	}
+	return files;
+}
+
+async function gitStatus() {
+	const statusResult = await runGit(["status", "--porcelain=v1", "-z", "--untracked-files=all"]);
+	const branchResult = await runGit(["branch", "--show-current"]);
+	const upstreamResult = await runGit(["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}"], { allowFailure: true });
+	const remotesResult = await runGit(["remote"]);
+	const branch = branchResult.stdout.trim();
+	const upstream = upstreamResult.code === 0 ? upstreamResult.stdout.trim() : "";
+	let ahead = 0;
+	let behind = 0;
+	if (upstream) {
+		const countResult = await runGit(["rev-list", "--left-right", "--count", `${upstream}...HEAD`], { allowFailure: true });
+		if (countResult.code === 0) {
+			const [behindText, aheadText] = countResult.stdout.trim().split(/\s+/);
+			behind = Number(behindText) || 0;
+			ahead = Number(aheadText) || 0;
+		}
+	}
+	const files = parseGitStatus(statusResult.stdout);
+	return {
+		branch,
+		upstream,
+		ahead,
+		behind,
+		files,
+		hasStaged: files.some((file) => file.staged),
+		hasChanges: files.length > 0,
+		hasOrigin: remotesResult.stdout.split(/\r?\n/).includes("origin"),
+		running: gitState.running,
+	};
+}
+
+function validatedGitFiles(paths, files, { stagedOnly = false } = {}) {
+	if (!Array.isArray(paths) || paths.length === 0) throw new Error("请先选择文件");
+	const byPath = new Map(files.map((file) => [file.path, file]));
+	const expanded = [];
+	for (const value of paths) {
+		const filePath = String(value || "").replaceAll("\\", "/");
+		if (!filePath || path.isAbsolute(filePath) || filePath.split("/").includes("..") || filePath.includes("\0")) {
+			throw new Error("文件路径不合法");
+		}
+		const file = byPath.get(filePath);
+		if (!file || (stagedOnly && !file.staged)) throw new Error(`文件状态已经变化：${filePath}`);
+		expanded.push(file.path);
+		if (file.oldPath) expanded.push(file.oldPath);
+	}
+	return [...new Set(expanded)];
+}
+
+async function withGitMutation(label, operation) {
+	if (gitState.running) throw new Error("另一个 Git 操作正在进行");
+	gitState.running = true;
+	appendLog(`\n[Git] ${label}\n`);
+	try {
+		const result = await operation();
+		if (result?.stdout) appendLog(`${result.stdout.trim()}\n`);
+		if (result?.stderr) appendLog(`${result.stderr.trim()}\n`);
+		return { ok: true, output: [result?.stdout, result?.stderr].filter(Boolean).join("\n").trim() };
+	} finally {
+		gitState.running = false;
+	}
+}
+
+async function stageGitFiles(payload) {
+	return withGitMutation(payload.all ? "暂存全部变更" : "暂存所选文件", async () => {
+		if (payload.all) return runGit(["add", "-A", "--", "."]);
+		const status = await gitStatus();
+		const files = validatedGitFiles(payload.paths, status.files);
+		return runGit(["add", "-A", "--", ...files]);
+	});
+}
+
+async function unstageGitFiles(payload) {
+	return withGitMutation("取消暂存所选文件", async () => {
+		const status = await gitStatus();
+		const files = validatedGitFiles(payload.paths, status.files, { stagedOnly: true });
+		return runGit(["restore", "--staged", "--", ...files]);
+	});
+}
+
+async function commitGitChanges(payload) {
+	const message = String(payload.message || "").trim();
+	if (!message) throw new Error("请填写提交说明");
+	if (message.length > 500) throw new Error("提交说明不能超过 500 个字符");
+	return withGitMutation("提交已暂存的变更", async () => {
+		const diff = await runGit(["diff", "--cached", "--quiet"], { allowFailure: true });
+		if (diff.code === 0) throw new Error("当前没有已暂存的变更");
+		if (diff.code !== 1) throw new Error(diff.stderr.trim() || "无法检查暂存区");
+		return runGit(["commit", "-m", message]);
+	});
+}
+
+async function pushGitChanges() {
+	return withGitMutation("推送到 GitHub", async () => {
+		const status = await gitStatus();
+		if (!status.branch) throw new Error("当前不在可推送的本地分支上");
+		if (!status.hasOrigin) throw new Error("仓库没有名为 origin 的远程地址");
+		const args = ["push"];
+		if (!status.upstream) args.push("--set-upstream");
+		args.push("origin", status.branch);
+		return runGit(args);
+	});
+}
 async function buildSite() {
 	if (state.build.running) return { ok: false, error: "构建正在进行" };
 	state.build.running = true;
@@ -625,6 +783,26 @@ const server = http.createServer(async (req, res) => {
 			send(res, 200, sitePayload());
 			return;
 		}
+		if (req.method === "GET" && url.pathname === "/api/git/status") {
+			send(res, 200, await gitStatus());
+			return;
+		}
+		if (req.method === "POST" && url.pathname === "/api/git/stage") {
+			send(res, 200, await stageGitFiles(await readJson(req)));
+			return;
+		}
+		if (req.method === "POST" && url.pathname === "/api/git/unstage") {
+			send(res, 200, await unstageGitFiles(await readJson(req)));
+			return;
+		}
+		if (req.method === "POST" && url.pathname === "/api/git/commit") {
+			send(res, 200, await commitGitChanges(await readJson(req)));
+			return;
+		}
+		if (req.method === "POST" && url.pathname === "/api/git/push") {
+			send(res, 200, await pushGitChanges());
+			return;
+		}
 		if (req.method === "POST" && url.pathname === "/api/build") {
 			const result = await buildSite();
 			send(res, result.ok ? 200 : 500, result);
@@ -672,5 +850,5 @@ setInterval(() => {
 
 server.listen(PORT, HOST, () => {
 	console.log("博客工作台已在浏览器中打开。关闭网页后，工作台会自动停止。");
-	openBrowser(STUDIO_URL);
+	if (process.env.STUDIO_NO_BROWSER !== "1") openBrowser(STUDIO_URL);
 });

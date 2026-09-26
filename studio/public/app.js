@@ -143,6 +143,7 @@ document.querySelectorAll(".tab").forEach((tab) => {
 		document.querySelectorAll(".tab").forEach((item) => {
 			item.setAttribute("aria-selected", String(item === tab));
 		});
+		if (name === "git") loadGitStatus().catch(showGitError);
 	});
 });
 
@@ -191,6 +192,149 @@ postForm.addEventListener("submit", async (event) => {
 	}
 });
 
+
+let gitFiles = [];
+let gitRequestId = 0;
+
+function selectedGitPaths() {
+	return [...document.querySelectorAll(".git-file-check:checked")].map((input) => input.value);
+}
+
+function gitStateLabels(file) {
+	const labels = [];
+	if (file.untracked) labels.push(["新文件", "new"]);
+	if (file.staged) labels.push(["已暂存", "staged"]);
+	if (file.unstaged) labels.push(["未暂存", "unstaged"]);
+	if (file.indexStatus === "D" || file.workingStatus === "D") labels.push(["已删除", "deleted"]);
+	if (file.indexStatus === "R" || file.workingStatus === "R") labels.push(["已重命名", "renamed"]);
+	return labels;
+}
+
+function renderGitFiles(files) {
+	const container = document.querySelector("#git-files");
+	container.replaceChildren();
+	if (!files.length) {
+		const empty = document.createElement("p");
+		empty.className = "git-empty";
+		empty.textContent = "工作区没有未提交的修改。";
+		container.append(empty);
+		return;
+	}
+	for (const file of files) {
+		const row = document.createElement("label");
+		row.className = "git-file";
+		const checkbox = document.createElement("input");
+		checkbox.type = "checkbox";
+		checkbox.className = "git-file-check";
+		checkbox.value = file.path;
+		const details = document.createElement("span");
+		details.className = "git-file-details";
+		const name = document.createElement("strong");
+		name.textContent = file.path;
+		details.append(name);
+		if (file.oldPath) {
+			const oldName = document.createElement("small");
+			oldName.textContent = `原路径：${file.oldPath}`;
+			details.append(oldName);
+		}
+		const badges = document.createElement("span");
+		badges.className = "git-badges";
+		for (const [text, kind] of gitStateLabels(file)) {
+			const badge = document.createElement("span");
+			badge.className = `git-badge ${kind}`;
+			badge.textContent = text;
+			badges.append(badge);
+		}
+		row.append(checkbox, details, badges);
+		container.append(row);
+	}
+}
+
+function setGitButtons(status) {
+	const selected = selectedGitPaths();
+	const running = Boolean(status?.running);
+	document.querySelector("#git-refresh").disabled = running;
+	document.querySelector("#git-select-all").disabled = running || gitFiles.length === 0;
+	document.querySelectorAll(".git-file-check").forEach((checkbox) => { checkbox.disabled = running; });
+	document.querySelector("#git-stage-selected").disabled = running || selected.length === 0;
+	document.querySelector("#git-stage-all").disabled = running || !status?.hasChanges;
+	document.querySelector("#git-unstage-selected").disabled = running || !selected.some((filePath) => gitFiles.find((file) => file.path === filePath)?.staged);
+	document.querySelector("#git-commit").disabled = running || !status?.hasStaged;
+	document.querySelector("#git-push").disabled = running || !status?.hasOrigin || (Boolean(status?.upstream) && status?.ahead === 0);
+}
+
+async function loadGitStatus() {
+	const requestId = ++gitRequestId;
+	const status = await api("/api/git/status");
+	if (requestId !== gitRequestId) return;
+	gitFiles = status.files || [];
+	document.querySelector("#git-branch").textContent = status.branch || "未命名分支";
+	document.querySelector("#git-sync").textContent = status.upstream
+		? `领先 ${status.ahead}，落后 ${status.behind}`
+		: "尚未关联远端分支";
+	document.querySelector("#git-note").textContent = status.hasChanges
+		? `发现 ${gitFiles.length} 个有变更的文件。`
+		: "本地文件已经全部提交。";
+	renderGitFiles(gitFiles);
+	setGitButtons(status);
+}
+
+function showGitError(error) {
+	document.querySelector("#git-note").textContent = error.message || String(error);
+}
+
+async function runGitAction(message, action) {
+	const note = document.querySelector("#git-note");
+	note.textContent = message;
+	document.querySelectorAll("[id^='git-'] button, button[id^='git-']").forEach((button) => { button.disabled = true; });
+	try {
+		const result = await action();
+		await loadGitStatus();
+		note.textContent = result.output || "操作完成。";
+	} catch (error) {
+		await loadGitStatus().catch(() => {});
+		showGitError(error);
+	}
+}
+
+document.querySelector("#git-files").addEventListener("change", () => {
+	api("/api/git/status").then(setGitButtons).catch(showGitError);
+});
+document.querySelector("#git-refresh").addEventListener("click", () => loadGitStatus().catch(showGitError));
+document.querySelector("#git-select-all").addEventListener("click", () => {
+	const checkboxes = [...document.querySelectorAll(".git-file-check")];
+	const shouldSelect = checkboxes.some((checkbox) => !checkbox.checked);
+	for (const checkbox of checkboxes) checkbox.checked = shouldSelect;
+	api("/api/git/status").then(setGitButtons).catch(showGitError);
+});
+document.querySelector("#git-stage-selected").addEventListener("click", () => {
+	runGitAction("正在暂存所选文件…", () => api("/api/git/stage", { paths: selectedGitPaths() }));
+});
+document.querySelector("#git-stage-all").addEventListener("click", () => {
+	runGitAction("正在暂存全部变更…", () => api("/api/git/stage", { all: true }));
+});
+document.querySelector("#git-unstage-selected").addEventListener("click", () => {
+	runGitAction("正在取消暂存…", () => api("/api/git/unstage", { paths: selectedGitPaths() }));
+});
+document.querySelector("#git-commit").addEventListener("click", () => {
+	const message = document.querySelector("#git-message").value.trim();
+	if (!message) {
+		showGitError(new Error("请先填写提交说明"));
+		return;
+	}
+	runGitAction("正在提交…", async () => {
+		const result = await api("/api/git/commit", { message });
+		document.querySelector("#git-message").value = "";
+		return result;
+	});
+});
+document.querySelector("#git-push").addEventListener("click", () => {
+	runGitAction("正在推送到 GitHub…", () => api("/api/git/push", {}));
+});
+setInterval(() => {
+	const gitPage = document.querySelector('[data-page="git"]');
+	if (gitPage && !gitPage.classList.contains("hidden")) loadGitStatus().catch(showGitError);
+}, 5000);
 async function refreshStatus() {
 	const status = await api("/api/status");
 	logBox.textContent = status.log || "还没有命令输出。";

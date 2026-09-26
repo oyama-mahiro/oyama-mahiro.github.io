@@ -162,11 +162,108 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 	white-space: pre-wrap;
 }
 
+
+.git-summary {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+	margin-bottom: 0.85rem;
+}
+
+.git-summary > div {
+	display: grid;
+	gap: 0.25rem;
+	padding: 0.8rem;
+	border: 1px solid var(--line);
+	border-radius: 0.9rem;
+	background: #10181f;
+}
+
+.git-toolbar { margin-bottom: 0.35rem; }
+
+.git-files {
+	display: grid;
+	gap: 0.45rem;
+	max-height: 24rem;
+	overflow: auto;
+	padding-right: 0.2rem;
+}
+
+.git-file {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	gap: 0.75rem;
+	align-items: center;
+	padding: 0.7rem 0.8rem;
+	border: 1px solid var(--line);
+	border-radius: 0.85rem;
+	background: #10181f;
+	cursor: pointer;
+}
+
+.git-file:hover { border-color: rgba(61, 183, 232, 0.55); }
+.git-file input { width: auto; }
+
+.git-file-details {
+	display: grid;
+	gap: 0.2rem;
+	min-width: 0;
+}
+
+.git-file-details strong,
+.git-file-details small {
+	overflow-wrap: anywhere;
+}
+
+.git-file-details small { color: var(--muted); }
+
+.git-badges {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 0.35rem;
+}
+
+.git-badge {
+	padding: 0.18rem 0.45rem;
+	border-radius: 999px;
+	font-size: 0.75rem;
+	background: #293743;
+	color: #c5d5df;
+}
+
+.git-badge.staged { background: rgba(69, 196, 126, 0.18); color: #78dda4; }
+.git-badge.unstaged { background: rgba(245, 177, 66, 0.17); color: #f1c36f; }
+.git-badge.new { background: rgba(61, 183, 232, 0.18); color: #74d3f7; }
+.git-badge.deleted { background: rgba(238, 94, 108, 0.16); color: #ff929d; }
+.git-badge.renamed { background: rgba(164, 122, 255, 0.17); color: #c4a7ff; }
+
+.git-empty {
+	margin: 0;
+	padding: 1.2rem;
+	border: 1px dashed var(--line);
+	border-radius: 0.85rem;
+	color: var(--muted);
+	text-align: center;
+}
+
+.git-commit-panel {
+	display: grid;
+	gap: 0.65rem;
+	margin-top: 1rem;
+	padding-top: 1rem;
+	border-top: 1px solid var(--line);
+}
+
+.git-commit-panel p { margin: 0; }
+
 .hidden { display: none; }
 code { color: var(--accent); }
 
 @media (max-width: 720px) {
-	.topbar, .form, .drops { display: grid; grid-template-columns: 1fr; }
+	.topbar, .form, .drops, .git-summary { display: grid; grid-template-columns: 1fr; }
 	.tabs { flex-wrap: wrap; }
 	.topbar { align-items: start; }
+	.git-file { grid-template-columns: auto minmax(0, 1fr); }
+	.git-badges { grid-column: 2; justify-content: flex-start; }
 }
