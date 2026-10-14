@@ -64,7 +64,9 @@ $$
 P(y_t\mid \hat y_{<t},x).
 $$
 
-![Seq2Seq 训练与生成](assets/序列生成、注意力与语音识别/01-Seq2Seq训练与生成.png)
+![Teacher Forcing 的输入与目标错位关系](assets/序列生成、注意力与语音识别/原总结配图/language-model-teacher-forcing.png)
+
+图中用语言模型展示解码端的训练方式：输入 `<BOS>` 时预测 cats，输入真实的 cats 时预测 average，依次向后错开一个 token。Seq2Seq 解码器也采用这种输入与目标关系，同时还接收源序列的编码信息 $x$；图中省略了这一条件输入。推理时，下方的真实前一个 token 才会换成模型自己选出的 token。
 
 第一步生成错误后，第二步看到的前缀就可能偏离训练分布，后续错误还会继续累积。这种训练和推理条件不一致常称为 exposure bias。它也存在于使用 Teacher Forcing 训练的自回归 Transformer 中，问题并非 RNN 独有。
 
@@ -235,7 +237,7 @@ $$
 
 因此本例的 $p_1=1/4=0.25$。
 
-![BLEU 截断计数](assets/序列生成、注意力与语音识别/05-BLEU截断计数.png)
+![BLEU 的截断计数与简短惩罚](assets/序列生成、注意力与语音识别/原总结配图/bleu-score.png)
 
 1-gram 主要检查词是否出现，2-gram 开始检查局部顺序，3-gram 和 4-gram 检查更长短语。BLEU 对多个阶数取加权几何平均：
 
@@ -335,7 +337,9 @@ $$
 c_t=\sum_{t'=1}^{T_x}\alpha_{t,t'}a_{t'}.
 $$
 
-![加性 Attention 数值过程](assets/序列生成、注意力与语音识别/07-加性注意力数值过程.png)
+![加性 Attention 的打分、归一化与上下文计算](assets/序列生成、注意力与语音识别/原总结配图/additive-attention.png)
+
+图中的上标表示时间位置：$a^{t\prime}$ 对应正文的 $a_{t\prime}$，$s^{t-1}$ 对应 $s_{t-1}$。右侧把最后一步简画成了从 Softmax 到 $c^t$ 的箭头；实际计算还要用 Softmax 得到的权重乘各个编码器向量，再求和，不能直接把权重当作上下文向量。下面用两个输入位置把这一步算出来。
 
 假设只有两个编码器位置：
 
@@ -422,7 +426,7 @@ $\pi=(\pi_1,\ldots,\pi_{T_x})$ 是一条帧级路径。CTC 折叠函数 $B$ 执�
 1. 合并连续重复标签；
 2. 删除 blank。
 
-![CTC 路径折叠](assets/序列生成、注意力与语音识别/09-CTC路径折叠.png)
+![CTC 合并连续重复与删除 blank 的过程](assets/序列生成、注意力与语音识别/原总结配图/ctc-collapse.png)
 
 例如：
 

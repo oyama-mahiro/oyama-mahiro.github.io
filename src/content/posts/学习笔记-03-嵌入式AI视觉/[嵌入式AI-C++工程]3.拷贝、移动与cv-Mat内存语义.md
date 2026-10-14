@@ -10,294 +10,348 @@ lang: zh_CN
 
 # 阶段1-3 拷贝、移动与`cv::Mat`内存语义
 
-本节讨论两类容易混在一起的问题：C++ 对象在传参和进入容器时，是复制还是移动；OpenCV 计算机视觉库中的 `cv::Mat` 被复制时，像素数据是否真的产生了另一份。
+在嵌入式 AI 与图像处理工程中，数据吞吐量极大、内存带宽紧张，性能瓶颈往往出在不经意的“隐式内存拷贝”上。本篇核心解决两个高度关联但常被混淆的技术点：
+1. **C++ 语言层**：对象在传参、赋值、放入标准容器时，究竟触发了拷贝（深拷贝开销）还是移动（资源所有权转移）？
+2. **OpenCV 库层**：`cv::Mat` 在传递与赋值时，底层数兆字节的图像像素到底有没有被复制？
 
-对象生命周期和资源获取即初始化（Resource Acquisition Is Initialization，RAII）已在阶段 1-1 第 1～5 节介绍，`std::move` 也在阶段 1-1 第 7 节和阶段 1-2 第 1 节出现过。本节不再重复资源管理基础，而是把复制、移动和图像缓冲区共享之间的关系讲清楚。
+搞清楚底层内存与对象语义，是写出低时延、零拷贝图像处理管线的基石。
+
+---
 
 ## 1 C++左值、右值、复制构造与移动构造
 
 ### 1.1 左值与右值的实用判断
 
-在本节需要掌握的范围内，可以先使用下面的判断方法：
+工程排查时，不需要死记语法标准中细分的 prvalue、xvalue 等复杂概念，掌握最直观的工程判断准则即可：
 
-- **左值（lvalue）**：有明确身份、之后还能通过名字继续访问的对象。例如变量 `frame`。
-- **右值（rvalue）**：通常表示临时值，或者明确表示“允许从这里取走资源”的值。例如函数返回的临时对象，以及 `std::move(frame)` 的结果。
+- **左值（lvalue）**：**有持久身份、有明确变量名、可以取地址**的对象。生命周期跨越当前语句，后续代码还能通过名字继续访问它。例如具名变量 `frame`。
+- **右值（rvalue）**：**没有持久身份的临时对象**，或者**被明确标记为“可以被剥夺资源”的表达式**。它们通常在当前语句结束后就立即消亡。例如字面量、函数返回的临时值，以及通过 `std::move(frame)` 强转后的表达式。
 
 ```cpp
-Frame frame;              // frame 是有名字的对象，因此表达式 frame 是左值
-consume(frame);           // 传入左值
-consume(std::move(frame)); // std::move(frame) 是右值表达式
-consume(Frame{});         // Frame{} 创建临时对象，也是右值
+Frame frame;               // frame 是具名变量 -> 表达式 frame 是左值
+consume(frame);            // 传入左值：consume 必须拷贝一份，不能破坏外部的 frame
+consume(std::move(frame)); // std::move 将其转为右值表达式：允许 consume 掏空 frame 的资源
+consume(Frame{});          // Frame{} 是纯临时对象 -> 右值，用完即弃
 ```
 
-需要注意的是，“对象”和“表达式的值类别”不是一回事。`frame` 这个对象没有被 `std::move` 变成另一种对象；只是表达式 `std::move(frame)` 允许后续代码选择移动操作。
+> **核心认知**：
+> `std::move(frame)` **并没有改变 `frame` 这个变量本身的对象类型**，它只是在表达式层面上做了一次右值强制转换，给编译器开辟了一条“可以调用移动语义”的语法通道。
 
-工程中最实用的问题不是背诵全部值类别，而是看到调用时能回答：
+在阅读或编写代码时，养成自问三连的习惯：
+1. 这个对象后续逻辑还要继续使用吗？
+2. 如果不需要了，是否可以通过 `std::move` 转移其内部的大块堆内存或句柄？
+3. 接收方的类是否真正实现了移动构造/移动赋值？
 
-1. 这个对象后面还需要保留原内容吗？
-2. 如果不需要，是否可以用 `std::move` 表达“允许转移其内部资源”？
-3. 接收方是否真的提供了移动构造或移动赋值操作？
+---
 
 ### 1.2 复制构造与移动构造的区别
 
-使用一个已有对象创建同类型的新对象时，会进入复制构造或移动构造：
+当用一个现有对象去初始化一个同类型的新对象时，编译器会在两者之间抉择：
 
 ```cpp
-Frame copied{source};            // source 是左值，调用复制构造
-Frame moved{std::move(source)};  // 允许调用移动构造
+Frame copied{source};           // source 是左值 -> 触发复制构造（Copy Constructor）
+Frame moved{std::move(source)}; // std::move(source) 是右值 -> 触发移动构造（Move Constructor）
 ```
 
-两种构造函数的典型声明如下：
+它们的签名与底层语义对比：
 
 ```cpp
-Frame(const Frame& other); // 复制构造函数
-Frame(Frame&& other);      // 移动构造函数
+Frame(const Frame& other); // 复制构造：只读引用，不可篡改原对象
+Frame(Frame&& other);      // 移动构造：右值引用，被授予“剥夺原对象资源”的权限
 ```
 
-这里每一部分的含义是：
+| 维度 | 复制构造（Copy） | 移动构造（Move） |
+| :--- | :--- | :--- |
+| **参数类型** | `const Frame&`（常量左值引用） | `Frame&&`（右值引用） |
+| **内存操作** | 重新向系统申请一块新的堆内存，并逐字节把内容完整复制过去。 | 仅进行指针与句柄的浅层复制（如将新指针指向旧内存），并将原对象的指针置空。 |
+| **运行开销** | 昂贵（随数据量线性增长 $O(N)$，消耗 CPU 算力与内存带宽）。 | 极低（常数时间复杂度 $O(1)$，通常仅为几次指针赋值）。 |
+| **源对象状态** | 原封不动，保持完整有效。 | 资源被掏空，原对象仍处于有效状态但已无实际内容。 |
 
-- `Frame(...)`：构造一个新的 `Frame` 对象。
-- `const Frame& other`：以只读引用观察源对象，不能取走或修改其资源，适合复制。
-- `Frame&& other`：右值引用参数，可以接收允许被移动的 `Frame`，适合转移其资源。
+如果类内部成员都是符合现代 C++ 规范的类型（如 `std::vector`、`std::string`、`std::unique_ptr`），应当严格遵循**零法则（Rule of Zero）**，让编译器自动生成移动和拷贝操作；只有在类自身直接持有原始指针（如 `void* dma_buffer`、OS 文件描述符）时，才需要手动手写这套逻辑。
 
-**复制构造**应让新旧两个对象都能独立满足各自的使用要求。若类拥有一块独占动态内存，复制通常需要重新分配内存并复制内容。
-
-**移动构造**通常把源对象持有的指针、容器或句柄转给新对象，避免复制大块数据。转移后，源对象仍然必须是可以析构、可以重新赋值的有效对象，但其原内容通常不能再依赖。
-
-如果成员本身已经正确实现复制和移动，例如 `std::string`、`std::vector` 和智能指针，应优先组合这些类型并遵守阶段 1-1 第 6 节的零法则。只有类亲自管理特殊资源时，才需要谨慎手写这些特殊成员函数。
+---
 
 ### 1.3 `std::move`的作用与移动后对象状态
 
-`std::move` 定义在 `<utility>` 头文件中。它不复制数据、不搬运内存，也不保证一定调用移动构造；它只是把表达式转换成可以匹配右值引用的形式。
-
-因此，下列过程要分成两步理解：
+`std::move` 内部并不搬运任何内存字节，它的本质仅仅是一个**无条件的强制类型转换**（等价于 `static_cast<T&&>(var)`）。
 
 ```cpp
 Frame target{std::move(source)};
 ```
 
-1. `std::move(source)` 表示允许从 `source` 转移资源。
-2. `Frame` 的移动构造函数决定具体如何转移。
+执行这行代码的实质分工：
+1. `std::move(source)`：仅仅负责在语法上将 `source` 标记为右值。
+2. `Frame` 类的移动构造函数：真正执行把 `source` 的内部缓冲区指针赋值给 `target`，并把 `source` 内部指针设为 `nullptr` 的操作。
 
-如果类型没有可用的移动构造函数，某些表达式仍可能退回复制。反过来，也不要在仍需保留原内容时随意写 `std::move`。
+> **陷阱警告**：如果一个类只写了复制构造函数，而没有声明移动构造函数，即使写了 `std::move(source)`，编译器也会因为找不到匹配的 `Frame(Frame&&)` 而**安全回退（Fallback）到复制构造函数**，导致仍然发生昂贵的全量深拷贝。
 
-移动后的对象处于**有效但内容未指定**的状态。这里“有效”表示可以安全析构，也可以重新赋值；“内容未指定”表示不能假定字符串一定为空、指针一定为 `nullptr`，除非该类型的接口明确作出这种保证。
+**移动后源对象处于什么状态？**
+标准规定：移动后的对象处于**“有效但未指定（valid but unspecified）”**的状态。
+- **有效**：它的析构函数能正常运行，不会 double free；你也可以对它重新赋值。
+- **未指定**：不能假设它内部还剩什么值（不能假定其指针必然为 null，也不能假定字符串长度必然为 0）。因此，被 `std::move` 掏空的对象，**后续逻辑绝不能再读取其原有数据**。
 
-例如，移动后的 `source` 可以安全析构；如果 `Frame` 提供赋值操作，也可以给它重新赋值后再使用。但在没有类型保证时，不应继续依赖 `source` 原来的帧名、缓冲区或句柄。
+---
 
 ## 2 函数和容器传递对象时的复制与移动
 
 ### 2.1 按值传递、左值传入与右值传入
 
-按值参数会在函数内部创建一个新的参数对象：
+当函数参数声明为按值传递时：
 
 ```cpp
 void process(Frame frame);
 ```
 
-调用方式会影响这个新对象怎样构造：
+调用时实际发生的事情由传入实参的值类别决定：
 
-- `process(source)`：`source` 是左值，通常复制构造参数。
-- `process(std::move(source))`：允许移动构造参数。
-- `process(Frame{})`：传入临时对象，编译器还可能直接在参数位置构造对象，省略复制或移动。
+```
+实参为左值：process(source)            ---> 触发 Frame 复制构造（深拷贝）
+实参为右值：process(std::move(source))  ---> 触发 Frame 移动构造（廉价转移）
+实参为临时值：process(Frame{})          ---> 触发移动构造，或被编译器直接省略构造（Copy Elision）
+```
 
-是否按值传递不能只看“复制贵不贵”，还要看函数是否需要取得一份自己的对象：
+**工程接口设计最佳实践**：
+- **纯只读观察**：统一使用 `const Frame&`，彻底规避任何对象构造与拷贝开销。
+- **原地修改外部对象**：使用非 const 引用 `Frame&`。
+- **函数内部必须接管/沉降一份独立对象**（例如需要存进内部成员或异步队列）：建议直接**按值传递**（`void sink(Frame f)`），内部再通过 `std::move(f)` 存入。这样调用者传入左值时自然拷贝，传入右值时自然移动，兼顾效率与接口简洁性。
 
-- 只在调用期间读取对象：通常使用 `const Frame&`，避免创建新对象。
-- 需要修改调用者的同一个对象：使用 `Frame&`。
-- 函数要保存或接管一份对象：按值传递常常更直接，再把参数移动到成员或容器中。
-
-编译器的复制省略（copy elision）可能让某些临时对象根本不发生复制或移动。因此，日志 Demo 用来观察指定调用路径，不应把某一次编译器输出误认为所有表达式都必然产生相同次数。
+---
 
 ### 2.2 容器插入和扩容产生的复制与移动
 
-`std::vector<Frame>` 表示“元素类型为 `Frame` 的动态数组”。它的元素存放在一段连续内存中，容量不够时会申请更大的内存，并把已有元素迁移过去。
+将自定义对象放入 `std::vector<Frame>` 时，涉及两处关键行为：
 
-本节会用到两个成员函数：
+1. **显式插入阶段**：
+   - `vec.push_back(frame)`：传入左值，调用复制构造。
+   - `vec.push_back(std::move(frame))`：传入右值，调用移动构造。
+2. **自动扩容阶段**：
+   当 `vector` 当前容量（`capacity`）不足时，它会在堆上重新开辟一块更大的连续内存区，并将旧内存中的所有历史元素迁移到新区域。
 
-- `reserve(2)`：预留至少能放 2 个元素的容量，但不创建元素。它用于避免接下来两次插入触发扩容，使日志只验证插入本身。
-- `push_back(value)`：在末尾构造一个元素。传入左值时复制，传入右值时优先移动。
+> **核心细节：`noexcept` 对容器扩容的影响**
+> 为了保证强异常安全（Strong Exception Safety），如果新元素在迁移过程中抛出异常，`std::vector` 必须保证旧数据不被损坏。
+> - 如果你的类的移动构造函数**没有标记 `noexcept`**，`std::vector` 在扩容迁移时会**放弃移动，退化为全量复制构造**！
+> - 因此，**移动构造函数必须显式标注 `noexcept`**：
+>   ```cpp
+>   Frame(Frame&& other) noexcept;
+>   ```
 
-若没有提前预留容量，扩容时已有元素也可能被移动或复制。标准容器通常更愿意移动一个移动构造标记为 `noexcept` 的类型，因为这表示移动不会抛出异常；若移动可能抛异常而复制可用，容器为了维持异常安全，可能选择复制。
+此外，在已知数据量的情况下，务必提前调用 `vec.reserve(N)` 预分配内存，从源头彻底消灭扩容引发的反复数据迁移。
 
-队列、任务池和异步流水线的判断原则相同：不要只看调用点写了 `std::move`，还要沿着函数参数、容器插入和任务保存过程检查，最终存入的是同一个共享对象、一份复制，还是被移动后的新对象。
+---
 
 ## 3 `cv::Mat`对象头、像素缓冲区与浅拷贝
 
 ### 3.1 `cv::Mat`对象头保存的信息
 
-OpenCV（Open Source Computer Vision Library）是常用的开源计算机视觉库。`cv::Mat` 是它在 C++ 中表示二维图像和多维数组的核心类型。
+在 OpenCV 中，`cv::Mat` 是一个典型的**两段式结构（Header + Data Buffer）**：
 
-理解 `cv::Mat` 时要把两部分分开：
+```
++------------------------------------------------------+
+| cv::Mat 对象头 (Header，栈上分配，约几十字节)           |
+| - 尺寸信息: rows, cols, dims                          |
+| - 数据布局: step (行步长), elemSize                  |
+| - 引用计数指针: int* refcount                        |
+| - 像素数据指针: uchar* data ------------------------+ |
++----------------------------------------------------+ |
+                                                       |
+                                                       v
++------------------------------------------------------+
+| 底层像素数据缓冲区 (Data Buffer，堆内存，通常数 MB)    |
+| [Pixel 0,0] [Pixel 0,1] ... [Pixel H-1, W-1]         |
++------------------------------------------------------+
+```
 
-1. **对象头**：尺寸、元素类型、行跨度、数据地址、引用计数相关信息等描述数据的字段。
-2. **像素缓冲区**：真正保存像素字节的内存。
+- **对象头（Header）**：体积小、固定字节数，仅保存矩阵维度、数据类型、步长以及指向实际数据和引用计数块的指针。
+- **像素数据缓冲区（Data Buffer）**：实际存储几百万甚至几千万图像像素的连续内存段，体积巨大。
 
-一个 `cv::Mat` 对象本身通常不等于整块图像数据。复制对象头很轻量，而复制数百万个像素可能很昂贵，所以 OpenCV 默认允许多个 `cv::Mat` 对象头共享同一块像素缓冲区。
+这种分离设计的目的非常明确：**让 `cv::Mat` 作为一个轻量级对象在代码间灵活传递，默认避免大内存拷贝。**
+
+---
 
 ### 3.2 浅拷贝、引用计数与像素共享
 
-下面这行代码是**浅拷贝（shallow copy）**：
+在 OpenCV 中，**默认的所有赋值操作符和拷贝构造函数，全部都是浅拷贝（Shallow Copy）**：
 
 ```cpp
-cv::Mat copied = original;
+cv::Mat mat_b = mat_a; // 浅拷贝！
 ```
 
-它创建新的 `cv::Mat` 对象头，但不复制像素缓冲区。`copied` 和 `original` 指向相同像素；通过其中一个对象修改像素，另一个对象读取到的内容也会变化。
+这行代码做了两件事：
+1. 拷贝了一份极轻量的 `mat_b` 对象头；
+2. 将 `mat_a` 对应的底层引用计数加 1。
 
-OpenCV 使用引用计数记录有多少个 `cv::Mat` 对象头正在共享由 OpenCV 管理的缓冲区。浅拷贝时计数增加；对象释放时计数减少；最后一个引用离开后，缓冲区才被释放。官方文档明确说明普通矩阵赋值是常数时间操作，只共享数据并增加引用计数，详见 [`cv::Mat` 类参考](https://docs.opencv.org/4.x/d3/d63/classcv_1_1Mat.html)。
+**底层像素缓冲区完全没有被复制！** `mat_a.data` 与 `mat_b.data` 指向完全一致的内存地址。因此：
+- 赋值速度极快（常数时间 $O(1)$，纯粹是指针复制与计数器自增）；
+- **修改 `mat_b` 的像素值，`mat_a` 看到的内容也会同步发生变化**。
 
-引用计数解决的是“缓冲区何时释放”，不是“多个线程能否同时修改像素”。它不会自动复制图像，也不会给像素访问加锁。
+当某个 `cv::Mat` 局部变量离开作用域被析构时，它只会让引用计数减 1。只有当引用计数降至 0 时，底层巨大的像素缓冲区才会被真正 `free` 释放。
+
+---
 
 ### 3.3 共享像素缓冲区的生命周期与并发修改风险
 
-局部 `cv::Mat` 对象离开作用域时，不代表共享像素一定立即释放。只要另一个 `cv::Mat` 对象头仍持有这块由 OpenCV 管理的缓冲区，引用计数就能延长它的生命周期。
+这种引用计数机制虽好，但在工程实践中隐藏着两大陷阱：
 
-但要区分两种情况：
+#### 陷阱一：外部内存封装失效（Dangling Pointer）
+如果你是用相机驱动暴露的裸指针直接包装出的 `cv::Mat`：
+```cpp
+cv::Mat frame(h, w, CV_8UC3, camera_raw_buffer);
+```
+此时该 `Mat` 的内部引用计数指针为 `nullptr`，**OpenCV 并不负责管理这块外部内存**。如果驱动层在下一帧覆盖或释放了 `camera_raw_buffer`，你手中持有的 `cv::Mat` 就会立即沦为野指针或读到脏数据！
 
-- 由 `cv::Mat` 自己分配并管理的缓冲区：浅拷贝通常可以依靠引用计数维持生命周期。
-- 用外部地址构造的 `cv::Mat`：对象头可能只借用这块内存，外部所有者仍负责保证地址有效。外部缓冲区先释放或被采集设备重新使用后，`cv::Mat` 仍可能指向失效或已改变的数据。
+#### 陷阱二：多线程数据竞争（Data Race）
+引用计数的增减是原子操作（线程安全），但**像素数据的读写完全没有加锁**。
+如果线程 A 正在往 `mat_a` 里写数据，而线程 B 通过浅拷贝持有的 `mat_b` 并发读取，会直接造成数据竞争（Data Race），导致画面撕裂或算法推理出错误结果。
 
-异步代码还有数据竞争风险。生产线程和消费线程共享同一缓冲区时，只要至少一方写像素，又没有正确同步，程序就可能读到撕裂数据或形成 C++ 数据竞争。引用计数是生命周期机制，不是线程同步机制。
+---
 
 ## 4 `cv::Mat`深拷贝、ROI与异步传递
 
 ### 4.1 `clone()`与`copyTo()`的深拷贝语义
 
-需要独立像素缓冲区时，应显式执行**深拷贝（deep copy）**。
+当业务需要修改图像，且不能影响原图时，必须显式触发**深拷贝（Deep Copy）**。
 
-`clone()` 的基本语法是：
-
+#### 1. `clone()`
 ```cpp
-cv::Mat destination = source.clone();
+cv::Mat independent = original.clone();
 ```
+- **语义**：完全开辟一块与原图大小、类型一模一样的新内存，并将所有像素字节复制过去。
+- **适用场景**：快速创建一份独立的新图，写法紧凑直观。
 
-- 功能：创建尺寸、类型和像素内容相同的新矩阵。
-- 返回值：一个拥有独立像素数据的 `cv::Mat`。
-- 适用情况：需要直接得到一个新对象时，写法最简洁。
-
-`copyTo()` 的基本语法是：
-
+#### 2. `copyTo()`
 ```cpp
-source.copyTo(destination);
+original.copyTo(destination);
 ```
+- **语义**：将像素数据复制到预先存在的 `destination` 中。如果 `destination` 已经拥有相同的尺寸和类型，`copyTo()` 会**复用现有内存而不重新申请堆内存**；只有当尺寸或类型不符时才会重新分配。
+- **适用场景**：在主循环中反复复用某块预分配好的固定缓冲区，避免高频触发 `malloc/free` 产生内存碎片；或者需要使用 Mask 掩码进行条件拷贝。
 
-- 功能：把源矩阵像素复制到目标矩阵。
-- 输出：通过参数 `destination` 接收结果；尺寸或类型不匹配时通常会重新分配。
-- 适用情况：目标对象已经存在，或者需要使用带掩码的重载时。
-
-两者都能复制像素，但接口形式不同。官方 [`cv::Mat` 文档](https://docs.opencv.org/4.x/d3/d63/classcv_1_1Mat.html) 将 `clone()` 定义为复制数组及其底层数据，并说明 `copyTo()` 会把矩阵数据复制到目标矩阵。
-
-深拷贝会消耗与有效图像数据规模相关的时间和内存带宽。不要因为“异步”两个字就无条件复制，也不要为省一次复制而接受不清楚的数据所有权。
+---
 
 ### 4.2 ROI与原图共享像素数据
 
-感兴趣区域（Region of Interest，ROI）表示图像中需要处理的一个矩形子区域。常用写法是：
+在目标检测或裁剪分支中，常使用矩形区域（Region of Interest，ROI）截取子图：
 
 ```cpp
-cv::Rect area(x, y, width, height);
-cv::Mat roi = image(area);
+cv::Rect roi_box(x, y, width, height);
+cv::Mat crop = image(roi_box); // 截取 ROI
 ```
 
-`cv::Rect` 的四个构造参数依次表示：
+> **核心本质**：
+> **`image(roi_box)` 同样是浅拷贝！**
+> 它不会产生任何新的像素拷贝，仅仅是创建了一个新的对象头：
+> - 它的 `crop.data` 直接指向原图中 `(x, y)` 对应的那个像素地址；
+> - 它的 `crop.step` 继承原图的整行跨度（详见第 5 节）；
+> - **修改 `crop` 的像素，原图 `image` 会被直接修改！**
 
-- `x`：矩形左上角在原图中的列坐标。
-- `y`：矩形左上角在原图中的行坐标。
-- `width`：区域宽度，单位是像素列。
-- `height`：区域高度，单位是像素行。
-
-`image(area)` 不会自动复制矩形中的像素，只创建描述该区域的新对象头。因此，修改 `roi` 会修改原图对应位置；原图缓冲区未失效前，ROI 才能安全访问。若需要独立保存区域，应写：
-
+如果后续处理（如送入神经网络预处理做归一化、填充）会原地改写 `crop` 的像素，必须主动做一次深拷贝：
 ```cpp
-cv::Mat independent_roi = image(area).clone();
+cv::Mat safe_crop = image(roi_box).clone();
 ```
 
-OpenCV 官方对 ROI 构造函数的说明同样指出：它只创建指向原数据或子数组的对象头，并增加引用计数；若要独立副本，应使用 `clone()`，见 [`cv::Mat` ROI 构造说明](https://docs.opencv.org/4.x/d3/d63/classcv_1_1Mat.html)。
+---
 
 ### 4.3 异步传递图像时的浅拷贝与深拷贝选择
 
-把 `cv::Mat` 放进异步队列前，可以按下面的顺序判断：
+在嵌入式多线程管线（如：采集线程 -> 推理线程 -> 渲染/推流线程）中，如何安全高效地在队列中传递 `cv::Mat`？
 
-1. **缓冲区由谁拥有？** 若只是包装相机、解码器或内存池提供的外部地址，先确认外部缓冲区何时被归还或复用。
-2. **生产者入队后还会写吗？** 如果会，浅拷贝会让消费者看到变化。
-3. **消费者是否只读？** 多个消费者只读同一份稳定数据时，浅拷贝通常可以减少内存带宽。
-4. **队列中的图像要保存多久？** 保存时间超过外部缓冲区有效期时，需要复制到自己管理的内存，或把外部所有权一同安全传递。
-5. **是否允许消费者看到同一时刻的固定快照？** 若需要固定快照，在生产者交付前完成 `clone()` 或等价深拷贝。
+```
+                        [决策流程树]
+                             |
+             底层缓冲区是否由 OpenCV 自身管理？
+                    /                 \
+                 [是]                 [否 (相机裸指针/DMA映射)]
+                  |                     |
+         入队后生产端是否立即复用/改写？     必须立即深拷贝入队 (.clone())
+               /          \
+            [是]          [否]
+             |              |
+    必须入队前深拷贝    入队后所有消费线程是否全为只读？
+                         /          \
+                      [是]          [否]
+                       |              |
+                  安全使用浅拷贝   写线程必须持有独立 .clone() 副本
+                  (零拷贝高吞吐)
+```
 
-常见选择如下：
+**工程准则总结**：
+1. **只读广播场景**：原图由 OpenCV 申请，各后级线程只做特征提取或检测显示，绝不修改图像数据 -> **直接浅拷贝入队**，享受零拷贝性能红利。
+2. **流水线覆写场景**：底层是单缓冲区相机采集，下一帧到来时驱动会直接覆盖原地址 -> **必须在回调里第一时间 `.clone()` 出独立副本**，才能安全抛给后续异步队列。
 
-- OpenCV 自管缓冲区，入队后所有参与者只读：可以浅拷贝 `cv::Mat` 对象头。
-- 生产者会复用或覆盖缓冲区：入队前深拷贝，或者设计明确的缓冲池所有权转移。
-- 消费者需要修改但不能影响其他模块：消费者先 `clone()`，再修改自己的副本。
-- 高帧率系统复制成本过高：不要偷偷共享可写内存，应使用缓冲池、只读约定和明确的归还时机重新设计数据流。
+---
 
 ## 5 `cv::Mat`的`step`、连续性与内存地址含义
 
 ### 5.1 `rows`、`cols`、`elemSize()`与`step`
 
-对普通二维图像，可以这样理解几个常用成员：
+为了精确操作内存指针，必须透彻理解描述图像维度的四个物理量：
 
-- `rows`：图像行数，即高度。
-- `cols`：图像列数，即宽度。
-- `elemSize()`：一个像素元素占用的总字节数，包含全部通道。例如 `CV_8UC3` 的结果通常是 3。
-- `step`：相邻两行起始地址之间相差的字节数，也叫行跨度或行步长。
+- `rows`：图像的高度（行数 $H$）。
+- `cols`：图像的宽度（列数 $W$）。
+- `elemSize()`：单个像素占用的**字节总数**（包含所有通道）。例如 `CV_8UC3` 占用 $3 \times 1 = 3$ 字节；`CV_32FC1` 占用 $1 \times 4 = 4$ 字节。
+- `step`：**相邻两行的首地址之差（单位：字节）**，也叫行跨度（Row Stride / Pitch）。
 
-一行真正参与当前矩阵运算的像素字节数通常是：
+一行中实际有效像素的总字节数为：
+$$\text{active\_bytes} = \text{cols} \times \text{elemSize()}$$
 
-```text
-cols * elemSize()
-```
+在内存中定位第 `r` 行、第 `c` 列像素的绝对地址公式为：
+$$\text{pixel\_ptr} = \text{data} + r \times \text{step} + c \times \text{elemSize()}$$
 
-而下一行的开始地址是：
+> **注意**：
+> `step` 的单位永远是**字节（Bytes）**，不是像素个数！
+> 在许多系统为了加速内存对齐访问（如 16 字节或 64 字节对齐），或者在 ROI 截图中，`step` 往往**大于** $\text{cols} \times \text{elemSize()}$。
 
-```text
-data + row * step
-```
-
-因此，`step` 的单位是**字节**，不是虚拟宽度，也不是虚拟高度。由于行尾对齐填充或 ROI 仍沿用原图行跨度，`step` 可能大于 `cols * elemSize()`。官方文档也把 `step` 定义为每一行占用的字节数，并明确它包含行尾填充，见 [`cv::Mat` 构造参数说明](https://docs.opencv.org/4.x/d3/d63/classcv_1_1Mat.html)。
+---
 
 ### 5.2 `isContinuous()`与逐行访问
 
-`isContinuous()` 返回布尔值，用于判断当前矩阵相邻行之间是否没有空隙。对于二维矩阵，可用下面的关系帮助理解：
+`isContinuous()` 返回一个布尔值，用于指示：**这块矩阵的所有行在物理/虚拟内存中是否紧挨着，中间没有任何空隙填充。**
 
-```text
-rows == 1，或者 step == cols * elemSize()
+判定准则：
+$$\text{isContinuous}() = \text{true} \iff (\text{rows} == 1) \lor (\text{step} == \text{cols} \times \text{elemSize()})$$
+
+```
+连续内存 (isContinuous == true):
+[--- Row 0 ---][--- Row 1 ---][--- Row 2 ---]   (一行紧接一行，无填充)
+
+非连续内存 (isContinuous == false):
+[--- Row 0 ---| Pad ][--- Row 1 ---| Pad ]      (行尾存在对齐填充，或原图 ROI 截取)
 ```
 
-若返回 `true`，可以在类型和边界正确的前提下，把全部像素看作一段连续元素处理。若返回 `false`，就必须逐行取得行首地址，并只访问每行有效的像素部分，不能直接假定 `rows * cols * elemSize()` 个字节紧挨在一起。
+**对编程的影响**：
+- **连续（`isContinuous() == true`）**：可以将整张图视为一个超长的一维数组 `data`，通过一个单重循环 `for (int i = 0; i < rows * cols; ++i)` 进行一次性连续内存读写或 DMA 拷贝，缓存命中率极高。
+- **不连续（`isContinuous() == false`）**：**严禁用单重指针一次性越界线性遍历！** 否则会把行尾无效的填充字节读入，或者错位读到原图其他区域。必须使用嵌套循环逐行寻址：
+  ```cpp
+  for (int r = 0; r < mat.rows; ++r) {
+      uchar* row_ptr = mat.ptr<uchar>(r); // 基于 step 准确计算每行的起始地址
+      for (int c = 0; c < mat.cols; ++c) {
+          // 安全处理第 c 列像素
+      }
+  }
+  ```
 
-完整原图通常连续，但从原图中截取的窄 ROI 往往不连续：ROI 每行只使用中间几列，下一行的起点仍按原图的 `step` 前进。OpenCV 官方对 [`isContinuous()`](https://docs.opencv.org/4.x/d3/d63/classcv_1_1Mat.html) 的说明也是“行尾是否存在间隙”，并建议根据连续性选择单段或逐行处理。
+---
 
 ### 5.3 虚拟地址连续与物理内存连续的区别
 
-`cv::Mat::isContinuous()` 讨论的是程序能够看到的**虚拟地址布局**：当前矩阵的上一行有效数据结束后，下一行是否紧接着开始。
+在嵌入式 Linux 系统中，必须严格区分 CPU 视角的虚拟地址与外设（NPU/DSP/DMA）视角的物理地址：
 
-它不能证明底层物理内存页连续。现代操作系统通过页表把连续的虚拟地址映射到可能分散的物理页。普通 CPU 代码访问 `cv::Mat` 时通常只需要关心虚拟地址和行跨度；涉及直接内存访问（Direct Memory Access，DMA）、相机驱动或硬件加速器时，物理连续性、缓存一致性和设备地址需要由对应的驱动或内存分配接口保证。
+- `cv::Mat::isContinuous() == true`：**仅代表在操作系统分配的进程虚拟内存空间中，行与行之间是连续的。**
+- 在底层物理内存中，虚拟内存是由 MMU 通过页表（以 4KB 为一页）映射过去的。哪怕虚拟内存连续，这几兆字节的数据在物理 RAM 上大概率也是被打散在离散物理页里的！
 
-所以不能做出下面的推断：
-
-```text
-mat.isContinuous() == true
-    不等于
-这块内存可以直接当作物理连续 DMA 缓冲区
 ```
+mat.isContinuous() == true  =/=>  底层物理内存连续！
+```
+
+**工程警示**：如果你的边缘设备需要将 `cv::Mat` 直接送给硬件 NPU 做零拷贝推理，**绝对不能直接把 `mat.data` 当成物理连续地址传给驱动的 DMA 控制器**。必须调用专用的连续物理内存分配接口（如 Linux CMA、V4L2 驱动缓冲区、ION 或外设专用的 `dma_buf`），再用 `cv::Mat` 包装这块物理连续内存。
+
+---
 
 ## 6 拷贝、移动与`cv::Mat`内存语义验证Demo
 
 ### 6.1 `Frame`复制与移动次数验证
 
-这个小 Demo 只回答一个问题：同一个 `Frame` 以左值和右值放进 `std::vector` 时，分别调用复制构造还是移动构造。
-
-代码使用的知识已经在前文说明：
-
-- `std::vector<Frame>` 是元素类型为 `Frame` 的动态数组。
-- `reserve(2)` 只预留两个元素的容量，用于排除扩容迁移的干扰。
-- `push_back(source)` 接收左值，复制一个元素。
-- `push_back(std::move(source))` 接收右值，移动一个元素。
-- `Frame(Frame&& other) noexcept` 是不会抛异常的移动构造函数。
-- 构造函数冒号后的成员初始化列表，会在进入函数体前直接初始化成员。
-
-依赖：C++17 标准库，不需要 OpenCV。输入：程序内部创建的一个 `Frame`。输出：构造、复制、移动和析构日志。
+验证目标：
+通过日志直观观察：对象作为左值和右值插入 `std::vector` 时，究竟走的是复制构造还是移动构造。
 
 ```cpp
 // frame_copy_move_demo.cpp
@@ -309,22 +363,21 @@ mat.isContinuous() == true
 class Frame {
 public:
     Frame() : name_("frame-0") {
-        std::cout << "construct Frame\n";
+        std::cout << "[构造] 默认构造 Frame\n";
     }
 
-    // 复制构造：为新对象复制一份字符串内容，源对象保持不变。
+    // 复制构造：深拷贝内部资源，源对象完全保留
     Frame(const Frame& other) : name_(other.name_) {
-        std::cout << "copy Frame\n";
+        std::cout << "[拷贝] 复制构造 Frame (耗时深拷贝)\n";
     }
 
-    // 移动构造：把字符串内部资源交给新对象，避免复制字符串内容。
-    // noexcept 告诉容器，这个移动过程不会抛出异常。
+    // 移动构造：掏空源对象内部资源，转给自身。标记 noexcept 保障异常安全
     Frame(Frame&& other) noexcept : name_(std::move(other.name_)) {
-        std::cout << "move Frame\n";
+        std::cout << "[移动] 移动构造 Frame (廉价指针转移)\n";
     }
 
     ~Frame() {
-        std::cout << "destroy Frame\n";
+        std::cout << "[析构] 析构 Frame\n";
     }
 
 private:
@@ -333,181 +386,178 @@ private:
 
 int main() {
     std::vector<Frame> frames;
-
-    // 预留两个元素的位置，避免第二次插入时扩容并迁移第一个元素。
+    // 关键：预留空间，规避 vector 扩容带来的历史元素搬运干扰
     frames.reserve(2);
 
     Frame source;
 
-    // source 是左值：vector 内的新元素通过复制构造产生。
-    frames.push_back(source);
+    std::cout << "--- 1. 传入左值 source ---\n";
+    frames.push_back(source); // source 后续还要用 -> 必须复制
 
-    // 明确表示以后不再依赖 source 的原内容：新元素通过移动构造产生。
-    frames.push_back(std::move(source));
+    std::cout << "--- 2. 传入右值 std::move(source) ---\n";
+    frames.push_back(std::move(source)); // 明确不再需要 source -> 触发移动
 
-    std::cout << "stored frames: " << frames.size() << '\n';
+    std::cout << "--- 3. 退出作用域析构 ---\n";
 }
 ```
 
-Linux 编译和运行：
-
+编译与运行：
 ```bash
-g++ -std=c++17 -Wall -Wextra -pedantic frame_copy_move_demo.cpp -o frame_copy_move_demo
+g++ -std=c++17 -Wall -Wextra frame_copy_move_demo.cpp -o frame_copy_move_demo
 ./frame_copy_move_demo
 ```
 
-关键输出应包含：
-
+终端输出与行为分析：
 ```text
-construct Frame
-copy Frame
-move Frame
-stored frames: 2
+[构造] 默认构造 Frame
+--- 1. 传入左值 source ---
+[拷贝] 复制构造 Frame (耗时深拷贝)
+--- 2. 传入右值 std::move(source) ---
+[移动] 移动构造 Frame (廉价指针转移)
+--- 3. 退出作用域析构 ---
+[析构] 析构 Frame
+[析构] 析构 Frame
+[析构] 析构 Frame
 ```
+可以看到，在预留空间后，左值明确触发拷贝，而 `std::move` 精确触发移动，没有一丝多余开销。
 
-析构日志会出现三次，因为最终有 `source` 和容器中的两个元素。验收时重点检查复制和移动各出现一次。然后可以删除 `reserve(2)` 再运行，观察容器扩容是否使日志增加；这只是补充验证，不改变 Demo 的主流程。
+---
 
 ### 6.2 `cv::Mat`浅拷贝与`clone()`隔离验证
 
-这个小 Demo 只验证：普通赋值共享像素，而 `clone()` 产生独立像素。
-
-代码中新语法和 API 的含义如下：
-
-- `cv::Mat(2, 2, CV_8UC1, cv::Scalar(10))`：创建 2 行、2 列的矩阵，并把元素初始化为 10。
-- `CV_8UC1`：每个通道是 8 位无符号整数（8-bit unsigned），通道数为 1。
-- `at<unsigned char>(row, col)`：按“行、列”访问一个单通道 8 位无符号元素；尖括号中的 `unsigned char` 必须与矩阵元素类型匹配。
-- `static_cast<int>(value)`：把 8 位整数转成普通整数再输出，避免 `std::cout` 把它当字符显示。
-- `clone()`：复制矩阵对象描述和底层像素，返回独立矩阵。
-
-依赖：OpenCV 的 Core 模块。输入：程序生成的 2×2 单通道矩阵。输出：修改前后的指定像素值。
+验证目标：
+通过修改像素，验证默认赋值操作的内存共享行为，以及 `clone()` 带来的内存完全隔离。
 
 ```cpp
 // mat_copy_demo.cpp
 #include <opencv2/core.hpp>
-
 #include <iostream>
 
 int main() {
-    // 创建 2×2 单通道图像，四个像素的初始值都是 10。
+    // 1. 创建 2x2 单通道图像，每个像素初始值均为 10
     cv::Mat original(2, 2, CV_8UC1, cv::Scalar(10));
 
-    // 浅拷贝只复制 Mat 对象头，shallow 与 original 共享像素缓冲区。
+    // 2. 浅拷贝：仅复制头信息，共享底层像素
     cv::Mat shallow = original;
 
-    // clone() 复制像素，deep 拥有独立缓冲区。
+    // 3. 深拷贝：完整申请新内存并复制像素
     cv::Mat deep = original.clone();
 
-    // 通过浅拷贝修改左上角像素，original 的同一位置也会变成 99。
+    // 4. 通过浅拷贝修改 (0, 0) 位置的像素
     shallow.at<unsigned char>(0, 0) = 99;
 
-    std::cout << "original(0,0): "
-              << static_cast<int>(original.at<unsigned char>(0, 0)) << '\n';
-    std::cout << "shallow(0,0): "
-              << static_cast<int>(shallow.at<unsigned char>(0, 0)) << '\n';
-    std::cout << "deep(0,0): "
-              << static_cast<int>(deep.at<unsigned char>(0, 0)) << '\n';
+    std::cout << "=== 修改 shallow(0, 0) 为 99 后 ===\n";
+    std::cout << "original(0, 0): " << static_cast<int>(original.at<unsigned char>(0, 0)) << " (被连带修改)\n";
+    std::cout << "shallow(0, 0) : " << static_cast<int>(shallow.at<unsigned char>(0, 0))  << " (当前值)\n";
+    std::cout << "deep(0, 0)    : " << static_cast<int>(deep.at<unsigned char>(0, 0))     << " (完全隔离，仍为原值)\n";
 
-    // 修改 deep 的另一个像素，不会影响 original。
+    // 5. 修改 deep 独立副本的 (0, 1) 位置
     deep.at<unsigned char>(0, 1) = 77;
-    std::cout << "original(0,1): "
-              << static_cast<int>(original.at<unsigned char>(0, 1)) << '\n';
-    std::cout << "deep(0,1): "
-              << static_cast<int>(deep.at<unsigned char>(0, 1)) << '\n';
+    std::cout << "\n=== 修改 deep(0, 1) 为 77 后 ===\n";
+    std::cout << "original(0, 1): " << static_cast<int>(original.at<unsigned char>(0, 1)) << " (不受影响)\n";
+    std::cout << "deep(0, 1)    : " << static_cast<int>(deep.at<unsigned char>(0, 1))     << " (独立修改)\n";
 }
 ```
 
-Ubuntu/Debian 安装依赖、编译和运行：
-
+编译与运行：
 ```bash
-sudo apt install libopencv-dev pkg-config
-g++ -std=c++17 -Wall -Wextra -pedantic mat_copy_demo.cpp \
-    $(pkg-config --cflags --libs opencv4) -o mat_copy_demo
+g++ -std=c++17 mat_copy_demo.cpp $(pkg-config --cflags --libs opencv4) -o mat_copy_demo
 ./mat_copy_demo
 ```
 
-`pkg-config --cflags --libs opencv4` 会输出 OpenCV 头文件目录和链接参数，再由 shell 放入 `g++` 命令。
-
-预期输出：
-
+终端输出：
 ```text
-original(0,0): 99
-shallow(0,0): 99
-deep(0,0): 10
-original(0,1): 10
-deep(0,1): 77
-```
+=== 修改 shallow(0, 0) 为 99 后 ===
+original(0, 0): 99 (被连带修改)
+shallow(0, 0) : 99 (当前值)
+deep(0, 0)    : 10 (完全隔离，仍为原值)
 
-前三行证明浅拷贝共享、深拷贝隔离；后两行从反方向证明修改深拷贝不会影响原图。
+=== 修改 deep(0, 1) 为 77 后 ===
+original(0, 1): 10 (不受影响)
+deep(0, 1)    : 77 (独立修改)
+```
+结果清晰表明：`shallow` 与 `original` 本质上在操作同一块内存，而 `deep` 拥有独立的生命周期和数据隔离。
+
+---
 
 ### 6.3 ROI、`step`与`isContinuous()`验证
 
-这个小 Demo 只验证：从连续原图中截取一个较窄的 ROI 后，ROI 仍沿用原图行跨度，因此可能不连续。
-
-代码所用接口已在第 4.2 和第 5 节解释。补充两点：
-
-- `CV_8UC3` 表示每个通道为 8 位无符号整数、每个像素有 3 个通道。
-- `isContinuous()` 输出到 `std::cout` 时，默认用 `1` 表示 `true`，用 `0` 表示 `false`。
-
-依赖：OpenCV 的 Core 模块。输入：程序生成的 4×6 三通道矩阵和固定 ROI。输出：原图与 ROI 的尺寸、每像素字节数、有效行字节数、`step` 和连续性。
+验证目标：
+截取局部 ROI 图像后，观察其行宽有效字节、`step` 行步长与连续性标志位的变化。
 
 ```cpp
 // mat_roi_step_demo.cpp
 #include <opencv2/core.hpp>
-
 #include <iostream>
 
 int main() {
-    // 4 行、6 列、3 通道；完整矩阵由 OpenCV 分配，通常是连续的。
+    // 1. 创建 4 行 6 列的三通道矩阵 (CV_8UC3: 每个像素 3 字节)
     cv::Mat image(4, 6, CV_8UC3, cv::Scalar(0, 0, 0));
 
-    // 从坐标 (1, 1) 开始，截取宽 3、高 2 的矩形区域。
+    // 2. 从 (x=1, y=1) 开始截取 宽=3, 高=2 的 ROI 区域
     cv::Rect area(1, 1, 3, 2);
     cv::Mat roi = image(area);
 
-    std::cout << "image rows: " << image.rows
-              << ", cols: " << image.cols
-              << ", elemSize: " << image.elemSize()
-              << ", active row bytes: " << image.cols * image.elemSize()
-              << ", step: " << image.step
-              << ", continuous: " << image.isContinuous() << '\n';
+    std::cout << "--- 原图 image (全图连续) ---\n";
+    std::cout << "尺寸: " << image.rows << "行 x " << image.cols << "列\n";
+    std::cout << "每像素大小 (elemSize): " << image.elemSize() << " 字节\n";
+    std::cout << "行有效字节 (cols * elemSize): " << image.cols * image.elemSize() << " 字节\n";
+    std::cout << "实际行步长 (step): " << image.step << " 字节\n";
+    std::cout << "是否连续 (isContinuous): " << (image.isContinuous() ? "true" : "false") << "\n\n";
 
-    // ROI 每行只有 3×3=9 个有效字节，但下一行仍按原图的 step 前进。
-    std::cout << "roi rows: " << roi.rows
-              << ", cols: " << roi.cols
-              << ", elemSize: " << roi.elemSize()
-              << ", active row bytes: " << roi.cols * roi.elemSize()
-              << ", step: " << roi.step
-              << ", continuous: " << roi.isContinuous() << '\n';
+    std::cout << "--- 截取 ROI (沿用原图 step，内存不连续) ---\n";
+    std::cout << "尺寸: " << roi.rows << "行 x " << roi.cols << "列\n";
+    std::cout << "每像素大小 (elemSize): " << roi.elemSize() << " 字节\n";
+    std::cout << "行有效字节 (cols * elemSize): " << roi.cols * roi.elemSize() << " 字节\n";
+    std::cout << "实际行步长 (step): " << roi.step << " 字节 (沿用原图步长！)\n";
+    std::cout << "是否连续 (isContinuous): " << (roi.isContinuous() ? "true" : "false") << " (出现断层)\n";
 }
 ```
 
-编译方式与 6.2 相同，只需替换源文件名：
-
+编译与运行：
 ```bash
-g++ -std=c++17 -Wall -Wextra -pedantic mat_roi_step_demo.cpp \
-    $(pkg-config --cflags --libs opencv4) -o mat_roi_step_demo
+g++ -std=c++17 mat_roi_step_demo.cpp $(pkg-config --cflags --libs opencv4) -o mat_roi_step_demo
 ./mat_roi_step_demo
 ```
 
-在常见 OpenCV 实现中，关键结果应接近：
-
+终端输出：
 ```text
-image rows: 4, cols: 6, elemSize: 3, active row bytes: 18, step: 18, continuous: 1
-roi rows: 2, cols: 3, elemSize: 3, active row bytes: 9, step: 18, continuous: 0
+--- 原图 image (全图连续) ---
+尺寸: 4行 x 6列
+每像素大小 (elemSize): 3 字节
+行有效字节 (cols * elemSize): 18 字节
+实际行步长 (step): 18 字节
+是否连续 (isContinuous): true
+
+--- 截取 ROI (沿用原图 step，内存不连续) ---
+尺寸: 2行 x 3列
+每像素大小 (elemSize): 3 字节
+行有效字节 (cols * elemSize): 9 字节
+实际行步长 (step): 18 字节 (沿用原图步长！)
+是否连续 (isContinuous): false (出现断层)
 ```
 
-这里 ROI 的 `cols` 是 3，不能因为 `step` 是 18 就把 ROI 宽度理解成 6。`step` 只说明从当前行起点前进多少字节才能到下一行起点。
+**关键数据解读**：
+ROI 的宽度是 3，每行有效数据只有 $3 \times 3 = 9$ 字节；但是为了跳到 ROI 下一行的第一个像素，指针必须在原图内存中前进一整行的宽度（即 18 字节）。
+因为 $\text{step} (18) \neq 9$，行与行之间存在 9 字节的原图数据断层，所以 `roi.isContinuous()` 必然判定为 `false`。
+
+---
 
 ### 6.4 Demo结果与异步图像传递验收
 
-完成三个 Demo 后，应能独立回答并验证以下问题：
+完成上述三个实验后，可以用以下 7 个核心问题快速自测，检验是否彻底吃透这部分内容：
 
-1. `push_back(source)` 为什么复制，而 `push_back(std::move(source))` 为什么可以移动？
-2. `std::move` 自己是否移动了对象内部数据？
-3. `cv::Mat copied = original` 是否复制像素？修改 `copied` 为什么影响 `original`？
-4. `clone()` 为什么能隔离修改？它付出的主要成本是什么？
-5. ROI 的 `step` 为什么可能大于 `cols * elemSize()`？
-6. `isContinuous()` 为真能否证明物理内存连续？
-7. 相机缓冲区会在下一帧被复用时，异步队列里只放一个浅拷贝 `cv::Mat` 是否安全？
-
-第 7 个问题的直接答案是：通常不安全。浅拷贝只延长 OpenCV 自管缓冲区的引用关系，不能阻止外部相机缓冲区被驱动或采集模块复用。应在缓冲区归还前完成处理、显式深拷贝，或者把缓冲区所有权和归还时机一起纳入队列协议。
+1. **`push_back(source)` 与 `push_back(std::move(source))` 的本质区别是什么？**
+   - 前者实参是左值，调用复制构造执行深拷贝；后者将实参转为右值，调用移动构造，仅做指针接管。
+2. **`std::move` 自身会搬运内存数据吗？**
+   - 不会。它只是一次编译期类型强转，把表达式转为右值引用。真正的资源转移发生在接收方的移动构造函数中。
+3. **`cv::Mat b = a;` 会复制底层像素吗？为什么改 `b` 会连带改 `a`？**
+   - 不会复制像素。它只拷贝对象头并增加引用计数，二者的 `data` 指针指向同一块堆内存。
+4. **`clone()` 解决了什么问题？代价是什么？**
+   - 实现了深拷贝，在内存中分配独立副本，彻底隔离数据修改。代价是需要重新申请大块内存并逐字节拷贝，消耗 CPU 算力与内存带宽。
+5. **为什么截取的 ROI 其 `step` 通常大于 `cols * elemSize()`？**
+   - 因为 ROI 没有开辟新内存，它的下一行像素在物理布局上依然隔着原图一整行的距离，必须沿用原图的行步长才能唯一定位。
+6. **`isContinuous() == true` 能否说明可以把这块内存直接交给外设做 DMA 硬件搬运？**
+   - 不能。它仅能证明虚拟地址连续，不能证明底层物理页连续。外设 DMA 搬运通常需要连续物理内存（如 CMA 保证）。
+7. **相机驱动在下一帧会复用当前内存时，直接将浅拷贝的 `cv::Mat` 塞进异步处理队列是否安全？**
+   - **绝对不安全**。OpenCV 的引用计数只能管住自己分配的内存，管不住外部硬件驱动。下一帧数据到达时，底层内存会被硬件静默覆盖，导致处理线程读到撕裂或错误的数据。必须在入队前显式 `.clone()` 制作独立快照，或者设计严格的双缓冲/缓冲池借还机制。

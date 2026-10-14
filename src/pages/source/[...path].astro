@@ -1,0 +1,52 @@
+---
+import fs from "node:fs";
+import path from "node:path";
+import { getCollection } from "astro:content";
+import { collectSourceFiles } from "../../utils/source-files.mjs";
+
+export async function getStaticPaths() {
+	const root = process.cwd();
+	const posts = await getCollection("posts", ({ data }) =>
+		import.meta.env.PROD ? !data.draft : true,
+	);
+	const files = new Map();
+	for (const post of posts) {
+		const markdownFile = path.join(root, "src/content/posts", post.id);
+		for (const source of collectSourceFiles(post.body, markdownFile, root)) {
+			files.set(source.key, source);
+		}
+	}
+	return [...files.values()].map(source => ({
+		params: { path: source.key },
+		props: { name: source.name, source: fs.readFileSync(source.file, "utf8") },
+	}));
+}
+
+const { name, source } = Astro.props;
+---
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="robots" content="noindex" />
+		<title>{name} · 源代码</title>
+	</head>
+	<body>
+		<header><h1>{name}</h1></header>
+		<main><pre><code>{source}</code></pre></main>
+	</body>
+</html>
+
+<style>
+	:root { color-scheme: light dark; }
+	body { margin: 0; background: #f8fafc; color: #172033; }
+	header { padding: 1rem 1.5rem; border-bottom: 1px solid #cbd5e1; }
+	h1 { margin: 0; font: 600 1rem system-ui, sans-serif; overflow-wrap: anywhere; }
+	pre { margin: 0; padding: 1.5rem; overflow-x: auto; tab-size: 4; }
+	code { font: 14px/1.65 ui-monospace, "Cascadia Code", Consolas, monospace; white-space: pre; }
+	@media (prefers-color-scheme: dark) {
+		body { background: #111827; color: #e5e7eb; }
+		header { border-color: #374151; }
+	}
+</style>

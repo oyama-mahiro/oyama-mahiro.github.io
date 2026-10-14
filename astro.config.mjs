@@ -24,6 +24,7 @@ import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
+import { rehypeSourceLinks } from "./src/plugins/rehype-source-links.mjs";
 
 function rehypeLazyImages() {
 	return tree => {
@@ -142,6 +143,7 @@ export default defineConfig({
 			parseDirectiveNode,
 		],
 		rehypePlugins: [
+			rehypeSourceLinks,
 			[rehypeKatex, { strict: "ignore" }],
 			rehypeLazyImages,
 			rehypeSlug,
