@@ -19,6 +19,15 @@ import { defaultFavicons } from "../constants/icon";
 import type { Favicon } from "../types/config";
 import { url } from "../utils/url-utils";
 import "katex/dist/katex.css";
+// Load site-wide styles explicitly; image discovery must not own CSS imports.
+import "../styles/variables.styl";
+import "../styles/main.css";
+import "../styles/markdown.css";
+import "../styles/markdown-extend.styl";
+import "../styles/transition.css";
+import "../styles/scrollbar.css";
+import "../styles/photoswipe.css";
+import "../styles/expressive-code.css";
 
 interface Props {
 	title?: string;
